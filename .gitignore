@@ -6,12 +6,15 @@
 */yarn-error.log*
 */pnpm-debug.log*
 */lerna-debug.log*
+*/package-lock.json
+package-lock.json
 
 /node_modules/
 */node_modules/
 */dist
 */dist-ssr
 *.local
+
 
 # Editor directories and files
 */.vscode/*
