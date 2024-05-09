@@ -25,4 +25,4 @@
 *.sw?
 
 # husky & lint-staged
-.husky
+.husky/_
