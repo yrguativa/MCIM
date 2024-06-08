@@ -32,8 +32,11 @@ import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
 import Cells from "../pages/cells"
+import { useAuthStore } from "../stores"
 
 export function Dashboard() {
+    const userState = useAuthStore(state => state.user);
+    
     return (
         <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
             <div className="hidden border-r bg-muted/40 md:block">
@@ -62,9 +65,9 @@ export function Dashboard() {
                                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
                             >
                                 <ShoppingCart className="h-4 w-4" />
-                                Orders
-                                <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                                    6
+                                Eventos
+                                <Badge className="ml-auto flex  shrink-0 items-center justify-center rounded-full">
+                                    Comming soon
                                 </Badge>
                             </a>
                             <a
@@ -72,14 +75,17 @@ export function Dashboard() {
                                 className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary"
                             >
                                 <Package className="h-4 w-4" />
-                                Products{" "}
+                                Celulas
                             </a>
                             <a
                                 href="#"
                                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
                             >
                                 <Users className="h-4 w-4" />
-                                Customers
+                                Discipulos
+                                <Badge className="ml-auto flex  shrink-0 items-center justify-center rounded-full">
+                                    Comming soon
+                                </Badge>
                             </a>
                             <a
                                 href="#"
@@ -87,6 +93,9 @@ export function Dashboard() {
                             >
                                 <LineChart className="h-4 w-4" />
                                 Analytics
+                                <Badge className="ml-auto flex  shrink-0 items-center justify-center rounded-full">
+                                    Comming soon
+                                </Badge>
                             </a>
                         </nav>
                     </div>
@@ -208,12 +217,12 @@ export function Dashboard() {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                            <DropdownMenuLabel>Mi cuenta {userState}</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>Settings</DropdownMenuItem>
+                            <DropdownMenuItem>Configuraciones</DropdownMenuItem>
                             <DropdownMenuItem>Support</DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>Logout</DropdownMenuItem>
+                            <DropdownMenuItem>Salir</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </header>
