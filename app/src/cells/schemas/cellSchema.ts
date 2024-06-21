@@ -1,8 +1,8 @@
 import { z } from "zod"
-import { AssistantsSchema } from "./cellAssistantsSchema"
-import { cellRecordSchema } from "./cellRecordsSchema";
+import { CellAssistantSchema } from "./cellAssistantsSchema"
+import { CellRecordSchema } from "./cellRecordsSchema";
 
-export const cellSchema = z.object({
+export const CellSchema = z.object({
   id: z.string()
     .uuid()
     .default(crypto.randomUUID()),
@@ -17,8 +17,9 @@ export const cellSchema = z.object({
     .min(2, {
       message: "Username must be at least 2 characters.",
     }),
-  assistants: z.array(AssistantsSchema),
-  records: z.array(cellRecordSchema)
+  assistants: z.array(CellAssistantSchema)
+    .min(1, "At least one assistant is required."),
+  records: z.array(CellRecordSchema),
 })
 
-export type Cell = z.infer<typeof cellSchema>;
+export type Cell = z.infer<typeof CellSchema>;

@@ -1,3 +1,4 @@
+
 import { FC } from 'react';
 import { useFieldArray, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -13,26 +14,28 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
-import { useAuthStore, useCellStore } from '../stores';
-import { CellRecord, cellRecordSchema } from './cellRecordsSchema';
+import { useAuthStore, useCellStore } from '../../stores';
+import { CellRecord, CellRecordSchema } from '../schemas/cellRecordsSchema';
+import AssistantsTableComponent from '../components/assistantsTableComponent';
+import { ColumnsAssistants } from '../components/assistantsColumns';
 
 const Cells: FC = () => {
   const userState = useAuthStore(state => state.user);
 
   const cellState = useCellStore(state => state.cell);
-  cellState.createdUser = userState;
   const addRecordState = useCellStore(state => state.addRecord);
   const form = useForm<CellRecord>({
-    resolver: zodResolver(cellRecordSchema),
+    resolver: zodResolver(CellRecordSchema),
     defaultValues: {
       topic: "",
       date: new Date(),
+      createUser: userState,
       assistants: cellState.assistants,
     },
   });
 
   const { fields: assistantsSubForm, append: appendAssitant, remove: removeAssitant } = useFieldArray({ name: 'assistants', control: form.control })
-
+  const dataAssistants = [];
   function onSubmit(data: CellRecord) {
     console.log("🚀 ~ onSubmit ~ data:", data)
     addRecordState(data);
@@ -109,7 +112,7 @@ const Cells: FC = () => {
                   </PopoverContent>
                 </Popover>
                 <FormDescription>
-                  Your date of birth is used to calculate your age.
+                  Registrar la fecha de la celula.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -118,15 +121,14 @@ const Cells: FC = () => {
           <div className="col-span-2 grid-cols-subgrid flex flex-row justify-between gap-3">
             <span className="col-span-2 text-xl font-semibold">Asistentes</span>
             <div>
+              {assistantsSubForm.length > 1 && (
+                <Button type="button" onClick={() => removeAssitant(assistantsSubForm.length - 1)}>
+                  Eliminar Asistente
+                </Button>
+              )}
               <Button type="button" onClick={() => appendAssitant({ id: crypto.randomUUID(), name: '', attended: true })}>
                 Agregar correo electrónico
               </Button>
-
-              {assistantsSubForm.length > 1 && (
-                <Button type="button" onClick={() => removeAssitant(assistantsSubForm.length - 1)}>
-                  Eliminar correo Electronics
-                </Button>
-              )}
             </div>
           </div>
           {
@@ -164,11 +166,32 @@ const Cells: FC = () => {
                     </FormItem>
                   )}
                 />
+                <Button type="button" onClick={() => removeAssitant(index)}>
+                  Eliminar Asistente
+                </Button>
               </div>
             ))
           }
-
-          <Button type="submit" className="col-span-2">Guardar</Button>
+          {
+            form.formState.errors.assistants?.root &&
+            (<div className="col-span-2 grid-cols-subgrid flex flex-row justify-center gap-3 text-destructive">
+              <span>{form.formState.errors.assistants?.root.message}</span>
+            </div>)
+          }
+          <div className="col-span-2">
+            <AssistantsTableComponent data={form.getValues().assistants} columns={ColumnsAssistants}></AssistantsTableComponent>
+          </div>
+          Values:
+          <pre className="col-span-2 text-sm">{JSON.stringify(form.watch(), null, 2)}</pre>
+          Errores:
+          <pre className="col-span-2 text-sm">{JSON.stringify(form.formState.errors, null, 2)}</pre>
+          {
+            form.formState.errors.assistants &&
+            (<div className="col-span-2 grid-cols-subgrid flex flex-row justify-center gap-3">
+              <span>{form.formState.errors.assistants.message}</span>
+            </div>)
+          }
+          <Button type="submit" className="col-span-2">Registrar Asistencia</Button>
         </form>
       </Form>
     </div>
