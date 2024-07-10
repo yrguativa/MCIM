@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 export const CellAssistantSchema = z.object({
-  date: z.string()
+  id: z.string()
     .uuid()
     .default(crypto.randomUUID()),
   name: z.string()

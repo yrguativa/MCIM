@@ -1,25 +1,47 @@
-import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
+import { ColumnDef } from "@tanstack/react-table";
+import { useNavigate } from 'react-router-dom';
+
 
 export const ColumnsAssistants: ColumnDef<any>[] = [
   {
-    header: "Nombre",
-    accessorKey: "name",
-    //  cell: (info) => <div>{info.getValue()}</div>,
+    header: "Fecha creación",
+    accessorKey: "createdDate",
+
   },
   {
-    header: "Asistencia",
-    accessorKey: "attended",
+    header: "Lider",
+    accessorKey: "leader",
+  },
+  {
+    header: "Asistentes",
+    accessorKey: "assistants",
     cell: (info) => {
-      return (<div>{info.getValue() ? "Si" : "No"}</div>);
+      return (<div>{info.getValue().length}</div>);
     },
   },
   {
     id: "Acctions",
-    header: () => (
-      <Button type="button">
-        Agregar asistente
-      </Button>
-    )
+    header: "Asistants",
+    cell: () => {
+      const navigate = useNavigate();
+      return (
+        <Button type="button" onClick={() => navigate('/cells/register')}>
+          Agregar Asistencia
+        </Button>
+      )
+    }
+  },
+  {
+    id: "Edit",
+    header: "Editar",
+    cell: () => {
+      const navigate = useNavigate();
+      return (
+        <Button variant="secondary" type="button" onClick={() => navigate('/cells/register')}>
+          Editar Celula
+        </Button>
+      )
+    }
   }
 ];

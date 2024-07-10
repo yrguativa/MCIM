@@ -1,15 +1,5 @@
-import {
-  Bell,
-  CircleUser,
-  Home,
-  LineChart,
-  Menu,
-  Package,
-  Package2,
-  Search,
-  ShoppingCart,
-  Users,
-} from "lucide-react"
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Bell, CircleUser, Home, LineChart, Menu, Package, Package2, Search, ShoppingCart, Users } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -33,6 +23,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
 import Cells from "../cells/pages/cells"
 import { useAuthStore } from "../stores"
+import CellRegister from '../cells/pages/cellRegister';
 
 export function Dashboard() {
   const userState = useAuthStore(state => state.user);
@@ -60,27 +51,18 @@ export function Dashboard() {
                 <Home className="h-4 w-4" />
                 Dashboard
               </a>
-              <a
-                href="#"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-              >
+              <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
                 <ShoppingCart className="h-4 w-4" />
-                Eventos
+                Reuniones Asistencia
                 <Badge className="ml-auto flex  shrink-0 items-center justify-center rounded-full">
                   Comming soon
                 </Badge>
               </a>
-              <a
-                href="#"
-                className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary"
-              >
+              <a href="#" className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary">
                 <Package className="h-4 w-4" />
                 Celulas
               </a>
-              <a
-                href="#"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-              >
+              <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
                 <Users className="h-4 w-4" />
                 Discipulos
                 <Badge className="ml-auto flex  shrink-0 items-center justify-center rounded-full">
@@ -92,7 +74,7 @@ export function Dashboard() {
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
               >
                 <LineChart className="h-4 w-4" />
-                Analytics
+                EF MCIM
                 <Badge className="ml-auto flex  shrink-0 items-center justify-center rounded-full">
                   Comming soon
                 </Badge>
@@ -227,7 +209,13 @@ export function Dashboard() {
           </DropdownMenu>
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-          <Cells></Cells>
+          <Router>
+            <Routes>
+              <Route path="/" element={<Cells />} />
+              <Route path="/cells/register" element={<CellRegister />} />
+
+            </Routes>
+          </Router>
         </main>
       </div>
     </div>
