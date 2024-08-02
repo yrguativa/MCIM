@@ -9,7 +9,7 @@ export const CellRecordSchema = z.object({
     .min(2, {
       message: "El tema de la celula es obligatorio.",
     }),
-  createUser: z.string()
+  createdUser: z.string()
     .min(2, {
       message: "El usuario de la celula es obligatorio.",
     }),

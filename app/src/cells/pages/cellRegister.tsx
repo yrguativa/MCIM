@@ -1,5 +1,4 @@
-
-import { FC } from 'react';
+import React from 'react';
 import { useFieldArray, useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from 'date-fns';
@@ -18,18 +17,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { useAuthStore, useCellStore } from '../../stores';
 import { CellRecord, CellRecordSchema } from '../schemas/cellRecordsSchema';
 
-const CellRegister: FC = () => {
+const CellRegister: React.FC = () => {
   const userState = useAuthStore(state => state.user);
 
-  const cellState = useCellStore(state => state.cell);
   const addRecordState = useCellStore(state => state.addRecord);
   const form = useForm<CellRecord>({
     resolver: zodResolver(CellRecordSchema),
     defaultValues: {
       topic: "",
       date: new Date(),
-      createUser: userState,
-      assistants: cellState.assistants,
+      createdUser: userState,
+    
     },
   });
 
@@ -53,7 +51,7 @@ const CellRegister: FC = () => {
     <div className="flex items-center">
       <h1 className="text-lg font-semibold md:text-2xl">Registro Asistencia de <mark>Celula</mark></h1>
     </div>
-    <div className="flex items-center items-center justify-center text-start rounded-lg border border-dashed p-4 shadow-sm" x-chunk="dashboard-02-chunk-1">
+    <div className="flex items-center items-center justify-center text-start rounded-lg border border-dashed p-4 shadow-sm">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-2 grid-flow-row gap-2 w-full">
           <FormField

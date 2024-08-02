@@ -1,7 +1,9 @@
-import './App.css'
-import { Dashboard } from './dashboard/dashboard'
+import React from 'react';
 
-function App() {
+import './App.css'
+import Dashboard from './dashboard/dashboard';
+
+const App: React.FC = () => {
   return (
     <>
       <Dashboard></Dashboard>
@@ -9,4 +11,4 @@ function App() {
   )
 }
 
-export default App
+export default App;

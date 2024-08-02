@@ -1,12 +1,12 @@
 
-import { FC } from 'react';
+import React from 'react';
 import { useCellStore } from '../../stores';
 import { ColumnsAssistants } from '../components/assistantsColumns';
 import AssistantsTableComponent from '../components/assistantsTableComponent';
 
-const Cells: FC = () => {
+const Cells: React.FC = () => {
   const cellsState = useCellStore(state => state.Cells);
-  
+
   return (
     <>
       <div className="flex items-center">
