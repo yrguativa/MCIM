@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from 'date-fns';
 
 import { cn } from '@/lib/utils';
-import { CalendarIcon } from "lucide-react"
+import { BookUp, CalendarIcon, PlusSquare, Trash2 } from "lucide-react"
 import { Button } from '@/components/ui/button';
 import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/use-toast"
@@ -12,14 +12,16 @@ import { Calendar } from "@/components/ui/calendar"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 import { useAuthStore, useCellStore } from '../../stores';
 import { CellRecord, CellRecordSchema } from '../schemas/cellRecordsSchema';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const CellRegister: React.FC = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const userState = useAuthStore(state => state.user);
-
   const addRecordState = useCellStore(state => state.addRecord);
   const form = useForm<CellRecord>({
     resolver: zodResolver(CellRecordSchema),
@@ -27,24 +29,33 @@ const CellRegister: React.FC = () => {
       topic: "",
       date: new Date(),
       createdUser: userState,
-    
     },
   });
 
   const { fields: assistantsSubForm, append: appendAssistant, remove: removeAssistant } = useFieldArray({ name: 'assistants', control: form.control });
   function onSubmit(data: CellRecord) {
     console.log("🚀 ~ onSubmit ~ data:", data)
-    addRecordState(data);
+    addRecordState(id!, data);
+    // toast({
+    //   title: "You submitted the following values:",
+    //   description: (
+    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+    //       <code className="text-white">
+    //         {JSON.stringify(data, null, 2)}
+    //       </code>
+    //     </pre>
+    //   ),
+    // });
     toast({
       title: "You submitted the following values:",
       description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">
-            {JSON.stringify(data, null, 2)}
-          </code>
-        </pre>
+        <p className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          Registro realizado
+        </p>
       ),
     });
+
+    navigate('/cell/' + id);
   }
 
   return <>
@@ -70,7 +81,6 @@ const CellRegister: React.FC = () => {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="date"
@@ -115,7 +125,7 @@ const CellRegister: React.FC = () => {
             )}
           />
 
-          <div className="col-span-2 gap-3">
+          <div className="col-span-2 gap-3 pb-3">
             <span className="col-span-2 text-xl font-semibold">Asistentes</span>
             <Table>
               <TableHeader>
@@ -123,9 +133,6 @@ const CellRegister: React.FC = () => {
                   <TableHead>Nombre Asistente</TableHead>
                   <TableHead>Asistencia</TableHead>
                   <TableHead>
-                    <Button type="button" onClick={() => appendAssistant({ id: crypto.randomUUID(), name: '', attended: true })}>
-                      Agregar Asistente
-                    </Button>
                   </TableHead>
                 </TableRow>
               </TableHeader>
@@ -175,13 +182,24 @@ const CellRegister: React.FC = () => {
                       />
                     </TableCell>
                     <TableCell>
-                      <Button type="button" variant="destructive" onClick={() => removeAssistant(index)}>
-                        Eliminar
-                      </Button>
+                      {index > 0 && (
+                        <Button type="button" variant="destructive" onClick={() => removeAssistant(index)}>
+                          <Trash2 /> Eliminar
+                        </Button>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TableCell colSpan={3} className="text-center">
+                    <Button variant="outline" type="button" onClick={() => appendAssistant({ id: crypto.randomUUID(), name: '', attended: true })}>
+                      <PlusSquare /> Agregar Asistente
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              </TableFooter>
             </Table>
           </div>
 
@@ -190,7 +208,9 @@ const CellRegister: React.FC = () => {
           Errores:
           <pre className="col-span-2 text-sm">{JSON.stringify(form.formState.errors, null, 2)}</pre> */}
 
-          <Button type="submit" className="col-span-2">Agregar RegistroCelula</Button>
+          <Button type="submit" className="col-span-2">
+            <BookUp />Agregar Registro Celula
+          </Button>
         </form>
       </Form>
     </div>

@@ -217,7 +217,7 @@ const Dashboard: React.FC = () => {
               <Route path="/" element={<Cells />} />
               <Route path="/cell/" element={<CellForm />} />
               <Route path="/cell/:id" element={<CellForm />} />
-              <Route path="/cells/register" element={<CellRegister />} />
+              <Route path="/cell/:id/register" element={<CellRegister />} />
             </Routes>
 
           </main>

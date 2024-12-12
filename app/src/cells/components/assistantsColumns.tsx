@@ -5,19 +5,6 @@ import { useNavigate } from 'react-router-dom';
 
 export const ColumnsAssistants: ColumnDef<any>[] = [
   {
-    id: "Edit",
-    header: "Editar",
-    accessorKey: "id",
-    cell: (info) => {
-      const navigate = useNavigate();
-      return (
-        <Button variant="secondary" type="button" onClick={() => navigate('/cell/'+info.getValue())}>
-          Editar
-        </Button>
-      )
-    }
-  },
-  {
     header: "Fecha creación",
     accessorKey: "createdDate",
 
@@ -34,15 +21,16 @@ export const ColumnsAssistants: ColumnDef<any>[] = [
     },
   },
   {
-    id: "Acctions",
-    header: "Asistants",
-    cell: () => {
+    id: "Edit",
+    header: "Editar",
+    accessorKey: "id",
+    cell: (info) => {
       const navigate = useNavigate();
       return (
-        <Button type="button" onClick={() => navigate('/cells/register')}>
-          Registrar Asistencia
+        <Button variant="secondary" type="button" onClick={() => navigate('/cell/' + info.getValue())}>
+          Editar
         </Button>
       )
     }
-  }
+  },
 ];

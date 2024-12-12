@@ -215,7 +215,7 @@ const CellForm: React.FC = () => {
             </Form>
         </div>
         {
-            id && <RecordCellComponent></RecordCellComponent>
+            id && <RecordCellComponent idCell={id}></RecordCellComponent>
         }
     </>;
 }
