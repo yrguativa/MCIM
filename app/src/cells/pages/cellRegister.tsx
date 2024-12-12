@@ -209,7 +209,7 @@ const CellRegister: React.FC = () => {
           <pre className="col-span-2 text-sm">{JSON.stringify(form.formState.errors, null, 2)}</pre> */}
 
           <Button type="submit" className="col-span-2">
-            <BookUp />Agregar Registro Celula
+            <BookUp /> Agregar Registro Celula
           </Button>
         </form>
       </Form>

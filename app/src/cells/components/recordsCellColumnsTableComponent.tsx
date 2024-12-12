@@ -1,13 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
+import { Pencil } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
+import { CellFull } from "../models/cellFull";
+import HumanizeNaturalDay from "@/lib/utilsDate";
 
-export const RecordsCellColummsTable: ColumnDef<any>[] = [
+export const RecordsCellColummsTable: ColumnDef<CellFull>[] = [
     {
         header: "Fecha",
         accessorKey: "date",
         cell: (info) => {
-            return <span>{info.getValue()}</span>
+            return <span>{HumanizeNaturalDay.HumanizeNaturalDay(new Date(info.getValue()))}</span>
         }
     },
     {
@@ -25,7 +28,7 @@ export const RecordsCellColummsTable: ColumnDef<any>[] = [
             const navigate = useNavigate();
             return (
                 <Button variant="secondary" type="button" onClick={() => navigate('/cell/' + info.getValue())}>
-                    Editar
+                    <Pencil /> Editar
                 </Button>
             )
         }
