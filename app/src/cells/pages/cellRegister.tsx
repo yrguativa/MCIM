@@ -195,7 +195,7 @@ const CellRegister: React.FC = () => {
                 <TableRow>
                   <TableCell colSpan={3} className="text-center">
                     <Button variant="outline" type="button" onClick={() => appendAssistant({ id: crypto.randomUUID(), name: '', attended: true })}>
-                      <PlusSquare /> Agregar Asistente
+                      <PlusSquare className='mr-2'/> Agregar Asistente
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -209,7 +209,7 @@ const CellRegister: React.FC = () => {
           <pre className="col-span-2 text-sm">{JSON.stringify(form.formState.errors, null, 2)}</pre> */}
 
           <Button type="submit" className="col-span-2">
-            <BookUp /> Agregar Registro Celula
+            <BookUp className='mr-2'/> Agregar Registro Celula
           </Button>
         </form>
       </Form>

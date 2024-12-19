@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { useCellStore } from '../../stores';
-import { ColumnsAssistants } from '../components/assistantsColumns';
 import AssistantsTableComponent from '../components/assistantsTableComponent';
+import { ColumnsAssistants } from '../components/assistantsColumnsTable';
 
 const Cells: React.FC = () => {
   const cellsState = useCellStore(state => state.Cells);

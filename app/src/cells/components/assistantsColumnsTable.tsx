@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
+import { Pen } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 
 
@@ -28,7 +29,7 @@ export const ColumnsAssistants: ColumnDef<any>[] = [
       const navigate = useNavigate();
       return (
         <Button variant="secondary" type="button" onClick={() => navigate('/cell/' + info.getValue())}>
-          Editar
+          <Pen className="mr-2" />Editar
         </Button>
       )
     }

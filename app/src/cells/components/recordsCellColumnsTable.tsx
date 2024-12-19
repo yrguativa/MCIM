@@ -17,7 +17,13 @@ export const RecordsCellColummsTable: ColumnDef<CellFull>[] = [
         header: "Total de asistentes",
         accessorKey: "assistants",
         cell: (info) => {
-            return (<div>{info.getValue() ? info.getValue().length : "0"}</div>);
+            return (
+                <div className="text-center">
+                    <div className="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground">
+                        {info.getValue() ? info.getValue().length : "0"}
+                    </div>
+                </div>
+            );
         },
     },
     {
@@ -28,7 +34,7 @@ export const RecordsCellColummsTable: ColumnDef<CellFull>[] = [
             const navigate = useNavigate();
             return (
                 <Button variant="secondary" type="button" onClick={() => navigate('/cell/' + info.getValue())}>
-                    <Pencil /> Editar
+                    <Pencil className='mr-2'/> Editar
                 </Button>
             )
         }

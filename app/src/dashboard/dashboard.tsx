@@ -26,6 +26,7 @@ import Cells from "../cells/pages/cells"
 import { useAuthStore } from "../stores"
 import CellRegister from '../cells/pages/cellRegister';
 import CellForm from '../cells/pages/cellForm';
+import Disciples from '../disciples/pages/disciples';
 
 const Dashboard: React.FC = () => {
   const userState = useAuthStore(state => state.user);
@@ -65,13 +66,10 @@ const Dashboard: React.FC = () => {
                   <Package className="h-4 w-4" />
                   Celulas
                 </Link>
-                <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
+                <Link to="/disciples" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
                   <Users className="h-4 w-4" />
                   Discipulos
-                  <Badge className="ml-auto flex  shrink-0 items-center justify-center rounded-full">
-                    Comming soon
-                  </Badge>
-                </a>
+                </Link>
                 <a
                   href="#"
                   className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
@@ -218,6 +216,8 @@ const Dashboard: React.FC = () => {
               <Route path="/cell/" element={<CellForm />} />
               <Route path="/cell/:id" element={<CellForm />} />
               <Route path="/cell/:id/register" element={<CellRegister />} />
+
+              <Route path="/disciples" element={<Disciples />} />
             </Routes>
 
           </main>

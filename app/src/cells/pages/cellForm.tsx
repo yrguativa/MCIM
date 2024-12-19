@@ -16,6 +16,7 @@ import { useAuthStore, useCellStore } from '@/src/stores';
 import { Cell, CellSchema } from '../schemas/cellSchema';
 import { Neighborhood } from "@/src/cells/schemas/neighborhood.enum";
 import { RecordCellComponent } from '../components/recordCellComponent';
+import { Save } from 'lucide-react';
 const CellForm: React.FC = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -210,7 +211,9 @@ const CellForm: React.FC = () => {
                     Errores:
                     <pre className="col-span-2 text-sm">{JSON.stringify(form.formState.errors, null, 2)}</pre> */}
 
-                    <Button type="submit" className="col-span-2">Guardr cambios</Button>
+                    <Button type="submit" className="col-span-2">
+                        <Save className='mr-2' /> Guardr cambios
+                    </Button>
                 </form>
             </Form>
         </div>

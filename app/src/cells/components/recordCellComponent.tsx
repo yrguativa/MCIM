@@ -1,12 +1,14 @@
-import { buttonVariants } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import { useCellStore } from "@/src/stores/cell/cell.store"
+import React from 'react';
 import { useState } from "react"
 import { Link, useParams } from "react-router-dom"
+import { es } from "date-fns/locale"
+import { BookUp } from "lucide-react"
+import { Calendar } from "@/components/ui/calendar"
+import { useCellStore } from "@/src/stores/cell/cell.store"
+import { buttonVariants } from "@/components/ui/button"
 import { CellFull } from "../models/cellFull"
 import RecordsCellTableComponent from "./recordsCellTableComponent"
-import { RecordsCellColummsTable } from "./recordsCellColumnsTableComponent"
-import { BookUp } from "lucide-react"
+import { RecordsCellColummsTable } from "./recordsCellColumnsTable"
 
 type RecordCellComponentProps = {
     idCell: string
@@ -36,13 +38,14 @@ export const RecordCellComponent: React.FC<RecordCellComponentProps> = (props: R
                     mode="multiple"
                     selected={dates}
                     onSelect={setDates}
+                    locale={es}
                     className="rounded-md border"
                 />
                 <div>
                     <div className="flex flex-row justify-between pb-2">
                         Ultimas Celulas
                         <Link className={buttonVariants({ variant: "outline" })} to={`/cell/${props.idCell}/register`}>
-                            <BookUp />Registrar Asistencia
+                            <BookUp className='mr-2' />Registrar Asistencia
                         </Link>
                     </div>
                     {
