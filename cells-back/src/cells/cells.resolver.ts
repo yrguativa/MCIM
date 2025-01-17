@@ -13,7 +13,7 @@ export class CellsResolver {
     return this.cellsService.create(createCellInput);
   }
 
-  @Query(() => [Cell], { name: 'cells' })
+  @Query(() => [Cell], { name: 'cells', description: 'Get all cells' })
   findAll() {
     return this.cellsService.findAll();
   }
