@@ -1,0 +1,80 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Cell {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Disciple {
+  id: ID!
+
+  """Example field (placeholder)"""
+  identification: String!
+  name: String!
+  lastName: String!
+  email: String
+  phone: String
+  address: String
+  birthDate: DateTime
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Query {
+  """Get all cells"""
+  cells: [Cell!]!
+  cell(id: Int!): Cell!
+  disciples: [Disciple!]!
+  disciple(id: String!): Disciple!
+}
+
+type Mutation {
+  createCell(createCellInput: CreateCellInput!): Cell!
+  updateCell(updateCellInput: UpdateCellInput!): Cell!
+  removeCell(id: Int!): Cell!
+  createDisciple(createDiscipleInput: CreateDiscipleInput!): Disciple!
+  updateDisciple(updateDiscipleInput: UpdateDiscipleInput!): Disciple!
+}
+
+input CreateCellInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateCellInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateDiscipleInput {
+  """Identification number"""
+  identification: String!
+  name: String!
+  lastName: String!
+  email: String
+  phone: String
+  address: String
+
+  """DOF (Date OF Birth)"""
+  birthDate: DateTime
+}
+
+input UpdateDiscipleInput {
+  """Identification number"""
+  identification: String
+  name: String
+  lastName: String
+  email: String
+  phone: String
+  address: String
+
+  """DOF (Date OF Birth)"""
+  birthDate: DateTime
+  id: String!
+}

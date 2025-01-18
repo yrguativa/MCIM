@@ -1,7 +1,10 @@
-import { ObjectType, Field } from '@nestjs/graphql';
+import { ObjectType, Field, ID } from '@nestjs/graphql';
 
-@ObjectType()
-export class Disciple {
+@ObjectType('Disciple')
+export class DiscipleEntity {
+  @Field(() => ID)
+  id: string;
+
   @Field(() => String, { description: 'Example field (placeholder)' })
   identification: string;
 
@@ -11,15 +14,15 @@ export class Disciple {
   @Field(() => String)
   lastName: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   email: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   phone: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   address: string;
 
-  @Field(() => Date)
+  @Field(() => Date, { nullable: true })
   birthDate: Date;
 }

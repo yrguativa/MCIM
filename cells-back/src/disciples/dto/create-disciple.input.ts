@@ -11,7 +11,7 @@ import {
 
 @InputType()
 export class CreateDiscipleInput {
-  @Field()
+  @Field(() => String, { description: 'Identification number' })
   @IsNotEmpty()
   identification: string;
 
@@ -23,20 +23,21 @@ export class CreateDiscipleInput {
   @IsNotEmpty()
   lastName: string;
 
-  @Field()
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsEmail()
   email: string;
 
-  @Field()
+  @Field(() => String, { nullable: true })
   @IsOptional()
   phone: string;
 
-  @Field()
+  @Field(() => String, { nullable: true })
   @IsOptional()
   address: string;
 
-  @Field(() => Date, { description: 'DOF (Date OF Birth)' })
+  @Field(() => Date, { description: 'DOF (Date OF Birth)', nullable: true })
+  @IsOptional()
   @Transform(({ value }) => new Date(value))
   @IsDate({ message: 'The date of birth must be a valid date' })
   @MaxDate(new Date(), {

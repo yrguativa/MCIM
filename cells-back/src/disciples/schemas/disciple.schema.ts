@@ -16,6 +16,7 @@ export class Disciple extends Document {
 
   phone: string;
 
+  @Prop({ required: false })
   address: string;
 
   birthDate: Date;
