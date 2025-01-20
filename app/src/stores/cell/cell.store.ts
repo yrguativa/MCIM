@@ -54,7 +54,7 @@ export const useCellStore = create<CellState>()(
     persist(
       storeCell,
       {
-        name: 'cell-storege',
+        name: 'cell-storage',
       }
     ),
   )

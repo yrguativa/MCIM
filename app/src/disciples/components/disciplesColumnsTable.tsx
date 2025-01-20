@@ -1,21 +1,17 @@
 import { ColumnDef } from "@tanstack/react-table";
 
-export const DisciplesColummsTable: ColumnDef<any>[] = [
+export const DisciplesColumnsTable: ColumnDef<any>[] = [
     {
         header: "Nombres",
-        accessorKey: "date",
+        accessorKey: "name",
     },
     {
         header: "Apellidos",
-        accessorKey: "assistants",
+        accessorKey: "lastName",
     },
     {
-        header: "Fecha de Cumpleaños",
-        accessorKey: "assistants",
-    },
-    {
-        header: "Celular",
-        accessorKey: "assistants",
+        header: "Identificación",
+        accessorKey: "identification",
     },
     {
         id: "More",
