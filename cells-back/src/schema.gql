@@ -3,8 +3,16 @@
 # ------------------------------------------------------
 
 type Cell {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  id: ID!
+  leader: String!
+  network: Int!
+
+  """Enter the name of the host who will receive the cell in their home."""
+  host: String!
+  address: String!
+  neighborhood: Int!
+  createdDate: String!
+  createdUser: String!
 }
 
 type Disciple {
@@ -28,7 +36,7 @@ scalar DateTime
 type Query {
   """Get all cells"""
   cells: [Cell!]!
-  cell(id: Int!): Cell!
+  cell(id: String!): Cell!
   disciples: [Disciple!]!
   disciple(id: String!): Disciple!
 }
@@ -36,20 +44,32 @@ type Query {
 type Mutation {
   createCell(createCellInput: CreateCellInput!): Cell!
   updateCell(updateCellInput: UpdateCellInput!): Cell!
-  removeCell(id: Int!): Cell!
+  removeCell(id: String!): Cell!
   createDisciple(createDiscipleInput: CreateDiscipleInput!): Disciple!
   updateDisciple(updateDiscipleInput: UpdateDiscipleInput!): Disciple!
 }
 
 input CreateCellInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  leader: String!
+  network: Int!
+
+  """Enter the name of the host who will receive the cell in their home."""
+  host: String!
+  address: String!
+  neighborhood: Int!
+  createdUser: String!
 }
 
 input UpdateCellInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  leader: String!
+  network: Int!
+
+  """Enter the name of the host who will receive the cell in their home."""
+  host: String!
+  address: String!
+  neighborhood: Int!
+  createdUser: String!
+  id: String!
 }
 
 input CreateDiscipleInput {
@@ -67,9 +87,9 @@ input CreateDiscipleInput {
 
 input UpdateDiscipleInput {
   """Identification number"""
-  identification: String
-  name: String
-  lastName: String
+  identification: String!
+  name: String!
+  lastName: String!
   email: String
   phone: String
   address: String

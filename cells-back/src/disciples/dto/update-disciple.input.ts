@@ -3,6 +3,7 @@ import { InputType, Field, PartialType } from '@nestjs/graphql';
 import {
   IsDate,
   IsEmail,
+  IsMongoId,
   IsNotEmpty,
   IsOptional,
   MaxDate,
@@ -13,6 +14,7 @@ import { Transform } from 'class-transformer';
 @InputType()
 export class UpdateDiscipleInput extends PartialType(CreateDiscipleInput) {
   @Field(() => String)
+  @IsMongoId()
   id: string;
 
   @Field(() => String, { description: 'Identification number' })

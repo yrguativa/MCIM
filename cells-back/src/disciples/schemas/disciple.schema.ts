@@ -12,13 +12,16 @@ export class Disciple extends Document {
   @Prop({ required: true })
   lastName: string;
 
+  @Prop()
   email: string;
 
+  @Prop()
   phone: string;
 
   @Prop({ required: false })
   address: string;
 
+  @Prop()
   birthDate: Date;
 }
 
