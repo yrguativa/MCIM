@@ -10,7 +10,6 @@ export class CellsResolver {
 
   @Mutation(() => CellEntity)
   createCell(@Args('createCellInput') createCellInput: CreateCellInput) {
-    console.log('test', createCellInput);
     return this.cellsService.create(createCellInput);
   }
 

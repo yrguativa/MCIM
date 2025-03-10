@@ -11,29 +11,29 @@ export class CellsService {
   constructor(@InjectModel(Cell.name) private cellModel: Model<Cell>) {}
 
   async create(createCellInput: CreateCellInput): Promise<CellEntity> {
-    const createdDisciple = new this.cellModel({
+    const createdCell = new this.cellModel({
       ...createCellInput,
       createdDate: new Date(),
     });
-    const savedDisciple = await createdDisciple.save();
+    const savedDisciple = await createdCell.save();
     return this.toModel(savedDisciple);
   }
 
   async findAll(): Promise<CellEntity[]> {
-    const disciples = await this.cellModel.find().exec();
-    return disciples.map((dis) => this.toModel(dis));
+    const cells = await this.cellModel.find().exec();
+    return cells.map((dis) => this.toModel(dis));
   }
 
   async findOne(id: string): Promise<CellEntity> {
-    const user = await this.cellModel.findById(id).exec();
-    return this.toModel(user);
+    const cell = await this.cellModel.findById(id).exec();
+    return this.toModel(cell);
   }
 
   async update(
     id: string,
     updateCellInput: UpdateCellInput,
   ): Promise<CellEntity> {
-    const updatedUser = await this.cellModel
+    const updatedCell = await this.cellModel
       .findByIdAndUpdate(
         id,
         { $set: updateCellInput },
@@ -42,11 +42,11 @@ export class CellsService {
       .lean()
       .exec();
 
-    if (!updatedUser) {
+    if (!updatedCell) {
       throw new NotFoundException(`Disciple with ID ${id} not found`);
     }
 
-    return this.toModel(updatedUser);
+    return this.toModel(updatedCell);
   }
 
   remove(id: string) {

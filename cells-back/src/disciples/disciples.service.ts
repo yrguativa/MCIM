@@ -30,22 +30,22 @@ export class DisciplesService {
 
   async update(
     id: string,
-    updateUserInput: UpdateDiscipleInput,
+    updateDiscipleInput: UpdateDiscipleInput,
   ): Promise<DiscipleEntity> {
-    const updatedUser = await this.discipleModel
+    const updatedDisciple = await this.discipleModel
       .findByIdAndUpdate(
         id,
-        { $set: updateUserInput },
+        { $set: updateDiscipleInput },
         { new: true, runValidators: true },
       )
       .lean()
       .exec();
 
-    if (!updatedUser) {
+    if (!updatedDisciple) {
       throw new NotFoundException(`Disciple with ID ${id} not found`);
     }
 
-    return this.toModel(updatedUser);
+    return this.toModel(updatedDisciple);
   }
 
   remove(id: number) {
