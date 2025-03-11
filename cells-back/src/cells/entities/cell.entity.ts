@@ -1,4 +1,5 @@
 import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
+import { RecordCellEntity } from './recordCell.entity';
 
 @ObjectType('Cell')
 export class CellEntity {
@@ -28,4 +29,7 @@ export class CellEntity {
 
   @Field(() => String)
   createdUser: string;
+
+  @Field(() => [RecordCellEntity], { nullable: true })
+  records: RecordCellEntity[];
 }

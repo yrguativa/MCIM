@@ -2,6 +2,7 @@
     "conventionalCommits.scopes": [
         "App",
         "StructureRepo",
-        "CellsBack"
+        "CellsBack",
+        "Ticket Meet"
     ]
 }

@@ -2,6 +2,23 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type AssistantRecordCell {
+  name: String!
+  disciple: String!
+}
+
+type RecordCell {
+  topic: String!
+  date: DateTime!
+  createdUser: String!
+  assistants: [AssistantRecordCell!]
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Cell {
   id: ID!
   leader: String!
@@ -13,6 +30,7 @@ type Cell {
   neighborhood: Int!
   createdDate: String!
   createdUser: String!
+  records: [RecordCell!]
 }
 
 type Disciple {
@@ -27,11 +45,6 @@ type Disciple {
   address: String
   birthDate: DateTime
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type Query {
   """Get all cells"""

@@ -63,6 +63,15 @@ export class CellsService {
       neighborhood: cell.neighborhood,
       createdDate: cell.createdDate,
       createdUser: cell.createdUser,
+      records: cell.records!.map((record) => ({
+        topic: record.topic,
+        date: record.date,
+        createdUser: record.createdUser,
+        assistants: record.assistants!.map((assistant) => ({
+          name: assistant.name,
+          disciple: assistant.disciple,
+        })),
+      })),
     };
   }
 }

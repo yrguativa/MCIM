@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { RecordCell, RecordCellSchema } from './recordCell.schema';
 
 @Schema()
 export class Cell extends Document {
@@ -23,6 +24,9 @@ export class Cell extends Document {
 
   @Prop({ required: true })
   createdUser: string;
+
+  @Prop({ type: [RecordCellSchema], required: false })
+  records: RecordCell[];
 }
 
 export const CellSchema = SchemaFactory.createForClass(Cell);
