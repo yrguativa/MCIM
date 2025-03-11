@@ -5,7 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 function App() {
   return (
     // <BrowserRouter >
-    <BrowserRouter>
+    <BrowserRouter basename="/MCIM">
       <Routes>
         <Route path="/" element={<GenerateTicket />} />
       </Routes>
