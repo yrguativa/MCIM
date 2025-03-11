@@ -28,13 +28,20 @@ body {
   place-items: stretch;
   min-width: 320px;
   min-height: 100vh;
-  background: #f080b2;
+  background-image: linear-gradient(
+    to bottom,
+    #f080b2,
+    #ff7a96,
+    #ff7a96,
+    #ff7b73,
+    #ff864b,
+    #ff9913
+  );
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
-  color: white; 
 }
 h2 {
   font-size: 1.8em;
