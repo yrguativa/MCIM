@@ -7,10 +7,6 @@ import QRCode from "react-qr-code"; // Librería para generar el QR
 
 import { db } from "../utils";
 
-import eventImage from '/assets/images/event1.png';
-
-import eventImageFooter from '/assets/images/event1footer.png';
-
 type FormData = {
     idNumber: string;
 };
@@ -87,7 +83,7 @@ function GenerateTicket() {
     return (
 
         <div>
-            <img src={eventImage} alt="logo Aroma" />
+            <img src="/assets/images/event1.png" alt="logo Aroma" />
             <h1 className="text-2xl font-bold text-[#FFE984]">Bienvenida a nuestra pre conveción de mujeres</h1>
             {!qrData && (
                 <>
@@ -122,7 +118,7 @@ function GenerateTicket() {
                 </>
             )}
 
-            <img src={eventImageFooter} className='mt-8' alt="logo Aroma" />
+            <img src="/assets/images/event1footer.png" className='mt-8' alt="logo Aroma" />
         </div>
     )
 }
