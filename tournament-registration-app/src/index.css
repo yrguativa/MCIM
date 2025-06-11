@@ -1,0 +1,58 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --color-primary: #ef863d;
+  --color-primary-hover: #f49030;
+  --color-light: #f3f0ee;
+  --color-secundary: #3c3f4c;
+  --color-secundary-hover: #35364a;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f2f5;
+  color: #333;
+
+  background: #ef863d;
+  background: linear-gradient(
+    90deg,
+    rgba(239, 134, 61, 1) 0%,
+    rgba(60, 63, 76, 1) 85%
+  );
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+  color: var(--color-light);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: var(--color-light);
+    background-color: var(--color-secundary);
+  }
+  a:hover {
+    color: var(--color-primary-hover);
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
