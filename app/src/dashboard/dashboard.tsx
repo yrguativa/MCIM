@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, NavLink } from 'react-router-dom';
 import { Bell, CircleUser, Home, LineChart, Menu, Package, Package2, Search, ShoppingCart, Users } from "lucide-react"
 
@@ -23,13 +23,20 @@ import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
 import Cells from "../cells/pages/cells"
-import { useAuthStore } from "../stores"
+import { useAuthStore, useDiscipleStore } from "../stores"
 import CellRegister from '../cells/pages/cellRegister';
 import CellForm from '../cells/pages/cellForm';
 import Disciples from '../disciples/pages/disciples';
+import DiscipleForm from '../disciples/pages/discipleForm';
 
 const Dashboard: React.FC = () => {
   const userState = useAuthStore(state => state.user);
+
+  const getDisciplesState = useDiscipleStore(state => state.getDisciples);
+
+    useEffect(() => {
+        getDisciplesState();
+    }, []);
 
   return (
     <Router>
@@ -218,6 +225,7 @@ const Dashboard: React.FC = () => {
               <Route path="/cell/:id/register" element={<CellRegister />} />
 
               <Route path="/disciples" element={<Disciples />} />
+              <Route path="/disciple/:id" element={<DiscipleForm />} />
             </Routes>
 
           </main>

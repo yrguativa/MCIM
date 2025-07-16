@@ -11,7 +11,7 @@ const api = axios.create({
 });
 
 
-export class DiscipleService {
+export class DisciplesService {
 
     static async getDisciples(): Promise<Disciple[]> {
         try {
@@ -28,6 +28,7 @@ export class DiscipleService {
                 name
                 lastName
             }
+                
             `;
             const { data } = await api.post(API_URL,
                 JSON.stringify({
@@ -36,6 +37,102 @@ export class DiscipleService {
             );
 
             return data.data.disciples;
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                console.error((error as AxiosError).response?.data);
+                throw new Error(JSON.stringify((error as AxiosError).response?.data) || 'In get disciples');
+            }
+            console.error(error);
+            throw new Error('In get disciples');
+        }
+    }
+
+    static async getDisciple(id: string): Promise<Disciple> {
+        try {
+            const queryDisciples = `
+            query Disciple($discipleId: String!) {
+                disciple(id: $discipleId) {
+                    id
+                    identification
+                    name
+                    lastName
+                    email
+                    phone
+                    address
+                    birthDate
+                    createdUser
+                    createdDate
+                    updatedUser
+                    updatedDate
+                }
+            }
+            `;
+            const { data } = await api.post(API_URL,
+                JSON.stringify({
+                    query: queryDisciples,
+                    variables: {
+                        "discipleId": id
+                    }
+                })
+            );
+
+            return data.data.disciple;
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                console.error((error as AxiosError).response?.data);
+                throw new Error(JSON.stringify((error as AxiosError).response?.data) || 'In get disciples');
+            }
+            console.error(error);
+            throw new Error('In get disciples');
+        }
+    }
+
+    static async addDisciple(disciple: Disciple): Promise<string> {
+        try {
+            const queryDisciples = `
+            mutation CreateDisciple($createDiscipleInput: CreateDiscipleInput!) {
+                createDisciple(createDiscipleInput: $createDiscipleInput) {
+                    id
+                }
+            }
+            `;
+            const { data } = await api.post(API_URL,
+                JSON.stringify({
+                    query: queryDisciples,
+                    variables: {
+                        "createDiscipleInput": disciple
+                    }
+                })
+            );
+
+            return data.data.id;
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                console.error((error as AxiosError).response?.data);
+                throw new Error(JSON.stringify((error as AxiosError).response?.data) || 'In get disciples');
+            }
+            console.error(error);
+            throw new Error('In get disciples');
+        }
+    }
+
+    static async updateDisciple(disciple: Disciple): Promise<string> {
+        try {
+            const queryDisciples = `mutation UpdateDisciple($updateDiscipleInput: UpdateDiscipleInput!) {
+                updateDisciple(updateDiscipleInput: $updateDiscipleInput) {
+                    id
+                }
+            }`;
+            const { data } = await api.post(API_URL,
+                JSON.stringify({
+                    query: queryDisciples,
+                    variables: {
+                        "updateDiscipleInput": disciple
+                    }
+                })
+            );
+
+            return data.data.id;
         } catch (error) {
             if (error instanceof AxiosError) {
                 console.error((error as AxiosError).response?.data);

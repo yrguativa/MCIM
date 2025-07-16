@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
-import { useAuthStore, useCellStore } from '@/src/stores';
+import { useAuthStore, useCellStore, useDiscipleStore } from '@/src/stores';
 import { Cell, CellSchema } from '../schemas/cellSchema';
 import { Neighborhood } from "@/src/cells/schemas/neighborhood.enum";
 import { RecordCellComponent } from '../components/recordCellComponent';
@@ -24,6 +24,7 @@ const CellForm: React.FC = () => {
     const addCellState = useCellStore(state => state.addCell);
     const addUpdateState = useCellStore(state => state.updateCell);
     const getCellState = useCellStore(state => state.getCell);
+    const disciplesState = useDiscipleStore(state => state.Disciples);
 
     const cellDefault: Cell = {
         id: crypto.randomUUID(),
@@ -59,7 +60,6 @@ const CellForm: React.FC = () => {
             addUpdateState(data);
         } else {
             addCellState(data);
-
         }
 
         navigate('/');
@@ -176,19 +176,70 @@ const CellForm: React.FC = () => {
                             </FormItem>
                         )}
                     />
+
+
                     <FormField
                         control={form.control}
                         name="leader"
                         render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Lider</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Andrea Lopez" {...field} />
-                                </FormControl>
+                            <FormItem className="flex flex-col">
+                                <FormLabel className="mt-1 mb-1">Lider</FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant="outline"
+                                                role="combobox"
+                                                className={cn(
+                                                    "w-full justify-between",
+                                                    !field.value && "text-muted-foreground"
+                                                )}
+                                            >
+                                                {field.value ? disciplesState.find((x) => x.id == field.value)?.name : "Andrea Rodriguez"}
+                                                <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-[400px] p-0">
+                                        <Command>
+                                            <CommandInput placeholder="Escribe 2 letras para comentar la busqueda..." className="h-9" />
+                                            <CommandList>
+                                                <CommandEmpty>
+                                                    <p className="text-lg mb-2">
+                                                        No se encontró el lider. <br></br>
+                                                        ! Próximamente agregaremos funcionalidad para agregar un lider
+                                                    </p>
+                                                    <Button type="button" disabled>Agregar un nuevo lider</Button>
+                                                </CommandEmpty>
+                                                <CommandGroup>
+                                                    {
+                                                        disciplesState.map((x) => (
+                                                            <CommandItem
+                                                                value={x.name}
+                                                                key={x.id}
+                                                                onSelect={() => {
+                                                                    form.setValue("leader", x.id);
+                                                                }}
+                                                            >
+                                                                {x.name}
+                                                                <CheckIcon className={cn("ml-auto h-4 w-4",
+                                                                    x.id == field.value
+                                                                        ? "opacity-100"
+                                                                        : "opacity-0")}
+                                                                />
+                                                            </CommandItem>
+                                                        ))
+                                                    }
+                                                </CommandGroup>
+                                            </CommandList>
+                                        </Command>
+                                    </PopoverContent>
+                                </Popover>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
+
                     <FormField
                         control={form.control}
                         name="host"

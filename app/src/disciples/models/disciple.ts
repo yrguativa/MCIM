@@ -1,8 +1,15 @@
 export interface Disciple {
-    id: number;
+    id: string;
+    identification:string;
     name: string;
-    email: string;
-    phone: string;
-    address: string;
-    birthday: string;   
+    lastName: string;
+    email: string | undefined;
+    phone: string | undefined;
+    address: string | undefined;
+    birthDate: Date | undefined;  
+    
+    createdUser: string;
+    createdDate: Date;
+    updatedUser: string;
+    updatedDate: Date;
 }

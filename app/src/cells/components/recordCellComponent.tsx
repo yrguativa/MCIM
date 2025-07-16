@@ -23,7 +23,6 @@ export const RecordCellComponent: React.FC<RecordCellComponentProps> = (props: R
         cellForUpdate = getCellState(id);
         if (cellForUpdate && cellForUpdate.records && cellForUpdate.records.length > 0) {
             const datesRecords = cellForUpdate.records.map(record => new Date(record.date));
-            console.log("🚀 ~ datesRecords:", datesRecords)
             if (JSON.stringify(dates) !== JSON.stringify(datesRecords)) {
                 setDates(datesRecords);
             }
@@ -41,7 +40,7 @@ export const RecordCellComponent: React.FC<RecordCellComponentProps> = (props: R
                     locale={es}
                     className="rounded-md border"
                 />
-                <div>
+                <div className='w-3/5'>
                     <div className="flex flex-row justify-between pb-2">
                         Ultimas Celulas
                         <Link className={buttonVariants({ variant: "outline" })} to={`/cell/${props.idCell}/register`}>

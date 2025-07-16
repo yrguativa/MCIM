@@ -4,15 +4,15 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from 'date-fns';
 
 import { cn } from '@/lib/utils';
-import { BookUp, CalendarIcon, PlusSquare, Trash2 } from "lucide-react"
+import { BookUp, CalendarIcon, CheckCircle, PlusSquare, Trash2 } from "lucide-react"
 import { Button } from '@/components/ui/button';
 import { Input } from "@/components/ui/input"
-import { toast } from "@/components/ui/use-toast"
 import { Calendar } from "@/components/ui/calendar"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { toast } from 'sonner';
 
 import { useAuthStore, useCellStore } from '../../stores';
 import { CellRecord, CellRecordSchema } from '../schemas/cellRecordsSchema';
@@ -34,25 +34,9 @@ const CellRegister: React.FC = () => {
 
   const { fields: assistantsSubForm, append: appendAssistant, remove: removeAssistant } = useFieldArray({ name: 'assistants', control: form.control });
   function onSubmit(data: CellRecord) {
-    console.log("🚀 ~ onSubmit ~ data:", data)
     addRecordState(id!, data);
-    // toast({
-    //   title: "You submitted the following values:",
-    //   description: (
-    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-    //       <code className="text-white">
-    //         {JSON.stringify(data, null, 2)}
-    //       </code>
-    //     </pre>
-    //   ),
-    // });
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <p className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          Registro realizado
-        </p>
-      ),
+    toast("El registro de la celula se guardo correctamente.", {
+      icon: <CheckCircle className="h-4 w-4 text-green-500" />,
     });
 
     navigate('/cell/' + id);
@@ -195,7 +179,7 @@ const CellRegister: React.FC = () => {
                 <TableRow>
                   <TableCell colSpan={3} className="text-center">
                     <Button variant="outline" type="button" onClick={() => appendAssistant({ id: crypto.randomUUID(), name: '', attended: true })}>
-                      <PlusSquare className='mr-2'/> Agregar Asistente
+                      <PlusSquare className='mr-2' /> Agregar Asistente
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -209,7 +193,7 @@ const CellRegister: React.FC = () => {
           <pre className="col-span-2 text-sm">{JSON.stringify(form.formState.errors, null, 2)}</pre> */}
 
           <Button type="submit" className="col-span-2">
-            <BookUp className='mr-2'/> Agregar Registro Celula
+            <BookUp className='mr-2' /> Agregar Registro Celula
           </Button>
         </form>
       </Form>

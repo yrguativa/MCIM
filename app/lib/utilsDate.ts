@@ -12,7 +12,6 @@ import { es } from 'date-fns/locale';
  * Any other day is formatted according to given argument or the DATE_FORMAT setting if no argument is given.
  */
 const HumanizeNaturalDay = (date: Date, formatOfDate: string | undefined = undefined) => {
-    console.log("🚀 ~ HumanizeNaturalDay ~ date:", date)
     const timestamp = (date === undefined) ? new Date().getTime() / 1000 : date.getTime() / 1000;
     formatOfDate = (formatOfDate === undefined) ? 'EEEE dd/LLLL/yyyy' : formatOfDate;
 
