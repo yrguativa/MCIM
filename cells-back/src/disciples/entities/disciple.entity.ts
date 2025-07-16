@@ -25,4 +25,16 @@ export class DiscipleEntity {
 
   @Field(() => Date, { nullable: true })
   birthDate: Date;
+
+  @Field(() => String)
+  createdUser: string;
+
+  @Field(() => Date)
+  createdDate: Date;
+
+  @Field(() => String, { nullable: true })
+  updatedUser: string;
+
+  @Field(() => Date, { nullable: true })
+  updatedDate: Date;
 }

@@ -44,6 +44,10 @@ type Disciple {
   phone: String
   address: String
   birthDate: DateTime
+  createdUser: String!
+  createdDate: DateTime!
+  updatedUser: String
+  updatedDate: DateTime
 }
 
 type Query {
@@ -96,6 +100,10 @@ input CreateDiscipleInput {
 
   """DOF (Date OF Birth)"""
   birthDate: DateTime
+  createdUser: String!
+
+  """DOF (Date OF Birth)"""
+  createdDate: DateTime
 }
 
 input UpdateDiscipleInput {
@@ -109,5 +117,11 @@ input UpdateDiscipleInput {
 
   """DOF (Date OF Birth)"""
   birthDate: DateTime
+  createdUser: String!
+
+  """DOF (Date OF Birth)"""
+  createdDate: DateTime!
   id: String!
+  updatedUser: String
+  updatedDate: DateTime
 }

@@ -73,6 +73,10 @@ export class DisciplesService {
       phone: disciple.phone,
       address: disciple.address,
       birthDate: disciple.birthDate,
+      createdUser: disciple.createdUser,
+      createdDate: disciple.createdDate,
+      updatedUser: disciple.updatedUser,
+      updatedDate: disciple.updatedDate,
     };
   }
 }

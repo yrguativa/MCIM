@@ -3,6 +3,7 @@ import { DisciplesService } from './disciples.service';
 import { DiscipleEntity } from './entities/disciple.entity';
 import { CreateDiscipleInput } from './dto/create-disciple.input';
 import { UpdateDiscipleInput } from './dto/update-disciple.input';
+import { Logger } from '@nestjs/common';
 
 @Resolver(() => DiscipleEntity)
 export class DisciplesResolver {
@@ -29,6 +30,10 @@ export class DisciplesResolver {
   updateDisciple(
     @Args('updateDiscipleInput') updateDiscipleInput: UpdateDiscipleInput,
   ) {
+    Logger.log(
+      '🚀 ~ DisciplesResolver ~ updateDiscipleInput:',
+      updateDiscipleInput,
+    );
     return this.disciplesService.update(
       updateDiscipleInput.id,
       updateDiscipleInput,

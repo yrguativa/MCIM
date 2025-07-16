@@ -12,17 +12,29 @@ export class Disciple extends Document {
   @Prop({ required: true })
   lastName: string;
 
-  @Prop()
+  @Prop({ required: false })
   email: string;
 
-  @Prop()
+  @Prop({ required: false })
   phone: string;
 
   @Prop({ required: false })
   address: string;
 
-  @Prop()
+  @Prop({ required: false })
   birthDate: Date;
+
+  @Prop()
+  createdUser: string;
+
+  @Prop()
+  createdDate: Date;
+
+  @Prop({ required: false })
+  updatedUser: string;
+
+  @Prop({ required: false })
+  updatedDate: Date;
 }
 
 export const DiscipleSchema = SchemaFactory.createForClass(Disciple);
