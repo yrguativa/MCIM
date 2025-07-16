@@ -28,7 +28,7 @@ body {
   place-items: stretch;
   min-width: 320px;
   min-height: 100vh;
-  background-image: linear-gradient(
+  /* background-image: linear-gradient(
     to bottom,
     #f080b2,
     #ff7a96,
@@ -36,11 +36,13 @@ body {
     #ff7b73,
     #ff864b,
     #ff9913
-  );
+  ); */
+  background-image: url('/assets/images/bckLeadersEvents.png');
+  background-size: cover;
+  background-repeat: repeat;
 }
 
 h1 {
-  font-size: 3.2em;
   line-height: 1.1;
 }
 h2 {
@@ -58,7 +60,6 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
 }

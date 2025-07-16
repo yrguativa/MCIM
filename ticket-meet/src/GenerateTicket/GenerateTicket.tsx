@@ -81,10 +81,9 @@ function GenerateTicket() {
     };
 
     return (
-
         <div>
-            <img src="/assets/images/event1.png" alt="logo Aroma" />
-            <h1 className="text-2xl font-bold text-[#FFE984]">Bienvenida a nuestra pre conveción de mujeres</h1>
+            <img src="/assets/images/event2.jpg" width="300" alt="logo Aroma" className='m-auto' />
+            <h1 className="text-4xl font-bold text-white">Bienvenidos a nuestra reunión</h1>
             {!qrData && (
                 <>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-14">
@@ -98,7 +97,7 @@ function GenerateTicket() {
                             />
                         </div>
 
-                        <Button type="submit">Consultar</Button>
+                        <Button type="submit" className="bg-[#601D2A]">Consultar</Button>
                     </form>
 
                     {error && <div className="text-[#FFE984] mt-4">{error}</div>}
@@ -118,7 +117,7 @@ function GenerateTicket() {
                 </>
             )}
 
-            <img src="/assets/images/event1footer.png" className='mt-8' alt="logo Aroma" />
+            <img src="/assets/images/event2footer.jpg" className='mt-8' alt="logo Aroma" />
         </div>
     )
 }
