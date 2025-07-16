@@ -8,6 +8,7 @@ import { AppController } from './app.controller';
 import { CellsModule } from './cells/cells.module';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { DisciplesModule } from './disciples/disciples.module';
+import { EventsModule } from './events/events.module';
 import { APP_PIPE } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 
@@ -22,6 +23,7 @@ import { MongooseModule } from '@nestjs/mongoose';
     }),
     CellsModule,
     DisciplesModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [

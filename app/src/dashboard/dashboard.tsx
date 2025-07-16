@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, NavLink } from 'react-router-dom';
-import { Bell, CircleUser, Home, LineChart, Menu, Package, Package2, Search, ShoppingCart, Users } from "lucide-react"
+import { Bell, CalendarDays, CircleUser, Home, LineChart, Menu, Package, Package2, Search, ShoppingCart, Users } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -28,6 +28,8 @@ import CellRegister from '../cells/pages/cellRegister';
 import CellForm from '../cells/pages/cellForm';
 import Disciples from '../disciples/pages/disciples';
 import DiscipleForm from '../disciples/pages/discipleForm';
+import { CreateEvent } from '../events/pages/CreateEvent';
+import { ScanQR } from '../events/pages/ScanQR';
 
 const Dashboard: React.FC = () => {
   const userState = useAuthStore(state => state.user);
@@ -76,6 +78,10 @@ const Dashboard: React.FC = () => {
                 <NavLink to="/disciples" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}>
                   <Users className="h-4 w-4" />
                   Discipulos
+                </NavLink>
+                <NavLink to="/events" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}>
+                  <CalendarDays className="h-4 w-4" />
+                  Crear Eventos
                 </NavLink>
                 <a
                   href="#"
@@ -226,6 +232,9 @@ const Dashboard: React.FC = () => {
 
               <Route path="/disciples" element={<Disciples />} />
               <Route path="/disciple/:id" element={<DiscipleForm />} />
+              
+              <Route path="/events" element={<CreateEvent />} />
+              <Route path="/events/scan" element={<ScanQR />} />
             </Routes>
 
           </main>
