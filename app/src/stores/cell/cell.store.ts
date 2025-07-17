@@ -17,12 +17,12 @@ const storeCell: StateCreator<CellState> = (set, get) => ({
   Cells: [
     {
       id: crypto.randomUUID(),
-      leader: "Yilmer",
+      leader: "678c06ec353c49781ac13d26",
       host: "Andres Lopez",
       neighborhood: 1,
       network: 1,
       address: "Calle 123",
-      createdUser: "Yilmer",
+      createdUser: "678c06ec353c49781ac13d26",
       createdDate: new Date(),
       records: []
     }

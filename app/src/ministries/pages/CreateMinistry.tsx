@@ -4,11 +4,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
 import { toast } from "sonner";
-import { useAuthStore } from "@/src/stores";
 import { useMinistryStore } from "@/src/stores/ministry";
 import { Ministry } from "../models/ministry";
 import { MinistrySchema } from "../schemas/ministrySchema";
-import { DiscipleCombobox } from "@/src/events/components/DiscipleCombobox";
 import {
     Form,
     FormControl,
@@ -19,13 +17,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Card } from "@/components/ui/card";
 
@@ -39,6 +30,7 @@ export const CreateMinistry = () => {
         resolver: zodResolver(MinistrySchema),
         defaultValues: {
             id: id || crypto.randomUUID(),
+            name: "",
             createdUser: userState,
             createdDate: new Date(),
             active: true,
@@ -121,80 +113,33 @@ export const CreateMinistry = () => {
                             )}
                         />
 
-                        <FormField
-                            control={form.control}
-                            name="parentMinistryId"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Ministerio Padre</FormLabel>
-                                    <Select 
-                                        onValueChange={field.onChange} 
-                                        defaultValue={field.value}
-                                    >
-                                        <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Seleccione el ministerio padre" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            {ministries.map((ministry) => (
-                                                <SelectItem 
-                                                    key={ministry.id} 
-                                                    value={ministry.id!}
-                                                >
-                                                    {ministry.name}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        <FormField
-                            control={form.control}
-                            name="leader"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Líder del Ministerio</FormLabel>
-                                    <FormControl>
-                                        <DiscipleCombobox
-                                            value={field.value}
-                                            onSelect={field.onChange}
-                                            placeholder="Seleccione el líder"
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        <FormField
-                            control={form.control}
-                            name="active"
-                            render={({ field }) => (
-                                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                                    <div className="space-y-0.5">
-                                        <FormLabel className="text-base">
-                                            Estado
-                                        </FormLabel>
-                                        <div className="text-sm text-muted-foreground">
-                                            Activar o desactivar el ministerio
+                        {id && (
+                            <FormField
+                                control={form.control}
+                                name="active"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                                        <div className="space-y-0.5">
+                                            <FormLabel className="text-base">
+                                                Estado
+                                            </FormLabel>
+                                            <div className="text-sm text-muted-foreground">
+                                                Activar o desactivar el ministerio
+                                            </div>
                                         </div>
-                                    </div>
-                                    <FormControl>
-                                        <Switch
-                                            checked={field.value}
-                                            onCheckedChange={field.onChange}
-                                        />
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
+                                        <FormControl>
+                                            <Switch
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                            />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                        )}
 
                         <Button type="submit" className="w-full">
-                            <Save className="mr-2 h-4 w-4" /> Crear Ministerio
+                            <Save className="mr-2 h-4 w-4" /> {id ? 'Actualizar' : 'Crear'} Ministerio
                         </Button>
                     </form>
                 </Form>
@@ -202,3 +147,5 @@ export const CreateMinistry = () => {
         </div>
     );
 };
+
+export default CreateMinistry;

@@ -7,6 +7,6 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>()((set) => ({
-    user: "Yilmer",
+    user: "678c06ec353c49781ac13d26",
     cells: [],
 }))

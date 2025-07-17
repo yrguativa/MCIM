@@ -15,11 +15,6 @@ export class CreateMinistryInput {
   @MinLength(3)
   name: string;
 
-  @Field(() => ID, { nullable: true })
-  @IsOptional()
-  @IsMongoId()
-  leader?: string;
-
   @Field(() => ID)
   @IsMongoId()
   createdUser: string;
@@ -28,11 +23,6 @@ export class CreateMinistryInput {
   @IsOptional()
   @IsDate()
   createdDate?: Date;
-
-  @Field(() => ID, { nullable: true })
-  @IsOptional()
-  @IsMongoId()
-  parentMinistryId?: string;
 
   @Field(() => Boolean, { defaultValue: true })
   @IsOptional()

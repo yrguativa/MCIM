@@ -20,24 +20,12 @@ export class MinistriesService {
   }
 
   async findAll(): Promise<MinistryEntity[]> {
-    const ministries = await this.ministryModel
-      .find()
-      .populate('parentMinistry')
-      .populate('subMinistries')
-      .populate('leader')
-      .populate('createdUser')
-      .exec();
+    const ministries = await this.ministryModel.find().exec();
     return ministries.map((ministry) => this.toModel(ministry));
   }
 
   async findOne(id: string): Promise<MinistryEntity> {
-    const ministry = await this.ministryModel
-      .findById(id)
-      .populate('parentMinistry')
-      .populate('subMinistries')
-      .populate('leader')
-      .populate('createdUser')
-      .exec();
+    const ministry = await this.ministryModel.findById(id).exec();
 
     if (!ministry) {
       throw new NotFoundException(`Ministry with ID ${id} not found`);
@@ -56,10 +44,6 @@ export class MinistriesService {
         { $set: updateMinistryInput },
         { new: true, runValidators: true },
       )
-      .populate('parentMinistry')
-      .populate('subMinistries')
-      .populate('leader')
-      .populate('createdUser')
       .exec();
 
     if (!updatedMinistry) {
@@ -85,7 +69,6 @@ export class MinistriesService {
   async findSubMinistries(ministryId: string): Promise<MinistryEntity[]> {
     const subMinistries = await this.ministryModel
       .find({ parentMinistry: ministryId })
-      .populate('leader')
       .exec();
     return subMinistries.map((ministry) => this.toModel(ministry));
   }
@@ -94,11 +77,6 @@ export class MinistriesService {
     return {
       id: ministry._id.toString(),
       name: ministry.name,
-      parentMinistry: null, // Will be populated by resolver
-      parentMinistryId: ministry.parentMinistry?.toString(),
-      subMinistries: [], // Will be populated by resolver
-      leader: null, // Will be populated by resolver
-      leader: ministry.leader?.toString(),
       createdUser: ministry.createdUser,
       createdDate: ministry.createdDate,
       active: ministry.active,

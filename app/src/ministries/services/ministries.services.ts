@@ -14,15 +14,6 @@ const api = axios.create({
 export class MinistriesService {
     static async getMinistries(): Promise<Ministry[]> {
         try {
-            //leader {
-            //     id
-            //     name
-            // }
-            // active
-            // createdUser {
-            //     id
-            //     name
-            // }
             const query = `
             query {
                 ministries {
@@ -32,12 +23,6 @@ export class MinistriesService {
             fragment ministryFields on Ministry {
                 id
                 name
-                parentMinistry {
-                    id
-                    name
-                }
-                active               
-                createdDate
             }
             `;
             const { data } = await api.post(API_URL,
@@ -65,14 +50,7 @@ export class MinistriesService {
                     id
                     name
                     description
-                    parentMinistry {
-                        id
-                        name
-                    }
-                    leader {
-                        id
-                        name
-                    }
+                    name
                     active
                     createdUser {
                         id
@@ -151,11 +129,9 @@ export class MinistriesService {
                     variables: {
                         "ministry":{
                             name: ministry.name,
-                            parentMinistryId: ministry.parentMinistryId,
-                            leader: ministry.leader,
                             active: ministry.active,
                             createdDate: ministry.createdDate,
-                            createdUser: ministry.leader,
+                            createdUser: ministry.createdUser,
                         } 
                     }
                 })

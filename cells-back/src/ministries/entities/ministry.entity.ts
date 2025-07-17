@@ -21,30 +21,6 @@ export class MinistryEntity {
   @Field(() => String)
   name: string;
 
-  @ManyToOne(() => MinistryEntity, (ministry) => ministry.subMinistries, {
-    nullable: true,
-  })
-  @JoinColumn({ name: 'parent_ministry_id' })
-  @Field(() => MinistryEntity, { nullable: true })
-  parentMinistry?: MinistryEntity;
-
-  @Column({ name: 'parent_ministry_id', nullable: true })
-  @Field(() => ID, { nullable: true })
-  parentMinistryId?: string;
-
-  @OneToMany(() => MinistryEntity, (ministry) => ministry.parentMinistry)
-  @Field(() => [MinistryEntity], { nullable: true })
-  subMinistries?: MinistryEntity[];
-
-  //@ManyToOne(() => UserEntity, { nullable: true })
-  @JoinColumn({ name: 'leader_id' })
-  @Field(() => String, { nullable: true })
-  leader?: string;
-
-  @Column({ name: 'leader_id', nullable: true })
-  @Field(() => ID, { nullable: true })
-  leaderId?: string;
-
   @JoinColumn({ name: 'created_user' })
   @Field(() => String)
   createdUser: string;

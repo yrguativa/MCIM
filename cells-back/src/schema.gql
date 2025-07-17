@@ -62,11 +62,6 @@ type EventAttendanceEntity {
 type Ministry {
   id: ID!
   name: String!
-  parentMinistry: Ministry
-  parentMinistryId: ID
-  subMinistries: [Ministry!]
-  leader: String
-  leaderId: ID
   createdUser: String!
   createdDate: DateTime!
   active: Boolean!
@@ -196,19 +191,15 @@ input CreateEventAttendanceInput {
 
 input CreateMinistryInput {
   name: String!
-  leader: ID
   createdUser: ID!
   createdDate: DateTime!
-  parentMinistryId: ID
   active: Boolean! = true
 }
 
 input UpdateMinistryInput {
   name: String!
-  leader: ID
   createdUser: ID!
   createdDate: DateTime!
-  parentMinistryId: ID
   active: Boolean! = true
   id: ID!
 }
