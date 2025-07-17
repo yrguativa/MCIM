@@ -30,6 +30,7 @@ import Disciples from '../disciples/pages/disciples';
 import DiscipleForm from '../disciples/pages/discipleForm';
 import { CreateEvent } from '../events/pages/CreateEvent';
 import { ScanQR } from '../events/pages/ScanQR';
+import { WeeklyCalendar } from '../events/pages/WeeklyCalendar';
 
 const Dashboard: React.FC = () => {
   const userState = useAuthStore(state => state.user);
@@ -81,7 +82,7 @@ const Dashboard: React.FC = () => {
                 </NavLink>
                 <NavLink to="/events" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}>
                   <CalendarDays className="h-4 w-4" />
-                  Crear Eventos
+                  Eventos
                 </NavLink>
                 <a
                   href="#"
@@ -233,7 +234,8 @@ const Dashboard: React.FC = () => {
               <Route path="/disciples" element={<Disciples />} />
               <Route path="/disciple/:id" element={<DiscipleForm />} />
               
-              <Route path="/events" element={<CreateEvent />} />
+              <Route path="/events" element={<WeeklyCalendar />} />
+              <Route path="/events/create" element={<CreateEvent />} />
               <Route path="/events/scan" element={<ScanQR />} />
             </Routes>
 
