@@ -17,3 +17,7 @@ npm run build
 * Copiar el contenido en la carpeta de raiz ./Docs
 
 * Visar el sitio https://yrguativa.github.io/MCIM/
+
+
+Send message by auth 
+https://api.whatsapp.com/send?phone=50764659944&text=hola
