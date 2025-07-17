@@ -7,8 +7,10 @@ import { DisciplesService } from "@/src/disciples/services/disciples.services";
 
 interface DiscipleState {
     Disciples: Disciple[],
+    searchResults: Disciple[],
 
     getDisciples: () => Promise<void>,
+    searchDisciples: (searchTerm: string) => Promise<void>,
     addDisciple: (disciple: Disciple) => Promise<boolean>,
     updateDisciple: (disciple: Disciple) => Promise<boolean>,
 }
@@ -16,6 +18,17 @@ interface DiscipleState {
 const storeDisciple: StateCreator<DiscipleState> = (set, get) => (
     {
         Disciples: [],
+        searchResults: [],
+
+        searchDisciples: async (searchTerm: string) => {
+            try {
+                const results = await DisciplesService.searchDisciples(searchTerm);
+                set({ searchResults: results });
+            } catch (error) {
+                console.error('Error searching disciples:', error);
+                set({ searchResults: [] });
+            }
+        },
 
         getDisciples: async () => {
             const disciples = await DisciplesService.getDisciples();

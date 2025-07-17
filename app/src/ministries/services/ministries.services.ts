@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { Ministry } from '../models/ministry';
+import { create } from 'zustand';
 
 const API_URL = 'http://localhost:3000/graphql';
 
@@ -13,6 +14,15 @@ const api = axios.create({
 export class MinistriesService {
     static async getMinistries(): Promise<Ministry[]> {
         try {
+            //leader {
+            //     id
+            //     name
+            // }
+            // active
+            // createdUser {
+            //     id
+            //     name
+            // }
             const query = `
             query {
                 ministries {
@@ -22,20 +32,11 @@ export class MinistriesService {
             fragment ministryFields on Ministry {
                 id
                 name
-                description
                 parentMinistry {
                     id
                     name
                 }
-                leader {
-                    id
-                    name
-                }
-                active
-                createdUser {
-                    id
-                    name
-                }
+                active               
                 createdDate
             }
             `;
@@ -139,18 +140,23 @@ export class MinistriesService {
 
     static async addMinistry(ministry: Ministry): Promise<string> {
         try {
-            const query = `
-            mutation CreateMinistry($createMinistryInput: CreateMinistryInput!) {
-                createMinistry(createMinistryInput: $createMinistryInput) {
+            const query = `mutation CreateMinistry($ministry: CreateMinistryInput!) {
+                createMinistry(ministry: $ministry) {
                     id
                 }
-            }
-            `;
+            }`;
             const { data } = await api.post(API_URL,
                 JSON.stringify({
                     query,
                     variables: {
-                        "createMinistryInput": ministry
+                        "ministry":{
+                            name: ministry.name,
+                            parentMinistryId: ministry.parentMinistryId,
+                            leader: ministry.leader,
+                            active: ministry.active,
+                            createdDate: ministry.createdDate,
+                            createdUser: ministry.leader,
+                        } 
                     }
                 })
             );

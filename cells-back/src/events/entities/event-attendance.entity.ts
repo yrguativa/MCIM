@@ -6,29 +6,29 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Event } from './event.entity';
-import { Disciple } from '../../disciples/entities/disciple.entity';
+import { EventEntity } from './event.entity';
+import { DiscipleEntity } from '../../disciples/entities/disciple.entity';
 
 @Entity('event_attendances')
 @ObjectType()
-export class EventAttendance {
+export class EventAttendanceEntity {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => ID)
   id: string;
 
-  @ManyToOne(() => Event, (event) => event.attendances)
-  @Field(() => Event)
-  event: Event;
+  @ManyToOne(() => EventEntity, (event) => event.attendees)
+  @Field(() => EventEntity)
+  event: EventEntity;
 
   @Column()
   @Field()
   eventId: string;
 
-  @ManyToOne(() => Disciple)
-  @Field(() => Disciple)
-  disciple: Disciple;
+  @ManyToOne(() => DiscipleEntity)
+  @Field(() => DiscipleEntity)
+  disciple: DiscipleEntity;
 
-  @Column()
+  @Column({ name: 'disciple_id' })
   @Field()
   discipleId: string;
 

@@ -1,47 +1,58 @@
 import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { MinistriesService } from './ministries.service';
-import { Ministry } from './entities/ministry.entity';
+import { MinistryEntity } from './entities/ministry.entity';
 import { CreateMinistryInput, UpdateMinistryInput } from './dto/ministry.input';
+import { Logger } from '@nestjs/common';
 
-@Resolver(() => Ministry)
+@Resolver(() => MinistryEntity)
 export class MinistriesResolver {
   constructor(private readonly ministriesService: MinistriesService) {}
 
-  @Query(() => [Ministry])
-  async ministries(): Promise<Ministry[]> {
+  @Query(() => [MinistryEntity])
+  async ministries(): Promise<MinistryEntity[]> {
     return this.ministriesService.findAll();
   }
 
-  @Query(() => Ministry)
-  async ministry(@Args('id', { type: () => ID }) id: string): Promise<Ministry> {
+  @Query(() => MinistryEntity)
+  async ministry(
+    @Args('id', { type: () => ID }) id: string,
+  ): Promise<MinistryEntity> {
     return this.ministriesService.findOne(id);
   }
 
-  @Query(() => [Ministry])
+  @Query(() => [MinistryEntity])
   async subMinistries(
     @Args('ministryId', { type: () => ID }) ministryId: string,
-  ): Promise<Ministry[]> {
+  ): Promise<MinistryEntity[]> {
     return this.ministriesService.findSubMinistries(ministryId);
   }
 
-  @Mutation(() => Ministry)
+  @Mutation(() => MinistryEntity)
   async createMinistry(
     @Args('ministry') createMinistryInput: CreateMinistryInput,
-  ): Promise<Ministry> {
+  ): Promise<MinistryEntity> {
+    Logger.log(
+      '🚀 ~ MinistriesResolver ~ createMinistry:',
+      createMinistryInput,
+    );
     return this.ministriesService.create(createMinistryInput);
   }
 
-  @Mutation(() => Ministry)
+  @Mutation(() => MinistryEntity)
   async updateMinistry(
     @Args('ministry') updateMinistryInput: UpdateMinistryInput,
-  ): Promise<Ministry> {
-    return this.ministriesService.update(updateMinistryInput.id, updateMinistryInput);
+  ): Promise<MinistryEntity> {
+    return this.ministriesService.update(
+      updateMinistryInput.id,
+      updateMinistryInput,
+    );
   }
 
   @Mutation(() => Boolean)
   async deleteMinistry(
     @Args('id', { type: () => ID }) id: string,
   ): Promise<boolean> {
-    return this.ministriesService.remove(id);
+    const ministry = await this.ministriesService.remove(id);
+    return !!ministry;
   }
 }

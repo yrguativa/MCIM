@@ -40,8 +40,15 @@ export class DisciplesResolver {
     );
   }
 
-  // @Mutation(() => Disciple)
-  // removeDisciple(@Args('id', { type: () => Int }) id: number) {
-  //   return this.disciplesService.remove(id);
-  // }
+  @Mutation(() => DiscipleEntity)
+  removeDisciple(@Args('id', { type: () => String }) id: string) {
+    return this.disciplesService.remove(id);
+  }
+
+  @Query(() => [DiscipleEntity], { name: 'searchDisciples' })
+  searchDisciples(
+    @Args('searchTerm', { type: () => String }) searchTerm: string,
+  ): Promise<DiscipleEntity[]> {
+    return this.disciplesService.searchByName(searchTerm);
+  }
 }

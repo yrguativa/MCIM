@@ -48,19 +48,31 @@ export class DisciplesService {
     return this.toModel(updatedDisciple);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} disciple`;
-    // async delete(id: string): Promise<UserModel> {
-    //   const deletedUser = await this.userModel
-    //     .findByIdAndDelete(id)
-    //     .lean()
-    //     .exec();
+  async remove(id: string): Promise<DiscipleEntity> {
+    const deletedDisciple = await this.discipleModel
+      .findByIdAndDelete(id)
+      .lean()
+      .exec();
 
-    //   if (!deletedUser) {
-    //     throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
-    //   }
+    if (!deletedDisciple) {
+      throw new NotFoundException(`Disciple with ID ${id} not found`);
+    }
 
-    //   return this.toModel(deletedUser);
+    return this.toModel(deletedDisciple);
+  }
+
+  async searchByName(searchTerm: string): Promise<DiscipleEntity[]> {
+    const disciples = await this.discipleModel
+      .find({
+        $or: [
+          { name: { $regex: searchTerm, $options: 'i' } },
+          { lastName: { $regex: searchTerm, $options: 'i' } },
+        ],
+      })
+      .limit(10)
+      .exec();
+
+    return disciples.map((disciple) => this.toModel(disciple));
   }
 
   private toModel(disciple: Disciple): DiscipleEntity {

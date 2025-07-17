@@ -44,7 +44,6 @@ export const Ministries = () => {
                     <TableHeader>
                         <TableRow>
                             <TableHead>Nombre</TableHead>
-                            <TableHead>Descripción</TableHead>
                             <TableHead>Líder</TableHead>
                             <TableHead>Ministerio Padre</TableHead>
                             <TableHead>Estado</TableHead>
@@ -55,7 +54,6 @@ export const Ministries = () => {
                         {ministries.map((ministry) => (
                             <TableRow key={ministry.id}>
                                 <TableCell className="font-medium">{ministry.name}</TableCell>
-                                <TableCell>{ministry.description}</TableCell>
                                 <TableCell>
                                     {ministry.leader?.name || 'Sin líder asignado'}
                                 </TableCell>
@@ -79,7 +77,7 @@ export const Ministries = () => {
                         ))}
                         {ministries.length === 0 && (
                             <TableRow>
-                                <TableCell colSpan={6} className="text-center py-6">
+                                <TableCell colSpan={5} className="text-center py-6">
                                     No hay ministerios registrados
                                 </TableCell>
                             </TableRow>

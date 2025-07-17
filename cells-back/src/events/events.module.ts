@@ -1,12 +1,21 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
 import { EventsService } from './events.service';
 import { EventsResolver } from './events.resolver';
-import { Event } from './entities/event.entity';
-import { EventAttendance } from './entities/event-attendance.entity';
+import {
+  Event,
+  EventSchema,
+  EventAttendance,
+  EventAttendanceSchema,
+} from './schemas/event.schema';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Event, EventAttendance])],
+  imports: [
+    MongooseModule.forFeature([
+      { name: Event.name, schema: EventSchema },
+      { name: EventAttendance.name, schema: EventAttendanceSchema },
+    ]),
+  ],
   providers: [EventsResolver, EventsService],
   exports: [EventsService],
 })

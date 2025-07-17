@@ -50,12 +50,61 @@ type Disciple {
   updatedDate: DateTime
 }
 
+type EventAttendanceEntity {
+  id: ID!
+  event: EventEntity!
+  eventId: String!
+  disciple: Disciple!
+  discipleId: String!
+  timestamp: DateTime!
+}
+
+type Ministry {
+  id: ID!
+  name: String!
+  parentMinistry: Ministry
+  parentMinistryId: ID
+  subMinistries: [Ministry!]
+  leader: String
+  leaderId: ID
+  createdUser: String!
+  createdDate: DateTime!
+  active: Boolean!
+}
+
+type EventEntity {
+  id: ID!
+  name: String!
+  description: String!
+  date: DateTime!
+  startTime: DateTime!
+  endTime: DateTime!
+  ministry: Ministry!
+  ministryId: ID!
+  location: String!
+  capacity: Float
+  createdUser: String!
+  createdUserId: ID!
+  createdDate: DateTime!
+  attendees: [EventAttendanceEntity!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  active: Boolean!
+}
+
 type Query {
   """Get all cells"""
   cells: [Cell!]!
   cell(id: String!): Cell!
   disciples: [Disciple!]!
   disciple(id: String!): Disciple!
+  searchDisciples(searchTerm: String!): [Disciple!]!
+  events: [EventEntity!]!
+  event(id: ID!): EventEntity!
+  eventAttendance(eventId: ID!): [EventAttendanceEntity!]!
+  ministries: [Ministry!]!
+  ministry(id: ID!): Ministry!
+  subMinistries(ministryId: ID!): [Ministry!]!
 }
 
 type Mutation {
@@ -64,6 +113,12 @@ type Mutation {
   removeCell(id: String!): Cell!
   createDisciple(createDiscipleInput: CreateDiscipleInput!): Disciple!
   updateDisciple(updateDiscipleInput: UpdateDiscipleInput!): Disciple!
+  removeDisciple(id: String!): Disciple!
+  createEvent(createEventInput: CreateEventInput!): EventEntity!
+  createEventAttendance(createEventAttendanceInput: CreateEventAttendanceInput!): EventAttendanceEntity!
+  createMinistry(ministry: CreateMinistryInput!): Ministry!
+  updateMinistry(ministry: UpdateMinistryInput!): Ministry!
+  deleteMinistry(id: ID!): Boolean!
 }
 
 input CreateCellInput {
@@ -124,4 +179,36 @@ input UpdateDiscipleInput {
   id: String!
   updatedUser: String
   updatedDate: DateTime
+}
+
+input CreateEventInput {
+  name: String!
+  description: String!
+  date: DateTime!
+  location: String!
+  capacity: Float
+}
+
+input CreateEventAttendanceInput {
+  eventId: String!
+  discipleId: String!
+}
+
+input CreateMinistryInput {
+  name: String!
+  leader: ID
+  createdUser: ID!
+  createdDate: DateTime!
+  parentMinistryId: ID
+  active: Boolean! = true
+}
+
+input UpdateMinistryInput {
+  name: String!
+  leader: ID
+  createdUser: ID!
+  createdDate: DateTime!
+  parentMinistryId: ID
+  active: Boolean! = true
+  id: ID!
 }

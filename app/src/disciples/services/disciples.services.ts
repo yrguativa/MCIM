@@ -12,6 +12,37 @@ const api = axios.create({
 
 
 export class DisciplesService {
+    static async searchDisciples(searchTerm: string): Promise<Disciple[]> {
+        try {
+            const query = `
+            query SearchDisciples($searchTerm: String!) {
+                searchDisciples(searchTerm: $searchTerm) {
+                    id
+                    identification
+                    name
+                    lastName
+                }
+            }
+            `;
+            const { data } = await api.post(API_URL,
+                JSON.stringify({
+                    query,
+                    variables: {
+                        searchTerm
+                    }
+                })
+            );
+
+            return data.data.searchDisciples;
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                console.error((error as AxiosError).response?.data);
+                throw new Error(JSON.stringify((error as AxiosError).response?.data) || 'Error searching disciples');
+            }
+            console.error(error);
+            throw new Error('Error searching disciples');
+        }
+    }
 
     static async getDisciples(): Promise<Disciple[]> {
         try {

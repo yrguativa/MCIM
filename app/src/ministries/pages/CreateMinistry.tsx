@@ -8,6 +8,7 @@ import { useAuthStore } from "@/src/stores";
 import { useMinistryStore } from "@/src/stores/ministry";
 import { Ministry } from "../models/ministry";
 import { MinistrySchema } from "../schemas/ministrySchema";
+import { DiscipleCombobox } from "@/src/events/components/DiscipleCombobox";
 import {
     Form,
     FormControl,
@@ -38,7 +39,7 @@ export const CreateMinistry = () => {
         resolver: zodResolver(MinistrySchema),
         defaultValues: {
             id: id || crypto.randomUUID(),
-            createdUserId: userState?.id,
+            createdUser: userState,
             createdDate: new Date(),
             active: true,
         }
@@ -122,20 +123,6 @@ export const CreateMinistry = () => {
 
                         <FormField
                             control={form.control}
-                            name="description"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Descripción</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Describa el ministerio" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        <FormField
-                            control={form.control}
                             name="parentMinistryId"
                             render={({ field }) => (
                                 <FormItem>
@@ -167,23 +154,17 @@ export const CreateMinistry = () => {
 
                         <FormField
                             control={form.control}
-                            name="leaderId"
+                            name="leader"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Líder del Ministerio</FormLabel>
-                                    <Select 
-                                        onValueChange={field.onChange} 
-                                        defaultValue={field.value}
-                                    >
-                                        <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Seleccione el líder" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            {/* TODO: Agregar lista de líderes disponibles */}
-                                        </SelectContent>
-                                    </Select>
+                                    <FormControl>
+                                        <DiscipleCombobox
+                                            value={field.value}
+                                            onSelect={field.onChange}
+                                            placeholder="Seleccione el líder"
+                                        />
+                                    </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}

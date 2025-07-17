@@ -1,10 +1,11 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
-import { IsNotEmpty, IsPositive } from 'class-validator';
+import { IsMongoId, IsNotEmpty, IsPositive } from 'class-validator';
 
 @InputType()
 export class CreateCellInput {
   @Field(() => String)
   @IsNotEmpty()
+  @IsMongoId()
   leader: string;
 
   @Field(() => Int)

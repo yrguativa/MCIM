@@ -1,5 +1,12 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
-import { IsBoolean, IsDate, IsOptional, IsString, IsUUID, MinLength } from 'class-validator';
+import {
+  IsBoolean,
+  IsDate,
+  IsMongoId,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
 
 @InputType()
 export class CreateMinistryInput {
@@ -8,29 +15,24 @@ export class CreateMinistryInput {
   @MinLength(3)
   name: string;
 
-  @Field(() => String)
-  @IsString()
-  @MinLength(10)
-  description: string;
-
   @Field(() => ID, { nullable: true })
   @IsOptional()
-  @IsUUID()
-  parentMinistryId?: string;
-
-  @Field(() => ID, { nullable: true })
-  @IsOptional()
-  @IsUUID()
-  leaderId?: string;
+  @IsMongoId()
+  leader?: string;
 
   @Field(() => ID)
-  @IsUUID()
-  createdUserId: string;
+  @IsMongoId()
+  createdUser: string;
 
-  @Field(() => Date, { nullable: true })
+  @Field(() => Date)
   @IsOptional()
   @IsDate()
   createdDate?: Date;
+
+  @Field(() => ID, { nullable: true })
+  @IsOptional()
+  @IsMongoId()
+  parentMinistryId?: string;
 
   @Field(() => Boolean, { defaultValue: true })
   @IsOptional()
@@ -41,6 +43,6 @@ export class CreateMinistryInput {
 @InputType()
 export class UpdateMinistryInput extends CreateMinistryInput {
   @Field(() => ID)
-  @IsUUID()
+  @IsMongoId()
   id: string;
 }

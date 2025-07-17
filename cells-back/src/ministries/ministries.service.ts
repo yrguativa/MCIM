@@ -1,57 +1,107 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Ministry } from './entities/ministry.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Ministry } from './schemas/ministry.schema';
+import { MinistryEntity } from './entities/ministry.entity';
 import { CreateMinistryInput, UpdateMinistryInput } from './dto/ministry.input';
 
 @Injectable()
 export class MinistriesService {
   constructor(
-    @InjectRepository(Ministry)
-    private readonly ministriesRepository: Repository<Ministry>,
+    @InjectModel(Ministry.name) private ministryModel: Model<Ministry>,
   ) {}
 
-  async create(createMinistryInput: CreateMinistryInput): Promise<Ministry> {
-    const ministry = this.ministriesRepository.create(createMinistryInput);
-    return await this.ministriesRepository.save(ministry);
+  async create(
+    createMinistryInput: CreateMinistryInput,
+  ): Promise<MinistryEntity> {
+    const createdMinistry = new this.ministryModel(createMinistryInput);
+    const savedMinistry = await createdMinistry.save();
+    return this.toModel(savedMinistry);
   }
 
-  async findAll(): Promise<Ministry[]> {
-    return await this.ministriesRepository.find({
-      relations: ['parentMinistry', 'leader', 'createdUser', 'subMinistries'],
-    });
+  async findAll(): Promise<MinistryEntity[]> {
+    const ministries = await this.ministryModel
+      .find()
+      .populate('parentMinistry')
+      .populate('subMinistries')
+      .populate('leader')
+      .populate('createdUser')
+      .exec();
+    return ministries.map((ministry) => this.toModel(ministry));
   }
 
-  async findOne(id: string): Promise<Ministry> {
-    const ministry = await this.ministriesRepository.findOne({
-      where: { id },
-      relations: ['parentMinistry', 'leader', 'createdUser', 'subMinistries'],
-    });
+  async findOne(id: string): Promise<MinistryEntity> {
+    const ministry = await this.ministryModel
+      .findById(id)
+      .populate('parentMinistry')
+      .populate('subMinistries')
+      .populate('leader')
+      .populate('createdUser')
+      .exec();
 
     if (!ministry) {
       throw new NotFoundException(`Ministry with ID ${id} not found`);
     }
 
-    return ministry;
+    return this.toModel(ministry);
   }
 
-  async update(id: string, updateMinistryInput: UpdateMinistryInput): Promise<Ministry> {
-    const ministry = await this.findOne(id);
-    
-    Object.assign(ministry, updateMinistryInput);
-    
-    return await this.ministriesRepository.save(ministry);
+  async update(
+    id: string,
+    updateMinistryInput: UpdateMinistryInput,
+  ): Promise<MinistryEntity> {
+    const updatedMinistry = await this.ministryModel
+      .findByIdAndUpdate(
+        id,
+        { $set: updateMinistryInput },
+        { new: true, runValidators: true },
+      )
+      .populate('parentMinistry')
+      .populate('subMinistries')
+      .populate('leader')
+      .populate('createdUser')
+      .exec();
+
+    if (!updatedMinistry) {
+      throw new NotFoundException(`Ministry with ID ${id} not found`);
+    }
+
+    return this.toModel(updatedMinistry);
   }
 
-  async remove(id: string): Promise<boolean> {
-    const result = await this.ministriesRepository.delete(id);
-    return result.affected > 0;
+  async remove(id: string): Promise<MinistryEntity> {
+    const deletedMinistry = await this.ministryModel
+      .findByIdAndDelete(id)
+      .lean()
+      .exec();
+
+    if (!deletedMinistry) {
+      throw new NotFoundException(`Ministry with ID ${id} not found`);
+    }
+
+    return this.toModel(deletedMinistry);
   }
 
-  async findSubMinistries(ministryId: string): Promise<Ministry[]> {
-    return await this.ministriesRepository.find({
-      where: { parentMinistryId: ministryId },
-      relations: ['leader'],
-    });
+  async findSubMinistries(ministryId: string): Promise<MinistryEntity[]> {
+    const subMinistries = await this.ministryModel
+      .find({ parentMinistry: ministryId })
+      .populate('leader')
+      .exec();
+    return subMinistries.map((ministry) => this.toModel(ministry));
+  }
+
+  private toModel(ministry: Ministry): MinistryEntity {
+    return {
+      id: ministry._id.toString(),
+      name: ministry.name,
+      parentMinistry: null, // Will be populated by resolver
+      parentMinistryId: ministry.parentMinistry?.toString(),
+      subMinistries: [], // Will be populated by resolver
+      leader: null, // Will be populated by resolver
+      leader: ministry.leader?.toString(),
+      createdUser: ministry.createdUser,
+      createdDate: ministry.createdDate,
+      active: ministry.active,
+    };
   }
 }

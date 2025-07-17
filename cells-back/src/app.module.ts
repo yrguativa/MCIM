@@ -11,6 +11,7 @@ import { DisciplesModule } from './disciples/disciples.module';
 import { EventsModule } from './events/events.module';
 import { APP_PIPE } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
+import { MinistriesModule } from './ministries/ministries.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { MongooseModule } from '@nestjs/mongoose';
     CellsModule,
     DisciplesModule,
     EventsModule,
+    MinistriesModule,
   ],
   controllers: [AppController],
   providers: [

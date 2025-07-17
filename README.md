@@ -21,3 +21,12 @@ npm run build
 
 Send message by auth 
 https://api.whatsapp.com/send?phone=50764659944&text=hola
+
+
+# BackEnd
+
+```sh
+pnpm start:dev
+```
+
+Navigate to url http://localhost:3000/graphql

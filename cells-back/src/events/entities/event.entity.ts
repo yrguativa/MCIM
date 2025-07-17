@@ -3,15 +3,17 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { EventAttendance } from './event-attendance.entity';
+import { EventAttendanceEntity } from './event-attendance.entity';
+import { MinistryEntity } from '../../ministries/entities/ministry.entity';
 
 @Entity('events')
 @ObjectType()
-export class Event {
+export class EventEntity {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => ID)
   id: string;
@@ -28,6 +30,22 @@ export class Event {
   @Field()
   date: Date;
 
+  @Column({ type: 'timestamp' })
+  @Field()
+  startTime: Date;
+
+  @Column({ type: 'timestamp' })
+  @Field()
+  endTime: Date;
+
+  @ManyToOne(() => MinistryEntity)
+  @Field(() => MinistryEntity)
+  ministry: MinistryEntity;
+
+  @Column({ name: 'ministry_id' })
+  @Field(() => ID)
+  ministryId: string;
+
   @Column()
   @Field()
   location: string;
@@ -36,9 +54,20 @@ export class Event {
   @Field({ nullable: true })
   capacity?: number;
 
-  @OneToMany(() => EventAttendance, (attendance) => attendance.event)
-  @Field(() => [EventAttendance])
-  attendances: EventAttendance[];
+  @Field(() => String)
+  createdUser: string;
+
+  @Column({ name: 'created_user_id' })
+  @Field(() => ID)
+  createdUserId: string;
+
+  @CreateDateColumn({ name: 'created_date' })
+  @Field()
+  createdDate: Date;
+
+  @OneToMany(() => EventAttendanceEntity, (attendance) => attendance.event)
+  @Field(() => [EventAttendanceEntity], { nullable: true })
+  attendees?: EventAttendanceEntity[];
 
   @CreateDateColumn()
   @Field()
@@ -47,4 +76,8 @@ export class Event {
   @UpdateDateColumn()
   @Field()
   updatedAt: Date;
+
+  @Column({ default: true })
+  @Field(() => Boolean)
+  active: boolean;
 }

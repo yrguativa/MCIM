@@ -1,7 +1,7 @@
 import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { EventsService } from './events.service';
-import { Event } from './entities/event.entity';
-import { EventAttendance } from './entities/event-attendance.entity';
+import { EventEntity } from './entities/event.entity';
+import { EventAttendanceEntity } from './entities/event-attendance.entity';
 import { CreateEventInput } from './dto/create-event.input';
 import { CreateEventAttendanceInput } from './dto/create-event-attendance.input';
 
@@ -9,35 +9,37 @@ import { CreateEventAttendanceInput } from './dto/create-event-attendance.input'
 export class EventsResolver {
   constructor(private readonly eventsService: EventsService) {}
 
-  @Query(() => [Event])
-  async events(): Promise<Event[]> {
+  @Query(() => [EventEntity])
+  async events(): Promise<EventEntity[]> {
     return this.eventsService.findAll();
   }
 
-  @Query(() => Event)
-  async event(@Args('id', { type: () => ID }) id: string): Promise<Event> {
+  @Query(() => EventEntity)
+  async event(
+    @Args('id', { type: () => ID }) id: string,
+  ): Promise<EventEntity> {
     return this.eventsService.findOne(id);
   }
 
-  @Mutation(() => Event)
+  @Mutation(() => EventEntity)
   async createEvent(
     @Args('createEventInput') createEventInput: CreateEventInput,
-  ): Promise<Event> {
+  ): Promise<EventEntity> {
     return this.eventsService.create(createEventInput);
   }
 
-  @Mutation(() => EventAttendance)
+  @Mutation(() => EventAttendanceEntity)
   async createEventAttendance(
     @Args('createEventAttendanceInput')
     createEventAttendanceInput: CreateEventAttendanceInput,
-  ): Promise<EventAttendance> {
+  ): Promise<EventAttendanceEntity> {
     return this.eventsService.createAttendance(createEventAttendanceInput);
   }
 
-  @Query(() => [EventAttendance])
+  @Query(() => [EventAttendanceEntity])
   async eventAttendance(
     @Args('eventId', { type: () => ID }) eventId: string,
-  ): Promise<EventAttendance[]> {
+  ): Promise<EventAttendanceEntity[]> {
     return this.eventsService.getEventAttendance(eventId);
   }
 }

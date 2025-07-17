@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { User } from '../../auth/entities/user.entity';
+//import { UserEntity } from '../../auth/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -10,9 +10,9 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity({ name: 'ministries' })
-@ObjectType()
-export class Ministry {
+@Entity('Ministry')
+@ObjectType('Ministry')
+export class MinistryEntity {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => ID)
   id: string;
@@ -21,40 +21,33 @@ export class Ministry {
   @Field(() => String)
   name: string;
 
-  @Column()
-  @Field(() => String)
-  description: string;
-
-  @ManyToOne(() => Ministry, ministry => ministry.subMinistries, { nullable: true })
+  @ManyToOne(() => MinistryEntity, (ministry) => ministry.subMinistries, {
+    nullable: true,
+  })
   @JoinColumn({ name: 'parent_ministry_id' })
-  @Field(() => Ministry, { nullable: true })
-  parentMinistry?: Ministry;
+  @Field(() => MinistryEntity, { nullable: true })
+  parentMinistry?: MinistryEntity;
 
   @Column({ name: 'parent_ministry_id', nullable: true })
   @Field(() => ID, { nullable: true })
   parentMinistryId?: string;
 
-  @OneToMany(() => Ministry, ministry => ministry.parentMinistry)
-  @Field(() => [Ministry], { nullable: true })
-  subMinistries?: Ministry[];
+  @OneToMany(() => MinistryEntity, (ministry) => ministry.parentMinistry)
+  @Field(() => [MinistryEntity], { nullable: true })
+  subMinistries?: MinistryEntity[];
 
-  @ManyToOne(() => User, { nullable: true })
+  //@ManyToOne(() => UserEntity, { nullable: true })
   @JoinColumn({ name: 'leader_id' })
-  @Field(() => User, { nullable: true })
-  leader?: User;
+  @Field(() => String, { nullable: true })
+  leader?: string;
 
   @Column({ name: 'leader_id', nullable: true })
   @Field(() => ID, { nullable: true })
   leaderId?: string;
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: 'created_user_id' })
-  @Field(() => User)
-  createdUser: User;
-
-  @Column({ name: 'created_user_id' })
-  @Field(() => ID)
-  createdUserId: string;
+  @JoinColumn({ name: 'created_user' })
+  @Field(() => String)
+  createdUser: string;
 
   @CreateDateColumn({ name: 'created_date' })
   @Field(() => Date)

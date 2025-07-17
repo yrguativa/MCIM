@@ -10,6 +10,7 @@ export class UpdateCellInput extends PartialType(CreateCellInput) {
 
   @Field(() => String)
   @IsNotEmpty()
+  @IsMongoId()
   leader: string;
 
   @Field(() => Int)

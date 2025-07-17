@@ -1,69 +1,114 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Event } from './entities/event.entity';
-import { EventAttendance } from './entities/event-attendance.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Event, EventAttendance } from './schemas/event.schema';
+import { EventEntity } from './entities/event.entity';
+import { EventAttendanceEntity } from './entities/event-attendance.entity';
 import { CreateEventInput } from './dto/create-event.input';
 import { CreateEventAttendanceInput } from './dto/create-event-attendance.input';
 
 @Injectable()
 export class EventsService {
   constructor(
-    @InjectRepository(Event)
-    private eventsRepository: Repository<Event>,
-    @InjectRepository(EventAttendance)
-    private eventAttendanceRepository: Repository<EventAttendance>,
+    @InjectModel(Event.name) private eventModel: Model<Event>,
+    @InjectModel(EventAttendance.name)
+    private eventAttendanceModel: Model<EventAttendance>,
   ) {}
 
-  async create(createEventInput: CreateEventInput): Promise<Event> {
-    const event = this.eventsRepository.create(createEventInput);
-    return await this.eventsRepository.save(event);
+  async create(createEventInput: CreateEventInput): Promise<EventEntity> {
+    const createdEvent = new this.eventModel(createEventInput);
+    const savedEvent = await createdEvent.save();
+    return this.toEventModel(savedEvent);
   }
 
-  async findAll(): Promise<Event[]> {
-    return await this.eventsRepository.find({
-      relations: ['attendances', 'attendances.disciple'],
-    });
+  async findAll(): Promise<EventEntity[]> {
+    const events = await this.eventModel
+      .find()
+      .populate('ministry')
+      .populate('attendees')
+      .exec();
+    return events.map((event) => this.toEventModel(event));
   }
 
-  async findOne(id: string): Promise<Event> {
-    const event = await this.eventsRepository.findOne({
-      where: { id },
-      relations: ['attendances', 'attendances.disciple'],
-    });
+  async findOne(id: string): Promise<EventEntity> {
+    const event = await this.eventModel
+      .findById(id)
+      .populate('ministry')
+      .populate('attendees')
+      .exec();
 
     if (!event) {
-      throw new NotFoundException(`Event with ID "${id}" not found`);
+      throw new NotFoundException(`Event with ID ${id} not found`);
     }
 
-    return event;
+    return this.toEventModel(event);
   }
 
   async createAttendance(
     createAttendanceInput: CreateEventAttendanceInput,
-  ): Promise<EventAttendance> {
-    const event = await this.eventsRepository.findOneBy({
-      id: createAttendanceInput.eventId,
-    });
+  ): Promise<EventAttendanceEntity> {
+    const event = await this.eventModel
+      .findById(createAttendanceInput.eventId)
+      .exec();
 
     if (!event) {
       throw new NotFoundException(
-        `Event with ID "${createAttendanceInput.eventId}" not found`,
+        `Event with ID ${createAttendanceInput.eventId} not found`,
       );
     }
 
-    const attendance = this.eventAttendanceRepository.create(
-      createAttendanceInput,
-    );
-    return await this.eventAttendanceRepository.save(attendance);
-  }
-
-  async getEventAttendance(eventId: string): Promise<EventAttendance[]> {
-    const attendances = await this.eventAttendanceRepository.find({
-      where: { eventId },
-      relations: ['disciple'],
+    const createdAttendance = new this.eventAttendanceModel({
+      event: createAttendanceInput.eventId,
+      disciple: createAttendanceInput.discipleId,
+      attended: true,
+      createdDate: new Date(),
+      createdUser: event.createdUser, // Using the event's creator as the attendance creator
     });
 
-    return attendances;
+    const savedAttendance = await createdAttendance.save();
+    return this.toAttendanceModel(savedAttendance);
+  }
+
+  async getEventAttendance(eventId: string): Promise<EventAttendanceEntity[]> {
+    const attendances = await this.eventAttendanceModel
+      .find({ event: eventId })
+      .populate('disciple')
+      .exec();
+    return attendances.map((attendance) => this.toAttendanceModel(attendance));
+  }
+
+  private toEventModel(event: Event): EventEntity {
+    return {
+      id: event._id.toString(),
+      name: event.name,
+      description: event.description,
+      date: event.date,
+      startTime: event.startTime,
+      endTime: event.endTime,
+      ministry: null, // Will be populated by resolver
+      ministryId: event.ministry?.toString(),
+      location: '', // TODO: Add location to schema
+      capacity: null, // TODO: Add capacity to schema
+      createdUser: event.createdUser,
+      createdUserId: event.createdUser,
+      createdDate: event.createdDate,
+      createdAt: event.createdDate,
+      updatedAt: event.createdDate,
+      attendees: [], // Will be populated by resolver
+      active: event.active,
+    };
+  }
+
+  private toAttendanceModel(
+    attendance: EventAttendance,
+  ): EventAttendanceEntity {
+    return {
+      id: attendance._id.toString(),
+      event: null, // Will be populated by resolver
+      eventId: attendance.event?.toString(),
+      disciple: null, // Will be populated by resolver
+      discipleId: attendance.disciple?.toString(),
+      timestamp: attendance.createdDate,
+    };
   }
 }
