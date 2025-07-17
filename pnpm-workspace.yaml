@@ -1,0 +1,6 @@
+packages:
+  - 'app'
+  - 'cells-back'
+  - 'docs'
+  - 'ticket-meet'
+  - 'tournament-registration-app'
