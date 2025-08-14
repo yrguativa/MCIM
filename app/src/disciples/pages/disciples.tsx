@@ -13,7 +13,7 @@ const Disciples: React.FC = () => {
         <>
             <div className="flex items-center justify-between">
                 <h1 className="text-lg font-semibold md:text-2xl">Discipulos</h1>
-                <Link to="/cell" className={buttonVariants({ variant: "outline" }) + " mr-14"}>
+                <Link to="/disciples/create" className={buttonVariants({ variant: "outline" }) + " mr-14"}>
                     <Plus className="mr-2" />Nuevo Discipulo
                 </Link>
             </div>

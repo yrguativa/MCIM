@@ -34,6 +34,9 @@ export const DiscipleSchema = z.object({
     birthday: z.date({
         required_error: "La fecha de nacimiento es obligatoria.",
     }).optional(),
+    ministryId: z.string({
+        required_error: "El ministerio es obligatorio.",
+    }),
     createdUser: z.string()
         .min(2, {
             message: "El usuario de creación es obligatorio.",

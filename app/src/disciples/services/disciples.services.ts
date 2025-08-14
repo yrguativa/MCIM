@@ -91,6 +91,7 @@ export class DisciplesService {
                     phone
                     address
                     birthDate
+                    ministryId
                     createdUser
                     createdDate
                     updatedUser

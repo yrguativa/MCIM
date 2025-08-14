@@ -6,7 +6,8 @@ export interface Disciple {
     email: string | undefined;
     phone: string | undefined;
     address: string | undefined;
-    birthDate: Date | undefined;  
+    birthDate: Date | undefined;
+    ministryId: string;
     
     createdUser: string;
     createdDate: Date;

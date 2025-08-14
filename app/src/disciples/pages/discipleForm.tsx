@@ -5,7 +5,15 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from 'date-fns';
 
 import { cn } from '@/lib/utils';
-import { CalendarIcon, CheckCircle, OctagonX, Save } from "lucide-react"
+import { CaretSortIcon } from '@radix-ui/react-icons';
+import { CalendarIcon, Check as CheckIcon, CheckCircle, OctagonX, Save } from "lucide-react";
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+} from "@/components/ui/command";
 import { Button } from '@/components/ui/button';
 import { Input } from "@/components/ui/input"
 import { Calendar } from "@/components/ui/calendar"
@@ -14,6 +22,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { toast } from "sonner"
 
 import { useAuthStore, useDiscipleStore } from '../../stores';
+import { useMinistryStore } from '../../stores/ministry';
 import { Disciple, DiscipleSchema } from '../schemas/discipleSchema';
 import { DisciplesService } from '../services/disciples.services';
 
@@ -22,6 +31,7 @@ const DiscipleForm: React.FC = () => {
   const { id } = useParams();
   const userState = useAuthStore(state => state.user);
   const updateDisciple = useDiscipleStore(state => state.updateDisciple);
+  const ministries = useMinistryStore(state => state.ministries);
 
   const form = useForm<Disciple>({
     resolver: zodResolver(DiscipleSchema),
@@ -49,6 +59,7 @@ const DiscipleForm: React.FC = () => {
             email: cellForUpdate.email || undefined,
             address: cellForUpdate.address || undefined,
             birthday: cellForUpdate.birthDate ? new Date(cellForUpdate.birthDate) : undefined,
+            ministryId: cellForUpdate.ministryId,
           });
         }
       };
@@ -68,6 +79,7 @@ const DiscipleForm: React.FC = () => {
       email: data.email,
       address: data.address,
       birthDate: data.birthday,
+      ministryId: data.ministryId,
       createdUser: data.createdUser,
       createdDate: data.createdDate,
       updatedUser: userState,
@@ -159,6 +171,59 @@ const DiscipleForm: React.FC = () => {
                 <FormControl>
                   <Input placeholder="Calle 12 N2-47 Alejandria 3 Torre 3 Apartamento 502 " {...field} />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="ministryId"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel className="mt-1 mb-1">Ministerio</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          "w-full justify-between",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? ministries.find((m) => m.id === field.value)?.name : "Selecciona un ministerio"}
+                        <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[400px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Buscar ministerio..." />
+                      <CommandEmpty>No se encontró el ministerio</CommandEmpty>
+                      <CommandGroup>
+                        {ministries?.map((ministry) => (
+                          <CommandItem
+                            value={ministry.id}
+                            key={ministry.id}
+                            onSelect={() => {
+                              form.setValue("ministryId", ministry.id)
+                            }}
+                          >
+                            <CheckIcon
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                ministry.id === field.value ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            {ministry.name}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
                 <FormMessage />
               </FormItem>
             )}

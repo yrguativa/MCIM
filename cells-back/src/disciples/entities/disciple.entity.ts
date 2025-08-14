@@ -27,6 +27,9 @@ export class DiscipleEntity {
   birthDate: Date;
 
   @Field(() => String)
+  ministryId: string;
+
+  @Field(() => String)
   createdUser: string;
 
   @Field(() => Date)

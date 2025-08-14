@@ -26,21 +26,23 @@ import Cells from "../cells/pages/cells"
 import { useAuthStore, useDiscipleStore } from "../stores"
 import CellRegister from '../cells/pages/cellRegister';
 import CellForm from '../cells/pages/cellForm';
-import Disciples from '../disciples/pages/disciples';
-import DiscipleForm from '../disciples/pages/discipleForm';
 import { CreateEvent } from '../events/pages/CreateEvent';
 import { ScanQR } from '../events/pages/ScanQR';
 import { WeeklyCalendar } from '../events/pages/WeeklyCalendar';
 import { MinistryRoutes } from '../ministries/routes';
+import { DisciplesRoutes } from '../disciples/routes';
+import { useMinistryStore } from '../stores/ministry';
 
 const Dashboard: React.FC = () => {
   const userState = useAuthStore(state => state.user);
 
   const getDisciplesState = useDiscipleStore(state => state.getDisciples);
+  const getMinistries = useMinistryStore(state => state.getMinistries);
 
-    useEffect(() => {
-        getDisciplesState();
-    }, []);
+  useEffect(() => {
+    getDisciplesState();
+    getMinistries();
+  }, []);
 
   return (
     <Router>
@@ -236,13 +238,13 @@ const Dashboard: React.FC = () => {
               <Route path="/cell/:id" element={<CellForm />} />
               <Route path="/cell/:id/register" element={<CellRegister />} />
 
-              <Route path="/disciples" element={<Disciples />} />
-              <Route path="/disciple/:id" element={<DiscipleForm />} />
-              
+              <Route path="/disciples/*" element={<DisciplesRoutes />} />
+
+
               <Route path="/events" element={<WeeklyCalendar />} />
               <Route path="/events/create" element={<CreateEvent />} />
               <Route path="/events/scan" element={<ScanQR />} />
-              
+
               <Route path="/ministries/*" element={<MinistryRoutes />} />
             </Routes>
 

@@ -22,7 +22,7 @@ export const DisciplesColumnsTable: ColumnDef<any>[] = [
         accessorKey: "id",
         cell: (info) => {
             return (
-                <Link to={'/disciple/' + info.getValue()} className={buttonVariants({ variant: "secondary" }) + " mr-14"}>
+                <Link to={'/disciples/' + info.getValue()} className={buttonVariants({ variant: "secondary" }) + " mr-14"}>
                     <Pen className="mr-2" />Editar
                 </Link>
             )

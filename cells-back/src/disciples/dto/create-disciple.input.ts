@@ -49,6 +49,10 @@ export class CreateDiscipleInput {
   @IsOptional()
   birthDate: string;
 
+  @Field(() => String, { description: 'Ministry ID' })
+  @IsNotEmpty({ message: 'The ministry ID is required' })
+  ministryId: string;
+
   @Field(() => String)
   @IsNotEmpty()
   createdUser: string;

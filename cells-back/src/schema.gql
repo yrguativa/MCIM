@@ -44,6 +44,7 @@ type Disciple {
   phone: String
   address: String
   birthDate: DateTime
+  ministryId: String!
   createdUser: String!
   createdDate: DateTime!
   updatedUser: String
@@ -150,6 +151,9 @@ input CreateDiscipleInput {
 
   """DOF (Date OF Birth)"""
   birthDate: DateTime
+
+  """Ministry ID"""
+  ministryId: String!
   createdUser: String!
 
   """DOF (Date OF Birth)"""
@@ -167,6 +171,9 @@ input UpdateDiscipleInput {
 
   """DOF (Date OF Birth)"""
   birthDate: DateTime
+
+  """Ministry ID"""
+  ministryId: String
   createdUser: String!
 
   """DOF (Date OF Birth)"""

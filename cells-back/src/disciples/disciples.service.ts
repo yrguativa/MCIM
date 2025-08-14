@@ -85,6 +85,7 @@ export class DisciplesService {
       phone: disciple.phone,
       address: disciple.address,
       birthDate: disciple.birthDate,
+      ministryId: disciple.ministryId,
       createdUser: disciple.createdUser,
       createdDate: disciple.createdDate,
       updatedUser: disciple.updatedUser,

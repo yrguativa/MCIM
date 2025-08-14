@@ -24,6 +24,12 @@ export class Disciple extends Document {
   @Prop({ required: false })
   birthDate: Date;
 
+  @Prop({ required: true })
+  ministryId: string;
+
+  @Prop({ type: String, ref: 'Disciple', required: false })
+  leaderId: string;
+
   @Prop()
   createdUser: string;
 
