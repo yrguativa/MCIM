@@ -1,8 +1,8 @@
 import { create, StateCreator } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import { Event } from "@/src/events/models/event";
+import { eventService } from "@/src/events/services/event.service"; 
 import { EventAttendance } from "@/src/events/models/eventAttendance";
-import { EventsService } from "@/src/events/services/events.services";
 
 interface EventState {
     events: Event[];
@@ -12,13 +12,11 @@ interface EventState {
     getEvents: () => Promise<void>;
     addEvent: (event: Event) => Promise<boolean>;
     updateEvent: (event: Event) => Promise<boolean>;
-    deleteEvent: (eventId: string) => Promise<boolean>;
     
     // Attendance methods
     registerAttendance: (attendance: EventAttendance) => Promise<boolean>;
     getEventAttendance: (eventId: string) => Promise<EventAttendance[]>;
     validateEventCapacity: (eventId: string) => Promise<boolean>;
-    getAttendanceByDisciple: (discipleId: string) => Promise<EventAttendance[]>;
 }
 
 const storeEvent: StateCreator<EventState> = (set, get) => ({
@@ -27,41 +25,29 @@ const storeEvent: StateCreator<EventState> = (set, get) => ({
 
     // Event methods implementation
     getEvents: async () => {
-        const events = await EventsService.getEvents();
+        const events = await eventService.getEvents();
         set({ events });
     },
-
     addEvent: async (event: Event) => {
+        console.log("🚀 ~ storeEvent ~ event:", event)
         const events = get().events;
         try {
-            const eventId = await EventsService.addEvent(event);
+            const eventId = await eventService.createEvent(event);
             set({ events: [...events, { ...event, id: eventId }] });
             return true;
         } catch (error) {
             return false;
         }
     },
-
     updateEvent: async (event: Event) => {
         const events = get().events;
         try {
-            await EventsService.updateEvent(event);
+            await eventService.updateEvent(event);
             set({ 
                 events: events.map(e => 
                     e.id === event.id ? { ...event } : e
                 ) 
             });
-            return true;
-        } catch (error) {
-            return false;
-        }
-    },
-
-    deleteEvent: async (eventId: string) => {
-        const events = get().events;
-        try {
-            await EventsService.deleteEvent(eventId);
-            set({ events: events.filter(e => e.id !== eventId) });
             return true;
         } catch (error) {
             return false;
@@ -78,7 +64,7 @@ const storeEvent: StateCreator<EventState> = (set, get) => ({
                 throw new Error("El evento ha alcanzado su capacidad máxima");
             }
 
-            const attendanceId = await EventsService.registerAttendance(attendance);
+            const attendanceId = await eventService.registerAttendance(attendance);
             set({ 
                 attendances: [...attendances, { ...attendance, id: attendanceId }] 
             });
@@ -87,17 +73,15 @@ const storeEvent: StateCreator<EventState> = (set, get) => ({
             return false;
         }
     },
-
     getEventAttendance: async (eventId: string) => {
         try {
-            const eventAttendances = await EventsService.getEventAttendance(eventId);
-            set({ attendances: eventAttendances });
+            const eventAttendances = await eventService.getEventAttendance(eventId);
+            set({ attendances: [...eventAttendances] });
             return eventAttendances;
         } catch (error) {
             return [];
         }
     },
-
     validateEventCapacity: async (eventId: string) => {
         try {
             const event = get().events.find(e => e.id === eventId);
@@ -107,15 +91,6 @@ const storeEvent: StateCreator<EventState> = (set, get) => ({
             return attendances.length < event.capacity;
         } catch (error) {
             return false;
-        }
-    },
-
-    getAttendanceByDisciple: async (discipleId: string) => {
-        try {
-            const attendances = await EventsService.getAttendanceByDisciple(discipleId);
-            return attendances;
-        } catch (error) {
-            return [];
         }
     },
 });

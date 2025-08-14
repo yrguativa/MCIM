@@ -23,10 +23,10 @@ export const EventSchema = z.object({
     })
     .min(1, { message: 'La capacidad debe ser al menos 1' })
     .optional(),
-    createdUser: z.string(),
-    createdDate: z.date(),
-    updatedUser: z.string().optional(),
-    updatedDate: z.date().optional(),
+    createdBy: z.string(),
+    createdAt: z.date(),
+    updatedBy: z.string().optional(),
+    updatedAt: z.date().optional(),
 });
 
 export type Event = z.infer<typeof EventSchema>;

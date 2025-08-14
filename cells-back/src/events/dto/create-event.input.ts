@@ -32,4 +32,9 @@ export class CreateEventInput {
   @IsNumber()
   @IsOptional()
   capacity?: number;
+
+  @Field()
+  @IsString()
+  @IsNotEmpty()
+  createdBy: string;
 }

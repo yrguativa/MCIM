@@ -15,7 +15,7 @@ export class Event extends Document {
   @Prop({ required: true })
   startTime: Date;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   endTime: Date;
 
   @Prop({
@@ -29,10 +29,10 @@ export class Event extends Document {
   attendees: string[];
 
   @Prop({ required: true })
-  createdUser: string;
+  createdBy: string;
 
   @Prop({ required: true })
-  createdDate: Date;
+  createdAt: Date;
 
   @Prop({ default: true })
   active: boolean;

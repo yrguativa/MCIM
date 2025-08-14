@@ -16,7 +16,11 @@ export class EventsService {
   ) {}
 
   async create(createEventInput: CreateEventInput): Promise<EventEntity> {
-    const createdEvent = new this.eventModel(createEventInput);
+    const createdEvent = new this.eventModel({
+      ...createEventInput,
+      createdAt: new Date(),
+      startTime: createEventInput.date,
+    });
     const savedEvent = await createdEvent.save();
     return this.toEventModel(savedEvent);
   }
@@ -62,7 +66,7 @@ export class EventsService {
       disciple: createAttendanceInput.discipleId,
       attended: true,
       createdDate: new Date(),
-      createdUser: event.createdUser, // Using the event's creator as the attendance creator
+      createdUser: event.createdBy, // Using the event's creator as the attendance creator
     });
 
     const savedAttendance = await createdAttendance.save();
@@ -89,11 +93,11 @@ export class EventsService {
       ministryId: event.ministry?.toString(),
       location: '', // TODO: Add location to schema
       capacity: null, // TODO: Add capacity to schema
-      createdUser: event.createdUser,
-      createdUserId: event.createdUser,
-      createdDate: event.createdDate,
-      createdAt: event.createdDate,
-      updatedAt: event.createdDate,
+      createdUser: event.createdBy,
+      createdUserId: event.createdBy,
+      createdDate: event.createdAt,
+      createdAt: event.createdAt,
+      updatedAt: event.createdAt,
       attendees: [], // Will be populated by resolver
       active: event.active,
     };

@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
 import { toast } from "sonner";
 import { useAuthStore } from "../../stores/auth/auth.store";
+import { useEventStore } from "../store/event.store";
 import { Event } from "../models/event";
 import { EventSchema } from "../schemas/eventSchema";
 import {
@@ -34,14 +35,20 @@ export const CreateEvent = () => {
         }
     });
 
+    const addEvent = useEventStore(state => state.addEvent);
+
     async function onSubmit(data: Event) {
+        console.log("🚀 ~ onSubmit ~ data:", data)
         try {
-            // TODO: Implementar la llamada al servicio
-            console.log('Creando evento:', data);
-            toast("Evento creado correctamente", {
-                description: "El evento se ha registrado exitosamente",
-            });
-            navigate('/events');
+            const success = await addEvent(data);
+            if (success) {
+                toast("Evento creado correctamente", {
+                    description: "El evento se ha registrado exitosamente",
+                });
+                navigate('/events');
+            } else {
+                throw new Error("No se pudo crear el evento");
+            }
         } catch (error) {
             toast("Error al crear el evento", {
                 description: "Ocurrió un error al intentar crear el evento"
@@ -90,8 +97,8 @@ export const CreateEvent = () => {
                                 <FormItem>
                                     <FormLabel>Fecha de Inicio</FormLabel>
                                     <FormControl>
-                                        <Input 
-                                            type="datetime-local" 
+                                        <Input
+                                            type="datetime-local"
                                             onChange={(e) => field.onChange(new Date(e.target.value))}
                                             value={field.value ? field.value.toISOString().slice(0, 16) : ''}
                                         />
@@ -118,7 +125,7 @@ export const CreateEvent = () => {
                                     <FormItem>
                                         <FormLabel>Fecha de Finalización</FormLabel>
                                         <FormControl>
-                                            <Input 
+                                            <Input
                                                 type="datetime-local"
                                                 onChange={(e) => field.onChange(new Date(e.target.value))}
                                                 value={field.value ? field.value.toISOString().slice(0, 16) : ''}
@@ -151,8 +158,8 @@ export const CreateEvent = () => {
                                 <FormItem>
                                     <FormLabel>Capacidad</FormLabel>
                                     <FormControl>
-                                        <Input 
-                                            type="number" 
+                                        <Input
+                                            type="number"
                                             placeholder="Número máximo de participantes"
                                             onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
                                             value={field.value || ''}

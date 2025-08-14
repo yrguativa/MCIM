@@ -11,10 +11,3 @@ export interface Event {
     createdBy: string; // User ID of the creator
     updatedAt: Date;
 }
-
-export interface EventAttendance {
-    id: string;
-    eventId: string;
-    discipleId: string;
-    timestamp: Date;
-}

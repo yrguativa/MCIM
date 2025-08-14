@@ -189,6 +189,7 @@ input CreateEventInput {
   date: DateTime!
   location: String!
   capacity: Float
+  createdBy: String!
 }
 
 input CreateEventAttendanceInput {
