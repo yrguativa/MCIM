@@ -23,6 +23,7 @@ export class MinistriesService {
             fragment ministryFields on Ministry {
                 id
                 name
+                active
             }
             `;
             const { data } = await api.post(API_URL,

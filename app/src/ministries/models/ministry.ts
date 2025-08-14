@@ -1,5 +1,5 @@
 export interface Ministry {
-    id?: string;
+    id: string;
     name: string;
     createdUser: string;
     createdDate?: Date;

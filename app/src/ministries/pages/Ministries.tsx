@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Plus } from "lucide-react";
+import { Pen, Plus } from "lucide-react";
 import {
     Table,
     TableBody,
@@ -70,7 +70,7 @@ export const Ministries = () => {
                                         variant="ghost"
                                         onClick={() => handleEdit(ministry.id!)}
                                     >
-                                        Editar
+                                      <Pen className="mr-2" />  Editar
                                     </Button>
                                 </TableCell>
                             </TableRow>

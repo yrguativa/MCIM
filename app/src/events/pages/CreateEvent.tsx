@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,8 +29,8 @@ export const CreateEvent = () => {
         resolver: zodResolver(EventSchema),
         defaultValues: {
             id: crypto.randomUUID(),
-            createdUser: userState,
-            createdDate: new Date(),
+            createdBy: userState,
+            createdAt: new Date(),
         }
     });
 
@@ -44,8 +44,7 @@ export const CreateEvent = () => {
             navigate('/events');
         } catch (error) {
             toast("Error al crear el evento", {
-                description: "Ocurrió un error al intentar crear el evento",
-                variant: "destructive",
+                description: "Ocurrió un error al intentar crear el evento"
             });
         }
     }

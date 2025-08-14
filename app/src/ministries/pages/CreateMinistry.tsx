@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { FC, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,8 +19,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Card } from "@/components/ui/card";
+import { useAuthStore } from '@/src/stores';
 
-export const CreateMinistry = () => {
+export const CreateMinistry: FC = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const userState = useAuthStore(state => state.user);
@@ -51,8 +52,7 @@ export const CreateMinistry = () => {
                     }
                 } catch (error) {
                     toast("Error al cargar el ministerio", {
-                        description: "No se pudo obtener la información del ministerio",
-                        variant: "destructive",
+                        description: "No se pudo obtener la información del ministerio"
                     });
                     navigate('/ministries');
                 }
@@ -79,7 +79,7 @@ export const CreateMinistry = () => {
                     });
                 }
             }
-            
+
             if (success) {
                 navigate('/ministries');
             } else {
@@ -87,8 +87,7 @@ export const CreateMinistry = () => {
             }
         } catch (error) {
             toast(id ? "Error al actualizar el ministerio" : "Error al crear el ministerio", {
-                description: `Ocurrió un error al intentar ${id ? 'actualizar' : 'crear'} el ministerio`,
-                variant: "destructive",
+                description: `Ocurrió un error al intentar ${id ? 'actualizar' : 'crear'} el ministerio`
             });
         }
     }

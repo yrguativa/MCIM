@@ -8,6 +8,7 @@ export interface Event {
     capacity?: number;
     attendees?: string[]; // Array of disciple IDs
     createdAt: Date;
+    createdBy: string; // User ID of the creator
     updatedAt: Date;
 }
 
