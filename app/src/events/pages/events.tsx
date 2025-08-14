@@ -1,3 +1,5 @@
+
+import React from "react";
 import { CreateEventForm } from "@/events/components/CreateEventForm";
 import { Button } from "@/components/ui/button";
 import {
