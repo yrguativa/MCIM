@@ -74,7 +74,7 @@ type EventEntity {
   description: String!
   date: DateTime!
   startTime: DateTime!
-  endTime: DateTime!
+  endTime: DateTime
   ministry: Ministry!
   ministryId: ID!
   location: String!
@@ -96,7 +96,7 @@ type Query {
   disciple(id: String!): Disciple!
   searchDisciples(searchTerm: String!): [Disciple!]!
   events: [EventEntity!]!
-  event(id: ID!): EventEntity!
+  event(eventId: ID!): EventEntity!
   eventAttendance(eventId: ID!): [EventAttendanceEntity!]!
   ministries: [Ministry!]!
   ministry(id: ID!): Ministry!

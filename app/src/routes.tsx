@@ -9,7 +9,7 @@ export const GeneralRoutes: React.FC = () => {
     return (
         <Routes>
             <Route path="/*" element={<DashboardPage />} />
-            <Route path="registerInEvent" element={<EventRegisterPage />} />
+            <Route path="registerInEvent/:id" element={<EventRegisterPage />} />
             <Route path="login" element={<LoginPage />} />
         </Routes>
     );

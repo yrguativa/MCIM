@@ -12,13 +12,43 @@ const api = axios.create({
 });
 export const eventService = {
   async getEvent(id: string): Promise<Event> {
-    const response = await fetch(`/api/events/${id}`);
+    try {
+      const query = `
+      query Event($eventId: ID!) {
+        event(eventId: $eventId) {
+          id
+          name
+          description
+          date
+          startTime
+          endTime
+          location
+          capacity
+          createdUser 
+          createdDate
+          createdAt
+        }
+      }
+      `;
+      const { data } = await api.post(API_URL,
+        JSON.stringify({
+          query,
+          variables: {
+            "eventId": id
+          }
+        }),
 
-    if (!response.ok) {
-      throw new Error('Error al obtener el evento');
+      );
+
+      return data.data.event;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error((error as AxiosError).response?.data);
+        throw new Error(JSON.stringify((error as AxiosError).response?.data) || 'Error getting ministries');
+      }
+      console.error(error);
+      throw new Error('Error getting ministries');
     }
-
-    return response.json();
   },
 
   async getEvents(): Promise<Event[]> {

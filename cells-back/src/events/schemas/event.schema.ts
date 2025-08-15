@@ -16,7 +16,7 @@ export class Event extends Document {
   startTime: Date;
 
   @Prop({ required: false })
-  endTime: Date;
+  endTime?: Date;
 
   @Prop({
     type: MongooseSchema.Types.ObjectId,
@@ -24,6 +24,12 @@ export class Event extends Document {
     required: false,
   })
   ministry: string;
+
+  @Prop({ required: true })
+  location: string;
+
+  @Prop({ required: true })
+  capacity: number;
 
   @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Disciple' }] })
   attendees: string[];

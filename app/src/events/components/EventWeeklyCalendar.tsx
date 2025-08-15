@@ -70,7 +70,7 @@ export const EventWeeklyCalendar: React.FC<EventWeeklyCalendarProps> = ({ event 
                 </span>
                 <SheetFooter>
                     <Button >
-                        <NavLink to="/registerInEvent">Ver pagina Asistencia</NavLink>
+                        <NavLink to={`/registerInEvent/${event.id}`}>Ver pagina Asistencia</NavLink>
                     </Button>
                     <SheetClose asChild>
                         <Button variant="outline">Close</Button>

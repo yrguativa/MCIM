@@ -4,6 +4,7 @@ import { EventEntity } from './entities/event.entity';
 import { EventAttendanceEntity } from './entities/event-attendance.entity';
 import { CreateEventInput } from './dto/create-event.input';
 import { CreateEventAttendanceInput } from './dto/create-event-attendance.input';
+import { Logger } from '@nestjs/common';
 
 @Resolver(() => Event)
 export class EventsResolver {
@@ -16,8 +17,9 @@ export class EventsResolver {
 
   @Query(() => EventEntity)
   async event(
-    @Args('id', { type: () => ID }) id: string,
+    @Args('eventId', { type: () => ID }) id: string,
   ): Promise<EventEntity> {
+    Logger.log('🚀 ~ DisciplesResolver ~ event ~ id:' + id);
     return this.eventsService.findOne(id);
   }
 

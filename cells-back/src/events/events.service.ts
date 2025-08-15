@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Event, EventAttendance } from './schemas/event.schema';
@@ -40,7 +40,7 @@ export class EventsService {
       .populate('ministry')
       .populate('attendees')
       .exec();
-
+    Logger.log('🚀 ~ EventsService ~ findOne ~ event:', event);
     if (!event) {
       throw new NotFoundException(`Event with ID ${id} not found`);
     }
@@ -89,17 +89,18 @@ export class EventsService {
       date: event.date,
       startTime: event.startTime,
       endTime: event.endTime,
-      ministry: null, // Will be populated by resolver
       ministryId: event.ministry?.toString(),
-      location: '', // TODO: Add location to schema
-      capacity: null, // TODO: Add capacity to schema
+      location: event.location,
+      capacity: event.capacity,
+      active: event.active,
+      attendees: [], // Will be populated by resolver
+      ministry: null, // Will be populated by resolver
+
       createdUser: event.createdBy,
       createdUserId: event.createdBy,
       createdDate: event.createdAt,
       createdAt: event.createdAt,
       updatedAt: event.createdAt,
-      attendees: [], // Will be populated by resolver
-      active: event.active,
     };
   }
 

@@ -1,18 +1,20 @@
 import { create, StateCreator } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import { Event } from "@/src/events/models/event";
-import { eventService } from "@/src/events/services/event.service"; 
+import { eventService } from "@/src/events/services/event.service";
 import { EventAttendance } from "@/src/events/models/eventAttendance";
 
 interface EventState {
+    event?: Event;
     events: Event[];
     attendances: EventAttendance[];
-    
+
     // Event methods
+    getEvent: (id: string) => Promise<void>;
     getEvents: () => Promise<void>;
     addEvent: (event: Event) => Promise<boolean>;
     updateEvent: (event: Event) => Promise<boolean>;
-    
+
     // Attendance methods
     registerAttendance: (attendance: EventAttendance) => Promise<boolean>;
     getEventAttendance: (eventId: string) => Promise<EventAttendance[]>;
@@ -20,16 +22,21 @@ interface EventState {
 }
 
 const storeEvent: StateCreator<EventState> = (set, get) => ({
+    event: undefined,
     events: [],
     attendances: [],
 
     // Event methods implementation
+    getEvent: async (id: string) => {
+        const event = await eventService.getEvent(id);
+        console.log("🚀 ~ storeEvent ~ event:", event)
+        set({ event });
+    },
     getEvents: async () => {
         const events = await eventService.getEvents();
         set({ events });
     },
     addEvent: async (event: Event) => {
-        console.log("🚀 ~ storeEvent ~ event:", event)
         const events = get().events;
         try {
             const eventId = await eventService.createEvent(event);
@@ -43,10 +50,10 @@ const storeEvent: StateCreator<EventState> = (set, get) => ({
         const events = get().events;
         try {
             await eventService.updateEvent(event);
-            set({ 
-                events: events.map(e => 
+            set({
+                events: events.map(e =>
                     e.id === event.id ? { ...event } : e
-                ) 
+                )
             });
             return true;
         } catch (error) {
@@ -65,8 +72,8 @@ const storeEvent: StateCreator<EventState> = (set, get) => ({
             }
 
             const attendanceId = await eventService.registerAttendance(attendance);
-            set({ 
-                attendances: [...attendances, { ...attendance, id: attendanceId }] 
+            set({
+                attendances: [...attendances, { ...attendance, id: attendanceId }]
             });
             return true;
         } catch (error) {

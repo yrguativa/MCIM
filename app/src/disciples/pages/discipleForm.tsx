@@ -67,8 +67,6 @@ const DiscipleForm: React.FC = () => {
 
       fetchData();
     }, [id]);
-
-
   }
 
   async function onSubmit(data: Disciple) {

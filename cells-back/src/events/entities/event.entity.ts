@@ -35,8 +35,8 @@ export class EventEntity {
   startTime: Date;
 
   @Column({ type: 'timestamp' })
-  @Field()
-  endTime: Date;
+  @Field({ nullable: true })
+  endTime?: Date;
 
   @ManyToOne(() => MinistryEntity)
   @Field(() => MinistryEntity)
