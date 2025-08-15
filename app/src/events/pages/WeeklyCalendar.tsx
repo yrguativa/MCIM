@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { format, startOfWeek, addDays, isSameDay, set } from 'date-fns';
+import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { CalendarPlus, QrCode } from 'lucide-react';
 import { useEventStore } from '../store/event.store';
+import { EventWeeklyCalendar } from '../components/EventWeeklyCalendar';
 
-export const WeeklyCalendar = () => {
+export const WeeklyCalendar: React.FC = () => {
     const navigate = useNavigate();
     const [currentDate, setCurrentDate] = useState(new Date());
     const events = useEventStore(state => state.events);
@@ -76,18 +77,8 @@ export const WeeklyCalendar = () => {
                         <div className="mt-2 space-y-2 min-h-[150px]">
                             {events.length > 0 ? (
                                 events.map((event) => (
-                                    <div
-                                        key={event.id}
-                                        className="p-2 bg-primary/10 rounded-md text-sm"
-                                    >
-                                        <div className="font-medium">{event.name}</div>
-                                        <div className="text-xs text-gray-500">
-                                            {format(new Date(event.date), 'HH:mm')}
-                                        </div>
-                                        <div className="text-xs truncate">
-                                            {event.location}
-                                        </div>
-                                    </div>
+                                    <EventWeeklyCalendar event={event} key={event.id}>
+                                    </EventWeeklyCalendar>
                                 ))
                             ) : (
                                 <div className="text-center text-sm text-gray-400 mt-4">
@@ -97,7 +88,7 @@ export const WeeklyCalendar = () => {
                         </div>
                     </Card>
                 ))}
-            </div>
+            </div>            
         </div>
     );
 };

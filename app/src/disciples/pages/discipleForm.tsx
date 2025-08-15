@@ -21,10 +21,11 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { toast } from "sonner"
 
-import { useAuthStore, useDiscipleStore } from '../../stores';
-import { useMinistryStore } from '../../stores/ministry';
 import { Disciple, DiscipleSchema } from '../schemas/discipleSchema';
 import { DisciplesService } from '../services/disciples.services';
+
+import { useAuthStore, useDiscipleStore } from '../../stores';
+import { useMinistryStore } from '@/src/ministries/store';
 
 const DiscipleForm: React.FC = () => {
   const navigate = useNavigate();

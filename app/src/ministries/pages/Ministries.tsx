@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/table";
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { useMinistryStore } from '@/src/stores/ministry';
 import { Badge } from '@/components/ui/badge';
+import { useMinistryStore } from '../store';
 
 export const Ministries = () => {
     const navigate = useNavigate();
@@ -70,7 +70,7 @@ export const Ministries = () => {
                                         variant="ghost"
                                         onClick={() => handleEdit(ministry.id!)}
                                     >
-                                      <Pen className="mr-2" />  Editar
+                                        <Pen className="mr-2" />  Editar
                                     </Button>
                                 </TableCell>
                             </TableRow>

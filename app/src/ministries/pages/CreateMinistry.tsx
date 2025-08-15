@@ -4,9 +4,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
 import { toast } from "sonner";
-import { useMinistryStore } from "@/src/stores/ministry";
-import { Ministry } from "../models/ministry";
-import { MinistrySchema } from "../schemas/ministrySchema";
 import {
     Form,
     FormControl,
@@ -19,7 +16,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Card } from "@/components/ui/card";
+import { Ministry } from "../models/ministry";
+import { MinistrySchema } from "../schemas/ministrySchema";
+
 import { useAuthStore } from '@/src/stores';
+import { useMinistryStore } from '../store';
 
 export const CreateMinistry: FC = () => {
     const navigate = useNavigate();

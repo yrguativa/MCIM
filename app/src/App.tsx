@@ -1,13 +1,16 @@
 import React from 'react';
+import { BrowserRouter,  } from 'react-router-dom';
+import { Toaster } from "@/components/ui/sonner";
 
 import './App.css'
-import Dashboard from './dashboard/dashboard';
-import { Toaster } from "@/components/ui/sonner";
+import { GeneralRoutes } from './routes';
 
 const App: React.FC = () => {
   return (
     <>
-      <Dashboard></Dashboard>
+      <BrowserRouter>        
+        <GeneralRoutes/>
+      </BrowserRouter>
       <Toaster />
     </>
   )

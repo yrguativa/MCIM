@@ -176,6 +176,7 @@ export const CreateEvent = () => {
                     </form>
                 </Form>
             </Card>
+            
         </div>
     );
 };

@@ -1,6 +1,6 @@
 
 import React from "react";
-import { CreateEventForm } from "@/events/components/CreateEventForm";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { PlusIcon } from "lucide-react";
 
-export default function EventsPage() {
+export const EventRegisterPage: React.FC = () => {
   return (
     <div className="container py-10">
       <div className="flex justify-between items-center mb-8">
@@ -32,12 +32,12 @@ export default function EventsPage() {
               </DialogDescription>
             </DialogHeader>
             <div className="py-4">
-              <CreateEventForm />
+              sdfsdf
             </div>
           </DialogContent>
         </Dialog>
       </div>
-      
+
       {/* TODO: Add events list component here */}
     </div>
   );

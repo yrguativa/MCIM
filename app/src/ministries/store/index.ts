@@ -1,7 +1,7 @@
 import { create, StateCreator } from "zustand";
 import { devtools, persist } from "zustand/middleware";
-import { Ministry } from "../../ministries/models/ministry";
-import { MinistriesService } from "../../ministries/services/ministries.services";
+import { Ministry } from "../models/ministry";
+import { MinistriesService } from "../services/ministries.services";
 
 export interface MinistryState {
     ministries: Ministry[];
@@ -20,7 +20,9 @@ const storeMinistry: StateCreator<MinistryState> = (set, get) => ({
     getMinistries: async () => {
         try {
             const ministries = await MinistriesService.getMinistries();
-            set({ ministries });
+            if (ministries && ministries.length > 0) {
+                set({ ministries: [...ministries] });
+            }
         } catch (error) {
             console.error('Error getting ministries:', error);
             set({ ministries: [] });

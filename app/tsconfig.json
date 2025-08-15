@@ -26,6 +26,6 @@
       "@/*": ["./*"]
     },
   },
-  "include": ["src"],
+  "include": ["src", "components/chart/DonutChartFillableHalf.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
