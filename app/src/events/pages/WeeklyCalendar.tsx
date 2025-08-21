@@ -1,36 +1,18 @@
-import React, { useState } from 'react';
+import React, { } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
+import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { CalendarPlus, QrCode } from 'lucide-react';
-import { useEventStore } from '../store/event.store';
 import { EventWeeklyCalendar } from '../components/EventWeeklyCalendar';
+import { useWeeklyCalendarHook } from '../hooks/weeklyCalendarHook';
+import LastEvent from '../components/LastEvent';
 
 export const WeeklyCalendar: React.FC = () => {
     const navigate = useNavigate();
-    const [currentDate, setCurrentDate] = useState(new Date());
-    const events = useEventStore(state => state.events);
 
-    if (events && events.length > 0 && new Date(events[0].date).toDateString() != currentDate.toDateString()) {
-        setCurrentDate(new Date(events[0].date));
-    }
-
-    // Obtener el inicio de la semana actual
-    const startOfCurrentWeek = startOfWeek(currentDate, { weekStartsOn: 1 });
-
-    // Crear array con los días de la semana
-    const weekDays = [...Array(7)].map((_, index) => {
-        const day = addDays(startOfCurrentWeek, index);
-        const dayEvents = events.filter(event =>
-            isSameDay(new Date(event.date), day)
-        );
-        return {
-            date: day,
-            events: dayEvents,
-        };
-    });
+    const { weekDays, lastEvent } = useWeeklyCalendarHook();
 
     const handleCreateEvent = () => {
         navigate('/events/create');
@@ -88,7 +70,9 @@ export const WeeklyCalendar: React.FC = () => {
                         </div>
                     </Card>
                 ))}
-            </div>            
+            </div>
+
+            { lastEvent && <LastEvent event={lastEvent}  />}
         </div>
     );
 };

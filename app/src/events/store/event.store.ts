@@ -3,9 +3,11 @@ import { devtools, persist } from "zustand/middleware";
 import { Event } from "@/src/events/models/event";
 import { eventService } from "@/src/events/services/event.service";
 import { EventAttendance } from "@/src/events/models/eventAttendance";
+import { LastOrCurrentEvent } from "../tools/event.tool";
 
 interface EventState {
     event?: Event;
+    lastEvent?: Event;
     events: Event[];
     attendances: EventAttendance[];
 
@@ -23,18 +25,21 @@ interface EventState {
 
 const storeEvent: StateCreator<EventState> = (set, get) => ({
     event: undefined,
+    lastEvent: undefined,
     events: [],
     attendances: [],
 
     // Event methods implementation
     getEvent: async (id: string) => {
         const event = await eventService.getEvent(id);
-        console.log("🚀 ~ storeEvent ~ event:", event)
         set({ event });
     },
     getEvents: async () => {
         const events = await eventService.getEvents();
-        set({ events });
+        if (events) {
+            set({ events });
+            set({lastEvent:LastOrCurrentEvent(events)});
+        }
     },
     addEvent: async (event: Event) => {
         const events = get().events;

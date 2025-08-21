@@ -60,14 +60,13 @@ export const eventService = {
           name
           description
           date
-          endDate
+          startTime
+          endTime
           location
           capacity
-          createdUser {
-            id
-            name
-          }
+          createdUser
           createdDate
+          createdAt
         }
       }
       `;

@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { useEventStore } from "../events/store/event.store";
 import { cn } from "@/lib/utils";
+import { QRCodeSVG } from 'qrcode.react';
 
 export const EventRegisterPage: React.FC = () => {
   const { id } = useParams();
@@ -20,21 +21,34 @@ export const EventRegisterPage: React.FC = () => {
   return (
 
     <div className={cn("container py-10 w-screen mx-auto h-screen", "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500")} >
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Events</h1>
+      <div className="flex flex-col justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">{eventState ? eventState.name : "Evento"}</h1>
       </div>
 
-      {
-        eventState &&
-        (
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="font-medium">{eventState.name}</div>
+      {eventState && (
+        <div className="flex flex-row items-center justify-around space-y-6">          
+          <div className="bg-white/30 backdrop-blur-md brightness-40 p-6 rounded-lg shadow-md flex flex-col items-center">
+            <h2 className="text-xl font-semibold mb-4">Código QR del Evento</h2>
+            <QRCodeSVG
+              value={eventState.id}
+              size={400}
+              level="H"
+              includeMargin={true}
+            />
+            <p className="text-sm text-gray-500 mt-4">Escanea este código para acceder al evento</p>
+          </div>
+          <div className="bg-white/30 backdrop-blur-md brightness-40 p-6 rounded-lg shadow-md">
+            <div className="font-bold text-2xl">{eventState.name}</div>
+            <div className="text-xs truncate">
+              {eventState.description || ""}
+            </div>
             <div className="text-xs text-gray-500">
               {format(new Date(eventState.date), 'HH:mm')}
             </div>
-            <div className="text-xs truncate">
-              {eventState.location}
-            </div>
+
+            <span className="block mb-2 mt-6">
+              Lugar:  {eventState.location}
+            </span>
 
             <span className="block mb-2 mt-6">
               Fecha Inicio: {format(new Date(eventState.date), 'dd/MM/yyyy')}
@@ -62,8 +76,8 @@ export const EventRegisterPage: React.FC = () => {
               Creado: {format(new Date(eventState.createdAt), 'dd/MM/yyyy')}
             </span>
           </div>
-        )
-      }
-    </div >
+        </div>
+      )}
+    </div>
   );
 }
