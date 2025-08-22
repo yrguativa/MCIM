@@ -17,4 +17,4 @@ export const CellRecordSchema = z.object({
     .min(2, "La celula debe tener 2 almenos dos asistentes."),
 });
 
-export type CellRecord = z.infer<typeof CellRecordSchema>;
+export type CellRecordInput = z.infer<typeof CellRecordSchema>;

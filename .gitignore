@@ -29,3 +29,10 @@ package-lock.json
 
 # husky & lint-staged
 .husky/_
+
+# Server Configuration
+*/.env
+*/.env.local
+*/.env.development
+*/.env.production
+*/.env.test

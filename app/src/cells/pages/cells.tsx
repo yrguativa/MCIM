@@ -1,12 +1,13 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useCellStore } from '../../stores';
+
+import { Plus } from 'lucide-react';
 import AssistantsTableComponent from '../components/assistantsTableComponent';
 import { ColumnsAssistants } from '../components/assistantsColumnsTable';
-import { Plus } from 'lucide-react';
-import { buttonVariants } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button";
 
+import { useCellStore } from '../store/cell.store';
 
 const Cells: React.FC = () => {
   const cellsState = useCellStore(state => state.Cells);

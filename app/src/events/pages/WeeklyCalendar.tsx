@@ -1,5 +1,5 @@
 import React, { } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
@@ -10,17 +10,7 @@ import { useWeeklyCalendarHook } from '../hooks/weeklyCalendarHook';
 import LastEvent from '../components/LastEvent';
 
 export const WeeklyCalendar: React.FC = () => {
-    const navigate = useNavigate();
-
     const { weekDays, lastEvent } = useWeeklyCalendarHook();
-
-    const handleCreateEvent = () => {
-        navigate('/events/create');
-    };
-
-    const handleScanQR = () => {
-        navigate('/events/scan');
-    };
 
     return (
         <div className="container mx-auto p-4">
@@ -28,19 +18,23 @@ export const WeeklyCalendar: React.FC = () => {
                 <h1 className="text-2xl font-bold">Calendario de Eventos</h1>
                 <div className="flex gap-2">
                     <Button
-                        onClick={handleScanQR}
+                        asChild
                         variant="outline"
                         className="flex items-center gap-2"
                     >
-                        <QrCode className="h-5 w-5" />
-                        Escanear QR
+                        <NavLink to="/events/scan">
+                            <QrCode className="h-5 w-5" />
+                            Escanear QR
+                        </NavLink>
                     </Button>
                     <Button
-                        onClick={handleCreateEvent}
+                        asChild
                         className="flex items-center gap-2"
                     >
-                        <CalendarPlus className="h-5 w-5" />
-                        Crear Evento
+                        <NavLink to="/events/create">
+                            <CalendarPlus className="h-5 w-5" />
+                            Crear Evento
+                        </NavLink>
                     </Button>
                 </div>
             </div>
@@ -72,7 +66,7 @@ export const WeeklyCalendar: React.FC = () => {
                 ))}
             </div>
 
-            { lastEvent && <LastEvent event={lastEvent}  />}
+            {lastEvent && <LastEvent event={lastEvent} />}
         </div>
     );
 };

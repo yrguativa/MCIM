@@ -14,8 +14,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { toast } from 'sonner';
 
-import { useAuthStore, useCellStore } from '../../stores';
-import { CellRecord, CellRecordSchema } from '../schemas/cellRecordsSchema';
+import { useAuthStore } from '@/src/stores';
+import { useCellStore } from '../store/cell.store';
+
+import { CellRecordInput, CellRecordSchema } from '../schemas/cellRecordsSchema';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const CellRegister: React.FC = () => {
@@ -23,17 +25,17 @@ const CellRegister: React.FC = () => {
   const navigate = useNavigate();
   const userState = useAuthStore(state => state.user);
   const addRecordState = useCellStore(state => state.addRecord);
-  const form = useForm<CellRecord>({
+  const form = useForm<CellRecordInput>({
     resolver: zodResolver(CellRecordSchema),
     defaultValues: {
       topic: "",
       date: new Date(),
-      createdUser: userState,
+      createdUser: userState?.id || "",
     },
   });
 
   const { fields: assistantsSubForm, append: appendAssistant, remove: removeAssistant } = useFieldArray({ name: 'assistants', control: form.control });
-  function onSubmit(data: CellRecord) {
+  function onSubmit(data: CellRecordInput) {
     addRecordState(id!, data);
     toast("El registro de la celula se guardo correctamente.", {
       icon: <CheckCircle className="h-4 w-4 text-green-500" />,

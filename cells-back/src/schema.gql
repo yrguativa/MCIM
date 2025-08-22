@@ -88,7 +88,30 @@ type EventEntity {
   active: Boolean!
 }
 
+type Users {
+  id: ID!
+  email: String!
+  displayName: String
+  photoURL: String
+  identification: String
+  ministryId: String
+  phoneNumber: String
+  authProvider: String!
+  createdAt: DateTime!
+  lastLogin: DateTime
+  active: Boolean!
+  roles: [String!]
+  accessToken: String
+}
+
+type User {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 type Query {
+  me: Users!
+
   """Get all cells"""
   cells: [Cell!]!
   cell(id: String!): Cell!
@@ -101,9 +124,15 @@ type Query {
   ministries: [Ministry!]!
   ministry(id: ID!): Ministry!
   subMinistries(ministryId: ID!): [Ministry!]!
+  users: [User!]!
+  user(id: ID!): User!
 }
 
 type Mutation {
+  login(loginInput: LoginInput!): Users!
+  loginSocial(loginSocialInput: LoginSocialInput!): Users!
+  register(registerInput: RegisterInput!): Users!
+  registerSocialLogin(RegisterSocialLoginInput: RegisterSocialLoginInput!): Users!
   createCell(createCellInput: CreateCellInput!): Cell!
   updateCell(updateCellInput: UpdateCellInput!): Cell!
   removeCell(id: String!): Cell!
@@ -115,6 +144,30 @@ type Mutation {
   createMinistry(ministry: CreateMinistryInput!): Ministry!
   updateMinistry(ministry: UpdateMinistryInput!): Ministry!
   deleteMinistry(id: ID!): Boolean!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input LoginSocialInput {
+  credential: String!
+}
+
+input RegisterInput {
+  email: String!
+  password: String!
+  identification: String!
+  ministryId: String!
+  phoneNumber: String!
+}
+
+input RegisterSocialLoginInput {
+  id: String!
+  identification: String!
+  ministryId: String!
+  phoneNumber: String!
 }
 
 input CreateCellInput {

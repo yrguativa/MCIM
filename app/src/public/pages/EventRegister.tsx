@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
-import { useEventStore } from "../events/store/event.store";
+import { useEventStore } from "../../events/store/event.store";
 import { cn } from "@/lib/utils";
 import { QRCodeSVG } from 'qrcode.react';
 

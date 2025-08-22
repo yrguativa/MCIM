@@ -3,32 +3,34 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { Save } from 'lucide-react';
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
+import { cn } from '@/lib/utils';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
 
-import { useAuthStore, useCellStore, useDiscipleStore } from '@/src/stores';
+import { RecordCellComponent } from '../components/recordCellComponent';
 import { Cell, CellSchema } from '../schemas/cellSchema';
 import { Neighborhood } from "@/src/cells/schemas/neighborhood.enum";
-import { RecordCellComponent } from '../components/recordCellComponent';
-import { Save } from 'lucide-react';
+
+import { useDiscipleStore } from '@/src/disciples/store/disciple.store';
+import { useAuthStore } from '@/src/stores';
+import { useCellStore } from '../store/cell.store';
+
 const CellForm: React.FC = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const userState = useAuthStore(state => state.user);
-    const addCellState = useCellStore(state => state.addCell);
-    const addUpdateState = useCellStore(state => state.updateCell);
-    const getCellState = useCellStore(state => state.getCell);
+    const { addCell: addCellState, updateCell: addUpdateState, getCell: getCellState } = useCellStore();
     const disciplesState = useDiscipleStore(state => state.Disciples);
 
     const cellDefault: Cell = {
         id: crypto.randomUUID(),
-        createdUser: userState,
+        createdUser: userState?.id || "",
         createdDate: new Date(),
         address: "",
         leader: "",

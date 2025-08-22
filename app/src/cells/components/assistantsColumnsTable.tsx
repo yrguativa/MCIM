@@ -1,10 +1,11 @@
-import { useDiscipleStore } from "@/src/stores";
+import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { BookUp, MoreHorizontal, Pen } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import HumanizeNaturalDay from "@/lib/utilsDate";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useDiscipleStore } from "@/src/disciples/store/disciple.store";
 
 export const ColumnsAssistants: ColumnDef<any>[] = [
   {
@@ -17,7 +18,7 @@ export const ColumnsAssistants: ColumnDef<any>[] = [
   {
     header: "Lider",
     accessorKey: "leader",
-    cell: (info) => {
+    cell: (info)  => {
       const disciplesState = useDiscipleStore(state => state.Disciples);
       return (<>{info.getValue() ? disciplesState.find((x) => x.id == info.getValue())?.name : ""}</>);
     },

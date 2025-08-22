@@ -1,10 +1,11 @@
 import React from 'react';
 import DisciplesTableComponent from '../components/disciplesTableComponent';
 import { DisciplesColumnsTable } from '../components/disciplesColumnsTable';
-import { useDiscipleStore } from '@/src/stores';
+
 import { Link } from 'react-router-dom';
 import { buttonVariants } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
+import { useDiscipleStore } from '../store/disciple.store';
 
 const Disciples: React.FC = () => {
     const discipleState = useDiscipleStore(state => state.Disciples);

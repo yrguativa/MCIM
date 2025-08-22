@@ -2,7 +2,7 @@ import { type StateCreator, create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware';
 
 import { Cell } from '@/src/cells/schemas/cellSchema';
-import { CellRecord } from '@/src/cells/schemas/cellRecordsSchema';
+import { CellRecordInput } from '@/src/cells/schemas/cellRecordsSchema';
 import { CellFull } from '@/src/cells/models/cellFull';
 
 interface CellState {
@@ -10,7 +10,7 @@ interface CellState {
   getCell: (id: string) => CellFull | undefined,
   addCell: (by: Cell) => void,
   updateCell: (by: Cell) => void,
-  addRecord: (id: string, by: CellRecord) => void
+  addRecord: (id: string, by: CellRecordInput) => void
 }
 
 const storeCell: StateCreator<CellState> = (set, get) => ({
@@ -35,7 +35,7 @@ const storeCell: StateCreator<CellState> = (set, get) => ({
     const otherCells = get().Cells.filter(cell => cell.id !== by.id);
     set(state => ({ ...state, Cells: [...otherCells, { ...by, records: cell?.records || [] }] }))
   },
-  addRecord: (id: string, by: CellRecord) => {
+  addRecord: (id: string, by: CellRecordInput) => {
     const cell = get().Cells.find(cell => cell.id === id);
     if (cell !== undefined && cell.records === undefined) {
       cell.records = [];

@@ -1,20 +1,24 @@
 import { join } from 'path';
+import { APP_PIPE } from '@nestjs/core';
 import { Module, ValidationPipe } from '@nestjs/common';
-import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ConfigModule } from '@nestjs/config';
+import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 
+import { AppService } from './app.service';
 import { AppController } from './app.controller';
 import { CellsModule } from './cells/cells.module';
-import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { DisciplesModule } from './disciples/disciples.module';
 import { EventsModule } from './events/events.module';
-import { APP_PIPE } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MinistriesModule } from './ministries/ministries.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     MongooseModule.forRoot('mongodb://localhost:27017/MCI-APP-db'),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -22,10 +26,12 @@ import { MinistriesModule } from './ministries/ministries.module';
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
+    AuthModule,
     CellsModule,
     DisciplesModule,
     EventsModule,
     MinistriesModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [

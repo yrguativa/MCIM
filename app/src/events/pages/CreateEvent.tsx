@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Card } from "@/components/ui/card";
 
-export const CreateEvent = () => {
+export const CreateEvent: React.FC = () => {
     const navigate = useNavigate();
     const userState = useAuthStore(state => state.user);
     const [hasEndDate, setHasEndDate] = useState(false);
