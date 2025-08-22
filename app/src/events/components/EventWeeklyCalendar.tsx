@@ -16,12 +16,14 @@ import { Button } from '@/components/ui/button';
 import { DonutChartFillableHalf } from '@/components/chart/DonutChartFillableHalf';
 import { format } from 'date-fns';
 import { Event } from '../models/event';
+import { useTranslation } from 'react-i18next';
 
 interface EventWeeklyCalendarProps {
     event: Event;
 }
 
 export const EventWeeklyCalendar: React.FC<EventWeeklyCalendarProps> = ({ event }) => {
+    const { t } = useTranslation();
     return (
         <Sheet>
             <SheetTrigger className="p-2 bg-primary/10 rounded-md text-sm">
@@ -41,36 +43,36 @@ export const EventWeeklyCalendar: React.FC<EventWeeklyCalendarProps> = ({ event 
                     </SheetDescription>
                 </SheetHeader>
                 <span className="block mb-2 mt-6">
-                    Fecha Inicio: {format(new Date(event.date), 'dd/MM/yyyy')}
+                    {t('events.dateStart')}: {format(new Date(event.date), 'dd/MM/yyyy')}
                 </span>
                 <span className="block mb-2">
-                    Hora: {format(new Date(event.date), 'HH:mm')}
+                    {t('events.time')}: {format(new Date(event.date), 'HH:mm')}
                 </span>
                 <span className="block mb-2">
-                    Fecha Fin: {event.endDate ? format(new Date(event.endDate), 'dd/MM/yyyy') : ""}
+                    {t('events.dateEnd')}: {event.endDate ? format(new Date(event.endDate), 'dd/MM/yyyy') : ""}
                 </span>
                 <span className="block mb-2">
-                    Ubicación: {event.location}
+                    {t('events.location')}: {event.location}
                 </span>
                 <span className="block mb-2">
-                    Capidad: {event.capacity || 'Sin límite'}
+                    {t('events.capacity')}: {event.capacity || 'Sin límite'}
                 </span>
                 <span className="block mb-2">
-                    Asistencia:
+                    {t('events.assistance')}:
                 </span>
                 <span className="block mb-2">
-                    <DonutChartFillableHalf name="Asistencia" value={20} />
+                    <DonutChartFillableHalf name={t('events.assistance')} value={20} />
                 </span>
                 <Separator />
                 <span className="block mb-2 mt-4">
-                    Organizador: {event.createdBy || 'No asignado'}
+                    {t('events.organizer')}: {event.createdBy || t('events.notOrganizer')}
                 </span>
                 <span className="block mb-2">
-                    Creado: {format(new Date(event.createdAt), 'dd/MM/yyyy')}
+                    {t('events.createdBy')}: {format(new Date(event.createdAt), 'dd/MM/yyyy')}
                 </span>
                 <SheetFooter>
                     <Button >
-                        <NavLink to={`/registerInEvent/${event.id}`}>Ver pagina Asistencia</NavLink>
+                        <NavLink to={`/registerInEvent/${event.id}`}>{t('events.viewEventPage')}</NavLink>
                     </Button>
                     <SheetClose asChild>
                         <Button variant="outline">Close</Button>

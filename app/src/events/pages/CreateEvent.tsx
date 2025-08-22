@@ -30,7 +30,7 @@ export const CreateEvent: React.FC = () => {
         resolver: zodResolver(EventSchema),
         defaultValues: {
             id: crypto.randomUUID(),
-            createdBy: userState,
+            createdBy: userState?.id || '',
             createdAt: new Date(),
         }
     });

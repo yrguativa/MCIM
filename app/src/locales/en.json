@@ -1,0 +1,113 @@
+{
+  "common": {
+    "welcome": "Welcome",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "create": "Create",
+    "search": "Search",
+    "required": "This field is required",
+    "invalid": "This field is invalid"
+  },
+  "menu": {
+    "dashboard": "Dashboard",
+    "cells": "Cells",
+    "disciples": "Disciples",
+    "events": "Events",
+    "ministries": "Ministries",
+    "reports": "Reports",
+    "settings": "Settings",
+    "profile": "Profile",
+    "logout": "Logout"
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Please enter a valid email",
+    "minLength": "Must be at least {{min}} characters",
+    "maxLength": "Must be at most {{max}} characters",
+    "passwordMatch": "Passwords do not match",
+    "number": "Must be a number",
+    "date": "Must be a valid date",
+    "phone": "Must be a valid phone number"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "email": "Email",
+    "password": "Password"
+  },
+  "cells": {
+    "title": "Cells",
+    "create": "Create cell",
+    "edit": "Edit cell",
+    "delete": "Delete cell",
+    "new": "New cell"
+  },
+  "disciples": {
+    "title": "Disciples",
+    "create": "Create disciple",
+    "edit": "Edit disciple",
+    "delete": "Delete disciple"
+  },
+  "events": {
+    "title": "Events",
+    "create": "Create event",
+    "edit": "Edit event",
+    "delete": "Delete event",
+    "name": "Event name",
+    "description": "Description",
+    "date": "Date",
+    "dateStart": "Start date",
+    "dateEnd": "End date",
+    "time": "Time",
+    "location": "Location",
+    "type": "Event type",
+    "capacity": "Capacity",
+    "assistance": "Assistance",
+    "registered": "Registered",
+    "status": "Status",
+    "register": "Register",
+    "organizer": "Organizer",
+    "notOrganizer": "No organizer",
+    "createdBy": "Created by",
+    "viewEventPage":"View event page",
+    "unregister": "Unregister",
+    "details": "View details",
+    "upcoming": "Upcoming events",
+    "past": "Past events",
+    "all": "All events",
+    "eventCalendar": "Event Calendar",
+    "scanQR":"Scan QR",
+    "withoutEvents":"No events",
+    "close": "Close",
+    "filters": {
+      "title": "Filters",
+      "dateRange": "Date range",
+      "type": "Type",
+      "status": "Status"
+    },
+    "statusOptions": {
+      "active": "Active",
+      "cancelled": "Cancelled",
+      "completed": "Completed",
+      "draft": "Draft"
+    },
+    "types": {
+      "conference": "Conference",
+      "workshop": "Workshop",
+      "meeting": "Meeting",
+      "service": "Service",
+      "other": "Other"
+    }
+  },
+  "ministries": {
+    "title": "Ministries",
+    "create": "Create ministry",
+    "edit": "Edit ministry",
+    "delete": "Delete ministry"
+  }
+}

@@ -30,7 +30,7 @@ export const useWeeklyCalendarHook = () => {
             events: dayEvents,
         };
     });
-
+    
     return {
         events,
         lastEvent,

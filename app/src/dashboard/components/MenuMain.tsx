@@ -7,8 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { CircleUser, Home, LineChart, Menu, Package, Package2, Search, ShoppingCart, Users } from "lucide-react";
 import { useAuthStore } from "@/src/stores";
+import { useTranslation } from "react-i18next";
 
 const MenuMain: React.FC = () => {
+    const { t } = useTranslation();
     const { user :userState, logout} = useAuthStore();
     return (
         <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
@@ -37,7 +39,7 @@ const MenuMain: React.FC = () => {
                             className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
                         >
                             <Home className="h-5 w-5" />
-                            Dashboard
+                            {t('menu.dashboard')}
                         </a>
                         <a
                             href="#"
@@ -125,7 +127,7 @@ const MenuMain: React.FC = () => {
                     <DropdownMenuItem>Configuraciones</DropdownMenuItem>
                     <DropdownMenuItem>Support</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={logout}>Salir</DropdownMenuItem>
+                    <DropdownMenuItem onClick={logout}>{t('menu.logout')}</DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         </header>

@@ -3,19 +3,23 @@ import { NavLink } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { es, enUS } from 'date-fns/locale';
 import { CalendarPlus, QrCode } from 'lucide-react';
 import { EventWeeklyCalendar } from '../components/EventWeeklyCalendar';
 import { useWeeklyCalendarHook } from '../hooks/weeklyCalendarHook';
 import LastEvent from '../components/LastEvent';
+import { useTranslation } from 'react-i18next';
 
 export const WeeklyCalendar: React.FC = () => {
+    const { t, i18n } = useTranslation();
+    const esLocale = i18n.language === 'es' ? es : enUS;
+    
     const { weekDays, lastEvent } = useWeeklyCalendarHook();
 
     return (
         <div className="container mx-auto p-4">
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold">Calendario de Eventos</h1>
+                <h1 className="text-2xl font-bold">{t('events.eventCalendar')}</h1>
                 <div className="flex gap-2">
                     <Button
                         asChild
@@ -24,7 +28,7 @@ export const WeeklyCalendar: React.FC = () => {
                     >
                         <NavLink to="/events/scan">
                             <QrCode className="h-5 w-5" />
-                            Escanear QR
+                            {t('events.scanQR')}
                         </NavLink>
                     </Button>
                     <Button
@@ -33,7 +37,7 @@ export const WeeklyCalendar: React.FC = () => {
                     >
                         <NavLink to="/events/create">
                             <CalendarPlus className="h-5 w-5" />
-                            Crear Evento
+                            {t('events.create')}
                         </NavLink>
                     </Button>
                 </div>
@@ -44,10 +48,10 @@ export const WeeklyCalendar: React.FC = () => {
                     <Card key={date.toISOString()} className="p-2">
                         <div className="text-center border-b pb-2">
                             <div className="font-medium">
-                                {format(date, 'EEEE', { locale: es })}
+                                {format(date, 'EEEE', { locale: esLocale})}
                             </div>
                             <div className="text-sm text-gray-500">
-                                {format(date, 'd MMM', { locale: es })}
+                                {format(date, 'd MMM', { locale: esLocale })}
                             </div>
                         </div>
                         <div className="mt-2 space-y-2 min-h-[150px]">
@@ -58,7 +62,7 @@ export const WeeklyCalendar: React.FC = () => {
                                 ))
                             ) : (
                                 <div className="text-center text-sm text-gray-400 mt-4">
-                                    Sin eventos
+                                    {t('events.withoutEvents')}
                                 </div>
                             )}
                         </div>

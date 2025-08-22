@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 import { Bell, CalendarDays, Home, LineChart, Package, Package2, ShoppingCart, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,8 +10,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
-const MenuMovil: FC = () => {
+const MenuMovil: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <div className="hidden border-r bg-muted/40 md:block">
       <div className="flex h-full max-h-screen flex-col gap-2">
@@ -32,7 +34,7 @@ const MenuMovil: FC = () => {
               className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-primary transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}
             >
               <Home className="h-4 w-4" />
-              Dashboard
+              {t('menu.dashboard')}
             </NavLink>
             <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
               <ShoppingCart className="h-4 w-4" />
@@ -43,19 +45,19 @@ const MenuMovil: FC = () => {
             </a>
             <NavLink to="/cells" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-primary transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}>
               <Package className="h-4 w-4" />
-              Celulas
+              {t('menu.cells')}
             </NavLink>
             <NavLink to="/disciples" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}>
               <Users className="h-4 w-4" />
-              Discipulos
+              {t('menu.disciples')}
             </NavLink>
             <NavLink to="/events" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}>
               <CalendarDays className="h-4 w-4" />
-              Eventos
+              {t('menu.events')}
             </NavLink>
             <NavLink to="/ministries" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}>
               <Package2 className="h-4 w-4" />
-              Ministerios
+              {t('menu.ministries')}
             </NavLink>
             <a
               href="#"
