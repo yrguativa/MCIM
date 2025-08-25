@@ -26,11 +26,18 @@ export const EventRegisterPage: React.FC = () => {
       </div>
 
       {eventState && (
-        <div className="flex flex-row items-center justify-around space-y-6">          
+        <div className="flex flex-row items-center justify-around space-y-6">
           <div className="bg-white/30 backdrop-blur-md brightness-40 p-6 rounded-lg shadow-md flex flex-col items-center">
             <h2 className="text-xl font-semibold mb-4">Código QR del Evento</h2>
             <QRCodeSVG
-              value={eventState.id}
+              value={JSON.stringify(
+                {
+                  id: eventState.id,
+                  event: eventState.name,
+                  date: eventState.date,
+                  location: eventState.location,
+                  createdBy: eventState.createdBy
+                })}
               size={400}
               level="H"
               includeMargin={true}

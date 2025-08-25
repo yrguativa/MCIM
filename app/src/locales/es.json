@@ -84,6 +84,9 @@
         "scanQR":"Escanear QR",
         "withoutEvents":"No hay eventos",
         "close": "Cerrar",
+        "registerInEvent": "Registrarse en el evento",
+        "registerAttendance": "Registrar asistencia",
+        "qrInvalid": "QR inválido",
         "filters": {
             "title": "Filtros",
             "dateRange": "Rango de fecha",

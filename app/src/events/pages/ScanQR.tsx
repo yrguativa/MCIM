@@ -5,6 +5,11 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import type { EventAttendance } from '../models/event';
+import { useTranslation } from 'react-i18next';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { useDebounce } from 'use-debounce';
 
 interface ScanData {
   id: string;
@@ -14,14 +19,40 @@ interface ScanData {
   location: string;
 }
 
+const formSchema = z.object({
+  identification: z.string()
+    .min(5, 'La identificación debe tener al menos 5 caracteres')
+    .max(20, 'La identificación no puede tener más de 20 caracteres')
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
 export const ScanQR: React.FC = () => {
-  const [discipleId, setDiscipleId] = useState('');
+  const { t } = useTranslation();
   const [scanData, setScanData] = useState<ScanData | null>(null);
   const [error, setError] = useState<string>('');
   const scannerRef = useRef<Html5QrcodeScanner | null>(null);
+  
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      identification: '',
+    },
+  });
+
+  const identification = form.watch('identification');
+  const [debouncedIdentification] = useDebounce(identification, 800);
 
   useEffect(() => {
-    // Crear una instancia del escáner
+    if (debouncedIdentification && debouncedIdentification.length >= 5) {
+      // Aquí puedes realizar la búsqueda cuando el valor haya sido debounced
+      console.log('Buscando identificación:', debouncedIdentification);
+      // Implementa tu lógica de búsqueda aquí
+    }
+  }, [debouncedIdentification]);
+
+  useEffect(() => {
+    // Create a scanner instance
     scannerRef.current = new Html5QrcodeScanner(
       "qr-reader",
       {
@@ -32,49 +63,48 @@ export const ScanQR: React.FC = () => {
       false
     );
 
-    // Iniciar el escaneo
+    // Start scanning
     scannerRef.current.render((decodedText) => {
       try {
         const eventData = JSON.parse(decodedText);
         setScanData(eventData);
-        // Detener el escaneo después de un escaneo exitoso
+        // Stop scanning after a successful scan
         scannerRef.current?.clear();
       } catch (e) {
-        setError('QR inválido');
+        if (e instanceof Error) {
+          setError(`${t('events.qrInvalid')}: ${e.message}`);
+        } else {
+          setError(t('events.qrInvalid'));
+        }
       }
     }, (error) => {
       console.error(error);
     });
 
-    // Limpiar el escáner cuando el componente se desmonte
+    // Clean the scanner when the component is removed
     return () => {
       scannerRef.current?.clear();
     };
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!scanData || !discipleId) return;
+  const onSubmit = async (values: FormValues) => {
+    if (!scanData) return;
 
     const attendance: Partial<EventAttendance> = {
       eventId: scanData.id,
-      discipleId: discipleId,
+      discipleId: values.identification,
       timestamp: new Date(),
     };
 
-    try {
-      // TODO: Implementar la llamada al servicio
-      console.log('Registrando asistencia:', attendance);
-    } catch (error) {
-      console.error('Error al registrar asistencia:', error);
-    }
+    // Implementa aquí la lógica para registrar la asistencia
+    console.log('Registrando asistencia:', attendance);
   };
 
   return (
     <div className="container mx-auto p-4">
       <Card className="p-6">
-        <h1 className="text-2xl font-bold mb-4">Registrar Asistencia</h1>
-        
+        <h1 className="text-2xl font-bold mb-4">{t('events.registerInEvent')}</h1>
+
         <div className="mb-6">
           <div id="qr-reader" className="w-full max-w-sm mx-auto"></div>
         </div>
@@ -95,25 +125,28 @@ export const ScanQR: React.FC = () => {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <Label htmlFor="discipleId">ID del Discípulo</Label>
+            <Label htmlFor="identification">Identificación</Label>
             <Input
-              id="discipleId"
-              value={discipleId}
-              onChange={(e) => setDiscipleId(e.target.value)}
-              placeholder="Ingresa el ID del discípulo"
-              required
+              {...form.register('identification')}
+              id="identification"
+              placeholder="Ingresa la identificación"
               className="mt-1"
             />
+            {form.formState.errors.identification && (
+              <p className="text-red-500 text-sm mt-1">
+                {form.formState.errors.identification.message}
+              </p>
+            )}
           </div>
 
-          <Button 
-            type="submit" 
-            disabled={!scanData || !discipleId}
+          <Button
+            type="submit"
+            disabled={!scanData || !form.formState.isValid}
             className="w-full"
           >
-            Registrar Asistencia
+            {t('events.registerAttendance')}
           </Button>
         </form>
       </Card>
