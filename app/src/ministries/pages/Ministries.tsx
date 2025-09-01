@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Pen, Plus } from "lucide-react";
 import {
     Table,
@@ -13,29 +13,25 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { useMinistryStore } from '../store';
+import { useMinistryStore } from '../store/ministries.store';
 
-export const Ministries = () => {
-    const navigate = useNavigate();
+export const Ministries: React.FC = () => {
     const { ministries, getMinistries } = useMinistryStore();
 
     useEffect(() => {
         getMinistries();
     }, [getMinistries]);
 
-    const handleEdit = (id: string) => {
-        navigate(`/ministries/${id}`);
-    };
 
     return (
         <div className="container mx-auto py-6">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold">Ministerios</h1>
-                <Link to="/ministries/create">
-                    <Button>
+                <Button asChild>
+                    <Link to="/ministries/create">
                         <Plus className="mr-2 h-4 w-4" /> Nuevo Ministerio
-                    </Button>
-                </Link>
+                    </Link>
+                </Button>
             </div>
 
             <Card>
@@ -68,9 +64,10 @@ export const Ministries = () => {
                                 <TableCell className="text-right space-x-2">
                                     <Button
                                         variant="ghost"
-                                        onClick={() => handleEdit(ministry.id!)}
+                                        size="icon"
+                                        asChild
                                     >
-                                        <Pen className="mr-2" />  Editar
+                                        <Link to={`/ministries/${ministry.id}`}><Pen className="mr-2" />  Editar</Link>
                                     </Button>
                                 </TableCell>
                             </TableRow>
@@ -85,6 +82,6 @@ export const Ministries = () => {
                     </TableBody>
                 </Table>
             </Card>
-        </div>
+        </div >
     );
 };

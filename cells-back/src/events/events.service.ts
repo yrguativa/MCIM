@@ -6,6 +6,8 @@ import { EventEntity } from './entities/event.entity';
 import { EventAttendanceEntity } from './entities/event-attendance.entity';
 import { CreateEventInput } from './dto/create-event.input';
 import { CreateEventAttendanceInput } from './dto/create-event-attendance.input';
+import { DisciplesService } from 'src/disciples/disciples.service';
+import { CreateDiscipleInput } from 'src/disciples/dto/create-disciple.input';
 
 @Injectable()
 export class EventsService {
@@ -13,6 +15,7 @@ export class EventsService {
     @InjectModel(Event.name) private eventModel: Model<Event>,
     @InjectModel(EventAttendance.name)
     private eventAttendanceModel: Model<EventAttendance>,
+    private readonly disciplesService: DisciplesService,
   ) {}
 
   async create(createEventInput: CreateEventInput): Promise<EventEntity> {
@@ -59,6 +62,20 @@ export class EventsService {
       throw new NotFoundException(
         `Event with ID ${createAttendanceInput.eventId} not found`,
       );
+    }
+
+    if (!createAttendanceInput.discipleId) {
+      const discipleInsert: CreateDiscipleInput = {
+        name: createAttendanceInput.name!,
+        lastName: createAttendanceInput.lastName!,
+        ministryId: createAttendanceInput.ministryId!,
+        identification: createAttendanceInput.identification!,
+        phone: createAttendanceInput.phone!,
+        createdUser: event.createdBy,
+        createdDate: new Date().toISOString(),
+      };
+      const savedDisciple = await this.disciplesService.create(discipleInsert);
+      createAttendanceInput.discipleId = savedDisciple.id;
     }
 
     const createdAttendance = new this.eventAttendanceModel({
@@ -113,7 +130,7 @@ export class EventsService {
       eventId: attendance.event?.toString(),
       disciple: null, // Will be populated by resolver
       discipleId: attendance.disciple?.toString(),
-      timestamp: attendance.createdDate,
+      dateRegister: attendance.createdDate,
     };
   }
 }

@@ -25,6 +25,9 @@ export class DisciplesService {
 
   async findOne(id: string): Promise<DiscipleEntity> {
     const user = await this.discipleModel.findById(id).exec();
+    if (!user) {
+      throw new NotFoundException(`Disciple with ID ${id} not found`);
+    }
     return this.toModel(user);
   }
 
@@ -61,18 +64,30 @@ export class DisciplesService {
     return this.toModel(deletedDisciple);
   }
 
-  async searchByName(searchTerm: string): Promise<DiscipleEntity[]> {
+  async searchByName(name: string): Promise<DiscipleEntity[]> {
     const disciples = await this.discipleModel
       .find({
         $or: [
-          { name: { $regex: searchTerm, $options: 'i' } },
-          { lastName: { $regex: searchTerm, $options: 'i' } },
+          { name: { $regex: name, $options: 'i' } },
+          { lastName: { $regex: name, $options: 'i' } },
         ],
       })
       .limit(10)
       .exec();
 
     return disciples.map((disciple) => this.toModel(disciple));
+  }
+
+  async searchByIdentification(
+    identification: string,
+  ): Promise<DiscipleEntity> {
+    const user = await this.discipleModel.findOne({ identification });
+    if (!user) {
+      throw new NotFoundException(
+        `Disciple with identification ${identification} not found`,
+      );
+    }
+    return this.toModel(user);
   }
 
   private toModel(disciple: Disciple): DiscipleEntity {

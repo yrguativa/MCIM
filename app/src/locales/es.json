@@ -11,7 +11,8 @@
         "create": "Crear",
         "search": "Buscar",
         "required": "Este campo es requerido",
-        "invalid": "Este campo es inválido"
+        "invalid": "Este campo es inválido",
+        "accept":"Aceptar"
     },
     "menu": {
         "dashboard": "Panel principal",
@@ -25,14 +26,20 @@
         "logout": "Cerrar sesión"
     },
     "validation": {
+        "masculinePronoun": "El",
+        "femininePronoun": "La",
+        "neuterPronoun": "los",
         "required": "Este campo es requerido",
         "email": "Por favor ingrese un correo electrónico válido",
-        "minLength": "Debe tener al menos {{min}} caracteres",
-        "maxLength": "Debe tener máximo {{max}} caracteres",
+        "minLength": "{{field}} debe tener al menos {{min}} caracteres",
+        "maxLength": "{{field}} debe tener máximo {{max}} caracteres",
         "passwordMatch": "Las contraseñas no coinciden",
+        "enter":"Ingresa ",
+
         "number": "Debe ser un número",
         "date": "Debe ser una fecha válida",
         "phone": "Debe ser un número de teléfono válido"
+
     },
     "auth": {
         "login": "Iniciar sesión",
@@ -51,10 +58,20 @@
         "title": "Discípulos",
         "create": "Crear discípulo",
         "edit": "Editar discípulo",
-        "delete": "Eliminar discípulo"
+        "delete": "Eliminar discípulo",
+        "names": "Nombres",
+        "name": "Nombre",
+        "lastName": "Apellidos",
+        "identification": "Identificación",
+        "email": "Correo electrónico",
+        "phone": "Teléfono",
+        "address": "Dirección",
+        "birthDate": "Fecha de nacimiento"
     },
     "events": {
         "title": "Eventos",
+        "event":"Evento",
+        "scanEvent":"Evento Escaneado",
         "create": "Crear evento",
         "edit": "Editar evento",
         "delete": "Eliminar evento",
@@ -87,6 +104,10 @@
         "registerInEvent": "Registrarse en el evento",
         "registerAttendance": "Registrar asistencia",
         "qrInvalid": "QR inválido",
+        "messageScanQR":"Escanea el QR para registrarte en el evento",
+        "selectMinistry":"Selecciona un ministerio",
+        "titleModalRegisterEvent":"Resultado del registro",
+        "messageRegisterEvent":"Se realizo el registro exitosamente",
         "filters": {
             "title": "Filtros",
             "dateRange": "Rango de fecha",
@@ -105,12 +126,19 @@
             "meeting": "Reunión",
             "service": "Servicio",
             "other": "Otro"
+        },
+        "validation": {
+            "identification": {
+                "min": "La identificación debe tener al menos {{min}} caracteres",
+                "max": "La identificación no puede tener más de {{max}} caracteres"
+            }
         }
     },
     "ministries": {
         "title": "Ministerios",
         "create": "Crear ministerio",
         "edit": "Editar ministerio",
-        "delete": "Eliminar ministerio"
+        "delete": "Eliminar ministerio",
+        "ministry":"Ministerio"
     }
 }

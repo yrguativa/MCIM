@@ -149,21 +149,32 @@ export const eventService = {
     }
   },
 
-  async registerAttendance(attendance: Partial<EventAttendance>): Promise<string> {
-    // TODO: Implementar la llamada a la API
-    const response = await fetch('/api/events/attendance', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(attendance),
-    });
+  async registerAttendance(attendance: Partial<EventAttendance>): Promise<EventAttendance> {
+    try {
+      const query = `mutation CreateEventAttendance($createEventAttendanceInput: CreateEventAttendanceInput!) {
+        createEventAttendance(createEventAttendanceInput: $createEventAttendanceInput) {
+          id
+          dateRegister
+        }
+      }`;
+      const { data } = await api.post(API_URL,
+        JSON.stringify({
+          query,
+          variables: {
+            "createEventAttendanceInput": attendance
+          }
+        })
+      );
 
-    if (!response.ok) {
-      throw new Error('Error al registrar la asistencia');
+      return data.data.createEventAttendance;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error((error as AxiosError).response?.data);
+        throw new Error(JSON.stringify((error as AxiosError).response?.data) || 'Error updating ministry');
+      }
+      console.error(error);
+      throw new Error('Error updating ministry');
     }
-
-    return response.json();
   },
 
   async getEventAttendance(eventId: string): Promise<EventAttendance[]> {

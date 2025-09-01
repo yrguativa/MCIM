@@ -14,13 +14,18 @@ import {
     SheetHeader,
     SheetTitle,
 } from "@/components/ui/sheet"
-import { Select, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { SelectTrigger } from "@radix-ui/react-select";
 
 import { LoginOtherDataInput, LoginOtherDataSchema } from "../schemas/loginOtherDataSchemta";
 import { useAuthStore } from "@/src/stores";
-import { useMinistryStore } from "@/src/ministries/store";
+import { useMinistryStore } from "@/src/ministries/store/ministries.store";
 
 interface LoginOtherDataProps {
     isOpenSheet: boolean;

@@ -57,7 +57,7 @@ type EventAttendanceEntity {
   eventId: String!
   disciple: Disciple!
   discipleId: String!
-  timestamp: DateTime!
+  dateRegister: DateTime!
 }
 
 type Ministry {
@@ -117,7 +117,8 @@ type Query {
   cell(id: String!): Cell!
   disciples: [Disciple!]!
   disciple(id: String!): Disciple!
-  searchDisciples(searchTerm: String!): [Disciple!]!
+  discipleByName(name: String!): [Disciple!]!
+  discipleByIdentification(identification: String!): Disciple!
   events: [EventEntity!]!
   event(eventId: ID!): EventEntity!
   eventAttendance(eventId: ID!): [EventAttendanceEntity!]!
@@ -247,7 +248,12 @@ input CreateEventInput {
 
 input CreateEventAttendanceInput {
   eventId: String!
-  discipleId: String!
+  discipleId: String
+  identification: String
+  name: String
+  lastName: String
+  phone: String
+  ministryId: String
 }
 
 input CreateMinistryInput {

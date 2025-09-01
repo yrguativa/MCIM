@@ -35,6 +35,10 @@ export class EventsResolver {
     @Args('createEventAttendanceInput')
     createEventAttendanceInput: CreateEventAttendanceInput,
   ): Promise<EventAttendanceEntity> {
+    Logger.log(
+      '🚀 ~ EventsResolver ~ createEventAttendance ~ createEventAttendanceInput:',
+      createEventAttendanceInput,
+    );
     return this.eventsService.createAttendance(createEventAttendanceInput);
   }
 

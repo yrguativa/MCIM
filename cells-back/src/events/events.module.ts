@@ -8,6 +8,7 @@ import {
   EventAttendance,
   EventAttendanceSchema,
 } from './schemas/event.schema';
+import { DisciplesModule } from '../disciples/disciples.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import {
       { name: Event.name, schema: EventSchema },
       { name: EventAttendance.name, schema: EventAttendanceSchema },
     ]),
+    DisciplesModule,
   ],
   providers: [EventsResolver, EventsService],
   exports: [EventsService],

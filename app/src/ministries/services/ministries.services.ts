@@ -1,6 +1,5 @@
 import axios, { AxiosError } from 'axios';
 import { Ministry } from '../models/ministry';
-import { create } from 'zustand';
 
 const API_URL = 'http://localhost:3000/graphql';
 

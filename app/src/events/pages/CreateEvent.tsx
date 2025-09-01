@@ -38,7 +38,6 @@ export const CreateEvent: React.FC = () => {
     const addEvent = useEventStore(state => state.addEvent);
 
     async function onSubmit(data: Event) {
-        console.log("🚀 ~ onSubmit ~ data:", data)
         try {
             const success = await addEvent(data);
             if (success) {

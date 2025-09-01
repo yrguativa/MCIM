@@ -4,15 +4,16 @@ import { devtools, persist } from "zustand/middleware";
 import { Disciple } from "@/src/disciples/models/disciple";
 import { DisciplesService } from "@/src/disciples/services/disciples.services";
 
-
 interface DiscipleState {
     Disciples: Disciple[],
+    discipleSelected?: Disciple | undefined,
     searchResults: Disciple[],
 
     getDisciples: () => Promise<void>,
-    searchDisciples: (searchTerm: string) => Promise<void>,
     addDisciple: (disciple: Disciple) => Promise<boolean>,
     updateDisciple: (disciple: Disciple) => Promise<boolean>,
+    searchByName: (name: string) => Promise<void>,
+    searchByIdentification: (identification: string) => Promise<void>,
 }
 
 const storeDisciple: StateCreator<DiscipleState> = (set, get) => (
@@ -20,10 +21,19 @@ const storeDisciple: StateCreator<DiscipleState> = (set, get) => (
         Disciples: [],
         searchResults: [],
 
-        searchDisciples: async (searchTerm: string) => {
+        searchByName: async (name: string) => {
             try {
-                const results = await DisciplesService.searchDisciples(searchTerm);
+                const results = await DisciplesService.searchByName(name);
                 set({ searchResults: results });
+            } catch (error) {
+                console.error('Error searching disciples:', error);
+                set({ searchResults: [] });
+            }
+        },
+        searchByIdentification: async (identification: string) => {
+            try {
+                const results = await DisciplesService.searchByIdentification(identification);              
+                set({ discipleSelected: results });
             } catch (error) {
                 console.error('Error searching disciples:', error);
                 set({ searchResults: [] });

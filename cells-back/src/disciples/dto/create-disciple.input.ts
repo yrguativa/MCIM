@@ -26,15 +26,15 @@ export class CreateDiscipleInput {
   @Field(() => String, { nullable: true })
   @IsOptional()
   @IsEmail()
-  email: string;
+  email?: string;
 
   @Field(() => String, { nullable: true })
   @IsOptional()
-  phone: string;
+  phone?: string;
 
   @Field(() => String, { nullable: true })
   @IsOptional()
-  address: string;
+  address?: string;
 
   @Field(() => Date, { description: 'DOF (Date OF Birth)', nullable: true })
   @IsOptional()
@@ -47,7 +47,7 @@ export class CreateDiscipleInput {
     message: 'The date of birth is not valid',
   })
   @IsOptional()
-  birthDate: string;
+  birthDate?: string;
 
   @Field(() => String, { description: 'Ministry ID' })
   @IsNotEmpty({ message: 'The ministry ID is required' })

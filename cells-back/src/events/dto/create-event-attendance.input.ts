@@ -1,5 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
 
 @InputType()
 export class CreateEventAttendanceInput {
@@ -8,8 +8,33 @@ export class CreateEventAttendanceInput {
   @IsNotEmpty()
   eventId: string;
 
-  @Field()
+  @Field({ nullable: true })
   @IsString()
-  @IsNotEmpty()
-  discipleId: string;
+  @IsOptional()
+  discipleId?: string;
+
+  @Field({ nullable: true })
+  @IsString()
+  @IsOptional()
+  identification?: string;
+
+  @Field({ nullable: true })
+  @IsString()
+  @IsOptional()
+  name?: string;
+
+  @Field({ nullable: true })
+  @IsString()
+  @IsOptional()
+  lastName?: string;
+
+  @Field({ nullable: true })
+  @IsString()
+  @IsOptional()
+  phone?: string;
+
+  @Field({ nullable: true })
+  @IsString()
+  @IsOptional()
+  ministryId?: string;
 }

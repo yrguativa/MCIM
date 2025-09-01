@@ -30,12 +30,3 @@ export const EventSchema = z.object({
 });
 
 export type Event = z.infer<typeof EventSchema>;
-
-export const EventAttendanceSchema = z.object({
-    id: z.string(),
-    eventId: z.string(),
-    discipleId: z.string(),
-    timestamp: z.date(),
-});
-
-export type EventAttendance = z.infer<typeof EventAttendanceSchema>;

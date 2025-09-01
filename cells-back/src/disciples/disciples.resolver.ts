@@ -45,10 +45,17 @@ export class DisciplesResolver {
     return this.disciplesService.remove(id);
   }
 
-  @Query(() => [DiscipleEntity], { name: 'searchDisciples' })
-  searchDisciples(
-    @Args('searchTerm', { type: () => String }) searchTerm: string,
+  @Query(() => [DiscipleEntity], { name: 'discipleByName' })
+  searchDisciplesByName(
+    @Args('name', { type: () => String }) name: string,
   ): Promise<DiscipleEntity[]> {
-    return this.disciplesService.searchByName(searchTerm);
+    return this.disciplesService.searchByName(name);
+  }
+
+  @Query(() => DiscipleEntity, { name: 'discipleByIdentification' })
+  findOneByIdentification(
+    @Args('identification', { type: () => String }) identification: string,
+  ) {
+    return this.disciplesService.searchByIdentification(identification);
   }
 }

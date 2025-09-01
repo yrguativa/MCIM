@@ -12,15 +12,17 @@ const api = axios.create({
 
 
 export class DisciplesService {
-    static async searchDisciples(searchTerm: string): Promise<Disciple[]> {
+    static async searchByName(name: string): Promise<Disciple[]> {
         try {
             const query = `
-            query SearchDisciples($searchTerm: String!) {
-                searchDisciples(searchTerm: $searchTerm) {
+            query DiscipleByName($name: String!) {
+                discipleByName(name: $name) {
                     id
                     identification
                     name
                     lastName
+                    phone
+                    ministryId
                 }
             }
             `;
@@ -28,12 +30,46 @@ export class DisciplesService {
                 JSON.stringify({
                     query,
                     variables: {
-                        searchTerm
+                        name
                     }
                 })
             );
 
             return data.data.searchDisciples;
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                console.error((error as AxiosError).response?.data);
+                throw new Error(JSON.stringify((error as AxiosError).response?.data) || 'Error searching disciples');
+            }
+            console.error(error);
+            throw new Error('Error searching disciples');
+        }
+    }
+
+    static async searchByIdentification(identification: string): Promise<Disciple | undefined> {
+        try {
+            const query = `
+            query DiscipleByIdentification($identification: String!) {
+                discipleByIdentification(identification: $identification) {
+                    id
+                    identification
+                    name
+                    lastName
+                    phone
+                    ministryId
+                }
+            }
+            `;
+            const { data } = await api.post(API_URL,
+                JSON.stringify({
+                    query,
+                    variables: {
+                        identification
+                    }
+                })
+            );
+
+            return data.data != null ? data.data.discipleByIdentification : undefined
         } catch (error) {
             if (error instanceof AxiosError) {
                 console.error((error as AxiosError).response?.data);

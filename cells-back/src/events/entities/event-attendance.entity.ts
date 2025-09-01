@@ -34,5 +34,5 @@ export class EventAttendanceEntity {
 
   @CreateDateColumn()
   @Field()
-  timestamp: Date;
+  dateRegister: Date;
 }

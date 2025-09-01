@@ -10,6 +10,7 @@ interface EventState {
     lastEvent?: Event;
     events: Event[];
     attendances: EventAttendance[];
+    isOpenModal: boolean;
 
     // Event methods
     getEvent: (id: string) => Promise<void>;
@@ -18,9 +19,12 @@ interface EventState {
     updateEvent: (event: Event) => Promise<boolean>;
 
     // Attendance methods
-    registerAttendance: (attendance: EventAttendance) => Promise<boolean>;
+    registerAttendance: (attendance: Partial<EventAttendance>) => Promise<boolean>;
     getEventAttendance: (eventId: string) => Promise<EventAttendance[]>;
     validateEventCapacity: (eventId: string) => Promise<boolean>;
+
+    // Modal methods  
+    toggleModal: () => void;
 }
 
 const storeEvent: StateCreator<EventState> = (set, get) => ({
@@ -28,6 +32,7 @@ const storeEvent: StateCreator<EventState> = (set, get) => ({
     lastEvent: undefined,
     events: [],
     attendances: [],
+    isOpenModal: false,
 
     // Event methods implementation
     getEvent: async (id: string) => {
@@ -38,7 +43,7 @@ const storeEvent: StateCreator<EventState> = (set, get) => ({
         const events = await eventService.getEvents();
         if (events) {
             set({ events });
-            set({lastEvent:LastOrCurrentEvent(events)});
+            set({ lastEvent: LastOrCurrentEvent(events) });
         }
     },
     addEvent: async (event: Event) => {
@@ -67,18 +72,23 @@ const storeEvent: StateCreator<EventState> = (set, get) => ({
     },
 
     // Attendance methods implementation
-    registerAttendance: async (attendance: EventAttendance) => {
+    registerAttendance: async (attendance: Partial<EventAttendance>) => {
         const attendances = get().attendances;
         try {
-            // Primero validamos la capacidad
-            const canAttend = await get().validateEventCapacity(attendance.eventId);
-            if (!canAttend) {
-                throw new Error("El evento ha alcanzado su capacidad máxima");
-            }
-
-            const attendanceId = await eventService.registerAttendance(attendance);
+            const attendanceRegister = await eventService.registerAttendance(attendance);
             set({
-                attendances: [...attendances, { ...attendance, id: attendanceId }]
+                attendances: [...attendances, {
+                    id: attendanceRegister.id,
+                    eventId: attendance.eventId!,
+                    discipleId: attendance.discipleId || '',
+                    event: attendance.event,
+                    disciple: attendance.disciple,
+                    registrationDate: new Date(attendanceRegister.registrationDate),
+                    attended: false,
+                    attendanceDate: attendance.attendanceDate,
+                    notes: attendance.notes || '',
+                }],
+                isOpenModal: true,
             });
             return true;
         } catch (error) {
@@ -104,6 +114,12 @@ const storeEvent: StateCreator<EventState> = (set, get) => ({
         } catch (error) {
             return false;
         }
+    },
+
+    // Modal methods implementation
+    toggleModal: () => {
+        const isOpen = get().isOpenModal;
+        set({ isOpenModal: !isOpen })
     },
 });
 

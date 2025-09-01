@@ -140,7 +140,6 @@ const CellForm: React.FC = () => {
                                                                 value={x.label}
                                                                 key={x.value}
                                                                 onSelect={() => {
-                                                                    console.log('sdfsdf', x)
                                                                     form.setValue("neighborhood", x.value);
                                                                 }}
                                                             >

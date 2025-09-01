@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { useMinistryStore } from '@/src/ministries/store';
+import { useMinistryStore } from '@/src/ministries/store/ministries.store';
 import { useDiscipleStore } from '@/src/disciples/store/disciple.store';
 
 import MenuMain from '../components/MenuMain';

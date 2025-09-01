@@ -5,7 +5,7 @@ import { MinistriesService } from "../services/ministries.services";
 
 export interface MinistryState {
     ministries: Ministry[];
-    
+
     // Ministry methods
     getMinistries: () => Promise<void>;
     addMinistry: (ministry: Ministry) => Promise<boolean>;
@@ -18,15 +18,10 @@ const storeMinistry: StateCreator<MinistryState> = (set, get) => ({
     ministries: [],
 
     getMinistries: async () => {
-        try {
-            const ministries = await MinistriesService.getMinistries();
-            if (ministries && ministries.length > 0) {
-                set({ ministries: [...ministries] });
-            }
-        } catch (error) {
-            console.error('Error getting ministries:', error);
-            set({ ministries: [] });
-        }
+        const ministries = await MinistriesService.getMinistries();
+        if (ministries && ministries.length > 0) {
+            set({ ministries: [...ministries] });
+        };
     },
 
     addMinistry: async (ministry: Ministry) => {
@@ -45,10 +40,10 @@ const storeMinistry: StateCreator<MinistryState> = (set, get) => ({
         const ministries = get().ministries;
         try {
             await MinistriesService.updateMinistry(ministry);
-            set({ 
-                ministries: ministries.map(m => 
+            set({
+                ministries: ministries.map(m =>
                     m.id === ministry.id ? { ...ministry } : m
-                ) 
+                )
             });
             return true;
         } catch (error) {

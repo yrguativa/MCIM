@@ -11,5 +11,6 @@ import { MongooseModule } from '@nestjs/mongoose';
     ]),
   ],
   providers: [DisciplesResolver, DisciplesService],
+  exports: [DisciplesService],
 })
 export class DisciplesModule {}

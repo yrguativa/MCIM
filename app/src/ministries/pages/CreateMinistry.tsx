@@ -20,13 +20,13 @@ import { Ministry } from "../models/ministry";
 import { MinistrySchema } from "../schemas/ministrySchema";
 
 import { useAuthStore } from '@/src/stores';
-import { useMinistryStore } from '../store';
+import { useMinistryStore } from '../store/ministries.store';
 
 export const CreateMinistry: FC = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const userState = useAuthStore(state => state.user);
-    const { ministries, getMinistries, addMinistry, updateMinistry } = useMinistryStore();
+    const { ministries, addMinistry, updateMinistry } = useMinistryStore();
 
     const form = useForm<Ministry>({
         resolver: zodResolver(MinistrySchema),
@@ -39,9 +39,6 @@ export const CreateMinistry: FC = () => {
         }
     });
 
-    useEffect(() => {
-        getMinistries();
-    }, [getMinistries]);
 
     useEffect(() => {
         const loadMinistry = async () => {

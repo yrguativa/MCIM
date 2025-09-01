@@ -11,7 +11,8 @@
     "create": "Create",
     "search": "Search",
     "required": "This field is required",
-    "invalid": "This field is invalid"
+    "invalid": "This field is invalid",
+    "accept":"Accept"
   },
   "menu": {
     "dashboard": "Dashboard",
@@ -25,11 +26,15 @@
     "logout": "Logout"
   },
   "validation": {
+    "masculinePronoun": "The",
+    "femininePronoun": "The",
+    "neuterPronoun": "The",
     "required": "This field is required",
     "email": "Please enter a valid email",
-    "minLength": "Must be at least {{min}} characters",
-    "maxLength": "Must be at most {{max}} characters",
+    "minLength": "{{field}} must be at least {{min}} characters",
+    "maxLength": "{{field}} must be at most {{max}} characters",
     "passwordMatch": "Passwords do not match",
+    "enter":"Enter ",
     "number": "Must be a number",
     "date": "Must be a valid date",
     "phone": "Must be a valid phone number"
@@ -51,10 +56,20 @@
     "title": "Disciples",
     "create": "Create disciple",
     "edit": "Edit disciple",
-    "delete": "Delete disciple"
+    "delete": "Delete disciple",
+    "name": "Name",
+    "names": "Names",
+    "lastName": "Last names",
+    "identification": "Identification",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "birthDate": "Birth date"
   },
   "events": {
     "title": "Events",
+    "event":"Event",
+    "scanEvent":"Scanned Event",
     "create": "Create event",
     "edit": "Edit event",
     "delete": "Delete event",
@@ -87,6 +102,10 @@
     "qrInvalid": "Invalid QR code",
     "registerInEvent": "Register in event",
     "registerAttendance": "Register attendance",
+    "messageScanQR":"Scan the QR to register in the event",
+    "selectMinistry":"Select a ministry",
+    "titleModalRegisterEvent":"Registration result",
+    "messageRegisterEvent":"The registration was successful",
     "filters": {
       "title": "Filters",
       "dateRange": "Date range",
@@ -111,6 +130,7 @@
     "title": "Ministries",
     "create": "Create ministry",
     "edit": "Edit ministry",
-    "delete": "Delete ministry"
+    "delete": "Delete ministry",
+    "ministry":"Ministry"
   }
 }
