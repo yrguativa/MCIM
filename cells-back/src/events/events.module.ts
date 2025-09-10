@@ -2,13 +2,12 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { EventsService } from './events.service';
 import { EventsResolver } from './events.resolver';
+import { Event, EventSchema } from './schemas/event.schema';
+import { DisciplesModule } from '../disciples/disciples.module';
 import {
-  Event,
-  EventSchema,
   EventAttendance,
   EventAttendanceSchema,
-} from './schemas/event.schema';
-import { DisciplesModule } from '../disciples/disciples.module';
+} from './schemas/event-attendance.schema';
 
 @Module({
   imports: [

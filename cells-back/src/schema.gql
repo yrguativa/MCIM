@@ -53,8 +53,6 @@ type Disciple {
 
 type EventAttendanceEntity {
   id: ID!
-  event: EventEntity!
-  eventId: String!
   disciple: Disciple!
   discipleId: String!
   dateRegister: DateTime!
@@ -75,17 +73,17 @@ type EventEntity {
   date: DateTime!
   startTime: DateTime!
   endTime: DateTime
-  ministry: Ministry!
-  ministryId: ID!
+  ministryId: ID
   location: String!
   capacity: Float
   createdUser: String!
   createdUserId: ID!
   createdDate: DateTime!
-  attendees: [EventAttendanceEntity!]
   createdAt: DateTime!
   updatedAt: DateTime!
   active: Boolean!
+  ministry: Ministry
+  attendees: [EventAttendanceEntity!]!
 }
 
 type Users {
@@ -259,14 +257,12 @@ input CreateEventAttendanceInput {
 input CreateMinistryInput {
   name: String!
   createdUser: ID!
-  createdDate: DateTime!
   active: Boolean! = true
 }
 
 input UpdateMinistryInput {
   name: String!
   createdUser: ID!
-  createdDate: DateTime!
   active: Boolean! = true
   id: ID!
 }

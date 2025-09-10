@@ -7,7 +7,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useLoginHook } from "../hooks/loginHook"
 import { NavLink } from "react-router-dom"
 import { toast } from "sonner"
-import LoginOtherData from "../components/loginOtherData"
+import LoginOtherData from "../components/LoginOtherData"
 
 export const LoginPage: React.FC = () => {
     const { form, isOpenSheet, setIsOpenSheet, handleSubmit, handleGoogleLogin } = useLoginHook();

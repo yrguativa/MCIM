@@ -1,4 +1,12 @@
-import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  ID,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { EventsService } from './events.service';
 import { EventEntity } from './entities/event.entity';
 import { EventAttendanceEntity } from './entities/event-attendance.entity';
@@ -6,7 +14,7 @@ import { CreateEventInput } from './dto/create-event.input';
 import { CreateEventAttendanceInput } from './dto/create-event-attendance.input';
 import { Logger } from '@nestjs/common';
 
-@Resolver(() => Event)
+@Resolver(() => EventEntity)
 export class EventsResolver {
   constructor(private readonly eventsService: EventsService) {}
 
@@ -47,5 +55,13 @@ export class EventsResolver {
     @Args('eventId', { type: () => ID }) eventId: string,
   ): Promise<EventAttendanceEntity[]> {
     return this.eventsService.getEventAttendance(eventId);
+  }
+
+  @ResolveField('attendees', () => [EventAttendanceEntity])
+  async getAttendees(
+    @Parent() event: EventEntity,
+  ): Promise<EventAttendanceEntity[]> {
+    Logger.log(`Resolving attendees for event ID: ${event.id}`);
+    return this.eventsService.getEventAttendance(event.id);
   }
 }

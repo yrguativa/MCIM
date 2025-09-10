@@ -18,21 +18,11 @@ export class Event extends Document {
   @Prop({ required: false })
   endTime?: Date;
 
-  @Prop({
-    type: MongooseSchema.Types.ObjectId,
-    ref: 'Ministry',
-    required: false,
-  })
-  ministry: string;
-
   @Prop({ required: true })
   location: string;
 
   @Prop({ required: true })
   capacity: number;
-
-  @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Disciple' }] })
-  attendees: string[];
 
   @Prop({ required: true })
   createdBy: string;
@@ -42,34 +32,13 @@ export class Event extends Document {
 
   @Prop({ default: true })
   active: boolean;
-}
-
-export const EventSchema = SchemaFactory.createForClass(Event);
-
-@Schema()
-export class EventAttendance extends Document {
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Event', required: true })
-  event: string;
 
   @Prop({
     type: MongooseSchema.Types.ObjectId,
-    ref: 'Disciple',
-    required: true,
+    ref: 'Ministry',
+    required: false,
   })
-  disciple: string;
-
-  @Prop({ required: true })
-  attended: boolean;
-
-  @Prop()
-  notes: string;
-
-  @Prop({ required: true })
-  createdUser: string;
-
-  @Prop({ required: true })
-  createdDate: Date;
+  ministryId: string;
 }
 
-export const EventAttendanceSchema =
-  SchemaFactory.createForClass(EventAttendance);
+export const EventSchema = SchemaFactory.createForClass(Event);

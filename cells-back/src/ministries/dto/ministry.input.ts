@@ -1,7 +1,6 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
 import {
   IsBoolean,
-  IsDate,
   IsMongoId,
   IsOptional,
   IsString,
@@ -18,11 +17,6 @@ export class CreateMinistryInput {
   @Field(() => ID)
   @IsMongoId()
   createdUser: string;
-
-  @Field(() => Date)
-  @IsOptional()
-  @IsDate()
-  createdDate?: Date;
 
   @Field(() => Boolean, { defaultValue: true })
   @IsOptional()

@@ -14,7 +14,10 @@ export class MinistriesService {
   async create(
     createMinistryInput: CreateMinistryInput,
   ): Promise<MinistryEntity> {
-    const createdMinistry = new this.ministryModel(createMinistryInput);
+    const createdMinistry = new this.ministryModel({
+      ...createMinistryInput,
+      createdDate: new Date(),
+    });
     const savedMinistry = await createdMinistry.save();
     return this.toModel(savedMinistry);
   }

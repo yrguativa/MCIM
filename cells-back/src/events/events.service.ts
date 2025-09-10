@@ -1,13 +1,14 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Event, EventAttendance } from './schemas/event.schema';
+import { Event } from './schemas/event.schema';
 import { EventEntity } from './entities/event.entity';
 import { EventAttendanceEntity } from './entities/event-attendance.entity';
 import { CreateEventInput } from './dto/create-event.input';
 import { CreateEventAttendanceInput } from './dto/create-event-attendance.input';
 import { DisciplesService } from 'src/disciples/disciples.service';
 import { CreateDiscipleInput } from 'src/disciples/dto/create-disciple.input';
+import { EventAttendance } from './schemas/event-attendance.schema';
 
 @Injectable()
 export class EventsService {
@@ -29,19 +30,14 @@ export class EventsService {
   }
 
   async findAll(): Promise<EventEntity[]> {
-    const events = await this.eventModel
-      .find()
-      .populate('ministry')
-      .populate('attendees')
-      .exec();
+    const events = await this.eventModel.find().populate('ministryId').exec();
     return events.map((event) => this.toEventModel(event));
   }
 
   async findOne(id: string): Promise<EventEntity> {
     const event = await this.eventModel
       .findById(id)
-      .populate('ministry')
-      .populate('attendees')
+      .populate('ministryId')
       .exec();
     Logger.log('🚀 ~ EventsService ~ findOne ~ event:', event);
     if (!event) {
@@ -90,15 +86,11 @@ export class EventsService {
     return this.toAttendanceModel(savedAttendance);
   }
 
-  async getEventAttendance(eventId: string): Promise<EventAttendanceEntity[]> {
-    const attendances = await this.eventAttendanceModel
-      .find({ event: eventId })
-      .populate('disciple')
-      .exec();
-    return attendances.map((attendance) => this.toAttendanceModel(attendance));
-  }
-
   private toEventModel(event: Event): EventEntity {
+    const populatedMinistry = event.ministryId as any;
+    const ministryIsObject =
+      populatedMinistry && typeof populatedMinistry === 'object';
+
     return {
       id: event._id.toString(),
       name: event.name,
@@ -106,12 +98,14 @@ export class EventsService {
       date: event.date,
       startTime: event.startTime,
       endTime: event.endTime,
-      ministryId: event.ministry?.toString(),
+      ministryId: ministryIsObject
+        ? populatedMinistry._id.toString()
+        : event.ministryId,
       location: event.location,
       capacity: event.capacity,
       active: event.active,
-      attendees: [], // Will be populated by resolver
-      ministry: null, // Will be populated by resolver
+      attendees: [],
+      ministry: ministryIsObject ? populatedMinistry : null,
 
       createdUser: event.createdBy,
       createdUserId: event.createdBy,
@@ -121,15 +115,21 @@ export class EventsService {
     };
   }
 
+  async getEventAttendance(eventId: string): Promise<EventAttendanceEntity[]> {
+    const attendances = await this.eventAttendanceModel
+      .find({ event: eventId })
+      .populate('disciple')
+      .exec();
+    return attendances.map((attendance) => this.toAttendanceModel(attendance));
+  }
+
   private toAttendanceModel(
     attendance: EventAttendance,
   ): EventAttendanceEntity {
     return {
       id: attendance._id.toString(),
-      event: null, // Will be populated by resolver
-      eventId: attendance.event?.toString(),
-      disciple: null, // Will be populated by resolver
-      discipleId: attendance.disciple?.toString(),
+      disciple: attendance.disciple as any,
+      discipleId: (attendance.disciple as any)._id.toString(),
       dateRegister: attendance.createdDate,
     };
   }
