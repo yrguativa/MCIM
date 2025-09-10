@@ -22,7 +22,7 @@ import { MinistrySchema } from "../schemas/ministrySchema";
 import { useAuthStore } from '@/src/stores';
 import { useMinistryStore } from '../store/ministries.store';
 
-export const CreateMinistry: FC = () => {
+const CreateMinistry: FC = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const userState = useAuthStore(state => state.user);

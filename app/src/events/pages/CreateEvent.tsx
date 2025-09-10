@@ -20,8 +20,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Card } from "@/components/ui/card";
+import { de } from 'date-fns/locale';
 
-export const CreateEvent: React.FC = () => {
+const CreateEvent: React.FC = () => {
     const navigate = useNavigate();
     const userState = useAuthStore(state => state.user);
     const [hasEndDate, setHasEndDate] = useState(false);
@@ -179,3 +180,5 @@ export const CreateEvent: React.FC = () => {
         </div>
     );
 };
+
+export default CreateEvent;

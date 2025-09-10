@@ -1,10 +1,11 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { WeeklyCalendar } from './pages/WeeklyCalendar';
-import { CreateEvent } from './pages/CreateEvent';
-import { ScanQR } from './pages/ScanQR';
 
-export const EventsRoutes: React.FC = () => {
+const WeeklyCalendar = React.lazy(() => import('./pages/WeeklyCalendar'));
+const CreateEvent = React.lazy(() => import('./pages/CreateEvent'));
+const ScanQR = React.lazy(() => import('./pages/ScanQR'));
+
+const EventsRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<WeeklyCalendar />} />
@@ -14,3 +15,5 @@ export const EventsRoutes: React.FC = () => {
     </Routes>
   );
 };
+
+export default EventsRoutes;

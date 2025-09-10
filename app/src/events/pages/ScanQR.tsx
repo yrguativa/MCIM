@@ -17,7 +17,7 @@ import { useRegisterEventHook } from '../hooks/registerEventHook';
 import { EventRegisterConfirmModal } from '../components/EventRegisterConfirmModal';
 import { useMinistryStore } from '@/src/ministries/store/ministries.store';
 
-export const ScanQR: React.FC = () => {
+const ScanQR: React.FC = () => {
   const { t } = useTranslation();
   const { ministries } = useMinistryStore();
 
@@ -146,3 +146,5 @@ export const ScanQR: React.FC = () => {
     </div>
   );
 };
+
+export default ScanQR;

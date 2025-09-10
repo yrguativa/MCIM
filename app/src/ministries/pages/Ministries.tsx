@@ -15,7 +15,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useMinistryStore } from '../store/ministries.store';
 
-export const Ministries: React.FC = () => {
+const Ministries: React.FC = () => {
     const { ministries, getMinistries } = useMinistryStore();
 
     useEffect(() => {
@@ -85,3 +85,5 @@ export const Ministries: React.FC = () => {
         </div >
     );
 };
+
+export default Ministries;

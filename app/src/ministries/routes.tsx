@@ -1,9 +1,10 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { CreateMinistry } from './pages/CreateMinistry';
-import { Ministries } from './pages/Ministries';
 
-export const MinistryRoutes = () => {
+const Ministries = React.lazy(() => import('./pages/Ministries'));
+const CreateMinistry = React.lazy(() => import('./pages/CreateMinistry'));
+
+const MinistryRoutes: React.FC = () => {
     return (
         <Routes>
             <Route path="/" element={<Ministries />} />
@@ -12,3 +13,5 @@ export const MinistryRoutes = () => {
         </Routes>
     );
 };
+
+export default MinistryRoutes;

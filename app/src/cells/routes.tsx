@@ -1,10 +1,11 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Cells from "./pages/cells";
-import CellForm from "./pages/cellForm";
-import CellRegister from "./pages/cellRegister";
 
-export const CellsRoutes: React.FC = () => {
+const Cells = React.lazy(() => import("./pages/cells"));
+const CellForm = React.lazy(() => import("./pages/cellForm"));
+const CellRegister = React.lazy(() => import("./pages/cellRegister"));
+
+const CellsRoutes: React.FC = () => {
     return (
         <Routes>
             <Route path="/" element={<Cells />} />
@@ -13,3 +14,5 @@ export const CellsRoutes: React.FC = () => {
         </Routes>
     );
 };
+
+export default CellsRoutes;

@@ -1,9 +1,10 @@
-import { FC } from 'react';
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import DiscipleForm from './pages/discipleForm';
-import Disciples from './pages/disciples';
 
-export const DisciplesRoutes: FC = () => {
+const Disciples = React.lazy(() => import('./pages/disciples'));
+const DiscipleForm = React.lazy(() => import('./pages/discipleForm'));
+
+const DisciplesRoutes: React.FC = () => {
     return (
         <Routes>
             <Route path="/" element={<Disciples />} />
@@ -12,3 +13,5 @@ export const DisciplesRoutes: FC = () => {
         </Routes>
     );
 };
+
+export default DisciplesRoutes;

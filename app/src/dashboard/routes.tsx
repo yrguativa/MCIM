@@ -1,11 +1,11 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 
-import HomePage from "./pages/HomePage";
-import { CellsRoutes } from "../cells/routes";
-import { DisciplesRoutes } from "../disciples/routes";
-import { EventsRoutes } from "../events/routes";
-import { MinistryRoutes } from "../ministries/routes";
+const HomePage = React.lazy(() => import("./pages/HomePage"));
+const CellsRoutes = React.lazy(() => import("../cells/routes"));
+const DisciplesRoutes = React.lazy(() => import("../disciples/routes"));
+const EventsRoutes = React.lazy(() => import("../events/routes"));
+const MinistryRoutes = React.lazy(() => import("../ministries/routes"));
 
 export const DashboardRoutes: React.FC = () => {
     return (
