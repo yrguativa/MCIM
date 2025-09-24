@@ -43,22 +43,6 @@ const MenuMovil: React.FC = () => {
                 Comming soon
               </Badge>
             </a>
-            <NavLink to="/cells" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-primary transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}>
-              <Package className="h-4 w-4" />
-              {t('menu.cells')}
-            </NavLink>
-            <NavLink to="/disciples" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}>
-              <Users className="h-4 w-4" />
-              {t('menu.disciples')}
-            </NavLink>
-            <NavLink to="/events" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}>
-              <CalendarDays className="h-4 w-4" />
-              {t('menu.events')}
-            </NavLink>
-            <NavLink to="/ministries" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}>
-              <Package2 className="h-4 w-4" />
-              {t('menu.ministries')}
-            </NavLink>
             <a
               href="#"
               className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
@@ -69,6 +53,23 @@ const MenuMovil: React.FC = () => {
                 Comming soon
               </Badge>
             </a>
+            <NavLink to="/cells" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-primary transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}>
+              <Package className="h-4 w-4" />
+              {t('menu.cells')}
+            </NavLink>
+            <NavLink to="/events" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}>
+              <CalendarDays className="h-4 w-4" />
+              {t('menu.events')}
+            </NavLink>
+            <NavLink to="/disciples" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}>
+              <Users className="h-4 w-4" />
+              {t('menu.disciples')}
+            </NavLink>
+            
+            <NavLink to="/ministries" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}>
+              <Package2 className="h-4 w-4" />
+              {t('menu.ministries')}
+            </NavLink>            
           </nav>
         </div>
         <div className="mt-auto p-4">

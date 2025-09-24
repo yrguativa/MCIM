@@ -1,10 +1,11 @@
 import React from 'react';
-import DisciplesTableComponent from '../components/disciplesTableComponent';
+import { Link } from 'react-router-dom';
+
+import { Plus } from 'lucide-react';
+import { buttonVariants } from '@/components/ui/button';
 import { DisciplesColumnsTable } from '../components/disciplesColumnsTable';
 
-import { Link } from 'react-router-dom';
-import { buttonVariants } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import TableComponent from '@/src/app/components/TableComponent';
 import { useDiscipleStore } from '../store/disciple.store';
 
 const Disciples: React.FC = () => {
@@ -19,7 +20,7 @@ const Disciples: React.FC = () => {
                 </Link>
             </div>
             <div className="flex items-center items-center justify-center text-start rounded-lg border border-dashed p-4 shadow-sm">
-                <DisciplesTableComponent data={discipleState} columns={DisciplesColumnsTable}></DisciplesTableComponent>
+                <TableComponent data={discipleState} columns={DisciplesColumnsTable}></TableComponent>
             </div>
         </>
     );

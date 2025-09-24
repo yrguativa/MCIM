@@ -6,8 +6,15 @@ export interface Event {
     endDate?: Date;
     location: string;
     capacity?: number;
-    attendees?: string[]; // Array of disciple IDs
+    attendees?: EventAttendance[]; 
     createdAt: Date;
-    createdBy: string; // User ID of the creator
+    createdBy: string;
     updatedAt: Date;
+}
+
+export interface EventAttendance{
+    id: string;
+    disciple: string;
+    discipleId: string;
+    dateRegister: Date;
 }

@@ -42,8 +42,17 @@ const storeEvent: StateCreator<EventState> = (set, get) => ({
     getEvents: async () => {
         const events = await eventService.getEvents();
         if (events) {
-            set({ events });
-            set({ lastEvent: LastOrCurrentEvent(events) });
+            set({ events: [...events] });
+            const lastOrCurrentEvent = LastOrCurrentEvent(events);
+            if (lastOrCurrentEvent && (get().lastEvent === undefined || get().lastEvent?.id !== lastOrCurrentEvent.id)) {
+                const lastEventInfo = await eventService.getEvent(lastOrCurrentEvent.id);
+                set({ lastEvent: lastEventInfo });
+            }
+            else if (!lastOrCurrentEvent && events.length > 0 && (get().lastEvent === undefined ||
+                get().lastEvent?.id !== events[events.length - 1].id)) {
+                const lastEventInfo = await eventService.getEvent(events[events.length - 1].id);
+                set({ lastEvent: lastEventInfo });
+            }
         }
     },
     addEvent: async (event: Event) => {

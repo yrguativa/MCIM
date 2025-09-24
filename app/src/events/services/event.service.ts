@@ -22,11 +22,42 @@ export const eventService = {
           date
           startTime
           endTime
+          ministry {
+            id
+            name
+            createdUser
+            createdDate
+            active
+          }
+          ministryId
           location
           capacity
-          createdUser 
+          createdUser
+          createdUserId
           createdDate
+          attendees {
+            id
+            disciple {
+              id
+              identification
+              name
+              lastName
+              email
+              phone
+              address
+              birthDate
+              ministryId
+              createdUser
+              createdDate
+              updatedUser
+              updatedDate
+            }
+            discipleId
+            dateRegister
+          }
           createdAt
+          updatedAt
+          active
         }
       }
       `;

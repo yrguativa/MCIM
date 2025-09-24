@@ -3,7 +3,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Plus } from 'lucide-react';
-import AssistantsTableComponent from '../components/assistantsTableComponent';
+
+import TableComponent from '@/src/app/components/TableComponent';
 import { ColumnsAssistants } from '../components/assistantsColumnsTable';
 import { buttonVariants } from "@/components/ui/button";
 
@@ -23,7 +24,7 @@ const Cells: React.FC = () => {
         </Link>
       </div>
       <div className="flex items-center items-center justify-center text-start rounded-lg border border-dashed p-4 shadow-sm">
-        <AssistantsTableComponent data={cellsState} columns={ColumnsAssistants}></AssistantsTableComponent>
+        <TableComponent data={cellsState} columns={ColumnsAssistants}></TableComponent>
       </div >
     </>
   );

@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
-import { es, enUS, de } from 'date-fns/locale';
+import { es, enUS } from 'date-fns/locale';
 import { CalendarPlus, QrCode } from 'lucide-react';
 import { EventWeeklyCalendar } from '../components/EventWeeklyCalendar';
 import { useWeeklyCalendarHook } from '../hooks/weeklyCalendarHook';
