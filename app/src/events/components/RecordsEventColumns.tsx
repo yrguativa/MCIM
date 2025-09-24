@@ -18,7 +18,6 @@ export const RecordsEventColumns = (): ColumnDef<EventAttendance>[] => {
             header: t('events.recordsAssistance.columns.dateRegister'),
             accessorKey: "dateRegister",
             cell: (info) => {
-                console.log("🚀 ~ RecordsEventColumns ~ info:", info)
                 const value = info.getValue() as string;
                 return (
                     <TooltipProvider>

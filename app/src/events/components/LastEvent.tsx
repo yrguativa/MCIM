@@ -20,7 +20,6 @@ const LastEvent: React.FC<LastEventProps> = ({ event }) => {
     const locale = i18n.language === 'es' ? es : enUS;
 
     const data = IntervalsWithEvents(event.attendees || []);
-    console.log("🚀 ~ LastEvent ~ event.attendees:", event.attendees)
     const timeRegister = data.map((item) => ({ start: item.start, end: item.end, value: item.registers.length }));
 
     return (
@@ -37,14 +36,14 @@ const LastEvent: React.FC<LastEventProps> = ({ event }) => {
                 <p><strong>Ubicación:</strong> {event.location}</p>
                 {event.description && (
                     <p><strong>Descripción:</strong> {event.description}</p>
-                )}
+                )} 
             </div>
 
-            <div className='mt-4' style={{ border: '1px solid #ccc', padding: 16, borderRadius: 8, minWidth: 400 }}>
+            <div className='mt-4 border-1 border-solid border-gray-400 p-4 rounded-lg min-w-md' >
                 <h3 className="mb-3">Tiempos de Registro </h3>
                 <LineChartStep data={timeRegister} />
             </div>
-            <div className='mt-4' style={{ border: '1px solid #ccc', padding: 16, borderRadius: 8, minWidth: 400 }}>
+            <div className='mt-4 border-1 border-solid border-gray-400 p-4 rounded-lg'>
                 <h3 className="mb-3">{t('events.recordsAssistance.title')}</h3>
                 <TableComponent data={event.attendees || []} columns={RecordsEventColumns()}></TableComponent>
             </div>
