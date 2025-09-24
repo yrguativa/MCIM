@@ -25,7 +25,7 @@ import { Disciple, DiscipleSchema } from '../schemas/discipleSchema';
 import { DisciplesService } from '../services/disciples.services';
 
 import { useMinistryStore } from '@/src/ministries/store/ministries.store';
-import { useAuthStore } from '@/src/stores';
+import { useAuthStore } from '@/src/app/stores';
 import { useDiscipleStore } from '../store/disciple.store';
 
 const DiscipleForm: React.FC = () => {

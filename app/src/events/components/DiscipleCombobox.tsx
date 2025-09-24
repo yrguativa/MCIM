@@ -15,7 +15,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useDiscipleStore } from "@/src/stores";
+import { useDiscipleStore } from "@/src/app/stores";
 
 interface DiscipleComboboxProps {
   onSelect: (value: string) => void;

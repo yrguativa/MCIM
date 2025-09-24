@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { CircleUser, Home, LineChart, Menu, Package, Package2, Search, ShoppingCart, Users } from "lucide-react";
-import { useAuthStore } from "@/src/stores";
+import { useAuthStore } from "@/src/app/stores";
 import { useTranslation } from "react-i18next";
 
 const MenuMain: React.FC = () => {

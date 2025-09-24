@@ -1,14 +1,12 @@
 import React from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 
-import { useAuthStore } from "./stores/auth/auth.store";
+import { useAuthStore } from "./app/stores/auth/auth.store";
 
 import DashboardPage from "./dashboard/pages/Dashboard";
 import { LoginPage } from "./public/pages/Login";
-import { RegisterPage } from "./public/pages/Register";
-import { ForgotPasswordPage } from "./public/pages/ForgotPassword";
-import { EventPage } from "./public/pages/EventPage";
-import EventRegisterPage from "./public/pages/EventRegister";
+import { PublicRoutes } from "./public/routes";
+
 
 // Protected Route Component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -31,12 +29,8 @@ export const GeneralRoutes: React.FC = () => {
 
             {/* Public Routes */}
             <Route path="login" element={<LoginPage />} />
-            <Route path="register" element={<RegisterPage />} />
-            <Route path="forgot-password" element={<ForgotPasswordPage />} />
 
-            {/* Public Routes without authentication check */}
-            <Route path="eventPage/:id" element={<EventPage />} />
-            <Route path="registerInEvent" element={<EventRegisterPage />} />
+            <Route path="public/*" element={<PublicRoutes />} />
         </Routes>
     );
 };

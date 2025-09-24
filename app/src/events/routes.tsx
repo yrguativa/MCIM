@@ -11,7 +11,6 @@ const EventsRoutes: React.FC = () => {
       <Route path="/" element={<WeeklyCalendar />} />
       <Route path="create" element={<CreateEvent />} />
       <Route path="scan" element={<ScanQR />} />
-
     </Routes>
   );
 };

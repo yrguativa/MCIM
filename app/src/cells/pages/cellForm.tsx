@@ -18,7 +18,7 @@ import { Cell, CellSchema } from '../schemas/cellSchema';
 import { Neighborhood } from "@/src/cells/schemas/neighborhood.enum";
 
 import { useDiscipleStore } from '@/src/disciples/store/disciple.store';
-import { useAuthStore } from '@/src/stores';
+import { useAuthStore } from '@/src/app/stores';
 import { useCellStore } from '../store/cell.store';
 
 const CellForm: React.FC = () => {

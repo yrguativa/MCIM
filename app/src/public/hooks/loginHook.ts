@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 import { LoginInput, LoginSchema } from "../schemas/loginSchema"
 import { useState } from "react"
-import { useAuthStore } from "@/src/stores"
+import { useAuthStore } from "@/src/app/stores"
 
 export const useLoginHook = () => {
     const navigate = useNavigate()

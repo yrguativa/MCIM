@@ -55,7 +55,7 @@ export const LoginPage: React.FC = () => {
                                                     <div className="flex items-center">
                                                         <FormLabel>Password</FormLabel>
                                                         <NavLink
-                                                            to="/forgot-password"
+                                                            to="/public/forgot-password"
                                                             className="ml-auto text-sm underline-offset-4 hover:underline"
                                                         >
                                                             Forgot your password?
@@ -101,7 +101,7 @@ export const LoginPage: React.FC = () => {
                             </div>
                             <div className="text-center text-sm">
                                 Don&apos;t have an account?{" "}
-                                <NavLink to="/register" className="underline underline-offset-4">
+                                <NavLink to="public/register" className="underline underline-offset-4">
                                     Sign up
                                 </NavLink>
                             </div>

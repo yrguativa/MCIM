@@ -14,7 +14,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { toast } from 'sonner';
 
-import { useAuthStore } from '@/src/stores';
+import { useAuthStore } from '@/src/app/stores';
 import { useCellStore } from '../store/cell.store';
 
 import { CellRecordInput, CellRecordSchema } from '../schemas/cellRecordsSchema';

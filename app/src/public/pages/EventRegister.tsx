@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 
 import  ScanQR  from "@/src/events/pages/ScanQR";
 
-export const EventRegisterPage: React.FC = () => {
+const EventRegisterPage: React.FC = () => {
     const { t } = useTranslation();
     return (
         <div className=" min-h-svh flex-row items-center justify-center">

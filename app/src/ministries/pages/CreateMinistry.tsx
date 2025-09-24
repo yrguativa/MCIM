@@ -19,7 +19,7 @@ import { Card } from "@/components/ui/card";
 import { Ministry } from "../models/ministry";
 import { MinistrySchema } from "../schemas/ministrySchema";
 
-import { useAuthStore } from '@/src/stores';
+import { useAuthStore } from '@/src/app/stores';
 import { useMinistryStore } from '../store/ministries.store';
 
 const CreateMinistry: FC = () => {

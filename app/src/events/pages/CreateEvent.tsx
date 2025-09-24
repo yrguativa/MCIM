@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
 import { toast } from "sonner";
-import { useAuthStore } from "../../stores/auth/auth.store";
+import { useAuthStore } from "../../app/stores/auth/auth.store";
 import { useEventStore } from "../store/event.store";
 import { Event } from "../models/event";
 import { EventSchema } from "../schemas/eventSchema";

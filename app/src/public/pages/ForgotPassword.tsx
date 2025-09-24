@@ -7,6 +7,7 @@ import { GalleryVerticalEnd } from "lucide-react"
 
 import { z } from "zod"
 import { toast } from "sonner"
+import { de } from "date-fns/locale"
 
 const ForgotPasswordSchema = z.object({
     email: z.string()
@@ -16,7 +17,7 @@ const ForgotPasswordSchema = z.object({
 
 type ForgotPasswordInput = z.infer<typeof ForgotPasswordSchema>
 
-export const ForgotPasswordPage: React.FC = () => {
+const ForgotPasswordPage: React.FC = () => {
     const navigate = useNavigate()
 
     const [isLoading, setIsLoading] = useState(false)
@@ -97,3 +98,5 @@ export const ForgotPasswordPage: React.FC = () => {
         </div>
     )
 }
+
+export default ForgotPasswordPage;

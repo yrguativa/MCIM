@@ -24,7 +24,7 @@ import {
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
 import { LoginOtherDataInput, LoginOtherDataSchema } from "../schemas/loginOtherDataSchemta";
-import { useAuthStore } from "@/src/stores";
+import { useAuthStore } from "@/src/app/stores";
 import { useMinistryStore } from "@/src/ministries/store/ministries.store";
 
 interface LoginOtherDataProps {

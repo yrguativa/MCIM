@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { GalleryVerticalEnd } from "lucide-react"
-import { useAuthStore } from "@/src/stores/auth/auth.store"
+import { useAuthStore } from "@/src/app/stores/auth/auth.store"
 import {
     Select,
     SelectContent,
@@ -16,7 +16,7 @@ import {
 import { RegisterInput, RegisterSchema } from "../schemas/registerSchema"
 import { toast } from "sonner"
 
-export const RegisterPage: React.FC = () => {
+const RegisterPage: React.FC = () => {
     const navigate = useNavigate()
 
     const { register } = useAuthStore()
@@ -157,3 +157,5 @@ export const RegisterPage: React.FC = () => {
         </div>
     )
 }
+
+export default RegisterPage;
