@@ -1,8 +1,8 @@
 import plugin from 'tailwindcss-animate';
 
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  darkMode: ["class"],
+// Tailwind v4 configuration
+export default {
+  darkMode: 'class',
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
