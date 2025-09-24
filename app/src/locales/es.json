@@ -12,7 +12,7 @@
         "search": "Buscar",
         "required": "Este campo es requerido",
         "invalid": "Este campo es inválido",
-        "accept":"Aceptar"
+        "accept": "Aceptar"
     },
     "menu": {
         "dashboard": "Panel principal",
@@ -34,12 +34,10 @@
         "minLength": "{{field}} debe tener al menos {{min}} caracteres",
         "maxLength": "{{field}} debe tener máximo {{max}} caracteres",
         "passwordMatch": "Las contraseñas no coinciden",
-        "enter":"Ingresa ",
-
+        "enter": "Ingresa ",
         "number": "Debe ser un número",
         "date": "Debe ser una fecha válida",
         "phone": "Debe ser un número de teléfono válido"
-
     },
     "auth": {
         "login": "Iniciar sesión",
@@ -70,8 +68,8 @@
     },
     "events": {
         "title": "Eventos",
-        "event":"Evento",
-        "scanEvent":"Evento Escaneado",
+        "event": "Evento",
+        "scanEvent": "Evento Escaneado",
         "create": "Crear evento",
         "edit": "Editar evento",
         "delete": "Eliminar evento",
@@ -92,22 +90,22 @@
         "notOrganizer": "Sin organizador",
         "unregister": "Cancelar registro",
         "createdBy": "Creado por",
-        "viewEventPage":"Ver página del evento",
+        "viewEventPage": "Ver página del evento",
         "details": "Ver detalles",
         "upcoming": "Próximos eventos",
         "past": "Eventos pasados",
         "all": "Todos los eventos",
         "eventCalendar": "Calendario de Eventos",
-        "scanQR":"Escanear QR",
-        "withoutEvents":"No hay eventos",
+        "scanQR": "Escanear QR",
+        "withoutEvents": "No hay eventos",
         "close": "Cerrar",
         "registerInEvent": "Registrarse en el evento",
         "registerAttendance": "Registrar asistencia",
         "qrInvalid": "QR inválido",
-        "messageScanQR":"Escanea el QR para registrarte en el evento",
-        "selectMinistry":"Selecciona un ministerio",
-        "titleModalRegisterEvent":"Resultado del registro",
-        "messageRegisterEvent":"Se realizo el registro exitosamente",
+        "messageScanQR": "Escanea el QR para registrarte en el evento",
+        "selectMinistry": "Selecciona un ministerio",
+        "titleModalRegisterEvent": "Resultado del registro",
+        "messageRegisterEvent": "Se realizo el registro exitosamente",
         "filters": {
             "title": "Filtros",
             "dateRange": "Rango de fecha",
@@ -132,6 +130,14 @@
                 "min": "La identificación debe tener al menos {{min}} caracteres",
                 "max": "La identificación no puede tener más de {{max}} caracteres"
             }
+        },
+        "recordsAssistance": {
+            "title": "Registros de asistencia",
+            "columns": {
+                "dateRegister": "Fecha registro",
+                "disciple": "Discípulo",
+                "ministry": "Ministerio"
+            }
         }
     },
     "ministries": {
@@ -139,6 +145,6 @@
         "create": "Crear ministerio",
         "edit": "Editar ministerio",
         "delete": "Eliminar ministerio",
-        "ministry":"Ministerio"
+        "ministry": "Ministerio"
     }
 }

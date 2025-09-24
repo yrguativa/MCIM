@@ -12,7 +12,7 @@
     "search": "Search",
     "required": "This field is required",
     "invalid": "This field is invalid",
-    "accept":"Accept"
+    "accept": "Accept"
   },
   "menu": {
     "dashboard": "Dashboard",
@@ -34,7 +34,7 @@
     "minLength": "{{field}} must be at least {{min}} characters",
     "maxLength": "{{field}} must be at most {{max}} characters",
     "passwordMatch": "Passwords do not match",
-    "enter":"Enter ",
+    "enter": "Enter ",
     "number": "Must be a number",
     "date": "Must be a valid date",
     "phone": "Must be a valid phone number"
@@ -68,8 +68,8 @@
   },
   "events": {
     "title": "Events",
-    "event":"Event",
-    "scanEvent":"Scanned Event",
+    "event": "Event",
+    "scanEvent": "Scanned Event",
     "create": "Create event",
     "edit": "Edit event",
     "delete": "Delete event",
@@ -89,23 +89,23 @@
     "organizer": "Organizer",
     "notOrganizer": "No organizer",
     "createdBy": "Created by",
-    "viewEventPage":"View event page",
+    "viewEventPage": "View event page",
     "unregister": "Unregister",
     "details": "View details",
     "upcoming": "Upcoming events",
     "past": "Past events",
     "all": "All events",
     "eventCalendar": "Event Calendar",
-    "scanQR":"Scan QR",
-    "withoutEvents":"No events",
+    "scanQR": "Scan QR",
+    "withoutEvents": "No events",
     "close": "Close",
     "qrInvalid": "Invalid QR code",
     "registerInEvent": "Register in event",
     "registerAttendance": "Register attendance",
-    "messageScanQR":"Scan the QR to register in the event",
-    "selectMinistry":"Select a ministry",
-    "titleModalRegisterEvent":"Registration result",
-    "messageRegisterEvent":"The registration was successful",
+    "messageScanQR": "Scan the QR to register in the event",
+    "selectMinistry": "Select a ministry",
+    "titleModalRegisterEvent": "Registration result",
+    "messageRegisterEvent": "The registration was successful",
     "filters": {
       "title": "Filters",
       "dateRange": "Date range",
@@ -124,6 +124,20 @@
       "meeting": "Meeting",
       "service": "Service",
       "other": "Other"
+    },
+    "validation": {
+      "identificationE": {
+        "min": "The identification must be at least {{min}} characters",
+        "max": "The identification must be at most {{max}} characters"
+      }
+    },
+    "recordsAssistance": {
+      "title": "Assistance records",
+      "columns": {
+        "dateRegister": "Date register",
+        "disciple": "Disciple",
+        "ministry": "Ministry"
+      }
     }
   },
   "ministries": {
@@ -131,6 +145,6 @@
     "create": "Create ministry",
     "edit": "Edit ministry",
     "delete": "Delete ministry",
-    "ministry":"Ministry"
+    "ministry": "Ministry"
   }
 }

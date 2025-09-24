@@ -1,7 +1,9 @@
 import React from 'react';
 
-import { Event } from '../models/event';
+import { useTranslation } from 'react-i18next';
+import { enUS, es } from 'date-fns/locale';
 import { format } from 'date-fns';
+import { Event } from '../models/event';
 import { LineChartStep } from '@/components/chart/LineChartStep';
 import { IntervalsWithEvents } from '../tools/event.tool';
 
@@ -14,7 +16,11 @@ type LastEventProps = {
 };
 
 const LastEvent: React.FC<LastEventProps> = ({ event }) => {
+    const { t, i18n } = useTranslation();
+    const locale = i18n.language === 'es' ? es : enUS;
+
     const data = IntervalsWithEvents(event.attendees || []);
+    console.log("🚀 ~ LastEvent ~ event.attendees:", event.attendees)
     const timeRegister = data.map((item) => ({ start: item.start, end: item.end, value: item.registers.length }));
 
     return (
@@ -23,10 +29,10 @@ const LastEvent: React.FC<LastEventProps> = ({ event }) => {
             <div className='mt-4' style={{ border: '1px solid #ccc', padding: 16, borderRadius: 8 }}>
                 <h2>{event.name}</h2>
                 <span className="block mb-2">
-                    Hora: {format(new Date(event.date), 'HH:mm')}
+                    Hora: {format(new Date(event.date), 'HH:mm a', { locale })}
                 </span>
                 <span className="block mb-2">
-                    Fecha Fin: {event.endDate ? format(new Date(event.endDate), 'dd/MM/yyyy') : ""}
+                    Fecha Fin: {event.endDate ? format(new Date(event.endDate), 'dd/MM/yyyy', { locale }) : ""}
                 </span>
                 <p><strong>Ubicación:</strong> {event.location}</p>
                 {event.description && (
@@ -39,8 +45,8 @@ const LastEvent: React.FC<LastEventProps> = ({ event }) => {
                 <LineChartStep data={timeRegister} />
             </div>
             <div className='mt-4' style={{ border: '1px solid #ccc', padding: 16, borderRadius: 8, minWidth: 400 }}>
-                <h3>Registro </h3>
-                <TableComponent data={event.attendees || []} columns={RecordsEventColumns}></TableComponent>
+                <h3 className="mb-3">{t('events.recordsAssistance.title')}</h3>
+                <TableComponent data={event.attendees || []} columns={RecordsEventColumns()}></TableComponent>
             </div>
         </div>
     )
