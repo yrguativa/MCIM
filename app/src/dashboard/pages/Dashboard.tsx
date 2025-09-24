@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect } from 'react';
-import { Progress } from "@/components/ui/progress"
+import { ProgressIndeterminate } from "@/components/ui/progress-indeterminate"
 
 import { useMinistryStore } from '@/src/ministries/store/ministries.store';
 import { useDiscipleStore } from '@/src/disciples/store/disciple.store';
@@ -23,7 +23,7 @@ const DashboardPage: React.FC = () => {
       <div className="flex flex-col">
         <MenuMain />
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-          <Suspense fallback={<Progress value={null} />}>
+          <Suspense fallback={<ProgressIndeterminate />}>
             <DashboardRoutes />
           </Suspense>
         </main>

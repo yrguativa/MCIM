@@ -1,20 +1,21 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { Toaster } from "@/components/ui/sonner";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
-import './App.css'
-import { Progress } from "@/components/ui/progress"
-import { GeneralRoutes } from './routes';
+import { Toaster } from "@/components/ui/sonner";
+import { ProgressIndeterminate } from '@/components/ui/progress-indeterminate';
 import { LanguageSwitcher } from './app/components/LanguageSwitcher';
 
+import { GeneralRoutes } from './routes';
+
+import './App.css'
 
 const App: React.FC = () => {
 
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <BrowserRouter>
-        <Suspense fallback={<Progress value={null} />}>
+        <Suspense fallback={<ProgressIndeterminate />}>
           <GeneralRoutes />
         </Suspense>
         <LanguageSwitcher />
