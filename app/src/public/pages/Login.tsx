@@ -84,10 +84,9 @@ export const LoginPage: React.FC = () => {
                                     onSuccess={handleGoogleLogin}
                                     onError={() => toast('Error! No se pudo iniciar sesión con Google')}
                                     useOneTap
-                                    flow="implicit"
                                     auto_select={false}
                                     ux_mode="popup"
-                                    className="w-full"
+                                    containerProps={{ className: "w-full" }}
                                 />
                                 <Button variant="outline" className="w-full">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height={24} width={24} className="mr-4">

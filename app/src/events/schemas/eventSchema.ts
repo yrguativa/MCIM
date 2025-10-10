@@ -8,25 +8,28 @@ export const EventSchema = z.object({
     description: z.string()
         .min(10, { message: 'La descripción debe tener al menos 10 caracteres' })
         .max(500, { message: 'La descripción no puede exceder los 500 caracteres' }),
-    date: z.date({
-        required_error: "La fecha de inicio es requerida",
-        invalid_type_error: "La fecha debe ser válida",
-    }),
-    endDate: z.date({
-        invalid_type_error: "La fecha debe ser válida",
-    }).optional(),
+    date: z
+        .date({
+            error: "La fecha de inicio es requerida",
+        }),
+    endDate: z
+        .date({
+            error: "La fecha debe ser válida",
+        })
+        .optional(),
     location: z.string()
         .min(5, { message: 'La ubicación debe tener al menos 5 caracteres' })
         .max(200, { message: 'La ubicación no puede exceder los 200 caracteres' }),
-    capacity: z.number({
-        invalid_type_error: "La capacidad debe ser un número",
-    })
-    .min(1, { message: 'La capacidad debe ser al menos 1' })
-    .optional(),
+    capacity: z
+        .number({
+            error: "La capacidad debe ser un número",
+        })
+        .min(1, { message: 'La capacidad debe ser al menos 1' })
+        .optional(),
     createdBy: z.string(),
     createdAt: z.date(),
     updatedBy: z.string().optional(),
     updatedAt: z.date().optional(),
 });
 
-export type Event = z.infer<typeof EventSchema>;
+export type EventInput = z.infer<typeof EventSchema>;

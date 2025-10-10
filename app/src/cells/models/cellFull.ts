@@ -1,7 +1,7 @@
 
-import { type Cell } from "../schemas/cellSchema";
+import { type CellInput } from "../schemas/cellSchema";
 import { type CellRecordInput } from "../schemas/cellRecordsSchema"; 
 
-export type CellFull =  Cell & {
+export type CellFull =  CellInput & {
     records: CellRecordInput[]
 }

@@ -13,17 +13,17 @@ export const CellSchema = z.object({
       message: "El anfitrion de la celula es obligatorio.",
     }),
   neighborhood: z.number({
-    required_error: "A neighborhood is required.",
+    error: "A neighborhood is required.",
   }),
   network: z.coerce.number({
-    required_error: "A neighborhood is required.",
+    error: "A neighborhood is required.",
   }),
   address: z.string()
     .min(5, {
       message: "La dirección debe tener minimo 5 caracteres.",
     }),
   createdDate: z.date({
-    required_error: "A date of birth is required.",
+    error: "A date of birth is required.",
   }),
   createdUser: z.string()
     .min(2, {
@@ -34,4 +34,4 @@ export const CellSchema = z.object({
   // records: z.array(CellRecordSchema),
 })
 
-export type Cell = z.infer<typeof CellSchema>;
+export type CellInput = z.infer<typeof CellSchema>;

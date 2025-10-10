@@ -62,5 +62,5 @@ export default function RecordsCellTableComponent<TData, TValue>({
                 </TableBody>
             </Table>
         </div>
-    )
+    ) as React.ReactElement;
 }

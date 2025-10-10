@@ -6,10 +6,14 @@ export const DiscipleSchema = z.object({
             message: "El id es obligatorio.",
         })
         .default(crypto.randomUUID()),
-    identification: z.coerce.number({
-        required_error: "La identificación es obligatoria.",
-        invalid_type_error: "La identificación no es un número valido.",
-    }),
+    identification: z.coerce
+        .number({
+            error: "La identificación no es un número valido.",
+        })
+        .optional()
+        .refine((val) => val !== undefined, {
+            message: "La identificación es obligatoria.",
+        }),
     name: z.string()
         .min(2, {
             message: "Los nombres del discipulo es obligatorio.",
@@ -19,7 +23,7 @@ export const DiscipleSchema = z.object({
             message: "Los apellidos del discipulo son obligatorios.",
         }),
     number: z.coerce.number({
-        invalid_type_error: "A telefono is required.",
+        error: "A telefono is required.",
     }).optional(),
 
     address: z.string()
@@ -32,18 +36,20 @@ export const DiscipleSchema = z.object({
         })
         .email("El correo no es valido").optional(),
     birthday: z.date({
-        required_error: "La fecha de nacimiento es obligatoria.",
-    }).optional(),
-    ministryId: z.string({
-        required_error: "El ministerio es obligatorio.",
-    }),
+        error: "La fecha de nacimiento es obligatoria.",
+    })
+        .optional(),
+    ministryId: z.string()
+        .min(2, {
+            message: "El ministerio es obligatorio.",
+        }),
     createdUser: z.string()
         .min(2, {
             message: "El usuario de creación es obligatorio.",
         }),
     createdDate: z.date({
-        required_error: "La fecha de creación es obligatoria.",
+        error: "La fecha de creación es obligatoria.",
     }),
 })
 
-export type Disciple = z.infer<typeof DiscipleSchema>;
+export type DiscipleInput = z.infer<typeof DiscipleSchema>;

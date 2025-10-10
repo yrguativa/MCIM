@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 import { RecordCellComponent } from '../components/recordCellComponent';
-import { Cell, CellSchema } from '../schemas/cellSchema';
+import { CellInput, CellSchema } from '../schemas/cellSchema';
 import { Neighborhood } from "@/src/cells/schemas/neighborhood.enum";
 
 import { useDiscipleStore } from '@/src/disciples/store/disciple.store';
@@ -28,7 +28,7 @@ const CellForm: React.FC = () => {
     const { addCell: addCellState, updateCell: addUpdateState, getCell: getCellState } = useCellStore();
     const disciplesState = useDiscipleStore(state => state.Disciples);
 
-    const cellDefault: Cell = {
+    const cellDefault: CellInput = {
         id: crypto.randomUUID(),
         createdUser: userState?.id || "",
         createdDate: new Date(),
@@ -52,12 +52,13 @@ const CellForm: React.FC = () => {
         }
     }
 
-    const form = useForm<Cell>({
+    const form = useForm<CellInput>({
         resolver: zodResolver(CellSchema),
+        mode: "onChange",
         defaultValues: cellDefault,
     });
 
-    const onSubmit = (data: Cell) => {
+    const onSubmit = (data: CellInput) => {
         if (id) {
             addUpdateState(data);
         } else {

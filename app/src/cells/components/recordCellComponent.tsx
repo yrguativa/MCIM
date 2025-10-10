@@ -7,8 +7,6 @@ import { Calendar } from "@/components/ui/calendar"
 import { useCellStore } from "@/src/cells/store/cell.store"
 import { buttonVariants } from "@/components/ui/button"
 import { CellFull } from "../models/cellFull"
-import RecordsCellTableComponent from "./recordsCellTableComponent"
-import { RecordsCellColummsTable } from "./recordsCellColumnsTable"
 
 type RecordCellComponentProps = {
     idCell: string
@@ -48,9 +46,9 @@ export const RecordCellComponent: React.FC<RecordCellComponentProps> = (props: R
                         </Link>
                     </div>
                     {
-                        cellForUpdate?.records && cellForUpdate.records.length > 0 && (
-                            <RecordsCellTableComponent data={cellForUpdate.records} columns={RecordsCellColummsTable}></RecordsCellTableComponent>
-                        )
+                        // cellForUpdate?.records && cellForUpdate.records.length > 0 && (
+                        //     <RecordsCellTableComponent data={cellForUpdate.records} columns={RecordsCellColummsTable}></RecordsCellTableComponent>
+                        // )
                     }
                 </div>
             </div>

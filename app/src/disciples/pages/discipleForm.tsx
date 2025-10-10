@@ -21,7 +21,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { toast } from "sonner"
 
-import { Disciple, DiscipleSchema } from '../schemas/discipleSchema';
+import { DiscipleInput, DiscipleSchema } from '../schemas/discipleSchema';
 import { DisciplesService } from '../services/disciples.services';
 
 import { useMinistryStore } from '@/src/ministries/store/ministries.store';
@@ -35,7 +35,7 @@ const DiscipleForm: React.FC = () => {
   const updateDisciple = useDiscipleStore(state => state.updateDisciple);
   const ministries = useMinistryStore(state => state.ministries);
 
-  const form = useForm<Disciple>({
+  const form = useForm<DiscipleInput>({
     resolver: zodResolver(DiscipleSchema),
     defaultValues: {
       id: id || crypto.randomUUID(),
@@ -70,7 +70,7 @@ const DiscipleForm: React.FC = () => {
     }, [id]);
   }
 
-  async function onSubmit(data: Disciple) {
+  async function onSubmit(data: DiscipleInput) {
     const isProcessSucess = await updateDisciple({
       id: data.id,
       name: data.name,
