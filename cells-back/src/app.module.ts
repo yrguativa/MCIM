@@ -23,7 +23,13 @@ import { UsersModule } from './users/users.module';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-      playground: false,
+
+      //only publish test in render.com
+      introspection: true,
+      playground: true,
+      // by production
+      //playground: false,
+      
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
     AuthModule,
@@ -45,4 +51,4 @@ import { UsersModule } from './users/users.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }
