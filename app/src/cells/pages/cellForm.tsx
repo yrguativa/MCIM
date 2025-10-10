@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { useForm, Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { Save } from 'lucide-react';
@@ -53,7 +53,7 @@ const CellForm: React.FC = () => {
     }
 
     const form = useForm<CellInput>({
-        resolver: zodResolver(CellSchema),
+        resolver: zodResolver(CellSchema) as Resolver<CellInput>,
         mode: "onChange",
         defaultValues: cellDefault,
     });

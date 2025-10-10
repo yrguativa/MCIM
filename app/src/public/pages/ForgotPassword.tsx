@@ -5,17 +5,17 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { GalleryVerticalEnd } from "lucide-react"
 
-import { z } from "zod"
+
 import { toast } from "sonner"
-import { de } from "date-fns/locale"
 
-const ForgotPasswordSchema = z.object({
-    email: z.string()
-        .email("Por favor ingresa un correo electrónico válido")
-        .min(1, "El correo electrónico es requerido"),
-})
 
-type ForgotPasswordInput = z.infer<typeof ForgotPasswordSchema>
+// const ForgotPasswordSchema = z.object({
+//     email: z.string()
+//         .email("Por favor ingresa un correo electrónico válido")
+//         .min(1, "El correo electrónico es requerido"),
+// })
+
+//type ForgotPasswordInput = z.infer<typeof ForgotPasswordSchema>
 
 const ForgotPasswordPage: React.FC = () => {
     const navigate = useNavigate()
@@ -29,7 +29,7 @@ const ForgotPasswordPage: React.FC = () => {
 
         try {
             // Validar el email
-            const validatedData = ForgotPasswordSchema.parse({ email })
+           // const validatedData = ForgotPasswordSchema.parse({ email })
 
             // TODO: Implementar la lógica de recuperación de contraseña
             // await authService.forgotPassword(validatedData.email)
@@ -39,6 +39,7 @@ const ForgotPasswordPage: React.FC = () => {
             // Redirigir al login después de unos segundos
             setTimeout(() => navigate("/login"), 2000)
         } catch (error) {
+            console.error(error)
             toast("Error al enviar el correo")
         } finally {
             setIsLoading(false)

@@ -1,26 +1,11 @@
-import React, { FC, useState } from 'react';
+import React from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-import {
-    Home,
-    Users,
-    Calendar,
-    Compass,
-    CheckSquare,
-    Search,
-    Settings,
-    Bell,
+import { Search, Settings } from 'lucide-react';
 
-} from 'lucide-react';
-
-
-
-
-
-const  HomePage: FC = () => {
+const HomePage: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-purple-300 via-purple-200 to-pink-200">

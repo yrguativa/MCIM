@@ -51,10 +51,10 @@ const Ministries: React.FC = () => {
                             <TableRow key={ministry.id}>
                                 <TableCell className="font-medium">{ministry.name}</TableCell>
                                 <TableCell>
-                                    {ministry.leader?.name || 'Sin líder asignado'}
+                                    Sin líder asignado
                                 </TableCell>
                                 <TableCell>
-                                    {ministry.parentMinistry?.name || 'Ministerio principal'}
+                                    Ministerio principal
                                 </TableCell>
                                 <TableCell>
                                     <Badge variant={ministry.active ? "default" : "destructive"}>

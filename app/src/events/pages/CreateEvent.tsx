@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useForm } from "react-hook-form";
+import { Resolver, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
 import { toast } from "sonner";
@@ -20,7 +20,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Card } from "@/components/ui/card";
-import { de } from 'date-fns/locale';
 
 const CreateEvent: React.FC = () => {
     const navigate = useNavigate();
@@ -28,7 +27,7 @@ const CreateEvent: React.FC = () => {
     const [hasEndDate, setHasEndDate] = useState(false);
 
     const form = useForm<Event>({
-        resolver: zodResolver(EventSchema),
+        resolver: zodResolver(EventSchema) as Resolver<Event>,
         defaultValues: {
             id: crypto.randomUUID(),
             createdBy: userState?.id || '',
@@ -50,6 +49,7 @@ const CreateEvent: React.FC = () => {
                 throw new Error("No se pudo crear el evento");
             }
         } catch (error) {
+            console.error("Error creating event:", error);
             toast("Error al crear el evento", {
                 description: "Ocurrió un error al intentar crear el evento"
             });
@@ -176,7 +176,7 @@ const CreateEvent: React.FC = () => {
                     </form>
                 </Form>
             </Card>
-            
+
         </div>
     );
 };

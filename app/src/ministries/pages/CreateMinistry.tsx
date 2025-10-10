@@ -1,6 +1,6 @@
-import React, { FC, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useForm } from "react-hook-form";
+import { Resolver, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
 import { toast } from "sonner";
@@ -22,18 +22,18 @@ import { MinistrySchema } from "../schemas/ministrySchema";
 import { useAuthStore } from '@/src/app/stores';
 import { useMinistryStore } from '../store/ministries.store';
 
-const CreateMinistry: FC = () => {
+const CreateMinistry: React.FC = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const userState = useAuthStore(state => state.user);
     const { ministries, addMinistry, updateMinistry } = useMinistryStore();
 
     const form = useForm<Ministry>({
-        resolver: zodResolver(MinistrySchema),
+        resolver: zodResolver(MinistrySchema) as Resolver<Ministry>,
         defaultValues: {
             id: id || crypto.randomUUID(),
             name: "",
-            createdUser: userState,
+            createdUser: userState?.id || "",
             createdDate: new Date(),
             active: true,
         }
@@ -49,6 +49,7 @@ const CreateMinistry: FC = () => {
                         form.reset(ministry);
                     }
                 } catch (error) {
+                    console.error("Error loading ministry:", error);
                     toast("Error al cargar el ministerio", {
                         description: "No se pudo obtener la información del ministerio"
                     });
@@ -84,6 +85,7 @@ const CreateMinistry: FC = () => {
                 throw new Error(id ? "Error al actualizar el ministerio" : "Error al crear el ministerio");
             }
         } catch (error) {
+            console.error(error);
             toast(id ? "Error al actualizar el ministerio" : "Error al crear el ministerio", {
                 description: `Ocurrió un error al intentar ${id ? 'actualizar' : 'crear'} el ministerio`
             });

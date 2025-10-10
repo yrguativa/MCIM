@@ -7,7 +7,6 @@ import { QRCodeSVG } from 'qrcode.react';
 
 import { useEventStore } from "../../events/store/event.store";
 import { ScanData } from "@/src/events/models/scanData";
-import { de } from "date-fns/locale";
 
 const EventPage: React.FC = () => {
   const { id } = useParams();

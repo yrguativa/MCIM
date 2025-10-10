@@ -1,5 +1,5 @@
 import React from 'react';
-import { useFieldArray, useForm, Controller } from "react-hook-form"
+import { useFieldArray, useForm, Controller, Resolver } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from 'date-fns';
 
@@ -26,7 +26,7 @@ const CellRegister: React.FC = () => {
   const userState = useAuthStore(state => state.user);
   const addRecordState = useCellStore(state => state.addRecord);
   const form = useForm<CellRecordInput>({
-    resolver: zodResolver(CellRecordSchema),
+    resolver: zodResolver(CellRecordSchema)as Resolver<CellRecordInput>,
     defaultValues: {
       topic: "",
       date: new Date(),

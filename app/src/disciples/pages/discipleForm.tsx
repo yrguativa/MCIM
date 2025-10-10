@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useForm } from "react-hook-form"
+import { Resolver, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from 'date-fns';
 
@@ -8,11 +8,11 @@ import { cn } from '@/lib/utils';
 import { CaretSortIcon } from '@radix-ui/react-icons';
 import { CalendarIcon, Check as CheckIcon, CheckCircle, OctagonX, Save } from "lucide-react";
 import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
 } from "@/components/ui/command";
 import { Button } from '@/components/ui/button';
 import { Input } from "@/components/ui/input"
@@ -36,10 +36,10 @@ const DiscipleForm: React.FC = () => {
   const ministries = useMinistryStore(state => state.ministries);
 
   const form = useForm<DiscipleInput>({
-    resolver: zodResolver(DiscipleSchema),
+    resolver: zodResolver(DiscipleSchema) as Resolver<DiscipleInput>,
     defaultValues: {
       id: id || crypto.randomUUID(),
-      createdUser: userState,
+      createdUser: userState?.id || undefined,
       createdDate: new Date(),
     }
   });
@@ -52,7 +52,7 @@ const DiscipleForm: React.FC = () => {
         if (cellForUpdate) {
           form.reset({
             id: id,
-            createdUser: cellForUpdate.createdUser || userState,
+            createdUser: cellForUpdate.createdUser || userState?.id,
             createdDate: cellForUpdate.createdDate ? new Date(cellForUpdate.createdDate) : new Date(),
             name: cellForUpdate.name,
             lastName: cellForUpdate.lastName,
@@ -75,14 +75,14 @@ const DiscipleForm: React.FC = () => {
       id: data.id,
       name: data.name,
       lastName: data.lastName,
-      identification: data.identification.toString(),
+      identification: data.identification?.toString() || '',
       email: data.email,
       address: data.address,
       birthDate: data.birthday,
       ministryId: data.ministryId,
       createdUser: data.createdUser,
       createdDate: data.createdDate,
-      updatedUser: userState,
+      updatedUser: userState?.id || '', // Added required property
       updatedDate: new Date(),
       phone: data.number?.toString(),
     })
