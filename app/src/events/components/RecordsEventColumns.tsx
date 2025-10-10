@@ -33,7 +33,7 @@ export const RecordsEventColumns = (): ColumnDef<EventAttendance>[] => {
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
-                );
+                ) as React.ReactElement;
             }
         },
         {

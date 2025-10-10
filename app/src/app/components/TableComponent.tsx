@@ -1,17 +1,39 @@
 import React from "react";
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable, } from "@tanstack/react-table"
+import { ColumnDef, flexRender, getCoreRowModel, useReactTable, Row } from "@tanstack/react-table"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from "@/components/ui/table"
 
-interface DataTableProps<TData, TValue> {
+/**
+ * Generic table component backed by @tanstack/react-table.
+ *
+ * Type parameters:
+ *  - TData: the row data type
+ *  - TValue: the cell value type (usually inferred)
+ *
+ * Props:
+ *  - columns: ColumnDef<TData, TValue>[]
+ *  - data: TData[]
+ *  - getRowId?: optional function to derive a stable row id from TData
+ *  - emptyMessage?: optional message to show when data is empty
+ */
+interface DataTableProps<TData, TValue = unknown> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
+    getRowId?: (row: TData, index: number) => string
+    emptyMessage?: React.ReactNode
 }
 
-const TableComponent: React.FC<DataTableProps<unknown, unknown>> = <TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) => {
+function TableComponent<TData, TValue = unknown>({
+    columns,
+    data,
+    getRowId,
+    emptyMessage = "No results.",
+}: DataTableProps<TData, TValue>) {
     const table = useReactTable({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
+        // Provide getRowId only when consumer passes it
+        ...(getRowId ? { getRowId } : {}),
     })
 
     return (
@@ -37,10 +59,11 @@ const TableComponent: React.FC<DataTableProps<unknown, unknown>> = <TData, TValu
                 </TableHeader>
                 <TableBody>
                     {table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row) => (
+                        table.getRowModel().rows.map((row: Row<TData>) => (
                             <TableRow
                                 key={row.id}
-                                data-state={row.getIsSelected() && "selected"}
+                                // only set the attribute when selected; avoid boolean values
+                                {...(row.getIsSelected() ? { "data-state": "selected" } : {})}
                             >
                                 {row.getVisibleCells().map((cell) => (
                                     <TableCell key={cell.id}>
@@ -52,14 +75,14 @@ const TableComponent: React.FC<DataTableProps<unknown, unknown>> = <TData, TValu
                     ) : (
                         <TableRow>
                             <TableCell colSpan={columns.length} className="h-24 text-center">
-                                No results.
+                                {emptyMessage}
                             </TableCell>
                         </TableRow>
                     )}
                 </TableBody>
             </Table>
         </div>
-    )
+    ) as React.ReactElement;
 }
 
 export default TableComponent;
