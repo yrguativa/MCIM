@@ -6,19 +6,20 @@ import HumanizeNaturalDay from "@/lib/utilsDate";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useDiscipleStore } from "@/src/disciples/store/disciple.store";
+import { CellFull } from "../models/cellFull";
 
-export const ColumnsAssistants: ColumnDef<any>[] = [
+export const ColumnsAssistants: ColumnDef<CellFull>[] = [
   {
     header: "Fecha creación",
     accessorKey: "createdDate",
     cell: (info) => {
-      return <>{HumanizeNaturalDay.HumanizeNaturalDay(new Date(info.getValue()))}</>
+      return <>{HumanizeNaturalDay.HumanizeNaturalDay(info.getValue() ? new Date(info.getValue() as string | number | Date) : new Date())}</>
     }
   },
   {
     header: "Lider",
     accessorKey: "leader",
-    cell: (info)  => {
+    cell: (info) => {
       const disciplesState = useDiscipleStore(state => state.Disciples);
       return (<>{info.getValue() ? disciplesState.find((x) => x.id == info.getValue())?.name : ""}</>);
     },
@@ -27,8 +28,8 @@ export const ColumnsAssistants: ColumnDef<any>[] = [
     header: "Asistentes",
     accessorKey: "records",
     cell: (info) => {
-
-      return (<>{info.getValue() && info.getValue().assistants ? info.getValue().assistants.length : "0"}</>);
+      console.log("🚀 ~ info:", info)
+      return (<>0</>);
     },
   },
   {
@@ -57,7 +58,7 @@ export const ColumnsAssistants: ColumnDef<any>[] = [
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      ) as React.JSX.Element;
     },
   },
 ];

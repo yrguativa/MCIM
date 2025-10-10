@@ -1,5 +1,5 @@
-import React from "react";
-import { CSSProperties } from "react";
+import React, { CSSProperties } from "react";
+
 import { scaleTime, scaleLinear, max, line as d3_line, curveStep } from "d3";
 
 type LineChartStepProps = {
@@ -11,7 +11,7 @@ type LineChartStepProps = {
 };
 
 
-export function LineChartStep({ data }: LineChartStepProps) {
+export const LineChartStep: React.FC<LineChartStepProps> = ({ data }) => {
     if (data.length === 0) {
         return null;
     }
@@ -49,12 +49,7 @@ export function LineChartStep({ data }: LineChartStepProps) {
         >
             {/* Y axis */}
             <div
-                className="absolute inset-0
-          h-[calc(100%-var(--marginTop)-var(--marginBottom))]
-          w-[var(--marginLeft)]
-          translate-y-[var(--marginTop)]
-          overflow-visible
-        "
+                className="absolute inset-0 h-[calc(100%-var(--marginTop)-var(--marginBottom))] w-[var(--marginLeft)] translate-y-[var(--marginTop)] overflow-visible"
             >
                 {yScale
                     .ticks(8)
@@ -75,13 +70,7 @@ export function LineChartStep({ data }: LineChartStepProps) {
 
             {/* Chart area */}
             <div
-                className="absolute inset-0
-          h-[calc(100%-var(--marginTop)-var(--marginBottom))]
-          w-[calc(100%-var(--marginLeft)-var(--marginRight))]
-          translate-x-[var(--marginLeft)]
-          translate-y-[var(--marginTop)]
-          overflow-visible
-        "
+                className="absolute inset-0 h-[calc(100%-var(--marginTop)-var(--marginBottom))] w-[calc(100%-var(--marginLeft)-var(--marginRight))] translate-x-[var(--marginLeft)] translate-y-[var(--marginTop)] overflow-visible"
             >
                 <svg
                     viewBox="0 0 100 100"

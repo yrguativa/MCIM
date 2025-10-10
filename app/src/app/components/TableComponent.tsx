@@ -7,10 +7,7 @@ interface DataTableProps<TData, TValue> {
     data: TData[]
 }
 
-export default function TableComponent<TData, TValue>({
-    columns,
-    data,
-}: DataTableProps<TData, TValue>): JSX.Element {
+const TableComponent: React.FC<DataTableProps<unknown, unknown>> = <TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) => {
     const table = useReactTable({
         data,
         columns,
@@ -64,3 +61,5 @@ export default function TableComponent<TData, TValue>({
         </div>
     )
 }
+
+export default TableComponent;

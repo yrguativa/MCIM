@@ -11,7 +11,7 @@ interface AuthState {
     error: string | null
     login: (email: string, password: string) => Promise<void>
     loginWithGoogle: (credential: string) => Promise<number>
-    loginWithApple: () => Promise<void>
+    // loginWithApple: () => Promise<void>
     register: (userData: {
         email: string
         password: string
@@ -41,8 +41,9 @@ export const storeAuth: StateCreator<AuthState> = (set, get) => ({
                 isLoading: false
             })
         } catch (error) {
+            console.error(error);
             set({
-                error: error.message,
+                error: "Error al iniciar sesión",
                 isLoading: false
             })
         }
@@ -71,7 +72,7 @@ export const storeAuth: StateCreator<AuthState> = (set, get) => ({
             }
             return 1;
         } catch (error) {
-            console.log("🚀 ~ storeAuth ~ error:", error)
+            console.error(error);
             set({
                 error: 'Error al iniciar sesión con Google',
                 isLoading: false
@@ -80,22 +81,22 @@ export const storeAuth: StateCreator<AuthState> = (set, get) => ({
         }
     },
 
-    loginWithApple: async () => {
-        set({ isLoading: true, error: null })
-        try {
-            const response = await authService.loginWithApple()
-            set({
-                user: response.user,
-                isAuthenticated: true,
-                isLoading: false
-            })
-        } catch (error) {
-            set({
-                error: error.message,
-                isLoading: false
-            })
-        }
-    },
+    // loginWithApple: async () => {
+    //     set({ isLoading: true, error: null })
+    //     try {
+    //         const response = await authService.loginWithApple()
+    //         set({
+    //             user: response.user,
+    //             isAuthenticated: true,
+    //             isLoading: false
+    //         })
+    //     } catch (error: any) {
+    //         set({
+    //             error: error.message,
+    //             isLoading: false
+    //         })
+    //     }
+    // },
 
     register: async (userData) => {
         set({ isLoading: true, error: null })
@@ -107,8 +108,9 @@ export const storeAuth: StateCreator<AuthState> = (set, get) => ({
                 isLoading: false
             })
         } catch (error) {
+            console.error(error);
             set({
-                error: error.message,
+                error: "Error al registrar el usuario",
                 isLoading: false
             })
         }
@@ -116,6 +118,7 @@ export const storeAuth: StateCreator<AuthState> = (set, get) => ({
 
     updateUser: async (id: string, otherData: LoginOtherDataInput) => {
         const userState = get().user;
+        if (!userState) return;
         set({ isLoading: true, error: null })
         await authService.updateUser(id, otherData);
         set({

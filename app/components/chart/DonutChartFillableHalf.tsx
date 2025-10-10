@@ -4,7 +4,7 @@ import { useSpring, animated } from "@react-spring/web";
 
 type Item = { name: string; value: number };
 
-// componente from https://rosencharts.com/
+// This component from: https://rosencharts.com/
 export const DonutChartFillableHalf: React.FC<Item> = ({ name, value }) => {
     const radius = 420; // Chart base dimensions
     const lightStrokeEffect = 10; // 3d light effect around the slice

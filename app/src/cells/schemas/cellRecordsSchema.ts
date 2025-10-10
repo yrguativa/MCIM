@@ -3,7 +3,7 @@ import { CellAssistantSchema } from "./cellAssistantsSchema";
 
 export const CellRecordSchema = z.object({
   date: z.date({
-    required_error: "La fecha de la celula es obligatoria.",
+    error: "La fecha de la celula es obligatoria.",
   }),
   topic: z.string()
     .min(2, {
