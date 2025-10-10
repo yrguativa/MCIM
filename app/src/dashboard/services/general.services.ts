@@ -1,7 +1,7 @@
 import { Disciple } from '@/src/disciples/models/disciple';
 import axios, { AxiosError } from 'axios';
 
-const API_URL = process.env.API_BASE_URL  || 'http://localhost:3000/graphql';
+const API_URL = (import.meta.env.VITE_API_BASE_URL as string);
 
 const api = axios.create({
     baseURL: API_URL,

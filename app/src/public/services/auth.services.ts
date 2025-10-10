@@ -1,7 +1,8 @@
 import axios from "axios";
 import { LoginOtherDataInput } from "../schemas/loginOtherDataSchemta";
 
-const API_URL = process.env.API_BASE_URL  || 'http://localhost:3000/graphql';
+// Vite exposes env vars on import.meta.env in the browser. Avoid using `process` which is undefined in the browser runtime.
+const API_URL = (import.meta.env.VITE_API_BASE_URL as string);
 
 const api = axios.create({
     baseURL: API_URL,
