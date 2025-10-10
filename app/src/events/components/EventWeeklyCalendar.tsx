@@ -18,7 +18,7 @@ import { format } from 'date-fns';
 import { Event } from '../models/event';
 import { useTranslation } from 'react-i18next';
 import { es, enUS } from 'date-fns/locale';
-import { eventService } from '../services/event.service';
+import { eventService } from '../services/event.services';
 
 interface EventWeeklyCalendarProps {
     event: Event;

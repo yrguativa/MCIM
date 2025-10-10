@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios';
 import type { Event } from '../models/event';
 import { EventAttendance } from '../models/eventAttendance';
 
-const API_URL = 'http://localhost:3000/graphql';
+const API_URL = process.env.API_BASE_URL  || 'http://localhost:3000/graphql';
 
 const api = axios.create({
   baseURL: API_URL,

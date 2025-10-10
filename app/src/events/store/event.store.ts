@@ -1,7 +1,7 @@
 import { create, StateCreator } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import { Event } from "@/src/events/models/event";
-import { eventService } from "@/src/events/services/event.service";
+import { eventService } from "@/src/events/services/event.services";
 import { EventAttendance } from "@/src/events/models/eventAttendance";
 import { LastOrCurrentEvent } from "../tools/event.tool";
 

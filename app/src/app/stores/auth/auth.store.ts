@@ -1,6 +1,6 @@
 import { create, StateCreator } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
-import { AuthService } from '@/src/public/services/auth.service'
+import { AuthService } from '@/src/public/services/auth.services'
 import type { UserState } from '@/src/public/schemas/userSchema'
 import { LoginOtherDataInput } from '@/src/public/schemas/loginOtherDataSchemta'
 
