@@ -25,7 +25,7 @@ const LastEvent: React.FC<LastEventProps> = ({ event }) => {
     return (
         <div className="flex items-center items-center justify-center text-start rounded-lg border border-dashed p-4 shadow-sm mt-4">
             <h2>Ultimo evento</h2>
-            <div className='mt-4' style={{ border: '1px solid #ccc', padding: 16, borderRadius: 8 }}>
+            <div className='mt-4 border-1 border-solid border-neutral-200 p-4 rounded-lg min-h-md' >
                 <h2>{event.name}</h2>
                 <span className="block mb-2">
                     Hora: {format(new Date(event.date), 'HH:mm a', { locale })}
@@ -39,11 +39,11 @@ const LastEvent: React.FC<LastEventProps> = ({ event }) => {
                 )} 
             </div>
 
-            <div className='mt-4 border-1 border-solid border-gray-400 p-4 rounded-lg min-w-md' >
-                <h3 className="mb-3">Tiempos de Registro </h3>
+            <div className='mt-4 border-1 border-solid border-neutral-200 p-4 rounded-lg min-w-md' >
+                <h3 className="mb-4">Tiempos de Registro </h3>
                 <LineChartStep data={timeRegister} />
             </div>
-            <div className='mt-4 border-1 border-solid border-gray-400 p-4 rounded-lg'>
+            <div className='mt-4 border-1 border-solid border-neutral-200 p-4 rounded-lg min-w-lg'>
                 <h3 className="mb-3">{t('events.recordsAssistance.title')}</h3>
                 <TableComponent data={event.attendees || []} columns={RecordsEventColumns()}></TableComponent>
             </div>
