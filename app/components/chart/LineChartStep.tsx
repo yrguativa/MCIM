@@ -40,7 +40,7 @@ export const LineChartStep: React.FC<LineChartStepProps> = ({ data }) => {
 
     const d = t.to(t_val => {
         const interpolatedData = data.map(d => ({ ...d, value: d.value * t_val }));
-        return line(interpolatedData);
+        return line(interpolatedData) || '';
     });
 
     if (!d) {
