@@ -1,6 +1,7 @@
 import React, { CSSProperties } from "react";
 
 import { scaleTime, scaleLinear, max, line as d3_line, curveStep } from "d3";
+import { animated, useSpring } from "@react-spring/web";
 
 type LineChartStepProps = {
     data: {
@@ -12,6 +13,14 @@ type LineChartStepProps = {
 
 
 export const LineChartStep: React.FC<LineChartStepProps> = ({ data }) => {
+    const { t } = useSpring({
+        from: { t: 0 },
+        to: { t: 1 },
+        config: {
+            duration: 1000,
+        }
+    });
+
     if (data.length === 0) {
         return null;
     }
@@ -29,7 +38,10 @@ export const LineChartStep: React.FC<LineChartStepProps> = ({ data }) => {
         .y((d) => yScale(d.value))
         .curve(curveStep);
 
-    const d = line(data);
+    const d = t.to(t_val => {
+        const interpolatedData = data.map(d => ({ ...d, value: d.value * t_val }));
+        return line(interpolatedData);
+    });
 
     if (!d) {
         return null;
@@ -99,7 +111,7 @@ export const LineChartStep: React.FC<LineChartStepProps> = ({ data }) => {
                         ))}
 
                     {/* Line */}
-                    <path
+                    <animated.path
                         d={d}
                         fill="none"
                         stroke="url(#lineStep-gradient)"
