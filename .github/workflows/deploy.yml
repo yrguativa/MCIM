@@ -27,8 +27,7 @@ jobs:
           # If Corepack isn't available for some reason, fallback to global install.
           corepack prepare pnpm@8 --activate || npm install -g pnpm@8
 
-      - name: Install dependencies (root workspace)
-        working-directory: ./app
+      - name: Install dependencies (monorepo root)
         run: pnpm install --frozen-lockfile
 
       - name: Build app
