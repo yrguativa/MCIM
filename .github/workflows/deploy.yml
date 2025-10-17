@@ -1,0 +1,45 @@
+name: Deploy app to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        run: corepack enable && corepack prepare pnpm@latest --activate
+
+      - name: Install dependencies (root workspace)
+        working-directory: ./app
+        run: pnpm install --frozen-lockfile
+
+      - name: Build app
+        working-directory: ./app
+        env:
+          # For GitHub Pages, set base to the repository name when not deploying from a custom domain.
+          # Use the repository name available in the event payload.
+          VITE_BASE: "/${{ github.event.repository.name }}/"
+        run: pnpm build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          publish_dir: ./app/dist
+          # Uses the GITHUB_TOKEN provided to the workflow for authenticated push to gh-pages
+          publish_branch: gh-pages
+          publish_repo: ${{ github.repository }}
+          allow_empty_commit: false
