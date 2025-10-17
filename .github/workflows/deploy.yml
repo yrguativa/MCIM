@@ -21,7 +21,12 @@ jobs:
           cache: 'pnpm'
 
       - name: Install pnpm
-        run: corepack enable && corepack prepare pnpm@latest --activate
+        run: |
+          # Try to enable corepack (no-op if already enabled)
+          corepack enable || true
+          # Prefer Corepack to prepare a pinned pnpm version for reproducibility.
+          # If Corepack isn't available for some reason, fallback to global install.
+          corepack prepare pnpm@8 --activate || npm install -g pnpm@8
 
       - name: Install dependencies (root workspace)
         working-directory: ./app
