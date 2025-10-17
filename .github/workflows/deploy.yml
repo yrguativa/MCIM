@@ -36,7 +36,7 @@ jobs:
           # For GitHub Pages, set base to the repository name when not deploying from a custom domain.
           # Use the repository name available in the event payload.
           VITE_BASE: "/${{ github.event.repository.name }}/"
-        run: pnpm build --filter ./app...
+        run: pnpm build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
