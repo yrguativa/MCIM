@@ -25,7 +25,7 @@ jobs:
           corepack enable || true
           # Prefer Corepack to prepare a pinned pnpm version for reproducibility.
           # If Corepack isn't available for some reason, fallback to global install.
-          corepack prepare pnpm@8 --activate || npm install -g pnpm@8
+          corepack prepare pnpm@9 --activate || npm install -g pnpm@9
 
       - name: Install dependencies (monorepo root)
         run: pnpm install --filter ./app... --frozen-lockfile
