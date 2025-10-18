@@ -48,4 +48,4 @@ jobs:
           # Uses the GITHUB_TOKEN provided to the workflow for authenticated push to gh-pages
           publish_branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          allow_empty_commit: false
+          keep_files: true
