@@ -4,12 +4,14 @@ on:
   push:
     branches: [ main ]
 
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
+jobs:
+  build:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -21,31 +23,30 @@ jobs:
 
       - name: Install pnpm
         run: |
-          # Try to enable corepack (no-op if already enabled)
           corepack enable || true
-          # Prefer Corepack to prepare a pinned pnpm version for reproducibility.
-          # If Corepack isn't available for some reason, fallback to global install.
           corepack prepare pnpm@9 --activate || npm install -g pnpm@9
 
-      - name: Install dependencies (monorepo root)
+      - name: Install dependencies
         run: pnpm install --filter ./app... --frozen-lockfile
 
       - name: Build app
         working-directory: ./app
         env:
-          # For GitHub Pages, set base to the repository name when not deploying from a custom domain.
-          # Use the repository name available in the event payload.
           VITE_BASE: "/${{ github.event.repository.name }}/"
         run: pnpm build
 
-      - name: List dist directory
-        run: ls -R app/dist
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          publish_dir: ./app/dist
-          # Uses the GITHUB_TOKEN provided to the workflow for authenticated push to gh-pages
-          publish_branch: gh-pages
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          keep_files: true
+          path: ./app/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
