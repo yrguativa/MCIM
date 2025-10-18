@@ -44,5 +44,5 @@ jobs:
           publish_dir: ./app/dist
           # Uses the GITHUB_TOKEN provided to the workflow for authenticated push to gh-pages
           publish_branch: gh-pages
-          publish_repo: ${{ github.repository }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           allow_empty_commit: false
