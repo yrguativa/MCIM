@@ -2,13 +2,7 @@ import React from "react";
 import { Bell, CalendarDays, Home, LineChart, Package, Package2, ShoppingCart, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -65,11 +59,11 @@ const MenuMovil: React.FC = () => {
               <Users className="h-4 w-4" />
               {t('menu.disciples')}
             </NavLink>
-            
+
             <NavLink to="/ministries" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}>
               <Package2 className="h-4 w-4" />
               {t('menu.ministries')}
-            </NavLink>            
+            </NavLink>
           </nav>
         </div>
         <div className="mt-auto p-4">
@@ -89,7 +83,8 @@ const MenuMovil: React.FC = () => {
           </Card>
         </div>
       </div>
-    </div>)
+    </div>
+  )
 }
 
 export default MenuMovil;

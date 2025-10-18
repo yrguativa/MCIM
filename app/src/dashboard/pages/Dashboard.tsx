@@ -1,11 +1,11 @@
 import React, { Suspense, useEffect } from 'react';
 import { ProgressIndeterminate } from "@/components/ui/progress-indeterminate"
+import MenuMain from '@/src/dashboard/components/MenuMain';
+import MenuMovil from '@/src/dashboard/components/MenuMovil';
 
 import { useMinistryStore } from '@/src/ministries/store/ministries.store';
 import { useDiscipleStore } from '@/src/disciples/store/disciple.store';
 
-import MenuMain from '@/src/dashboard/components/MenuMain';
-import MenuMovil from '@/src/dashboard/components/MenuMovil';
 import { DashboardRoutes } from '../routes';
 
 const DashboardPage: React.FC = () => {
