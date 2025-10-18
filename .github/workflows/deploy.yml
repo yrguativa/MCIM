@@ -38,6 +38,9 @@ jobs:
           VITE_BASE: "/${{ github.event.repository.name }}/"
         run: pnpm build
 
+      - name: List dist directory
+        run: ls -R app/dist
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
