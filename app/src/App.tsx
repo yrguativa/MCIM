@@ -14,7 +14,7 @@ const App: React.FC = () => {
 
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <BrowserRouter basename={import.meta.env.VITE_BASE}>
+      <BrowserRouter basename="/MCIM/">
         <Suspense fallback={<ProgressIndeterminate />}>
           <GeneralRoutes />
         </Suspense>
