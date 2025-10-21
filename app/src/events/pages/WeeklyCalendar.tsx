@@ -39,7 +39,7 @@ const WeeklyCalendar: React.FC = () => {
                             </Tooltip>
                             <PopoverContent className='min-w-md'>{t('events.messageRegisterInEvent')}
                                 <QRCodeSVG
-                                    value={window.location.origin + '/public/events/register'}
+                                    value={window.location.origin + import.meta.env.VITE_BASE + '/public/events/register'}
                                     size={400}
                                     level="H"
                                     includeMargin={true}
