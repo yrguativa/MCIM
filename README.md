@@ -1,6 +1,8 @@
 
 
-# Ticket Meet
+# MCI Mosquera App
+
+[![Deploy app to GitHub Pages](https://github.com/yrguativa/MCIM/actions/workflows/deploy.yml/badge.svg)](https://github.com/yrguativa/MCIM/actions/workflows/deploy.yml)
 
 Este es un projecto que se genera para poder generar un QR de ingreso a un evento, simplemente se valida el numero de identificación y se genera un QR
 
