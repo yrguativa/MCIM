@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 import { Toaster } from "@/components/ui/sonner";
@@ -14,12 +14,12 @@ const App: React.FC = () => {
 
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <BrowserRouter basename={import.meta.env.VITE_BASE}>
+      <HashRouter>
         <Suspense fallback={<ProgressIndeterminate />}>
           <GeneralRoutes />
         </Suspense>
         <LanguageSwitcher />
-      </BrowserRouter>
+      </HashRouter>
       <Toaster />
     </GoogleOAuthProvider>
   )
