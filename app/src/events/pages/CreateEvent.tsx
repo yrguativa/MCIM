@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Resolver, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
@@ -22,7 +22,9 @@ import { Switch } from "@/components/ui/switch";
 import { Card } from "@/components/ui/card";
 
 const CreateEvent: React.FC = () => {
+    const { id } = useParams();
     const navigate = useNavigate();
+    const { addEvent, event: eventForUpdate, getEvent } = useEventStore(state => state);
     const userState = useAuthStore(state => state.user);
     const [hasEndDate, setHasEndDate] = useState(false);
 
@@ -35,7 +37,35 @@ const CreateEvent: React.FC = () => {
         }
     });
 
-    const addEvent = useEventStore(state => state.addEvent);
+    if (id) {
+        useEffect(() => {
+            const fetchData = async () => {
+                await getEvent(id);
+            };
+
+            if (id && id !== eventForUpdate?.id) {
+                fetchData();
+            }
+            if (eventForUpdate) {
+                form.reset({
+                    id: id,
+                    name: eventForUpdate.name,
+                    description: eventForUpdate.description,
+                    date: new Date(eventForUpdate.date),
+                    endDate: eventForUpdate.endDate ? new Date(eventForUpdate.endDate) : undefined,
+                    location: eventForUpdate.location,
+                    capacity: eventForUpdate.capacity,
+                    createdBy: eventForUpdate.createdBy,
+                    createdAt: new Date(eventForUpdate.createdAt),
+                    updatedBy: userState?.id || '',
+                    updatedAt: new Date(),
+                });
+            }
+
+        }, [id, eventForUpdate]);
+    }
+
+
 
     async function onSubmit(data: Event) {
         try {

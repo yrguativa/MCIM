@@ -63,9 +63,6 @@ export const EventWeeklyCalendar: React.FC<EventWeeklyCalendarProps> = ({ event 
                 <div className="text-xs text-gray-500">
                     {format(new Date(event.date), 'HH:mm')}
                 </div>
-                <div className="text-xs truncate">
-                    {event.location}
-                </div>
             </SheetTrigger>
             <SheetContent >
                 <SheetHeader>
@@ -103,12 +100,15 @@ export const EventWeeklyCalendar: React.FC<EventWeeklyCalendarProps> = ({ event 
                     {t('events.createdBy')}: {format(new Date(event.createdAt), 'dd/MM/yyyy')}
                 </span>
                 <SheetFooter>
-                    <Button >
-                        <NavLink to={`/public/eventPage/${event.id}`} target="_blank" rel="noopener noreferrer">{t('events.viewEventPage')}</NavLink>
-                    </Button>
                     <SheetClose asChild>
                         <Button variant="outline">{t('events.close')}</Button>
                     </SheetClose>
+                    <Button >
+                        <NavLink to={`/events/${event.id}`}  >{t('events.edit')}</NavLink>
+                    </Button>
+                    <Button >
+                        <NavLink to={`/public/eventPage/${event.id}`} target="_blank" rel="noopener noreferrer">{t('events.viewEventPage')}</NavLink>
+                    </Button>
                 </SheetFooter>
             </SheetContent>
         </Sheet>

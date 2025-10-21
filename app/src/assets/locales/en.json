@@ -106,6 +106,8 @@
     "selectMinistry": "Select a ministry",
     "titleModalRegisterEvent": "Registration result",
     "messageRegisterEvent": "The registration was successful",
+    "messageRegisterInEventTooltip": "Click to scan the QR and register in the event",
+    "messageRegisterInEvent":"Scan the QR to register in the event",
     "filters": {
       "title": "Filters",
       "dateRange": "Date range",

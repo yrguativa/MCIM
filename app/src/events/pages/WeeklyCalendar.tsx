@@ -4,22 +4,51 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 import { es, enUS } from 'date-fns/locale';
-import { CalendarPlus, QrCode } from 'lucide-react';
+import { CalendarPlus, Info, QrCode } from 'lucide-react';
 import { EventWeeklyCalendar } from '../components/EventWeeklyCalendar';
 import { useWeeklyCalendarHook } from '../hooks/weeklyCalendarHook';
 import LastEvent from '../components/LastEvent';
 import { useTranslation } from 'react-i18next';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { QRCodeSVG } from 'qrcode.react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const WeeklyCalendar: React.FC = () => {
     const { t, i18n } = useTranslation();
     const esLocale = i18n.language === 'es' ? es : enUS;
-    
+
     const { weekDays, lastEvent } = useWeeklyCalendarHook();
 
     return (
         <div className="container mx-auto p-4">
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold">{t('events.eventCalendar')}</h1>
+
+                <h1 className="text-2xl font-bold">
+                    {t('events.eventCalendar')}
+                    <TooltipProvider>
+                        <Popover>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <PopoverTrigger className=" ml-2">
+                                        <Info />
+                                    </PopoverTrigger>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>{t('events.messageRegisterInEventTooltip')}</p>
+                                </TooltipContent>
+                            </Tooltip>
+                            <PopoverContent className='min-w-md'>{t('events.messageRegisterInEvent')}
+                                <QRCodeSVG
+                                    value={window.location.origin + '/public/events/register'}
+                                    size={400}
+                                    level="H"
+                                    includeMargin={true}
+                                />
+                            </PopoverContent>
+                        </Popover>
+                    </TooltipProvider>
+                </h1>
+
                 <div className="flex gap-2">
                     <Button
                         asChild
@@ -48,7 +77,7 @@ const WeeklyCalendar: React.FC = () => {
                     <Card key={date.toISOString()} className="p-2">
                         <div className="text-center border-b pb-2">
                             <div className="font-medium">
-                                {format(date, 'EEEE', { locale: esLocale})}
+                                {format(date, 'EEEE', { locale: esLocale })}
                             </div>
                             <div className="text-sm text-gray-500">
                                 {format(date, 'd MMM', { locale: esLocale })}

@@ -10,6 +10,7 @@ const EventsRoutes: React.FC = () => {
     <Routes>
       <Route path="/" element={<WeeklyCalendar />} />
       <Route path="create" element={<CreateEvent />} />
+      <Route path=":id" element={<CreateEvent />} />
       <Route path="scan" element={<ScanQR />} />
     </Routes>
   );

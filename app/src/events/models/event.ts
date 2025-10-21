@@ -9,7 +9,8 @@ export interface Event {
     attendees?: EventAttendance[]; 
     createdAt: Date;
     createdBy: string;
-    updatedAt: Date;
+    updatedBy?: string;
+    updatedAt?: Date;
 }
 
 export interface EventAttendance{

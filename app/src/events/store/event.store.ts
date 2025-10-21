@@ -62,6 +62,7 @@ const storeEvent: StateCreator<EventState> = (set, get) => ({
             set({ events: [...events, { ...event, id: eventId }] });
             return true;
         } catch (error) {
+            console.error("Error in addEvent:", error);
             return false;
         }
     },
@@ -76,6 +77,7 @@ const storeEvent: StateCreator<EventState> = (set, get) => ({
             });
             return true;
         } catch (error) {
+            console.error("Error in updateEvent:", error);
             return false;
         }
     },
@@ -101,6 +103,7 @@ const storeEvent: StateCreator<EventState> = (set, get) => ({
             });
             return true;
         } catch (error) {
+            console.error("Error in registerAttendance:", error);
             return false;
         }
     },
@@ -110,6 +113,7 @@ const storeEvent: StateCreator<EventState> = (set, get) => ({
             set({ attendances: [...eventAttendances] });
             return eventAttendances;
         } catch (error) {
+            console.error("Error in getEventAttendance:", error);
             return [];
         }
     },
@@ -121,6 +125,7 @@ const storeEvent: StateCreator<EventState> = (set, get) => ({
             const attendances = await get().getEventAttendance(eventId);
             return attendances.length < event.capacity;
         } catch (error) {
+            console.error("Error in validateEventCapacity:", error);
             return false;
         }
     },
