@@ -107,7 +107,8 @@
         "titleModalRegisterEvent": "Resultado del registro",
         "messageRegisterEvent": "Se realizo el registro exitosamente",
         "messageRegisterInEventTooltip": "Da clic para escanear el QR y registrarte en el evento",
-        "messageRegisterInEvent":"Escane el QR para registrarse en el evento",
+        "messageRegisterInEvent":"Escane el QR para registrarse en el evento o visite el enlace: ",
+        "linkEvetnRegister": "Enlace de registro de evento",
         "filters": {
             "title": "Filtros",
             "dateRange": "Rango de fecha",

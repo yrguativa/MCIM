@@ -18,7 +18,7 @@ const WeeklyCalendar: React.FC = () => {
     const esLocale = i18n.language === 'es' ? es : enUS;
 
     const { weekDays, lastEvent } = useWeeklyCalendarHook();
-
+    const urlPageRegister = window.location.origin + (import.meta.env.VITE_BASE && import.meta.env.VITE_BASE !== '' ? '/' + import.meta.env.VITE_BASE : "") + '/public/registerInEvent';
     return (
         <div className="container mx-auto p-4">
             <div className="flex justify-between items-center mb-6">
@@ -37,9 +37,15 @@ const WeeklyCalendar: React.FC = () => {
                                     <p>{t('events.messageRegisterInEventTooltip')}</p>
                                 </TooltipContent>
                             </Tooltip>
-                            <PopoverContent className='min-w-md'>{t('events.messageRegisterInEvent')}
+                            <PopoverContent className='min-w-md'>
+                                <p>
+                                    {t('events.messageRegisterInEvent')}
+                                    <NavLink to={urlPageRegister} target="_blank" rel="noopener noreferrer">
+                                        {t('events.linkEvetnRegister')}
+                                    </NavLink>
+                                </p>
                                 <QRCodeSVG
-                                    value={window.location.origin + '/' + import.meta.env.VITE_BASE + '/public/events/register'}
+                                    value={urlPageRegister}
                                     size={400}
                                     level="H"
                                     includeMargin={true}
