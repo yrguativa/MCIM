@@ -27,7 +27,7 @@ export const ColumnsAssistants: ColumnDef<CellFull>[] = [
   {
     header: "Asistentes",
     accessorKey: "records",
-    cell: (info) => {
+    cell: () => {
       return (<>0</>);
     },
   },
