@@ -29,7 +29,7 @@ export const useLoginHook = () => {
             await login(data.email, data.password)
             navigate("/dashboard")
         } catch (error) {
-            console.log(error)
+            console.error(error)
             toast("Error al iniciar sesión")
         } finally {
             setIsLoading(false)

@@ -28,7 +28,6 @@ export const ColumnsAssistants: ColumnDef<CellFull>[] = [
     header: "Asistentes",
     accessorKey: "records",
     cell: (info) => {
-      console.log("🚀 ~ info:", info)
       return (<>0</>);
     },
   },

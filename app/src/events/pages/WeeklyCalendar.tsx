@@ -40,7 +40,7 @@ const WeeklyCalendar: React.FC = () => {
                             <PopoverContent className='min-w-md'>
                                 <p>
                                     {t('events.messageRegisterInEvent')}
-                                    <NavLink to={urlPageRegister} target="_blank" rel="noopener noreferrer">
+                                    <NavLink to={urlPageRegister} className="underline" target="_blank" rel="noopener noreferrer">
                                         {t('events.linkEvetnRegister')}
                                     </NavLink>
                                 </p>
