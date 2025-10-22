@@ -1,4 +1,5 @@
 {
+  "AppTitle": "Management System",
   "common": {
     "welcome": "Welcome",
     "loading": "Loading...",
@@ -106,6 +107,8 @@
     "selectMinistry": "Select a ministry",
     "titleModalRegisterEvent": "Registration result",
     "messageRegisterEvent": "The registration was successful",
+    "titleModalNotFound": "Disciple not found",
+    "messageNotFound": "The disciple with the provided identification was not found by this event.",
     "messageRegisterInEventTooltip": "Click to scan the QR and register in the event",
     "messageRegisterInEvent":"Scan the QR to register in the event or visit the link: ",
     "linkEvetnRegister": "Event registration link",

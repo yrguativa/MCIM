@@ -15,6 +15,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useRegisterEventHook } from '../hooks/registerEventHook';
 import { EventRegisterConfirmModal } from '../components/EventRegisterConfirmModal';
+import { PersonNotFoundEvent } from '../components/PersonNotFoundEvent';
+
 import { useMinistryStore } from '@/src/ministries/store/ministries.store';
 
 const ScanQR: React.FC = () => {
@@ -142,7 +144,9 @@ const ScanQR: React.FC = () => {
           </form>
         </Form>
       </Card>
+
       <EventRegisterConfirmModal/>
+      <PersonNotFoundEvent/>
     </div>
   );
 };

@@ -8,18 +8,21 @@ interface DiscipleState {
     Disciples: Disciple[],
     discipleSelected?: Disciple | undefined,
     searchResults: Disciple[],
+    showModalNotFound: boolean,
 
     getDisciples: () => Promise<void>,
     addDisciple: (disciple: Disciple) => Promise<boolean>,
     updateDisciple: (disciple: Disciple) => Promise<boolean>,
     searchByName: (name: string) => Promise<void>,
     searchByIdentification: (identification: string) => Promise<void>,
+    toggleModalNotFound: () => void,
 }
 
 const storeDisciple: StateCreator<DiscipleState> = (set, get) => (
     {
         Disciples: [],
         searchResults: [],
+        showModalNotFound: false,
 
         searchByName: async (name: string) => {
             try {
@@ -33,6 +36,10 @@ const storeDisciple: StateCreator<DiscipleState> = (set, get) => (
         searchByIdentification: async (identification: string) => {
             try {
                 const results = await DisciplesService.searchByIdentification(identification);              
+                
+                if (!results){
+                    set({ showModalNotFound: true });
+                }
                 set({ discipleSelected: results });
             } catch (error) {
                 console.error('Error searching disciples:', error);
@@ -55,6 +62,7 @@ const storeDisciple: StateCreator<DiscipleState> = (set, get) => (
 
                 return true;
             } catch (error) {
+                console.error("🚀 ~ addDisciple ~ error:", error);
                 return false;
             }
         },
@@ -67,9 +75,14 @@ const storeDisciple: StateCreator<DiscipleState> = (set, get) => (
                 set({ Disciples: [...disciples.filter(d => d.identification == disciple.identification), { ...disciple }] });
                 return true;
             } catch (error) {
+                console.error("🚀 ~ updateDisciple ~ error:", error);
                 return false;
             }
-        }
+        },
+        
+        toggleModalNotFound: () => {
+            set({ showModalNotFound: get().showModalNotFound ? false : true });
+        },
     }
 );
 

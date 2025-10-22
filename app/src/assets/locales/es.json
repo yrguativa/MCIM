@@ -1,4 +1,5 @@
 {
+    "AppTitle": "Sistema de Gestión",
     "common": {
         "welcome": "Bienvenido",
         "loading": "Cargando...",
@@ -106,6 +107,8 @@
         "selectMinistry": "Selecciona un ministerio",
         "titleModalRegisterEvent": "Resultado del registro",
         "messageRegisterEvent": "Se realizo el registro exitosamente",
+        "titleModalNotFound": "Discípulo no encontrado",
+        "messageNotFound": "El discípulo con la identificación proporcionada no fue encontrado por este evento.",
         "messageRegisterInEventTooltip": "Da clic para escanear el QR y registrarte en el evento",
         "messageRegisterInEvent":"Escane el QR para registrarse en el evento o visite el enlace: ",
         "linkEvetnRegister": "Enlace de registro de evento",
