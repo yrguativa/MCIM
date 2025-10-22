@@ -48,6 +48,7 @@ const RegisterPage: React.FC = () => {
             await register(validatedData)
             navigate("/dashboard")
         } catch (error) {
+            console.error("🚀 ~ handleSubmit ~ error:", error)
             toast("Error al registrar usuario")
         } finally {
             setIsLoading(false)
