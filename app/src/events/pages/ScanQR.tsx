@@ -19,6 +19,8 @@ import { PersonNotFoundEvent } from '../components/PersonNotFoundEvent';
 
 import { useMinistryStore } from '@/src/ministries/store/ministries.store';
 
+import './ScanQR.css';
+
 const ScanQR: React.FC = () => {
   const { t } = useTranslation();
   const { ministries } = useMinistryStore();

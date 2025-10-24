@@ -1,0 +1,35 @@
+import { Html5QrcodeScannerStrings } from 'html5-qrcode/esm/strings';
+import { TFunction } from 'i18next';
+
+export const setSpanishHtml5QrcodeScannerStrings = (t: TFunction) => {
+    Html5QrcodeScannerStrings.scanningStatus = () => t('html5-qrcode-scanner.scanningStatus');
+    Html5QrcodeScannerStrings.idleStatus = () => t('html5-qrcode-scanner.idleStatus');
+    Html5QrcodeScannerStrings.errorStatus = () => t('html5-qrcode-scanner.errorStatus');
+    Html5QrcodeScannerStrings.permissionStatus = () => t('html5-qrcode-scanner.permissionStatus');
+    Html5QrcodeScannerStrings.noCameraFoundErrorStatus = () => t('html5-qrcode-scanner.noCameraFoundErrorStatus');
+    Html5QrcodeScannerStrings.lastMatch = (decodedText: string) => t('html5-qrcode-scanner.lastMatch', { decodedText });
+    Html5QrcodeScannerStrings.codeScannerTitle = () => t('html5-qrcode-scanner.codeScannerTitle');
+    Html5QrcodeScannerStrings.cameraPermissionTitle = () => t('html5-qrcode-scanner.cameraPermissionTitle');
+    Html5QrcodeScannerStrings.cameraPermissionRequesting = () => t('html5-qrcode-scanner.cameraPermissionRequesting');
+    Html5QrcodeScannerStrings.noCameraFound = () => t('html5-qrcode-scanner.noCameraFound');
+    Html5QrcodeScannerStrings.scanButtonStopScanningText = () => t('html5-qrcode-scanner.scanButtonStopScanningText');
+    Html5QrcodeScannerStrings.scanButtonStartScanningText = () => t('html5-qrcode-scanner.scanButtonStartScanningText');
+    Html5QrcodeScannerStrings.torchOnButton = () => t('html5-qrcode-scanner.torchOnButton');
+    Html5QrcodeScannerStrings.torchOffButton = () => t('html5-qrcode-scanner.torchOffButton');
+    Html5QrcodeScannerStrings.torchOnFailedMessage = () => t('html5-qrcode-scanner.torchOnFailedMessage');
+    Html5QrcodeScannerStrings.torchOffFailedMessage = () => t('html5-qrcode-scanner.torchOffFailedMessage');
+    Html5QrcodeScannerStrings.scanButtonScanningStarting = () => t('html5-qrcode-scanner.scanButtonScanningStarting');
+    Html5QrcodeScannerStrings.textIfCameraScanSelected = () => t('html5-qrcode-scanner.textIfCameraScanSelected');
+    Html5QrcodeScannerStrings.textIfFileScanSelected = () => t('html5-qrcode-scanner.textIfFileScanSelected');
+    Html5QrcodeScannerStrings.selectCamera = () => t('html5-qrcode-scanner.selectCamera');
+    Html5QrcodeScannerStrings.fileSelectionChooseImage = () => t('html5-qrcode-scanner.fileSelectionChooseImage');
+    Html5QrcodeScannerStrings.fileSelectionChooseAnother = () => t('html5-qrcode-scanner.fileSelectionChooseAnother');
+    Html5QrcodeScannerStrings.fileSelectionNoImageSelected = () => t('html5-qrcode-scanner.fileSelectionNoImageSelected');
+    Html5QrcodeScannerStrings.anonymousCameraPrefix = () => t('html5-qrcode-scanner.anonymousCameraPrefix');
+    Html5QrcodeScannerStrings.dragAndDropMessage = () => t('html5-qrcode-scanner.dragAndDropMessage');
+    Html5QrcodeScannerStrings.dragAndDropMessageOnlyImages = () => t('html5-qrcode-scanner.dragAndDropMessageOnlyImages');
+    Html5QrcodeScannerStrings.zoom = () => t('html5-qrcode-scanner.zoom');
+    Html5QrcodeScannerStrings.loadingImage = () => t('html5-qrcode-scanner.loadingImage');
+    Html5QrcodeScannerStrings.cameraScanAltText = () => t('html5-qrcode-scanner.cameraScanAltText');
+    Html5QrcodeScannerStrings.fileScanAltText = () => t('html5-qrcode-scanner.fileScanAltText');
+};

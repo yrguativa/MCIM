@@ -1,0 +1,31 @@
+#html5-qrcode-button-camera-permission,
+#html5-qrcode-button-camera-start,
+#html5-qrcode-button-camera-stop {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    border: 2px var(--border);
+    margin-top: 10px;
+}
+
+#html5-qrcode-button-camera-stop {
+    background-color: #f87171;
+}
+
+#html5-qrcode-button-camera-permission:hover,
+#html5-qrcode-button-camera-start:hover {
+    background-color: color-mix(in oklab, var(--primary) 90%, transparent);
+    cursor: pointer;
+}
+
+#html5-qrcode-select-camera {
+    border: 2px var(--border) solid;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+#html5-qrcode-anchor-scan-type-change{
+    font-size: 12px;
+}

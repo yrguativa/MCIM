@@ -11,6 +11,7 @@ import { ScanData } from '../models/scanData';
 
 import { useDiscipleStore } from '@/src/disciples/store/disciple.store';
 import { useEventStore } from '../store/event.store';
+import { setSpanishHtml5QrcodeScannerStrings } from '../helpers/html5-qrcode-strings';
 
 export const useRegisterEventHook = () => {
     const { t } = useTranslation();
@@ -38,6 +39,7 @@ export const useRegisterEventHook = () => {
 
     // Initialize the QR code scanner
     useEffect(() => {
+        setSpanishHtml5QrcodeScannerStrings(t);
         // Create a scanner instance
         scannerRef.current = new Html5QrcodeScanner(
             "qr-reader",
