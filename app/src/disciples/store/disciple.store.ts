@@ -62,7 +62,7 @@ const storeDisciple: StateCreator<DiscipleState> = (set, get) => (
 
                 return true;
             } catch (error) {
-                console.error("🚀 ~ addDisciple ~ error:", error);
+                console.error("Error adding disciple:", error);
                 return false;
             }
         },
@@ -75,7 +75,7 @@ const storeDisciple: StateCreator<DiscipleState> = (set, get) => (
                 set({ Disciples: [...disciples.filter(d => d.identification == disciple.identification), { ...disciple }] });
                 return true;
             } catch (error) {
-                console.error("🚀 ~ updateDisciple ~ error:", error);
+                console.error("Error updating disciple:", error);
                 return false;
             }
         },

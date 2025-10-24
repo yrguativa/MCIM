@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
-import { useDebounce } from 'use-debounce';
 import { Html5QrcodeScanner } from 'html5-qrcode';
+//import { useDebounce } from 'use-debounce';
 
 import { EventAttendance } from '../models/eventAttendanceSchema';
 import { RegisterEventInput, useRegisterEventSchema } from '../schemas/registerEventSchema';
@@ -35,14 +35,8 @@ export const useRegisterEventHook = () => {
         },
     });
 
-    const identification = form.watch('identification');
-    const [debouncedIdentification] = useDebounce(identification, 800);
-
-    useEffect(() => {
-        if (i18n.language) {
-            setSpanishHtml5QrcodeScannerStrings(t);
-        }
-    }, [i18n.language]);
+    // const identification = form.watch('identification');
+    // const [debouncedIdentification] = useDebounce(identification, 800);
 
     // Initialize the QR code scanner
     useEffect(() => {
@@ -81,12 +75,19 @@ export const useRegisterEventHook = () => {
         };
     }, []);
 
-    // When the debounced identification changes, search for the disciple
+    // Initialize the QR code scanner strings based on the current language
     useEffect(() => {
-        if (debouncedIdentification && debouncedIdentification.length >= 5) {
-            searchByIdentification(debouncedIdentification);
+        if (i18n.language) {
+            setSpanishHtml5QrcodeScannerStrings(t);
         }
-    }, [debouncedIdentification]);
+    }, [i18n.language]);
+
+    // // When the debounced identification changes, search for the disciple
+    // useEffect(() => {
+    //     if (debouncedIdentification && debouncedIdentification.length >= 5) {
+    //         searchByIdentification(debouncedIdentification);
+    //     }
+    // }, [debouncedIdentification]);
 
     // When a disciple is selected, populate the form fields
     useEffect(() => {
@@ -98,7 +99,7 @@ export const useRegisterEventHook = () => {
             form.setValue('lastName', discipleSelected.lastName);
             form.setValue('phoneNumber', discipleSelected.phone || '');
             form.setValue('ministryId', discipleSelected.ministryId);
-        }else {
+        } else {
             form.setValue('name', '');
             form.setValue('lastName', '');
             form.setValue('phoneNumber', '');
@@ -106,15 +107,35 @@ export const useRegisterEventHook = () => {
         }
     }, [discipleSelected]);
 
+    
     const onSubmit = async (values: RegisterEventInput) => {
         if (!scanData) return;
 
         const attendance: Partial<EventAttendance> = {
             eventId: scanData.id
         };
-        if (discipleSelected && discipleSelected.id){
+        if (discipleSelected && discipleSelected.id) {
             attendance.discipleId = discipleSelected.id;
-        }else{
+        } else {
+            attendance.name = values.name;
+            attendance.lastName = values.lastName;
+            attendance.identification = values.identification;
+            attendance.phone = values.phoneNumber;
+            attendance.ministryId = values.ministryId;
+        }
+
+        await registerAttendance(attendance);
+    };
+
+    const onRegisterEvent = async (values: RegisterEventInput) => {
+        if (!scanData) return;
+
+        const attendance: Partial<EventAttendance> = {
+            eventId: scanData.id
+        };
+        if (discipleSelected && discipleSelected.id) {
+            attendance.discipleId = discipleSelected.id;
+        } else {
             attendance.name = values.name;
             attendance.lastName = values.lastName;
             attendance.identification = values.identification;

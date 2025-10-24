@@ -112,6 +112,9 @@
     "messageRegisterInEventTooltip": "Click to scan the QR and register in the event",
     "messageRegisterInEvent": "Scan the QR to register in the event or visit the link: ",
     "linkEvetnRegister": "Event registration link",
+    "eventRegisterInstructions": "To register for the event, you only need to complete two simple steps:",
+    "eventRegisterStep1": "Scan the event's QR code using your mobile device's camera.",
+    "eventRegisterStep2": "Enter your identification number in the form to validate if you have access to the event.",
     "filters": {
       "title": "Filters",
       "dateRange": "Date range",

@@ -10,16 +10,15 @@ import { useDiscipleStore } from "@/src/disciples/store/disciple.store";
 export const PersonNotFoundEvent: React.FC = () => {
     const { t } = useTranslation();
     const { showModalNotFound, toggleModalNotFound } = useDiscipleStore();
-    console.log("🚀 ~ PersonNotFoundEvent ~ showModalNotFound:", showModalNotFound)
 
     return (
-        <Dialog open={showModalNotFound}>
-            <DialogContent>
+        <Dialog open={showModalNotFound}  >
+            <DialogContent className="max-w-sm" >
                 <DialogHeader>
                     <DialogTitle>{t('events.titleModalNotFound')}</DialogTitle>
                 </DialogHeader>
-                <div className="flex">
-                    <ShieldAlert size={58} className="inline-block text-amber-300" />
+                <div className="flex gap-2">
+                    <ShieldAlert size={78} className="inline-block text-amber-300" />
                     {t('events.messageNotFound')}
                 </div>
                 <DialogFooter>
