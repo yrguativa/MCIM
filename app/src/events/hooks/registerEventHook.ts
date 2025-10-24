@@ -12,6 +12,7 @@ import { ScanData } from '../models/scanData';
 import { useDiscipleStore } from '@/src/disciples/store/disciple.store';
 import { useEventStore } from '../store/event.store';
 import { setSpanishHtml5QrcodeScannerStrings } from '../helpers/html5-qrcode-strings';
+import i18n from '@/src/i18n';
 
 export const useRegisterEventHook = () => {
     const { t } = useTranslation();
@@ -37,9 +38,14 @@ export const useRegisterEventHook = () => {
     const identification = form.watch('identification');
     const [debouncedIdentification] = useDebounce(identification, 800);
 
+    useEffect(() => {
+        if (i18n.language) {
+            setSpanishHtml5QrcodeScannerStrings(t);
+        }
+    }, [i18n.language]);
+
     // Initialize the QR code scanner
     useEffect(() => {
-        setSpanishHtml5QrcodeScannerStrings(t);
         // Create a scanner instance
         scannerRef.current = new Html5QrcodeScanner(
             "qr-reader",

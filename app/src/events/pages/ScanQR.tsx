@@ -32,123 +32,135 @@ const ScanQR: React.FC = () => {
       <Card className="p-6">
         <h1 className="text-2xl font-bold mb-4">{t('events.registerInEvent')}</h1>
 
-        <div className="mb-6">
-          <div id="qr-reader" className="w-full max-w-sm mx-auto"></div>
-        </div>
+        <p className="mb-6">{t('events.eventRegisterInstructions')}</p>
 
-        {error && (
-          <div className="text-red-500 mb-4">{error}</div>
-        )}
+        <Card className="p-6">
+          <p className="text-md mb-4">
+            <span className="p-1 mr-1 border-3 rounded-full border-slate-400 text-slate-400 text-xl">1</span>
+            {t('events.eventRegisterStep1')}
+          </p>
 
-        {scanData && (
-          <div className="mb-4 p-4 bg-muted rounded-lg">
-            <h3 className="font-bold text-lg mb-2">{t('events.scanEvent')}:</h3>
-            <p><strong>{t('disciples.name')}:</strong> {scanData.event}</p>
-            <p><strong>{t('events.dateStart')}:</strong> {new Date(scanData.date).toLocaleString()}</p>
-            <p><strong>{t('events.location')}:</strong> {scanData.location}</p>
+          <div className="mb-6">
+            <div id="qr-reader" className="w-full max-w-sm mx-auto"></div>
           </div>
-        )}
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="identification"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('disciples.identification')}</FormLabel>
-                  <FormControl>
-                    <Input placeholder={t('validation.enter') + t('validation.femininePronoun').toLocaleLowerCase() + ' ' + t('disciples.identification').toLowerCase()} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          {error && (
+            <div className="text-red-500 mb-4">{error}</div>
+          )}
 
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('disciples.names')}</FormLabel>
-                  <FormControl>
-                    <Input placeholder={t('validation.enter') + t('validation.masculinePronoun').toLocaleLowerCase() + ' ' + t('disciples.name').toLowerCase()} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="lastName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('disciples.lastName')}</FormLabel>
-                  <FormControl>
-                    <Input placeholder={t('validation.enter') + t('validation.neuterPronoun').toLocaleLowerCase() + ' ' + t('disciples.lastName').toLowerCase()} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          {scanData && (
+            <div className="mb-4 p-4 bg-muted rounded-lg">
+              <h3 className="font-bold text-lg mb-2">{t('events.scanEvent')}:</h3>
+              <p><strong>{t('disciples.name')}:</strong> {scanData.event}</p>
+              <p><strong>{t('events.dateStart')}:</strong> {new Date(scanData.date).toLocaleString()}</p>
+              <p><strong>{t('events.location')}:</strong> {scanData.location}</p>
+            </div>
+          )}
+        </Card>
 
-            <FormField
-              control={form.control}
-              name="ministryId"
-              render={({ field }) => (
-                <FormItem >
-                  <FormLabel>{t('ministries.ministry')}</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+        <Card className="p-6">
+          <p className="text-md  mb-4"><span>2</span> {t('events.eventRegisterStep2')}</p>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="identification"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('disciples.identification')}</FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder={field.value ? ministries.find((m) => m.id === field.value)?.name : t('events.selectMinistry')} />
-                      </SelectTrigger>
+                      <Input placeholder={t('validation.enter') + t('validation.femininePronoun').toLocaleLowerCase() + ' ' + t('disciples.identification').toLowerCase()} {...field} />
                     </FormControl>
-                    <SelectContent>
-                      {
-                        Array.isArray(ministries) && ministries.length > 0 && (
-                          ministries.map((ministry) => (
-                            <SelectItem value={ministry.id} key={ministry.id}> {ministry.name}</SelectItem>
-                          ))
-                        )
-                      }
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="phoneNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('disciples.phone')}</FormLabel>
-                  <FormControl>
-                    <Input placeholder="3243432434" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            {!form.formState.isValid && !scanData && (
-              <div className="text-red-500 mb-4">{t('events.messageScanQR')}</div>
-            )}
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('disciples.names')}</FormLabel>
+                    <FormControl>
+                      <Input placeholder={t('validation.enter') + t('validation.masculinePronoun').toLocaleLowerCase() + ' ' + t('disciples.name').toLowerCase()} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('disciples.lastName')}</FormLabel>
+                    <FormControl>
+                      <Input placeholder={t('validation.enter') + t('validation.neuterPronoun').toLocaleLowerCase() + ' ' + t('disciples.lastName').toLowerCase()} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <Button
-              type="submit"
-              disabled={!scanData || !form.formState.isValid}
-              className="w-full"
-            >
-              {t('events.registerAttendance')}
-            </Button>
-          </form>
-        </Form>
+              <FormField
+                control={form.control}
+                name="ministryId"
+                render={({ field }) => (
+                  <FormItem >
+                    <FormLabel>{t('ministries.ministry')}</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder={field.value ? ministries.find((m) => m.id === field.value)?.name : t('events.selectMinistry')} />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {
+                          Array.isArray(ministries) && ministries.length > 0 && (
+                            ministries.map((ministry) => (
+                              <SelectItem value={ministry.id} key={ministry.id}> {ministry.name}</SelectItem>
+                            ))
+                          )
+                        }
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="phoneNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('disciples.phone')}</FormLabel>
+                    <FormControl>
+                      <Input placeholder="3243432434" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {!form.formState.isValid && !scanData && (
+                <div className="text-red-500 mb-4">{t('events.messageScanQR')}</div>
+              )}
+
+              <Button
+                type="submit"
+                disabled={!scanData || !form.formState.isValid}
+                className="w-full"
+              >
+                {t('events.registerAttendance')}
+              </Button>
+            </form>
+          </Form>
+        </Card>
       </Card>
 
-      <EventRegisterConfirmModal/>
-      <PersonNotFoundEvent/>
+      <EventRegisterConfirmModal />
+      <PersonNotFoundEvent />
     </div>
   );
 };

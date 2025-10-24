@@ -112,6 +112,9 @@
         "messageRegisterInEventTooltip": "Da clic para escanear el QR y registrarte en el evento",
         "messageRegisterInEvent":"Escane el QR para registrarse en el evento o visite el enlace: ",
         "linkEvetnRegister": "Enlace de registro de evento",
+        "eventRegisterInstructions": "Para registrarse en el evento, solo neceistas realizar dos pasos sencillos:", 
+        "eventRegisterStep1": "Escanea el código QR que se muestra a continuación utilizando la cámara de tu dispositivo móvil o una aplicación de escaneo de códigos QR.",
+        "eventRegisterStep2": "Ingresa tu número de identificación en el formulario que aparecerá después de escanear el código QR y selecciona el ministerio al que perteneces.",
         "filters": {
             "title": "Filtros",
             "dateRange": "Rango de fecha",
