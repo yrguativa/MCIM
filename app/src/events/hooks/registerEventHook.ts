@@ -20,7 +20,8 @@ export const useRegisterEventHook = () => {
     const [scanData, setScanData] = useState<ScanData | null>(null);
     const [error, setError] = useState<string>('');
 
-    const { discipleSelected, searchByIdentification } = useDiscipleStore();
+    //const { discipleSelected, searchByIdentification } = useDiscipleStore();
+    const { discipleSelected } = useDiscipleStore();
     const { registerAttendance } = useEventStore();
 
     const registerEventSchema = useRegisterEventSchema();
@@ -127,24 +128,24 @@ export const useRegisterEventHook = () => {
         await registerAttendance(attendance);
     };
 
-    const onRegisterEvent = async (values: RegisterEventInput) => {
-        if (!scanData) return;
+    // const onRegisterEvent = async (values: RegisterEventInput) => {
+    //     if (!scanData) return;
 
-        const attendance: Partial<EventAttendance> = {
-            eventId: scanData.id
-        };
-        if (discipleSelected && discipleSelected.id) {
-            attendance.discipleId = discipleSelected.id;
-        } else {
-            attendance.name = values.name;
-            attendance.lastName = values.lastName;
-            attendance.identification = values.identification;
-            attendance.phone = values.phoneNumber;
-            attendance.ministryId = values.ministryId;
-        }
+    //     const attendance: Partial<EventAttendance> = {
+    //         eventId: scanData.id
+    //     };
+    //     if (discipleSelected && discipleSelected.id) {
+    //         attendance.discipleId = discipleSelected.id;
+    //     } else {
+    //         attendance.name = values.name;
+    //         attendance.lastName = values.lastName;
+    //         attendance.identification = values.identification;
+    //         attendance.phone = values.phoneNumber;
+    //         attendance.ministryId = values.ministryId;
+    //     }
 
-        await registerAttendance(attendance);
-    };
+    //     await registerAttendance(attendance);
+    // };
 
     return {
         error,
