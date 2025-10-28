@@ -1,7 +1,8 @@
+import { UserSchema } from "@/src/public/schemas/userSchema";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
-export const useRegisterEventSchema = () => {
+export const RegisterEventSchema = () => {
     const { t } = useTranslation();
 
     return z.object({
@@ -23,4 +24,10 @@ export const useRegisterEventSchema = () => {
     });
 };
 
-export type RegisterEventInput = z.infer<ReturnType<typeof useRegisterEventSchema>>;
+export type RegisterEventInput = z.infer<ReturnType<typeof RegisterEventSchema>>;
+
+export const SearchDiscipleSchema = UserSchema.pick({
+    identification: true,
+})
+
+export type SearchDiscipleInput = z.infer<typeof SearchDiscipleSchema>;

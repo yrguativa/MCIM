@@ -3,41 +3,39 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
 import { Html5QrcodeScanner } from 'html5-qrcode';
-//import { useDebounce } from 'use-debounce';
+import i18n from '@/src/i18n';
+import { useDebounce } from 'use-debounce';
 
-import { EventAttendance } from '../models/eventAttendanceSchema';
-import { RegisterEventInput, useRegisterEventSchema } from '../schemas/registerEventSchema';
-import { ScanData } from '../models/scanData';
+import { setSpanishHtml5QrcodeScannerStrings } from '../helpers/html5-qrcode-strings';
+//import { EventAttendance } from '../models/eventAttendanceSchema';
+import { SearchDiscipleInput, SearchDiscipleSchema } from '../schemas/registerEventSchema';
+
 
 import { useDiscipleStore } from '@/src/disciples/store/disciple.store';
-import { useEventStore } from '../store/event.store';
-import { setSpanishHtml5QrcodeScannerStrings } from '../helpers/html5-qrcode-strings';
-import i18n from '@/src/i18n';
+import { useMinistryStore } from '@/src/ministries/store/ministries.store';
+//import { useEventStore } from '../store/event.store';
+import { ScanData } from '../models/scanData';
 
 export const useRegisterEventHook = () => {
     const { t } = useTranslation();
     const scannerRef = useRef<Html5QrcodeScanner | null>(null);
     const [scanData, setScanData] = useState<ScanData | null>(null);
     const [error, setError] = useState<string>('');
+    const [ministryOfDisciple, setMinistryOfDisciple] = useState<string>('');
 
-    //const { discipleSelected, searchByIdentification } = useDiscipleStore();
-    const { discipleSelected } = useDiscipleStore();
-    const { registerAttendance } = useEventStore();
+    const { discipleSelected, searchByIdentification, clearDiscipleSelected } = useDiscipleStore();
+    const { ministries } = useMinistryStore();
+    //const { registerAttendance } = useEventStore();
 
-    const registerEventSchema = useRegisterEventSchema();
-    const form = useForm<RegisterEventInput>({
-        resolver: zodResolver(registerEventSchema),
+    const form = useForm<SearchDiscipleInput>({
+        resolver: zodResolver(SearchDiscipleSchema),
         defaultValues: {
             identification: '',
-            name: '',
-            lastName: '',
-            phoneNumber: '',
-            ministryId: '',
         },
     });
 
-    // const identification = form.watch('identification');
-    // const [debouncedIdentification] = useDebounce(identification, 800);
+    const identification = form.watch('identification');
+    const [debouncedIdentification] = useDebounce(identification, 800);
 
     // Initialize the QR code scanner
     useEffect(() => {
@@ -84,11 +82,11 @@ export const useRegisterEventHook = () => {
     }, [i18n.language]);
 
     // // When the debounced identification changes, search for the disciple
-    // useEffect(() => {
-    //     if (debouncedIdentification && debouncedIdentification.length >= 5) {
-    //         searchByIdentification(debouncedIdentification);
-    //     }
-    // }, [debouncedIdentification]);
+    useEffect(() => {
+        if (debouncedIdentification && debouncedIdentification != discipleSelected?.identification) {
+            clearDiscipleSelected();
+        }
+    }, [debouncedIdentification]);
 
     // When a disciple is selected, populate the form fields
     useEffect(() => {
@@ -96,36 +94,20 @@ export const useRegisterEventHook = () => {
             if (form.getValues('identification') !== discipleSelected.identification) {
                 form.setValue('identification', discipleSelected.identification);
             }
-            form.setValue('name', discipleSelected.name);
-            form.setValue('lastName', discipleSelected.lastName);
-            form.setValue('phoneNumber', discipleSelected.phone || '');
-            form.setValue('ministryId', discipleSelected.ministryId);
+            const ministry = ministries.find(m => m.id === discipleSelected.ministryId);
+            if (ministry) {
+                setMinistryOfDisciple(ministry.name);
+            }
         } else {
-            form.setValue('name', '');
-            form.setValue('lastName', '');
-            form.setValue('phoneNumber', '');
-            form.setValue('ministryId', '');
+            setMinistryOfDisciple('');
         }
     }, [discipleSelected]);
 
-    
-    const onSubmit = async (values: RegisterEventInput) => {
-        if (!scanData) return;
 
-        const attendance: Partial<EventAttendance> = {
-            eventId: scanData.id
-        };
-        if (discipleSelected && discipleSelected.id) {
-            attendance.discipleId = discipleSelected.id;
-        } else {
-            attendance.name = values.name;
-            attendance.lastName = values.lastName;
-            attendance.identification = values.identification;
-            attendance.phone = values.phoneNumber;
-            attendance.ministryId = values.ministryId;
+    const onSubmit = async (searchData: SearchDiscipleInput) => {
+        if (searchData && searchData.identification && searchData.identification.length >= 5) {
+            searchByIdentification(searchData.identification);
         }
-
-        await registerAttendance(attendance);
     };
 
     // const onRegisterEvent = async (values: RegisterEventInput) => {
@@ -152,5 +134,7 @@ export const useRegisterEventHook = () => {
         scanData,
         form,
         onSubmit,
+        discipleSelected,
+        ministryOfDisciple
     };
 }

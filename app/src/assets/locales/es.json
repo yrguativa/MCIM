@@ -110,9 +110,9 @@
         "titleModalNotFound": "Discípulo no encontrado",
         "messageNotFound": "El discípulo con la identificación proporcionada no fue encontrado por este evento.",
         "messageRegisterInEventTooltip": "Da clic para escanear el QR y registrarte en el evento",
-        "messageRegisterInEvent":"Escane el QR para registrarse en el evento o visite el enlace: ",
+        "messageRegisterInEvent": "Escane el QR para registrarse en el evento o visite el enlace: ",
         "linkEvetnRegister": "Enlace de registro de evento",
-        "eventRegisterInstructions": "Para registrarse en el evento, solo necesitas realizar dos pasos sencillos:", 
+        "eventRegisterInstructions": "Para registrarse en el evento, solo necesitas realizar dos pasos sencillos:",
         "eventRegisterStep1": "Escanea el código QR del evento utilizando la cámara de tu dispositivo móvil.",
         "eventRegisterStep2": "Ingresa tu número de identificación en el formulario para validar si tienes acceso al evento.",
         "filters": {
@@ -147,6 +147,14 @@
                 "disciple": "Discípulo",
                 "ministry": "Ministerio"
             }
+        },
+        "regiterEvent": {
+            "discipleFound": "Discípulo encontrado",
+            "name": "Nombres ",
+            "ministerio": "Ministerio",
+            "discipleNotFound": "Discípulo no encontrado",
+            "search": "Buscar discípulo",
+            "registerAttendance": "Registrar asistencia"
         }
     },
     "ministries": {

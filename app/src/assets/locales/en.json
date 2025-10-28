@@ -147,6 +147,14 @@
         "disciple": "Disciple",
         "ministry": "Ministry"
       }
+    },
+    "regiterEvent": {
+      "discipleFound": "Disciple found",
+      "name": "Names ",
+      "ministerio": "Ministry",
+      "discipleNotFound": "Disciple not found",
+      "search": "Search disciple",
+      "registerAttendance": "Register attendance"
     }
   },
   "ministries": {

@@ -15,6 +15,7 @@ interface DiscipleState {
     updateDisciple: (disciple: Disciple) => Promise<boolean>,
     searchByName: (name: string) => Promise<void>,
     searchByIdentification: (identification: string) => Promise<void>,
+    clearDiscipleSelected: () => void,
     toggleModalNotFound: () => void,
 }
 
@@ -35,16 +36,23 @@ const storeDisciple: StateCreator<DiscipleState> = (set, get) => (
         },
         searchByIdentification: async (identification: string) => {
             try {
-                const results = await DisciplesService.searchByIdentification(identification);              
-                
-                if (!results){
+                set({ discipleSelected: undefined });
+                const results = await DisciplesService.searchByIdentification(identification);
+
+                if (!results) {
                     set({ showModalNotFound: true });
                 }
-                set({ discipleSelected: results });
+                else {
+                    set({ discipleSelected: results });
+                }
             } catch (error) {
                 console.error('Error searching disciples:', error);
                 set({ searchResults: [] });
             }
+        },
+
+        clearDiscipleSelected: () => {
+            set({ discipleSelected: undefined });
         },
 
         getDisciples: async () => {
@@ -79,7 +87,7 @@ const storeDisciple: StateCreator<DiscipleState> = (set, get) => (
                 return false;
             }
         },
-        
+
         toggleModalNotFound: () => {
             set({ showModalNotFound: get().showModalNotFound ? false : true });
         },
