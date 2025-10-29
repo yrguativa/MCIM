@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { QRCodeSVG } from 'qrcode.react';
 import { Button } from "@/components/ui/button";
-import { Bot, CalendarDays, CalendarPlus, CalendarSearch, Clock, Download, MapPinCheckInside, Users } from "lucide-react";
+import { Bot, CalendarDays, CalendarPlus, Clock, Download, MapPinCheckInside, Users } from "lucide-react";
 
 import { useEventStore } from "../../events/store/event.store";
 import { ScanData } from "@/src/events/models/scanData";
@@ -58,7 +58,7 @@ const EventPage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (id && !eventState) {
+    if (id && (!eventState || eventState.id !== id)) {
       getEventState(id);
     }
   }, [id]);
