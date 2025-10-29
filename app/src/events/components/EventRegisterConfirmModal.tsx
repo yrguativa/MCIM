@@ -11,7 +11,7 @@ import { SheetDescription } from "@/components/ui/sheet";
 
 export const EventRegisterConfirmModal: React.FC = () => {
     const { t } = useTranslation();
-    const { isOpenModal, toggleModal } = useEventStore();
+    const { isOpenModal, closeModal } = useEventStore();
 
     if (isOpenModal) {
         confetti({
@@ -22,7 +22,7 @@ export const EventRegisterConfirmModal: React.FC = () => {
     }
 
     return (
-        <Dialog open={isOpenModal} onOpenChange={toggleModal}>
+        <Dialog open={isOpenModal}  onOpenChange ={closeModal}>
             <DialogContent className="max-w-sm bor">
                 <DialogHeader>
                     <DialogTitle>{t('events.titleModalRegisterEvent')}</DialogTitle>
@@ -39,7 +39,7 @@ export const EventRegisterConfirmModal: React.FC = () => {
 
                 <DialogFooter>
                     <DialogClose asChild>
-                        <Button variant="outline" onClick={toggleModal}>{t('common.accept')}</Button>
+                        <Button variant="outline" onClick={closeModal}>{t('common.accept')}</Button>
                     </DialogClose>
                 </DialogFooter>
             </DialogContent>

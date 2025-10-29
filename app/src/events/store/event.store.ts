@@ -24,7 +24,7 @@ interface EventState {
     validateEventCapacity: (eventId: string) => Promise<boolean>;
 
     // Modal methods  
-    toggleModal: () => void;
+    closeModal: () => void;
 }
 
 const storeEvent: StateCreator<EventState> = (set, get) => ({
@@ -131,9 +131,8 @@ const storeEvent: StateCreator<EventState> = (set, get) => ({
     },
 
     // Modal methods implementation
-    toggleModal: () => {
-        const isOpen = get().isOpenModal;
-        set({ isOpenModal: !isOpen })
+    closeModal: () => {
+        set({ isOpenModal: false });
     },
 });
 
