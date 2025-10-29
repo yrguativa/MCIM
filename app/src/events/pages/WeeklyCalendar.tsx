@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 import { es, enUS } from 'date-fns/locale';
-import { CalendarPlus, Info, QrCode } from 'lucide-react';
+import { CalendarPlus, ChevronLeft, ChevronRight, Info, QrCode } from 'lucide-react';
 import { EventWeeklyCalendar } from '../components/EventWeeklyCalendar';
 import { useWeeklyCalendarHook } from '../hooks/weeklyCalendarHook';
 import LastEvent from '../components/LastEvent';
@@ -17,7 +17,7 @@ const WeeklyCalendar: React.FC = () => {
     const { t, i18n } = useTranslation();
     const esLocale = i18n.language === 'es' ? es : enUS;
 
-    const { weekDays, lastEvent } = useWeeklyCalendarHook();
+    const { weekDays, lastEvent, nextWeek, previousWeek, currentDate } = useWeeklyCalendarHook();
     const urlPageRegister = window.location.origin + (import.meta.env.VITE_BASE && import.meta.env.VITE_BASE !== '' ?  import.meta.env.VITE_BASE : "/") + '#/public/registerInEvent';
     return (
         <div className="container mx-auto p-4">
@@ -76,6 +76,30 @@ const WeeklyCalendar: React.FC = () => {
                         </NavLink>
                     </Button>
                 </div>
+            </div>
+
+            <div className="flex justify-between items-center mb-4">
+                <Button
+                    variant="outline"
+                    onClick={previousWeek}
+                    className="flex items-center gap-2"
+                >
+                    <ChevronLeft className="h-5 w-5" />
+                    {t('events.previousWeek')}
+                </Button>
+
+                <div className="text-lg font-semibold">
+                    {format(currentDate, 'MMMM yyyy', { locale: esLocale })}
+                </div>
+
+                <Button
+                    variant="outline"
+                    onClick={nextWeek}
+                    className="flex items-center gap-2"
+                >
+                    {t('events.nextWeek')}
+                    <ChevronRight className="h-5 w-5" />
+                </Button>
             </div>
 
             <div className="grid grid-cols-7 gap-4">

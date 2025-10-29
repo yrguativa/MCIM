@@ -100,6 +100,8 @@
     "scanQR": "Scan QR",
     "withoutEvents": "No events",
     "close": "Close",
+    "previousWeek": "Previous Week",
+    "nextWeek": "Next Week",
     "qrInvalid": "Invalid QR code",
     "registerInEvent": "Register in event",
     "registerAttendance": "Register attendance",
