@@ -7,12 +7,13 @@ import { BadgeCheck } from "lucide-react";
 import confetti from "canvas-confetti";
 
 import { useEventStore } from "../store/event.store";
+import { SheetDescription } from "@/components/ui/sheet";
 
 export const EventRegisterConfirmModal: React.FC = () => {
     const { t } = useTranslation();
     const { isOpenModal, toggleModal } = useEventStore();
 
-    if(isOpenModal){
+    if (isOpenModal) {
         confetti({
             particleCount: 100,
             spread: 70,
@@ -21,12 +22,21 @@ export const EventRegisterConfirmModal: React.FC = () => {
     }
 
     return (
-        <Dialog open={isOpenModal}>
-            <DialogContent>
+        <Dialog open={isOpenModal} onOpenChange={toggleModal}>
+            <DialogContent className="max-w-sm bor">
                 <DialogHeader>
                     <DialogTitle>{t('events.titleModalRegisterEvent')}</DialogTitle>
+                    <SheetDescription className="sr-only">
+                        description goes here
+                    </SheetDescription>
                 </DialogHeader>
-                <BadgeCheck className="text-green-500" size={48} /> {t('events.messageRegisterEvent')}
+                <div className="flex flex-row justify-center items-center gap-1 text-sm text-start">
+                    <BadgeCheck className="text-green-500" size={38} />
+                    <span className="text-lg">
+                        {t('events.messageRegisterEvent')}
+                    </span>
+                </div>
+
                 <DialogFooter>
                     <DialogClose asChild>
                         <Button variant="outline" onClick={toggleModal}>{t('common.accept')}</Button>

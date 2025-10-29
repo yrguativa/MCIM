@@ -7,14 +7,14 @@ import i18n from '@/src/i18n';
 import { useDebounce } from 'use-debounce';
 
 import { setSpanishHtml5QrcodeScannerStrings } from '../helpers/html5-qrcode-strings';
-//import { EventAttendance } from '../models/eventAttendanceSchema';
 import { SearchDiscipleInput, SearchDiscipleSchema } from '../schemas/registerEventSchema';
 
 
 import { useDiscipleStore } from '@/src/disciples/store/disciple.store';
 import { useMinistryStore } from '@/src/ministries/store/ministries.store';
-//import { useEventStore } from '../store/event.store';
+import { useEventStore } from '../store/event.store';
 import { ScanData } from '../models/scanData';
+import { EventAttendance } from '../models/eventAttendance';
 
 export const useRegisterEventHook = () => {
     const { t } = useTranslation();
@@ -25,7 +25,7 @@ export const useRegisterEventHook = () => {
 
     const { discipleSelected, searchByIdentification, clearDiscipleSelected } = useDiscipleStore();
     const { ministries } = useMinistryStore();
-    //const { registerAttendance } = useEventStore();
+    const { registerAttendance } = useEventStore();
 
     const form = useForm<SearchDiscipleInput>({
         resolver: zodResolver(SearchDiscipleSchema),
@@ -110,31 +110,25 @@ export const useRegisterEventHook = () => {
         }
     };
 
-    // const onRegisterEvent = async (values: RegisterEventInput) => {
-    //     if (!scanData) return;
+    const onRegisterEvent = async () => {
+        if (!scanData || scanData == null || !discipleSelected) return;
 
-    //     const attendance: Partial<EventAttendance> = {
-    //         eventId: scanData.id
-    //     };
-    //     if (discipleSelected && discipleSelected.id) {
-    //         attendance.discipleId = discipleSelected.id;
-    //     } else {
-    //         attendance.name = values.name;
-    //         attendance.lastName = values.lastName;
-    //         attendance.identification = values.identification;
-    //         attendance.phone = values.phoneNumber;
-    //         attendance.ministryId = values.ministryId;
-    //     }
+        const attendance: Partial<EventAttendance> = {
+            eventId: scanData.id,
+            discipleId: discipleSelected.id,
+        };
 
-    //     await registerAttendance(attendance);
-    // };
+        await registerAttendance(attendance);
+    };
 
     return {
         error,
         scanData,
         form,
-        onSubmit,
         discipleSelected,
-        ministryOfDisciple
+        ministryOfDisciple,
+
+        onSubmit,
+        onRegisterEvent,
     };
 }

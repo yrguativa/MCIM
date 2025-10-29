@@ -6,21 +6,12 @@ export const RegisterEventSchema = () => {
     const { t } = useTranslation();
 
     return z.object({
-        identification: z.string()
-            .min(5, t('validation.minLength', { min: 5, field: 'identificación' }))
-            .max(20, t('validation.minLength', { max: 20, field: 'identificación' })),
-        name: z.string()
-            .min(3, t('validation.minLength', { min: 3, field: 'nombre' }))
-            .max(200, t('validation.maxLength', { max: 200, field: 'nombre' })),
-        lastName: z.string()
-            .min(3, t('validation.minLength', { min: 3, field: 'apellido' }))
-            .max(200, t('validation.maxLength', { max: 200, field: 'apellido' })),
-        ministryId: z.string()
-            .min(1, "El ministerio es obligatorio"),
-
-        phoneNumber: z.string()
-            .min(1, "El número de teléfono es obligatorio")
-            .regex(/^[0-9]+$/, "El número de teléfono solo debe contener números"),
+        discipleId: z.string()
+            .min(5, t('validation.minLength', { min: 5, field: 'discipleId' }))
+            .max(20, t('validation.minLength', { max: 20, field: 'discipleId' })),
+        eventId: z.string()
+            .min(3, t('validation.minLength', { min: 3, field: 'eventId' }))
+            .max(200, t('validation.maxLength', { max: 200, field: 'eventId' })),
     });
 };
 

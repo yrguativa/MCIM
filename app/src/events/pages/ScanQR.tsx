@@ -17,7 +17,7 @@ import './ScanQR.css';
 const ScanQR: React.FC = () => {
   const { t } = useTranslation();
 
-  const { error, scanData, form, onSubmit, discipleSelected, ministryOfDisciple } = useRegisterEventHook();
+  const { error, scanData, form, discipleSelected, ministryOfDisciple, onSubmit, onRegisterEvent } = useRegisterEventHook();
 
   return (
     <div className="container mx-auto p-4">
@@ -68,11 +68,19 @@ const ScanQR: React.FC = () => {
               </p>
             </div>
           )}
+
+          {discipleSelected && (!scanData || scanData == null) && (
+            <Alert variant="destructive" className="bg-red-500 text-white mt-2">
+              <AlertDescription>
+                <BadgeAlert className='inline' width={18} /> {t('events.messageScanQR')}
+              </AlertDescription>
+            </Alert>
+          )}
         </Card>
 
-        <Card className={"p-3" + (scanData != null && form.formState.isValid ? " border-green-500" : "")}>
+        <Card className={"p-3" + (discipleSelected ? " border-green-500" : "")}>
           <p className="text-sm mb-4 flex text-justify">
-            <span className={"p-1 mr-1 border-3 rounded-full text-lg flex items-center justify-center font-bold w-20 max-h-20" + (scanData && form.formState.isValid ? " border-green-500 text-green-500" : "border-slate-400 text-slate-400")}>2</span>
+            <span className={"p-1 mr-1 border-3 rounded-full text-lg flex items-center justify-center font-bold w-20 max-h-20" + (discipleSelected ? " border-green-500 text-green-500" : "border-slate-400 text-slate-400")}>2</span>
             {t('events.eventRegisterStep2')}
           </p>
           <Form {...form}>
@@ -122,23 +130,16 @@ const ScanQR: React.FC = () => {
                   </p>
                 </div>
               )}
-
-              {discipleSelected && (!scanData || scanData == null) && (
-                <Alert variant="destructive" className="bg-red-500 text-white">
-                  <AlertDescription>
-                    <BadgeAlert className='inline' width={18} /> {t('events.messageScanQR')}
-                  </AlertDescription>
-                </Alert>
-              )}
             </form>
           </Form>
         </Card>
 
-        {scanData && form.formState.isValid && (
+        {scanData && discipleSelected && (
           <Button
-            type="submit"
-            disabled={!scanData || !form.formState.isValid}
-            className="w-full mt-4"
+            type="button"
+            disabled={scanData == null || !discipleSelected}
+            className="w-full mt-4 bg-green-500 hover:bg-green-600 focus:bg-green-700"
+            onClick={onRegisterEvent}
           >
 
             {t('events.registerAttendance')}

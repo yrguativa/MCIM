@@ -246,12 +246,7 @@ input CreateEventInput {
 
 input CreateEventAttendanceInput {
   eventId: String!
-  discipleId: String
-  identification: String
-  name: String
-  lastName: String
-  phone: String
-  ministryId: String
+  discipleId: String!
 }
 
 input CreateMinistryInput {

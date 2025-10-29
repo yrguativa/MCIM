@@ -6,16 +6,17 @@ export interface Event {
     endDate?: Date;
     location: string;
     capacity?: number;
-    attendees?: EventAttendance[]; 
+    attendees?: EventAttendance[];
     createdAt: Date;
     createdBy: string;
     updatedBy?: string;
     updatedAt?: Date;
 }
 
-export interface EventAttendance{
+export interface EventAttendance {
     id: string;
     disciple: string;
     discipleId: string;
     dateRegister: Date;
+    eventId: string;
 }
