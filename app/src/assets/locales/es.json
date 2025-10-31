@@ -108,7 +108,7 @@
         "messageScanQR": "Escanea el QR para registrarte en el evento",
         "selectMinistry": "Selecciona un ministerio",
         "titleModalRegisterEvent": "Resultado del registro",
-        "messageRegisterEvent": "Se realizo el registro exitosamente",
+        "messageRegisterEvent": "Se realizo el registro exitosamente para el asistente:",
         "titleModalNotFound": "Discípulo no encontrado",
         "messageNotFound": "El discípulo con la identificación proporcionada no fue encontrado por este evento.",
         "messageRegisterInEventTooltip": "Da clic para escanear el QR y registrarte en el evento",

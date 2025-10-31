@@ -108,7 +108,7 @@
     "messageScanQR": "Scan the QR to register in the event",
     "selectMinistry": "Select a ministry",
     "titleModalRegisterEvent": "Registration result",
-    "messageRegisterEvent": "The registration was successful",
+    "messageRegisterEvent": "The registration was successful for the assistant:",
     "titleModalNotFound": "Disciple not found",
     "messageNotFound": "The disciple with the provided identification was not found by this event.",
     "messageRegisterInEventTooltip": "Click to scan the QR and register in the event",

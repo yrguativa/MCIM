@@ -10,14 +10,13 @@ import { SheetDescription } from "@/components/ui/sheet";
 
 type EventRegisterConfirmModalProps = {
     isOpenModal: boolean;
-    setOpenModal: (close: boolean) => void;
+    onModalClose: () => void;
+    fullName: string;
 };
 
-
 export const EventRegisterConfirmModal: React.FC<EventRegisterConfirmModalProps> =
-    ({ isOpenModal, setOpenModal }) => {
+    ({ isOpenModal, onModalClose, fullName }) => {
         const { t } = useTranslation();
-
 
         if (isOpenModal) {
             confetti({
@@ -28,7 +27,7 @@ export const EventRegisterConfirmModal: React.FC<EventRegisterConfirmModalProps>
         }
 
         return (
-            <Dialog open={isOpenModal} onOpenChange={() => setOpenModal(false)}>
+            <Dialog open={isOpenModal} onOpenChange={onModalClose}>
                 <DialogContent className="max-w-sm bor">
                     <DialogHeader>
                         <DialogTitle>{t('events.titleModalRegisterEvent')}</DialogTitle>
@@ -37,15 +36,19 @@ export const EventRegisterConfirmModal: React.FC<EventRegisterConfirmModalProps>
                         </SheetDescription>
                     </DialogHeader>
                     <div className="flex flex-row justify-center items-center gap-1 text-sm text-start">
-                        <BadgeCheck className="text-green-500" size={38} />
+                        <BadgeCheck className="text-green-500" size={78} />
+
                         <span className="text-lg">
                             {t('events.messageRegisterEvent')}
+                            <b>
+                                {fullName}
+                            </b>
                         </span>
                     </div>
 
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button variant="outline" onClick={() => setOpenModal(false)}>{t('common.accept')}</Button>
+                            <Button variant="outline" onClick={onModalClose}>{t('common.accept')}</Button>
                         </DialogClose>
                     </DialogFooter>
                 </DialogContent>

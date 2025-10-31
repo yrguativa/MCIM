@@ -16,10 +16,10 @@ import './ScanQR.css';
 
 const ScanQR: React.FC = () => {
   const { t } = useTranslation();
-  const { scanError, scanData, form,
-    ministryOfDisciple,
-    onSubmit, isLoadingSearch, isNeedleToSearch, dataSearch,
-    onRegisterEvent, isLoadingRegister, isOpenModalRegister, setIsOpenModalRegister
+  const { 
+    scanError, scanData,
+    form, onSearchDisciple, isLoadingSearch, attandance,
+    onRegisterEvent, isLoadingRegister, isOpenModalRegister, onCloseConfirmModal
   } = useRegisterEventHook();
 
   return (
@@ -72,7 +72,7 @@ const ScanQR: React.FC = () => {
               </div>
             )}
 
-            {dataSearch && (!scanData || scanData == null) && (
+            {attandance && (!scanData || scanData == null) && (
               <Alert variant="destructive" className="bg-red-500 text-white mt-2">
                 <AlertDescription>
                   <BadgeAlert className='inline' width={18} /> {t('events.messageScanQR')}
@@ -81,13 +81,13 @@ const ScanQR: React.FC = () => {
             )}
           </Card>
 
-          <Card className={"p-3 md:min-h-full" + (dataSearch && !isNeedleToSearch ? " border-green-500" : "")}>
+          <Card className={"p-3 md:min-h-full" + (attandance ? " border-green-500" : "")}>
             <p className="text-sm mb-4 flex text-justify">
-              <span className={"p-1 mr-1 border-3 rounded-full text-lg flex items-center justify-center font-bold w-20 max-h-20" + (dataSearch && !isNeedleToSearch ? " border-green-500 text-green-500" : "border-slate-400 text-slate-400")}>2</span>
+              <span className={"p-1 mr-1 border-3 rounded-full text-lg flex items-center justify-center font-bold w-20 max-h-20" + (attandance ? " border-green-500 text-green-500" : "border-slate-400 text-slate-400")}>2</span>
               {t('events.eventRegisterStep2')}
             </p>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <form onSubmit={form.handleSubmit(onSearchDisciple)} className="space-y-4">
                 <FormField
                   control={form.control}
                   name="identification"
@@ -101,7 +101,7 @@ const ScanQR: React.FC = () => {
                     </FormItem>
                   )}
                 />
-                {(!dataSearch || isNeedleToSearch) && (
+                {!attandance && (
                   <Button
                     type="submit"
                     disabled={!form.formState.isValid || isLoadingSearch}
@@ -112,7 +112,7 @@ const ScanQR: React.FC = () => {
                   </Button>
                 )}
 
-                {dataSearch && dataSearch.identification && !isNeedleToSearch && (
+                {attandance && (
                   <div className="p-3 bg-muted rounded-lg">
                     <h3 className="font-bold text-lg mb-2">{t('events.regiterEvent.discipleFound')}:</h3>
                     <p className="grid grid-cols-[minmax(100px,_2fr)_3fr] gap-1 text-sm text-start">
@@ -121,7 +121,7 @@ const ScanQR: React.FC = () => {
                         {t('events.regiterEvent.name')}:
                       </strong>
                       <span>
-                        {dataSearch.name} {dataSearch.lastName}
+                        {attandance.name} {attandance.lastName}
                       </span>
 
                       <strong>
@@ -129,7 +129,7 @@ const ScanQR: React.FC = () => {
                         {t('events.regiterEvent.ministerio')}:
                       </strong>
                       <span>
-                        {ministryOfDisciple}
+                        {attandance.ministry}
                       </span>
                     </p>
                   </div>
@@ -139,10 +139,10 @@ const ScanQR: React.FC = () => {
           </Card>
         </div>
 
-        {scanData && dataSearch && !isNeedleToSearch && (
+        {scanData && attandance && (
           <Button
             type="button"
-            disabled={scanData == null || !dataSearch || isLoadingRegister || isNeedleToSearch}
+            disabled={scanData == null || !attandance || isLoadingRegister}
             className="w-full mt-4 bg-green-500 hover:bg-green-600 focus:bg-green-700"
             onClick={onRegisterEvent}
           >
@@ -152,7 +152,7 @@ const ScanQR: React.FC = () => {
         )}
       </Card>
       <PersonNotFoundEvent />
-      <EventRegisterConfirmModal isOpenModal={isOpenModalRegister} setOpenModal={setIsOpenModalRegister}/>
+      <EventRegisterConfirmModal isOpenModal={isOpenModalRegister} onModalClose={onCloseConfirmModal} fullName={attandance?.name + ' ' + attandance?.lastName} />
     </div >
   );
 };

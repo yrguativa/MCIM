@@ -16,6 +16,15 @@ import { ScanData } from '../models/scanData';
 import { EventAttendance } from '../models/eventAttendance';
 import { setSpanishHtml5QrcodeScannerStrings } from '../helpers/html5-qrcode-strings';
 
+type Attendance = {
+    id: string;
+    name: string;
+    lastName: string;
+    ministry: string;
+    identification: string;
+};
+
+
 export const useRegisterEventHook = () => {
     const { t } = useTranslation();
     const { ministries } = useMinistryStore();
@@ -23,8 +32,7 @@ export const useRegisterEventHook = () => {
     const scannerRef = useRef<Html5QrcodeScanner | null>(null);
     const [scanData, setScanData] = useState<ScanData | null>(null);
     const [scanError, setScanError] = useState<string>('');
-    const [isNeedleToSearch, setIsNeedleToSearch] = useState<boolean>(false);
-    const [ministryOfDisciple, setMinistryOfDisciple] = useState<string>('');
+    const [attandance, setAttandance] = useState<Attendance | undefined>(undefined);
     const [isOpenModalRegister, setIsOpenModalRegister] = useState<boolean>(false);
 
 
@@ -35,7 +43,7 @@ export const useRegisterEventHook = () => {
         },
     });
     const identification = form.watch('identification');
-    const [debouncedIdentification] = useDebounce(identification, 1500);
+    const [debouncedIdentification] = useDebounce(identification, 600);
 
     // Initialize the QR code scanner strings based on the current language
     useEffect(() => {
@@ -79,54 +87,54 @@ export const useRegisterEventHook = () => {
 
     // When the debounced identification changes, search for the disciple
     useEffect(() => {
-        if (!debouncedIdentification || debouncedIdentification.length <= 0 || debouncedIdentification != searchDiscipleMutation.data?.identification) {
-            setIsNeedleToSearch(true);
+        if (!debouncedIdentification || debouncedIdentification.length <= 0 || debouncedIdentification != attandance?.identification) {
+            setAttandance(undefined);
         }
     }, [debouncedIdentification]);
 
-    const onSubmit = async (searchData: SearchDiscipleInput) => {
+    const onSearchDisciple = async (searchData: SearchDiscipleInput) => {
         if (searchData && searchData.identification && searchData.identification.length >= 5) {
-            setIsNeedleToSearch(false);
             searchDiscipleMutation.mutate(searchData.identification);
         }
     };
-
-    const onRegisterEvent = async () => {
-        if (!scanData || scanData == null || !searchDiscipleMutation.data || isNeedleToSearch) return;
-
-        const attendance: Partial<EventAttendance> = {
-            eventId: scanData.id,
-            discipleId: searchDiscipleMutation.data.id,
-        };
-
-        registerAttendanceMutation.mutate(attendance);
-    };
-
-
     const searchDiscipleMutation = useMutation({
         mutationFn: (identification: string) =>
             DisciplesService.searchByIdentification(identification),
         onSuccess: (data) => {
             if (!data) {
                 onShowModalNotFound();
-                setMinistryOfDisciple('');
+                setAttandance(undefined);
             }
             else {
                 const ministry = ministries.find(m => m.id === data.ministryId);
                 if (ministry) {
-                    setMinistryOfDisciple(ministry.name);
+                    setAttandance(
+                        {
+                            id: data.id,
+                            name: data.name,
+                            ministry: ministry.name,
+                            lastName: data.lastName,
+                            identification: data.identification
+                        }
+                    );
                 }
             }
         },
     });
 
+    const onRegisterEvent = async () => {
+        if (!scanData || scanData == null || !attandance) return;
 
+        const attendance: Partial<EventAttendance> = {
+            eventId: scanData.id,
+            discipleId: attandance.id,
+        };
+
+        registerAttendanceMutation.mutate(attendance);
+    };
     const registerAttendanceMutation = useMutation({
         mutationFn: (attendance: Partial<EventAttendance>) => eventService.registerAttendance(attendance),
-        onSuccess: (data) => {
-            console.log("🚀 ~ useRegisterEventHook ~ data:", data)
-            setScanData(null);
-            form.reset();
+        onSuccess: () => {            
             setIsOpenModalRegister(true);
         },
         onError: (error) => {
@@ -136,21 +144,27 @@ export const useRegisterEventHook = () => {
         }
     });
 
+    const onCloseConfirmModal = () => {
+        setIsOpenModalRegister(false);
+        setScanData(null);
+        form.reset();
+    };
+
+
     return {
         scanError,
         scanData,
-        form,
-        ministryOfDisciple,
-        isNeedleToSearch,
-        isOpenModalRegister,
-        setIsOpenModalRegister,
 
-        onSubmit,
-        onRegisterEvent,
-        isLoadingRegister: registerAttendanceMutation.isPending,
-        registerError: registerAttendanceMutation.error,
-        dataSearch: searchDiscipleMutation.data,
+        form,
+        onSearchDisciple,
+        attandance,
         isLoadingSearch: searchDiscipleMutation.isPending,
         searchError: searchDiscipleMutation.error,
+
+        onRegisterEvent,
+        isLoadingRegister: registerAttendanceMutation.isPending,
+        isOpenModalRegister,
+        onCloseConfirmModal,
+        registerError: registerAttendanceMutation.error,
     };
 }
