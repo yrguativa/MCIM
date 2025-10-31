@@ -165,5 +165,37 @@
     "edit": "Edit ministry",
     "delete": "Delete ministry",
     "ministry": "Ministry"
-  }
+  },
+  "html5-qrcode-scanner": {
+        "scanningStatus": "Scanning",
+        "idleStatus": "Inactive",
+        "errorStatus": "Error",
+        "permissionStatus": "Permission",
+        "noCameraFoundErrorStatus": "No cameras found",
+        "lastMatch": "Last match: {{decodedText}}",
+        "codeScannerTitle": "QR Code Scanner",
+        "cameraPermissionTitle": "Request for camera permission",
+        "cameraPermissionRequesting": "Requesting camera permission...",
+        "noCameraFound": "No camera found on this device.",
+        "scanButtonStopScanningText": "Stop Scanning",
+        "scanButtonStartScanningText": "Start Scanning",
+        "torchOnButton": "",
+        "torchOffButton": "",
+        "torchOnFailedMessage": "Could not turn on the torch",
+        "torchOffFailedMessage": "Could not turn off the torch",
+        "scanButtonScanningStarting": "Starting...",
+        "textIfCameraScanSelected": "Scan using camera",
+        "textIfFileScanSelected": "Scan using file upload",
+        "selectCamera": "Select Camera",
+        "fileSelectionChooseImage": "Choose image to scan",
+        "fileSelectionChooseAnother": "Choose another image",
+        "fileSelectionNoImageSelected": "No image selected",
+        "anonymousCameraPrefix": "Camera Anonymous",
+        "dragAndDropMessage": "Drop or click to select an image to scan",
+        "dragAndDropMessageOnlyImages": "Only image files are supported (no other files)",
+        "zoom": "zoom",
+        "loadingImage": "Loading image...",
+        "cameraScanAltText": "Scanning using camera",
+        "fileScanAltText": "Scanning using file upload"
+    }
 }

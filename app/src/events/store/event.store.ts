@@ -10,7 +10,6 @@ interface EventState {
     lastEvent?: Event;
     events: Event[];
     attendances: EventAttendance[];
-    isOpenModal: boolean;
 
     // Event methods
     getEvent: (id: string) => Promise<void>;
@@ -19,12 +18,8 @@ interface EventState {
     updateEvent: (event: Event) => Promise<boolean>;
 
     // Attendance methods
-    registerAttendance: (attendance: Partial<EventAttendance>) => Promise<boolean>;
     getEventAttendance: (eventId: string) => Promise<EventAttendance[]>;
     validateEventCapacity: (eventId: string) => Promise<boolean>;
-
-    // Modal methods  
-    closeModal: () => void;
 }
 
 const storeEvent: StateCreator<EventState> = (set, get) => ({
@@ -83,30 +78,6 @@ const storeEvent: StateCreator<EventState> = (set, get) => ({
     },
 
     // Attendance methods implementation
-    registerAttendance: async (attendance: Partial<EventAttendance>) => {
-        const attendances = get().attendances;
-        try {
-            const attendanceRegister = await eventService.registerAttendance(attendance);
-            set({
-                attendances: [...attendances, {
-                    id: attendanceRegister.id,
-                    eventId: attendance.eventId!,
-                    discipleId: attendance.discipleId || '',
-                    event: attendance.event,
-                    disciple: attendance.disciple,
-                    registrationDate: new Date(attendanceRegister.registrationDate),
-                    attended: false,
-                    attendanceDate: attendance.attendanceDate,
-                    notes: attendance.notes || '',
-                }],
-                isOpenModal: true,
-            });
-            return true;
-        } catch (error) {
-            console.error("Error in registerAttendance:", error);
-            return false;
-        }
-    },
     getEventAttendance: async (eventId: string) => {
         try {
             const eventAttendances = await eventService.getEventAttendance(eventId);
@@ -128,11 +99,6 @@ const storeEvent: StateCreator<EventState> = (set, get) => ({
             console.error("Error in validateEventCapacity:", error);
             return false;
         }
-    },
-
-    // Modal methods implementation
-    closeModal: () => {
-        set({ isOpenModal: false });
     },
 });
 

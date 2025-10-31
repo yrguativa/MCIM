@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { BadgeAlert, CalendarDays, CalendarSearch, Contact, MapPinCheckInside, Search, Users } from 'lucide-react';
+import { BadgeAlert, CalendarDays, CalendarSearch, Contact, LoaderCircle, MapPinCheckInside, NotebookPen, Search, Users } from 'lucide-react';
 
 import { EventRegisterConfirmModal } from '../components/EventRegisterConfirmModal';
 import { PersonNotFoundEvent } from '../components/PersonNotFoundEvent';
@@ -16,16 +16,17 @@ import './ScanQR.css';
 
 const ScanQR: React.FC = () => {
   const { t } = useTranslation();
-
-  const { error, scanData, form, discipleSelected, ministryOfDisciple, onSubmit, onRegisterEvent } = useRegisterEventHook();
+  const { scanError, scanData, form,
+    ministryOfDisciple,
+    onSubmit, isLoadingSearch, isNeedleToSearch, dataSearch,
+    onRegisterEvent, isLoadingRegister, isOpenModalRegister, setIsOpenModalRegister
+  } = useRegisterEventHook();
 
   return (
     <div className="container mx-auto p-4">
       <Card className="p-4">
         <h1 className="text-2xl font-bold mb-2">{t('events.registerInEvent')}</h1>
-
         <p className="mb-3">{t('events.eventRegisterInstructions')}</p>
-
 
         <div className="flex flex-col md:flex-row justify-between gap-4">
           <Card className={"p-3 mb-6 md:min-h-full md:mb-0" + (scanData ? " border-green-500" : "")}>
@@ -38,8 +39,8 @@ const ScanQR: React.FC = () => {
               <div id="qr-reader" className="w-full max-w-sm mx-auto"></div>
             </div>
 
-            {error && (
-              <div className="text-red-500 mb-4">{error}</div>
+            {scanError && (
+              <div className="text-red-500 mb-4">{scanError}</div>
             )}
 
             {scanData && (
@@ -71,7 +72,7 @@ const ScanQR: React.FC = () => {
               </div>
             )}
 
-            {discipleSelected && (!scanData || scanData == null) && (
+            {dataSearch && (!scanData || scanData == null) && (
               <Alert variant="destructive" className="bg-red-500 text-white mt-2">
                 <AlertDescription>
                   <BadgeAlert className='inline' width={18} /> {t('events.messageScanQR')}
@@ -80,9 +81,9 @@ const ScanQR: React.FC = () => {
             )}
           </Card>
 
-          <Card className={"p-3 md:min-h-full" + (discipleSelected ? " border-green-500" : "")}>
+          <Card className={"p-3 md:min-h-full" + (dataSearch && !isNeedleToSearch ? " border-green-500" : "")}>
             <p className="text-sm mb-4 flex text-justify">
-              <span className={"p-1 mr-1 border-3 rounded-full text-lg flex items-center justify-center font-bold w-20 max-h-20" + (discipleSelected ? " border-green-500 text-green-500" : "border-slate-400 text-slate-400")}>2</span>
+              <span className={"p-1 mr-1 border-3 rounded-full text-lg flex items-center justify-center font-bold w-20 max-h-20" + (dataSearch && !isNeedleToSearch ? " border-green-500 text-green-500" : "border-slate-400 text-slate-400")}>2</span>
               {t('events.eventRegisterStep2')}
             </p>
             <Form {...form}>
@@ -100,17 +101,18 @@ const ScanQR: React.FC = () => {
                     </FormItem>
                   )}
                 />
-                {!discipleSelected && (
+                {(!dataSearch || isNeedleToSearch) && (
                   <Button
                     type="submit"
-                    disabled={!form.formState.isValid}
+                    disabled={!form.formState.isValid || isLoadingSearch}
                     className="w-full"
                   >
-                    <Search /> {t('common.search')}
+                    {isLoadingSearch ? <LoaderCircle className="animate-spin" /> : <Search />}
+                    {t('common.search')}
                   </Button>
                 )}
 
-                {discipleSelected && discipleSelected.identification && (
+                {dataSearch && dataSearch.identification && !isNeedleToSearch && (
                   <div className="p-3 bg-muted rounded-lg">
                     <h3 className="font-bold text-lg mb-2">{t('events.regiterEvent.discipleFound')}:</h3>
                     <p className="grid grid-cols-[minmax(100px,_2fr)_3fr] gap-1 text-sm text-start">
@@ -119,7 +121,7 @@ const ScanQR: React.FC = () => {
                         {t('events.regiterEvent.name')}:
                       </strong>
                       <span>
-                        {discipleSelected.name} {discipleSelected.lastName}
+                        {dataSearch.name} {dataSearch.lastName}
                       </span>
 
                       <strong>
@@ -137,20 +139,20 @@ const ScanQR: React.FC = () => {
           </Card>
         </div>
 
-        {scanData && discipleSelected && (
+        {scanData && dataSearch && !isNeedleToSearch && (
           <Button
             type="button"
-            disabled={scanData == null || !discipleSelected}
+            disabled={scanData == null || !dataSearch || isLoadingRegister || isNeedleToSearch}
             className="w-full mt-4 bg-green-500 hover:bg-green-600 focus:bg-green-700"
             onClick={onRegisterEvent}
           >
-
+            {isLoadingRegister ? <LoaderCircle className="animate-spin" /> : <NotebookPen />}
             {t('events.registerAttendance')}
           </Button>
         )}
       </Card>
-      <EventRegisterConfirmModal />
       <PersonNotFoundEvent />
+      <EventRegisterConfirmModal isOpenModal={isOpenModalRegister} setOpenModal={setIsOpenModalRegister}/>
     </div >
   );
 };

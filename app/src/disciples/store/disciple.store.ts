@@ -6,7 +6,6 @@ import { DisciplesService } from "@/src/disciples/services/disciples.services";
 
 interface DiscipleState {
     Disciples: Disciple[],
-    discipleSelected?: Disciple | undefined,
     searchResults: Disciple[],
     showModalNotFound: boolean,
 
@@ -14,9 +13,10 @@ interface DiscipleState {
     addDisciple: (disciple: Disciple) => Promise<boolean>,
     updateDisciple: (disciple: Disciple) => Promise<boolean>,
     searchByName: (name: string) => Promise<void>,
-    searchByIdentification: (identification: string) => Promise<void>,
-    clearDiscipleSelected: () => void,
+
     toggleModalNotFound: () => void,
+    onShowModalNotFound: () => void,
+
 }
 
 const storeDisciple: StateCreator<DiscipleState> = (set, get) => (
@@ -33,26 +33,6 @@ const storeDisciple: StateCreator<DiscipleState> = (set, get) => (
                 console.error('Error searching disciples:', error);
                 set({ searchResults: [] });
             }
-        },
-        searchByIdentification: async (identification: string) => {
-            try {
-                set({ discipleSelected: undefined });
-                const results = await DisciplesService.searchByIdentification(identification);
-
-                if (!results) {
-                    set({ showModalNotFound: true });
-                }
-                else {
-                    set({ discipleSelected: results });
-                }
-            } catch (error) {
-                console.error('Error searching disciples:', error);
-                set({ searchResults: [] });
-            }
-        },
-
-        clearDiscipleSelected: () => {
-            set({ discipleSelected: undefined });
         },
 
         getDisciples: async () => {
@@ -90,6 +70,9 @@ const storeDisciple: StateCreator<DiscipleState> = (set, get) => (
 
         toggleModalNotFound: () => {
             set({ showModalNotFound: get().showModalNotFound ? false : true });
+        },
+        onShowModalNotFound: () => {
+            set({ showModalNotFound: true });
         },
     }
 );
