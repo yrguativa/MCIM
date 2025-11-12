@@ -23,9 +23,9 @@ const LastEvent: React.FC<LastEventProps> = ({ event }) => {
     const timeRegister = data.map((item) => ({ start: item.start, end: item.end, value: item.registers.length }));
 
     return (
-        <div className="flex items-center items-center justify-center text-start rounded-lg border border-dashed p-4 shadow-sm mt-4">
-            <h2>Ultimo evento</h2>
-            <div className='mt-4 border-1 border-solid border-neutral-200 p-4 rounded-lg min-h-md' >
+        <div className="grid grid-cols-4 gap-4 items-stretch justify-center mt-3 text-start rounded-lg border border-dashed  shadow-sm p-2">
+            <h2 className="col-span-4 pb-2">Ultimo evento</h2>
+            <div className='col-span-2 border-1 border-solid border-neutral-200 p-4 rounded-lg' >
                 <h2>{event.name}</h2>
                 <span className="block mb-2">
                     Hora: {format(new Date(event.date), 'HH:mm a', { locale })}
@@ -36,17 +36,18 @@ const LastEvent: React.FC<LastEventProps> = ({ event }) => {
                 <p><strong>Ubicación:</strong> {event.location}</p>
                 {event.description && (
                     <p><strong>Descripción:</strong> {event.description}</p>
-                )} 
+                )}
             </div>
 
-            <div className='mt-4 border-1 border-solid border-neutral-200 p-4 rounded-lg min-w-md' >
-                <h3 className="mb-4">Tiempos de Registro </h3>
-                <LineChartStep data={timeRegister} />
-            </div>
-            <div className='mt-4 border-1 border-solid border-neutral-200 p-4 rounded-lg min-w-lg'>
+            <div className='col-span-2 row-span-2  border-1 border-solid border-neutral-200 p-4 rounded-lg '>
                 <h3 className="mb-3">{t('events.recordsAssistance.title')}</h3>
                 <TableComponent data={event.attendees || []} columns={RecordsEventColumns()}></TableComponent>
             </div>
+
+            <div className='col-span-2  border-1 border-solid border-neutral-200 p-4 rounded-lg' >
+                <h3 className="mb-4">Tiempos de Registro </h3>
+                <LineChartStep data={timeRegister} />
+            </div>°
         </div>
     )
 }
