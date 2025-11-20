@@ -6,15 +6,10 @@ import { EventEntity } from './entities/event.entity';
 import { EventAttendanceEntity } from './entities/event-attendance.entity';
 import { CreateEventInput } from './dto/create-event.input';
 import { CreateEventAttendanceInput } from './dto/create-event-attendance.input';
-import { EventAttendance } from './schemas/event-attendance.schema';
 
 @Injectable()
 export class EventsService {
-  constructor(
-    @InjectModel(Event.name) private eventModel: Model<Event>,
-    @InjectModel(EventAttendance.name)
-    private eventAttendanceModel: Model<EventAttendance>,
-  ) {}
+  constructor(@InjectModel(Event.name) private eventModel: Model<Event>) { }
 
   async create(createEventInput: CreateEventInput): Promise<EventEntity> {
     const createdEvent = new this.eventModel({
@@ -57,16 +52,31 @@ export class EventsService {
       );
     }
 
-    const createdAttendance = new this.eventAttendanceModel({
-      event: createAttendanceInput.eventId,
+    const newAttendance = {
       disciple: createAttendanceInput.discipleId,
       attended: true,
       createdDate: new Date(),
       createdUser: event.createdBy, // Using the event's creator as the attendance creator
-    });
+      notes: '',
+    };
 
-    const savedAttendance = await createdAttendance.save();
-    return this.toAttendanceModel(savedAttendance);
+    const updatedEvent = await this.eventModel
+      .findByIdAndUpdate(
+        createAttendanceInput.eventId,
+        {
+          $push: { attendance: newAttendance },
+        },
+        { new: true },
+      )
+      .populate('attendance.disciple')
+      .exec();
+
+    const createdAttendance = updatedEvent.attendance[updatedEvent.attendance.length - 1];
+
+    // We need to map it to EventAttendanceEntity. 
+    // The populated disciple might be in the last element.
+
+    return this.toAttendanceModel(createdAttendance);
   }
 
   private toEventModel(event: Event): EventEntity {
@@ -87,7 +97,7 @@ export class EventsService {
       location: event.location,
       capacity: event.capacity,
       active: event.active,
-      attendees: [],
+      attendees: event.attendance ? event.attendance.map(a => this.toAttendanceModel(a)) : [],
       ministry: ministryIsObject ? populatedMinistry : null,
 
       createdUser: event.createdBy,
@@ -99,20 +109,25 @@ export class EventsService {
   }
 
   async getEventAttendance(eventId: string): Promise<EventAttendanceEntity[]> {
-    const attendances = await this.eventAttendanceModel
-      .find({ event: eventId })
-      .populate('disciple')
+    const event = await this.eventModel
+      .findById(eventId)
+      .populate('attendance.disciple')
       .exec();
-    return attendances.map((attendance) => this.toAttendanceModel(attendance));
+
+    if (!event || !event.attendance) {
+      return [];
+    }
+
+    return event.attendance.map((attendance) => this.toAttendanceModel(attendance));
   }
 
   private toAttendanceModel(
-    attendance: EventAttendance,
+    attendance: any,
   ): EventAttendanceEntity {
     return {
-      id: attendance._id.toString(),
-      disciple: attendance.disciple as any,
-      discipleId: (attendance.disciple as any)._id.toString(),
+      id: attendance._id ? attendance._id.toString() : '',
+      disciple: attendance.disciple,
+      discipleId: attendance.disciple && attendance.disciple._id ? attendance.disciple._id.toString() : attendance.disciple,
       dateRegister: attendance.createdDate,
     };
   }
