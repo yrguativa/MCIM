@@ -1,4 +1,3 @@
-import React from "react";
 import { useMinistryStore } from "@/src/ministries/store/ministries.store";
 import { buttonVariants } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
