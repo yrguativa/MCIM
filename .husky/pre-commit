@@ -1,0 +1,32 @@
+#!/bin/sh
+
+# Only run checks if there are staged files
+if git diff --cached --quiet; then
+  exit 0
+fi
+
+echo "🔍 Running pre-commit checks..."
+
+# Check if backend files changed
+if git diff --cached --name-only | grep -q "^cells-back/"; then
+  echo "🔨 Building backend..."
+  cd cells-back && npm run build
+  if [ $? -ne 0 ]; then
+    echo "❌ Backend build failed"
+    exit 1
+  fi
+  cd ..
+fi
+
+# Check if frontend files changed
+if git diff --cached --name-only | grep -q "^app/"; then
+  echo "🧹 Linting frontend..."
+  cd app && npm run lint -- --max-warnings=0
+  if [ $? -ne 0 ]; then
+    echo "❌ Frontend lint failed"
+    exit 1
+  fi
+  cd ..
+fi
+
+echo "✅ Pre-commit checks passed!"
