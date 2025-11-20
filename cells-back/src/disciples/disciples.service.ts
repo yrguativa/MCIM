@@ -102,6 +102,7 @@ export class DisciplesService {
       birthDate: disciple.birthDate,
       ministryId: disciple.ministryId,
       network: disciple.network,
+      status: disciple.status,
       createdUser: disciple.createdUser,
       createdDate: disciple.createdDate,
       updatedUser: disciple.updatedUser,

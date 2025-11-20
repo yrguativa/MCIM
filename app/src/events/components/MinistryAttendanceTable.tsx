@@ -13,6 +13,7 @@ interface MinistryAttendanceTableProps {
 export const MinistryAttendanceTable: React.FC<MinistryAttendanceTableProps> = ({ event }) => {
     const { ministries, getMinistries } = useMinistryStore(state => state);
     const { Disciples: disciples, getDisciples } = useDiscipleStore(state => state);
+    console.log("🚀 ~ MinistryAttendanceTable ~ disciples:", disciples)
 
     React.useEffect(() => {
         getMinistries();
@@ -51,6 +52,8 @@ export const MinistryAttendanceTable: React.FC<MinistryAttendanceTableProps> = (
             data={data}
             columns={MinistryAttendanceColumns()}
             emptyMessage="No hay datos de ministerios disponibles."
+            disablePagination={true}
+            defaultPageSize={20}
         />
     );
 };

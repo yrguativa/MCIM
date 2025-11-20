@@ -23,6 +23,7 @@ interface DataTableProps<TData, TValue = unknown> {
     getRowId?: (row: TData, index: number) => string
     emptyMessage?: React.ReactNode
     defaultPageSize?: number
+    disablePagination?: boolean
 }
 
 function TableComponent<TData, TValue = unknown>({
@@ -31,6 +32,7 @@ function TableComponent<TData, TValue = unknown>({
     getRowId,
     emptyMessage = "No results.",
     defaultPageSize = 10,
+    disablePagination = false,
 }: DataTableProps<TData, TValue>) {
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
@@ -93,48 +95,50 @@ function TableComponent<TData, TValue = unknown>({
                     )}
                 </TableBody>
             </Table>
-            <div className="flex items-center justify-between px-4 py-2">
-                <div className="text-sm text-muted-foreground">
-                    {data.length > 0 ? (
-                        <>
-                            Mostrando {pagination.pageIndex * pagination.pageSize + 1} - {Math.min((pagination.pageIndex + 1) * pagination.pageSize, data.length)} de {data.length}
-                        </>
-                    ) : (
-                        <>0 resultados</>
-                    )}
-                </div>
-
-                <div className="flex items-center space-x-2">
-                    <div className="flex items-center space-x-1">
-                        <Button size="sm" variant="ghost" onClick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()}>
-                            «
-                        </Button>
-                        <Button size="sm" variant="ghost" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
-                            ‹
-                        </Button>
-                        <Button size="sm" variant="ghost" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-                            ›
-                        </Button>
-                        <Button size="sm" variant="ghost" onClick={() => table.setPageIndex(table.getPageCount() - 1)} disabled={!table.getCanNextPage()}>
-                            »
-                        </Button>
+            {!disablePagination && (
+                <div className="flex items-center justify-between px-4 py-2">
+                    <div className="text-sm text-muted-foreground">
+                        {data.length > 0 ? (
+                            <>
+                                Mostrando {pagination.pageIndex * pagination.pageSize + 1} - {Math.min((pagination.pageIndex + 1) * pagination.pageSize, data.length)} de {data.length}
+                            </>
+                        ) : (
+                            <>0 resultados</>
+                        )}
                     </div>
 
-                    <div className="flex items-center">
-                        <Select onValueChange={(v) => table.setPageSize(Number(v))} defaultValue={String(pagination.pageSize)}>
-                            <SelectTrigger className="w-24 h-8">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="5">5</SelectItem>
-                                <SelectItem value="10">10</SelectItem>
-                                <SelectItem value="20">20</SelectItem>
-                                <SelectItem value="50">50</SelectItem>
-                            </SelectContent>
-                        </Select>
+                    <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-1">
+                            <Button size="sm" variant="ghost" onClick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()}>
+                                «
+                            </Button>
+                            <Button size="sm" variant="ghost" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
+                                ‹
+                            </Button>
+                            <Button size="sm" variant="ghost" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+                                ›
+                            </Button>
+                            <Button size="sm" variant="ghost" onClick={() => table.setPageIndex(table.getPageCount() - 1)} disabled={!table.getCanNextPage()}>
+                                »
+                            </Button>
+                        </div>
+
+                        <div className="flex items-center">
+                            <Select onValueChange={(v) => table.setPageSize(Number(v))} defaultValue={String(pagination.pageSize)}>
+                                <SelectTrigger className="w-24 h-8">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="5">5</SelectItem>
+                                    <SelectItem value="10">10</SelectItem>
+                                    <SelectItem value="20">20</SelectItem>
+                                    <SelectItem value="50">50</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
         </div>
     ) as React.ReactElement;
 }

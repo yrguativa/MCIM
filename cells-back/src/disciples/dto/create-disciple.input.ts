@@ -56,6 +56,10 @@ export class CreateDiscipleInput {
   @IsOptional()
   network: string;
 
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  status: string;
+
   @Field(() => String)
   @IsNotEmpty()
   createdUser: string;

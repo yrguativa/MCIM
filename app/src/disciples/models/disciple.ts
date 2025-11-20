@@ -9,6 +9,7 @@ export interface Disciple {
     birthDate: Date | undefined;
     ministryId: string;
     network?: string;
+    status?: string;
 
     createdUser: string;
     createdDate: Date;

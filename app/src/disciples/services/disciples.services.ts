@@ -94,6 +94,9 @@ export class DisciplesService {
                 identification
                 name
                 lastName
+                email
+                network
+                ministryId
             }
                 
             `;

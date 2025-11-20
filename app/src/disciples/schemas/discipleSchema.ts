@@ -45,6 +45,8 @@ export const DiscipleSchema = z.object({
         }),
     network: z.string()
         .optional(),
+    status: z.string()
+        .optional(),
     createdUser: z.string()
         .min(2, {
             message: "El usuario de creación es obligatorio.",

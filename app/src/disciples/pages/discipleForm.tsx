@@ -64,6 +64,7 @@ const DiscipleForm: React.FC = () => {
             birthday: cellForUpdate.birthDate ? new Date(cellForUpdate.birthDate) : undefined,
             ministryId: cellForUpdate.ministryId,
             network: cellForUpdate.network || undefined,
+            status: cellForUpdate.status || undefined,
           });
         }
       };
@@ -83,6 +84,7 @@ const DiscipleForm: React.FC = () => {
       birthDate: data.birthday,
       ministryId: data.ministryId,
       network: data.network,
+      status: data.status,
       createdUser: data.createdUser,
       createdDate: data.createdDate,
       updatedUser: userState?.id || '', // Added required property
@@ -265,6 +267,31 @@ const DiscipleForm: React.FC = () => {
                     <SelectItem value="rocas">Rocas</SelectItem>
                     <SelectItem value="pre">Pre</SelectItem>
                     <SelectItem value="kids">Kids</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="status"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Estado</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecciona un estado" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="lider">Líder</SelectItem>
+                    <SelectItem value="prelider">Prelíder</SelectItem>
+                    <SelectItem value="universidad_vida">Universidad de la Vida</SelectItem>
+                    <SelectItem value="solo_celula">Solo Célula</SelectItem>
+                    <SelectItem value="deserto">Deserto</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />

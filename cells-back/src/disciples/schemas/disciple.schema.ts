@@ -33,6 +33,9 @@ export class Disciple extends Document {
   @Prop({ required: false })
   network: string;
 
+  @Prop({ required: false })
+  status: string;
+
   @Prop()
   createdUser: string;
 
