@@ -7,7 +7,7 @@ import { LastOrCurrentEvent } from "../tools/event.tool";
 
 interface EventState {
     event?: Event;
-    lastEvent?: Event;
+    eventSelected?: Event;
     events: Event[];
     attendances: EventAttendance[];
 
@@ -24,7 +24,7 @@ interface EventState {
 
 const storeEvent: StateCreator<EventState> = (set, get) => ({
     event: undefined,
-    lastEvent: undefined,
+    eventSelected: undefined,
     events: [],
     attendances: [],
     isOpenModal: false,
@@ -39,14 +39,14 @@ const storeEvent: StateCreator<EventState> = (set, get) => ({
         if (events) {
             set({ events: [...events] });
             const lastOrCurrentEvent = LastOrCurrentEvent(events);
-            if (lastOrCurrentEvent && (get().lastEvent === undefined || get().lastEvent?.id !== lastOrCurrentEvent.id)) {
+            if (lastOrCurrentEvent && (get().eventSelected === undefined || get().eventSelected?.id !== lastOrCurrentEvent.id)) {
                 const lastEventInfo = await eventService.getEvent(lastOrCurrentEvent.id);
-                set({ lastEvent: lastEventInfo });
+                set({ eventSelected: lastEventInfo });
             }
-            else if (!lastOrCurrentEvent && events.length > 0 && (get().lastEvent === undefined ||
-                get().lastEvent?.id !== events[events.length - 1].id)) {
+            else if (!lastOrCurrentEvent && events.length > 0 && (get().eventSelected === undefined ||
+                get().eventSelected?.id !== events[events.length - 1].id)) {
                 const lastEventInfo = await eventService.getEvent(events[events.length - 1].id);
-                set({ lastEvent: lastEventInfo });
+                set({ eventSelected: lastEventInfo });
             }
         }
     },

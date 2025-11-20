@@ -59,6 +59,10 @@ export class UpdateDiscipleInput extends PartialType(CreateDiscipleInput) {
   })
   birthDate: string;
 
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  network: string;
+
   @Field(() => String)
   @IsNotEmpty()
   createdUser: string;

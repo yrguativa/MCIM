@@ -17,8 +17,8 @@ const WeeklyCalendar: React.FC = () => {
     const { t, i18n } = useTranslation();
     const esLocale = i18n.language === 'es' ? es : enUS;
 
-    const { weekDays, lastEvent, nextWeek, previousWeek, currentDate } = useWeeklyCalendarHook();
-    const urlPageRegister = window.location.origin + (import.meta.env.VITE_BASE && import.meta.env.VITE_BASE !== '' ?  import.meta.env.VITE_BASE : "/") + '#/public/registerInEvent';
+    const { weekDays, eventSelected, nextWeek, previousWeek, currentDate } = useWeeklyCalendarHook();
+    const urlPageRegister = window.location.origin + (import.meta.env.VITE_BASE && import.meta.env.VITE_BASE !== '' ? import.meta.env.VITE_BASE : "/") + '#/public/registerInEvent';
     return (
         <div className="container mx-auto p-4">
             <div className="flex justify-between items-center mb-6">
@@ -129,7 +129,7 @@ const WeeklyCalendar: React.FC = () => {
                 ))}
             </div>
 
-            {lastEvent && <LastEvent event={lastEvent} />}
+            {eventSelected && <LastEvent event={eventSelected} />}
         </div>
     );
 };

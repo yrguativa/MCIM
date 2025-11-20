@@ -45,6 +45,7 @@ type Disciple {
   address: String
   birthDate: DateTime
   ministryId: String!
+  network: String
   createdUser: String!
   createdDate: DateTime!
   updatedUser: String
@@ -206,6 +207,7 @@ input CreateDiscipleInput {
 
   """Ministry ID"""
   ministryId: String!
+  network: String
   createdUser: String!
 
   """DOF (Date OF Birth)"""
@@ -226,6 +228,7 @@ input UpdateDiscipleInput {
 
   """Ministry ID"""
   ministryId: String
+  network: String
   createdUser: String!
 
   """DOF (Date OF Birth)"""

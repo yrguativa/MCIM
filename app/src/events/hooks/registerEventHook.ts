@@ -107,6 +107,7 @@ export const useRegisterEventHook = () => {
             }
             else {
                 const ministry = ministries.find(m => m.id === data.ministryId);
+                console.log("🚀 ~ useRegisterEventHook ~ ministry:", ministry)
                 if (ministry) {
                     setAttandance(
                         {
@@ -134,7 +135,7 @@ export const useRegisterEventHook = () => {
     };
     const registerAttendanceMutation = useMutation({
         mutationFn: (attendance: Partial<EventAttendance>) => eventService.registerAttendance(attendance),
-        onSuccess: () => {            
+        onSuccess: () => {
             setIsOpenModalRegister(true);
         },
         onError: (error) => {

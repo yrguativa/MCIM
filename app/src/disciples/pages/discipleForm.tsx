@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input"
 import { Calendar } from "@/components/ui/calendar"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from "sonner"
 
 import { DiscipleInput, DiscipleSchema } from '../schemas/discipleSchema';
@@ -62,6 +63,7 @@ const DiscipleForm: React.FC = () => {
             address: cellForUpdate.address || undefined,
             birthday: cellForUpdate.birthDate ? new Date(cellForUpdate.birthDate) : undefined,
             ministryId: cellForUpdate.ministryId,
+            network: cellForUpdate.network || undefined,
           });
         }
       };
@@ -80,6 +82,7 @@ const DiscipleForm: React.FC = () => {
       address: data.address,
       birthDate: data.birthday,
       ministryId: data.ministryId,
+      network: data.network,
       createdUser: data.createdUser,
       createdDate: data.createdDate,
       updatedUser: userState?.id || '', // Added required property
@@ -164,6 +167,20 @@ const DiscipleForm: React.FC = () => {
 
           <FormField
             control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Correo Electrónico</FormLabel>
+                <FormControl>
+                  <Input placeholder="ejemplo@correo.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
             name="address"
             render={({ field }) => (
               <FormItem>
@@ -224,6 +241,32 @@ const DiscipleForm: React.FC = () => {
                     </Command>
                   </PopoverContent>
                 </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="network"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Red</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecciona una red" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="hombres">Hombres</SelectItem>
+                    <SelectItem value="mujeres">Mujeres</SelectItem>
+                    <SelectItem value="jovenes">Jovenes</SelectItem>
+                    <SelectItem value="rocas">Rocas</SelectItem>
+                    <SelectItem value="pre">Pre</SelectItem>
+                    <SelectItem value="kids">Kids</SelectItem>
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}

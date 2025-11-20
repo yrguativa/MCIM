@@ -9,7 +9,7 @@ import { IntervalsWithEvents } from '../tools/event.tool';
 
 import TableComponent from '@/src/app/components/TableComponent';
 import { RecordsEventColumns } from './RecordsEventColumns';
-
+import { MinistryAttendanceTable } from './MinistryAttendanceTable';
 
 type LastEventProps = {
     event: Event;
@@ -47,7 +47,12 @@ const LastEvent: React.FC<LastEventProps> = ({ event }) => {
             <div className='col-span-2  border-1 border-solid border-neutral-200 p-4 rounded-lg' >
                 <h3 className="mb-4">Tiempos de Registro </h3>
                 <LineChartStep data={timeRegister} />
-            </div>°
+            </div>
+
+            <div className='col-span-4 border-1 border-solid border-neutral-200 p-4 rounded-lg'>
+                <h3 className="mb-4">Asistencia por Ministerio</h3>
+                <MinistryAttendanceTable event={event} />
+            </div>
         </div>
     )
 }

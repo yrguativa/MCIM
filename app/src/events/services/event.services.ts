@@ -224,7 +224,7 @@ export const eventService = {
         })
       );
 
-      return data.data.ministries;
+      return data.data.eventAttendance;
     } catch (error) {
       if (error instanceof AxiosError) {
         console.error((error as AxiosError).response?.data);

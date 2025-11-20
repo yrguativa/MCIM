@@ -10,7 +10,7 @@ import { DiscipleEntity } from './entities/disciple.entity';
 export class DisciplesService {
   constructor(
     @InjectModel(Disciple.name) private discipleModel: Model<Disciple>,
-  ) {}
+  ) { }
 
   async create(createUserInput: CreateDiscipleInput): Promise<DiscipleEntity> {
     const createdDisciple = new this.discipleModel(createUserInput);
@@ -101,6 +101,7 @@ export class DisciplesService {
       address: disciple.address,
       birthDate: disciple.birthDate,
       ministryId: disciple.ministryId,
+      network: disciple.network,
       createdUser: disciple.createdUser,
       createdDate: disciple.createdDate,
       updatedUser: disciple.updatedUser,

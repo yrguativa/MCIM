@@ -5,7 +5,7 @@ import { addDays, addWeeks, isSameDay, startOfWeek, subWeeks } from "date-fns";
 export const useWeeklyCalendarHook = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const events = useEventStore(state => state.events);
-    const lastEvent = useEventStore(state => state.lastEvent);
+    const eventSelected = useEventStore(state => state.eventSelected);
     const getEventsState = useEventStore(state => state.getEvents);
 
     const nextWeek = () => {
@@ -41,10 +41,10 @@ export const useWeeklyCalendarHook = () => {
             events: dayEvents,
         };
     });
-    
+
     return {
         events,
-        lastEvent,
+        eventSelected,
         weekDays,
         nextWeek,
         previousWeek,

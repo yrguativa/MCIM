@@ -22,6 +22,7 @@ interface DataTableProps<TData, TValue = unknown> {
     data: TData[]
     getRowId?: (row: TData, index: number) => string
     emptyMessage?: React.ReactNode
+    defaultPageSize?: number
 }
 
 function TableComponent<TData, TValue = unknown>({
@@ -29,10 +30,11 @@ function TableComponent<TData, TValue = unknown>({
     data,
     getRowId,
     emptyMessage = "No results.",
+    defaultPageSize = 10,
 }: DataTableProps<TData, TValue>) {
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
-        pageSize: 10,
+        pageSize: defaultPageSize,
     });
 
     const table = useReactTable({

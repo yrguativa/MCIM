@@ -29,6 +29,9 @@ export class DiscipleEntity {
   @Field(() => String)
   ministryId: string;
 
+  @Field(() => String, { nullable: true })
+  network: string;
+
   @Field(() => String)
   createdUser: string;
 

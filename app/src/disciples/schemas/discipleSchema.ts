@@ -32,7 +32,7 @@ export const DiscipleSchema = z.object({
         }).optional(),
     email: z.string()
         .min(5, {
-            message: "La dirección debe tener minimo 5 caracteres.",
+            message: "El correo debe tener minimo 5 caracteres.",
         })
         .email("El correo no es valido").optional(),
     birthday: z.date({
@@ -43,6 +43,8 @@ export const DiscipleSchema = z.object({
         .min(2, {
             message: "El ministerio es obligatorio.",
         }),
+    network: z.string()
+        .optional(),
     createdUser: z.string()
         .min(2, {
             message: "El usuario de creación es obligatorio.",

@@ -1,6 +1,6 @@
 export interface Disciple {
     id: string;
-    identification:string;
+    identification: string;
     name: string;
     lastName: string;
     email: string | undefined;
@@ -8,7 +8,8 @@ export interface Disciple {
     address: string | undefined;
     birthDate: Date | undefined;
     ministryId: string;
-    
+    network?: string;
+
     createdUser: string;
     createdDate: Date;
     updatedUser: string;

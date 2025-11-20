@@ -19,18 +19,17 @@ export class CreateDiscipleInput {
   @IsNotEmpty()
   name: string;
 
-  @Field()
-  @IsNotEmpty()
+  @Field(() => String)
   lastName: string;
 
   @Field(() => String, { nullable: true })
   @IsOptional()
   @IsEmail()
-  email?: string;
+  email: string;
 
   @Field(() => String, { nullable: true })
   @IsOptional()
-  phone?: string;
+  phone: string;
 
   @Field(() => String, { nullable: true })
   @IsOptional()
@@ -52,6 +51,10 @@ export class CreateDiscipleInput {
   @Field(() => String, { description: 'Ministry ID' })
   @IsNotEmpty({ message: 'The ministry ID is required' })
   ministryId: string;
+
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  network: string;
 
   @Field(() => String)
   @IsNotEmpty()

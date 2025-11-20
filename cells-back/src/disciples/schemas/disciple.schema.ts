@@ -30,6 +30,9 @@ export class Disciple extends Document {
   @Prop({ type: String, ref: 'Disciple', required: false })
   leaderId: string;
 
+  @Prop({ required: false })
+  network: string;
+
   @Prop()
   createdUser: string;
 
