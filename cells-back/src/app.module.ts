@@ -15,6 +15,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { MinistriesModule } from './ministries/ministries.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { FormationSchoolModule } from './formation-school/formation-school.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { UsersModule } from './users/users.module';
     EventsModule,
     MinistriesModule,
     UsersModule,
+    FormationSchoolModule,
   ],
   controllers: [AppController],
   providers: [

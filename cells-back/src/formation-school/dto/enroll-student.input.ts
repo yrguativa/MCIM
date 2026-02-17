@@ -36,6 +36,11 @@ export class EnrollStudentInput {
 
 @InputType()
 export class UpdateEnrollmentInput {
+  @Field()
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+
   @Field({ nullable: true })
   @IsOptional()
   @IsString()
