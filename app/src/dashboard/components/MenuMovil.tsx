@@ -1,9 +1,10 @@
 import React from "react";
-import { Bell, CalendarDays, GraduationCap, Home, LineChart, Package, Package2, ShoppingCart, Users } from "lucide-react";
+import { Bell, CalendarDays, Home, LineChart, Package, Package2, ShoppingCart, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import FormationSchoolMenu from "@/formation-school/components/FormationSchoolMenu";
 
 const MenuMovil: React.FC = () => {
   const { t } = useTranslation();
@@ -46,10 +47,7 @@ const MenuMovil: React.FC = () => {
                 Comming soon
               </Badge>
             </a>
-            <NavLink to="/formation-school" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}>
-              <GraduationCap className="h-4 w-4" />
-              {t('formation-school.title')}
-            </NavLink>
+            <FormationSchoolMenu />
             <NavLink to="/cells" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-primary transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}>
               <Package className="h-4 w-4" />
               {t('menu.cells')}

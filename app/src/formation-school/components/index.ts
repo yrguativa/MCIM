@@ -9,3 +9,4 @@ export { TeacherDashboard } from './TeacherDashboard';
 export { QRGenerator } from './QRGenerator';
 export { AttendanceList } from './AttendanceList';
 export { DashboardStats } from './DashboardStats';
+export { default as FormationSchoolMenu } from './FormationSchoolMenu';
