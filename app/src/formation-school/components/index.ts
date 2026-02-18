@@ -5,3 +5,6 @@ export { ScheduleForm } from './ScheduleForm';
 export { CourseClassForm } from './CourseClassForm';
 export { StudentEnrollmentForm } from './StudentEnrollmentForm';
 export { AdminDashboard } from './AdminDashboard';
+export { TeacherDashboard } from './TeacherDashboard';
+export { QRGenerator } from './QRGenerator';
+export { AttendanceList } from './AttendanceList';
