@@ -7,7 +7,7 @@ export class TeacherAssignment extends Document {
   teacherId: string;
 
   @Prop({ required: true })
-  courseClassId: string;
+  courseId: string;
 
   @Prop({ required: true })
   assignedDate: Date;

@@ -9,7 +9,7 @@ export class TeacherAssignmentEntity {
   teacherId: string;
 
   @Field(() => ID)
-  courseClassId: string;
+  courseId: string;
 
   @Field()
   assignedDate: Date;

@@ -9,7 +9,7 @@ export class StudentEnrollmentEntity {
   studentId: string;
 
   @Field(() => ID)
-  courseClassId: string;
+  courseId: string;
 
   @Field()
   enrollmentDate: Date;

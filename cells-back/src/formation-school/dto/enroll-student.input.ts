@@ -11,7 +11,7 @@ export class EnrollStudentInput {
   @Field()
   @IsString()
   @IsNotEmpty()
-  courseClassId: string;
+  courseId: string;
 
   @Field()
   @IsDate()
@@ -51,7 +51,7 @@ export class UpdateEnrollmentInput {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  courseClassId?: string;
+  courseId?: string;
 
   @Field({ nullable: true })
   @IsOptional()

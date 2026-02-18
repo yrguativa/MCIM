@@ -76,9 +76,9 @@ describe('FormationSchoolResolver', () => {
 
   describe('course classes', () => {
     it('should generate QR code', async () => {
-      const courseClassId = 'course-class-1';
-      const result = await resolver.generateQRCode(courseClassId);
-      expect(service.generateQRCode).toHaveBeenCalledWith(courseClassId);
+      const courseId = 'course-class-1';
+      const result = await resolver.generateQRCode(courseId);
+      expect(service.generateQRCode).toHaveBeenCalledWith(courseId);
     });
   });
 

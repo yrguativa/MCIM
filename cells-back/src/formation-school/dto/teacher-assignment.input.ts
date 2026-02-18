@@ -11,7 +11,7 @@ export class CreateTeacherAssignmentInput {
   @Field()
   @IsString()
   @IsNotEmpty()
-  courseClassId: string;
+  courseId: string;
 
   @Field()
   @IsDate()
@@ -40,7 +40,7 @@ export class UpdateTeacherAssignmentInput {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  courseClassId?: string;
+  courseId?: string;
 
   @Field({ nullable: true })
   @IsOptional()

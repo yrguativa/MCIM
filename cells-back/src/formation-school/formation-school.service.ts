@@ -106,7 +106,7 @@ export class FormationSchoolService {
     return {
       id: enrollment._id?.toString() ?? '',
       studentId: enrollment.studentId,
-      courseClassId: enrollment.courseClassId,
+      courseId: enrollment.courseId,
       enrollmentDate: enrollment.enrollmentDate,
       status: enrollment.status,
       finalGrade: enrollment.finalGrade,
@@ -119,7 +119,7 @@ export class FormationSchoolService {
     return {
       id: attendance._id?.toString() ?? '',
       studentEnrollmentId: attendance.studentEnrollmentId,
-      courseClassId: attendance.courseClassId,
+      courseId: attendance.courseId,
       attended: attendance.attended,
       attendanceDate: attendance.attendanceDate,
       notes: attendance.notes,
@@ -245,12 +245,12 @@ export class FormationSchoolService {
   }
 
   async findEnrollmentsByCourse(courseId: string): Promise<StudentEnrollmentEntity[]> {
-    const enrollments = await this.enrollmentModel.find({ courseClassId: courseId }).populate('studentId').exec();
+    const enrollments = await this.enrollmentModel.find({ courseId: courseId }).populate('studentId').exec();
     return enrollments.map(e => this.toStudentEnrollmentEntity(e));
   }
 
   async findEnrollmentsByStudent(studentId: string): Promise<StudentEnrollmentEntity[]> {
-    const enrollments = await this.enrollmentModel.find({ studentId }).populate('courseClassId').exec();
+    const enrollments = await this.enrollmentModel.find({ studentId }).populate('courseId').exec();
     return enrollments.map(e => this.toStudentEnrollmentEntity(e));
   }
 
@@ -290,7 +290,7 @@ export class FormationSchoolService {
     
     const newEnrollment = new this.enrollmentModel({
       studentId: currentEnrollment.studentId,
-      courseClassId: '',
+      courseId: '',
       enrollmentDate: new Date(),
       status: 'active',
       createdUser: userId,
@@ -311,7 +311,7 @@ export class FormationSchoolService {
   }
 
   async findAttendanceByCourse(courseId: string): Promise<AttendanceEntity[]> {
-    const attendances = await this.attendanceModel.find({ courseClassId: courseId })
+    const attendances = await this.attendanceModel.find({ courseId: courseId })
       .populate('studentEnrollmentId')
       .exec();
     return attendances.map(a => this.toAttendanceEntity(a));

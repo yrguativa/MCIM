@@ -9,7 +9,7 @@ export class AttendanceEntity {
   studentEnrollmentId: string;
 
   @Field(() => ID)
-  courseClassId: string;
+  courseId: string;
 
   @Field()
   attended: boolean;

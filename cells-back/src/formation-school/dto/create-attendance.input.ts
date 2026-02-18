@@ -11,7 +11,7 @@ export class CreateAttendanceInput {
   @Field(() => ID)
   @IsString()
   @IsNotEmpty()
-  courseClassId: string;
+  courseId: string;
 
   @Field()
   @IsBoolean()
@@ -45,7 +45,7 @@ export class UpdateAttendanceInput {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  courseClassId?: string;
+  courseId?: string;
 
   @Field({ nullable: true })
   @IsOptional()

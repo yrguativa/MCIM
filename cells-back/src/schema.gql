@@ -166,7 +166,7 @@ type CourseEntity {
 type StudentEnrollmentEntity {
   id: ID!
   studentId: ID!
-  courseClassId: ID!
+  courseId: ID!
   enrollmentDate: DateTime!
   status: String!
   finalGrade: Float
@@ -177,7 +177,7 @@ type StudentEnrollmentEntity {
 type AttendanceEntity {
   id: ID!
   studentEnrollmentId: ID!
-  courseClassId: ID!
+  courseId: ID!
   attended: Boolean!
   attendanceDate: DateTime!
   notes: String
@@ -410,7 +410,7 @@ input CreateCourseInput {
 
 input EnrollStudentInput {
   studentId: String!
-  courseClassId: String!
+  courseId: String!
   enrollmentDate: DateTime!
   status: String
   finalGrade: Float
@@ -420,7 +420,7 @@ input EnrollStudentInput {
 input UpdateEnrollmentInput {
   id: String!
   studentId: String
-  courseClassId: String
+  courseId: String
   enrollmentDate: DateTime
   status: String
   finalGrade: Float
@@ -428,7 +428,7 @@ input UpdateEnrollmentInput {
 
 input CreateAttendanceInput {
   studentEnrollmentId: ID!
-  courseClassId: ID!
+  courseId: ID!
   attended: Boolean!
   attendanceDate: DateTime!
   notes: String

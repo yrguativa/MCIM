@@ -7,7 +7,7 @@ export class Attendance extends Document {
   studentEnrollmentId: string;
 
   @Prop({ required: true })
-  courseClassId: string;
+  courseId: string;
 
   @Prop({ required: true })
   attended: boolean;

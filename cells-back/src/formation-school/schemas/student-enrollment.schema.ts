@@ -7,7 +7,7 @@ export class StudentEnrollment extends Document {
   studentId: string;
 
   @Prop({ required: true })
-  courseClassId: string;
+  courseId: string;
 
   @Prop({ required: true })
   enrollmentDate: Date;

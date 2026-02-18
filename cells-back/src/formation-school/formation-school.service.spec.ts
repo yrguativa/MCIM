@@ -280,7 +280,7 @@ describe('FormationSchoolService', () => {
     it('should create attendance', async () => {
       const createAttendanceInput = {
         studentEnrollmentId: 'enrollment-1',
-        courseClassId: 'course-class-1',
+        courseId: 'course-class-1',
         attended: true,
         attendanceDate: new Date(),
         createdUser: 'user-1',
