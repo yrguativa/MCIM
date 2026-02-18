@@ -11,6 +11,7 @@ import { Student, StudentSchema } from './schemas/student.schema';
 import { StudentEnrollment, StudentEnrollmentSchema } from './schemas/student-enrollment.schema';
 import { TeacherAssignment, TeacherAssignmentSchema } from './schemas/teacher-assignment.schema';
 import { Attendance, AttendanceSchema } from './schemas/attendance.schema';
+import { StudentCourseHistory, StudentCourseHistorySchema } from './schemas/student-course-history.schema';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { Attendance, AttendanceSchema } from './schemas/attendance.schema';
       { name: StudentEnrollment.name, schema: StudentEnrollmentSchema },
       { name: TeacherAssignment.name, schema: TeacherAssignmentSchema },
       { name: Attendance.name, schema: AttendanceSchema },
+      { name: StudentCourseHistory.name, schema: StudentCourseHistorySchema },
     ]),
   ],
   providers: [FormationSchoolService, FormationSchoolResolver],

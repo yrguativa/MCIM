@@ -1,7 +1,7 @@
 import { create, StateCreator } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { FormationSchoolService } from '../services/formation-school.services';
-import { Student, Cycle, Level, Classroom, Schedule, Course, StudentEnrollment, TeacherAssignment, Attendance } from '../models';
+import { Student, Cycle, Level, Classroom, Schedule, Course, StudentEnrollment, TeacherAssignment, Attendance, StudentCourseHistory } from '../models';
 
 interface FormationSchoolState {
   students: Student[];
@@ -13,6 +13,7 @@ interface FormationSchoolState {
   enrollments: StudentEnrollment[];
   teacherAssignments: TeacherAssignment[];
   attendances: Attendance[];
+  courseHistories: StudentCourseHistory[];
   activeCycle: Cycle | null;
   
   getStudents: () => Promise<void>;
@@ -49,6 +50,10 @@ interface FormationSchoolState {
   getAttendanceByCourse: (courseId: string) => Promise<void>;
   getAttendanceByEnrollment: (enrollmentId: string) => Promise<void>;
   createAttendance: (attendance: Partial<Attendance>) => Promise<boolean>;
+  
+  getCourseHistoriesByStudent: (studentId: string) => Promise<void>;
+  createCourseHistory: (history: Partial<StudentCourseHistory>) => Promise<boolean>;
+  updateCourseHistory: (history: Partial<StudentCourseHistory>) => Promise<boolean>;
 }
 
 const store: StateCreator<FormationSchoolState> = (set, get) => ({
@@ -61,6 +66,7 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
   enrollments: [],
   teacherAssignments: [],
   attendances: [],
+  courseHistories: [],
   activeCycle: null,
 
   getStudents: async () => {
@@ -307,6 +313,38 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
       return true;
     } catch (error) {
       console.error('Error creating attendance:', error);
+      return false;
+    }
+  },
+
+  getCourseHistoriesByStudent: async (studentId: string) => {
+    const data = await FormationSchoolService.getCourseHistoriesByStudent(studentId);
+    set({ courseHistories: data.courseHistoriesByStudent });
+  },
+
+  createCourseHistory: async (history) => {
+    try {
+      const { id, createdDate, enrollmentDate, ...historyData } = history as any;
+      await FormationSchoolService.createCourseHistory({
+        ...historyData,
+        createdUser: historyData.createdUser || 'system',
+        enrollmentDate: enrollmentDate ? new Date(enrollmentDate) : new Date(),
+      });
+      await get().getCourseHistoriesByStudent(history.studentId!);
+      return true;
+    } catch (error) {
+      console.error('Error creating course history:', error);
+      return false;
+    }
+  },
+
+  updateCourseHistory: async (history) => {
+    try {
+      await FormationSchoolService.updateCourseHistory(history);
+      await get().getCourseHistoriesByStudent(history.studentId!);
+      return true;
+    } catch (error) {
+      console.error('Error updating course history:', error);
       return false;
     }
   },

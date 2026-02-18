@@ -7,3 +7,4 @@ export * from './course';
 export * from './studentEnrollment';
 export * from './teacherAssignment';
 export * from './attendance';
+export * from './studentCourseHistory';

@@ -9,6 +9,7 @@ import { StudentEntity } from './entities/student.entity';
 import { StudentEnrollmentEntity } from './entities/student-enrollment.entity';
 import { TeacherAssignmentEntity } from './entities/teacher-assignment.entity';
 import { AttendanceEntity } from './entities/attendance.entity';
+import { StudentCourseHistoryEntity } from './entities/student-course-history.entity';
 import { CreateCycleInput } from './dto/create-cycle.input';
 import { CreateLevelInput } from './dto/create-level.input';
 import { CreateClassroomInput } from './dto/create-classroom.input';
@@ -18,6 +19,7 @@ import { CreateStudentInput, UpdateStudentInput } from './dto/create-student.inp
 import { EnrollStudentInput, UpdateEnrollmentInput } from './dto/enroll-student.input';
 import { CreateTeacherAssignmentInput } from './dto/teacher-assignment.input';
 import { CreateAttendanceInput } from './dto/create-attendance.input';
+import { CreateStudentCourseHistoryInput, UpdateStudentCourseHistoryInput } from './dto/create-student-course-history.input';
 
 @Resolver()
 export class FormationSchoolResolver {
@@ -182,5 +184,21 @@ export class FormationSchoolResolver {
   @Mutation(() => AttendanceEntity)
   async createAttendance(@Args('input') input: CreateAttendanceInput): Promise<AttendanceEntity> {
     return this.fsService.createAttendance(input);
+  }
+
+  // Course History
+  @Query(() => [StudentCourseHistoryEntity])
+  async courseHistoriesByStudent(@Args('studentId', { type: () => ID }) studentId: string): Promise<StudentCourseHistoryEntity[]> {
+    return this.fsService.findCourseHistoriesByStudent(studentId);
+  }
+
+  @Mutation(() => StudentCourseHistoryEntity)
+  async createCourseHistory(@Args('input') input: CreateStudentCourseHistoryInput): Promise<StudentCourseHistoryEntity> {
+    return this.fsService.createCourseHistory(input);
+  }
+
+  @Mutation(() => StudentCourseHistoryEntity)
+  async updateCourseHistory(@Args('input') input: UpdateStudentCourseHistoryInput): Promise<StudentCourseHistoryEntity> {
+    return this.fsService.updateCourseHistory(input);
   }
 }

@@ -155,4 +155,19 @@ export const FormationSchoolService = {
     const query = `mutation CreateAttendance($input: CreateAttendanceInput!) { createAttendance(input: $input) { id attended } }`;
     return graphqlRequest(query, { input });
   },
+
+  async getCourseHistoriesByStudent(studentId: string) {
+    const query = `query CourseHistoriesByStudent($studentId: ID!) { courseHistoriesByStudent(studentId: $studentId) { id studentId courseId enrollmentDate completionDate finalGrade status promotedToNextLevel createdUser createdDate } }`;
+    return graphqlRequest(query, { studentId });
+  },
+
+  async createCourseHistory(input: Record<string, unknown>) {
+    const query = `mutation CreateCourseHistory($input: CreateStudentCourseHistoryInput!) { createCourseHistory(input: $input) { id studentId courseId status } }`;
+    return graphqlRequest(query, { input });
+  },
+
+  async updateCourseHistory(input: Record<string, unknown>) {
+    const query = `mutation UpdateCourseHistory($input: UpdateStudentCourseHistoryInput!) { updateCourseHistory(input: $input) { id status finalGrade promotedToNextLevel } }`;
+    return graphqlRequest(query, { input });
+  },
 };

@@ -10,6 +10,7 @@ import { Student } from './schemas/student.schema';
 import { StudentEnrollment } from './schemas/student-enrollment.schema';
 import { TeacherAssignment } from './schemas/teacher-assignment.schema';
 import { Attendance } from './schemas/attendance.schema';
+import { StudentCourseHistory } from './schemas/student-course-history.schema';
 import { CreateCycleInput } from './dto/create-cycle.input';
 import { CreateLevelInput } from './dto/create-level.input';
 import { CreateClassroomInput } from './dto/create-classroom.input';
@@ -19,6 +20,7 @@ import { CreateStudentInput, UpdateStudentInput } from './dto/create-student.inp
 import { EnrollStudentInput, UpdateEnrollmentInput } from './dto/enroll-student.input';
 import { CreateTeacherAssignmentInput } from './dto/teacher-assignment.input';
 import { CreateAttendanceInput } from './dto/create-attendance.input';
+import { CreateStudentCourseHistoryInput, UpdateStudentCourseHistoryInput } from './dto/create-student-course-history.input';
 import { CycleEntity } from './entities/cycle.entity';
 import { LevelEntity } from './entities/level.entity';
 import { ClassroomEntity } from './entities/classroom.entity';
@@ -28,6 +30,7 @@ import { StudentEntity } from './entities/student.entity';
 import { StudentEnrollmentEntity } from './entities/student-enrollment.entity';
 import { TeacherAssignmentEntity } from './entities/teacher-assignment.entity';
 import { AttendanceEntity } from './entities/attendance.entity';
+import { StudentCourseHistoryEntity } from './entities/student-course-history.entity';
 import * as QRCode from 'qrcode';
 
 @Injectable()
@@ -42,6 +45,7 @@ export class FormationSchoolService {
     @InjectModel(StudentEnrollment.name) private enrollmentModel: Model<StudentEnrollment>,
     @InjectModel(TeacherAssignment.name) private teacherAssignmentModel: Model<TeacherAssignment>,
     @InjectModel(Attendance.name) private attendanceModel: Model<Attendance>,
+    @InjectModel(StudentCourseHistory.name) private courseHistoryModel: Model<StudentCourseHistory>,
   ) {}
 
   private toCycleEntity(cycle: Cycle & { _id: unknown }): CycleEntity {
@@ -156,6 +160,21 @@ export class FormationSchoolService {
       notes: attendance.notes,
       createdUser: attendance.createdUser,
       createdDate: attendance.createdDate,
+    };
+  }
+
+  private toStudentCourseHistoryEntity(history: StudentCourseHistory & { _id: unknown }): StudentCourseHistoryEntity {
+    return {
+      id: history._id?.toString() ?? '',
+      studentId: history.studentId,
+      courseId: history.courseId,
+      enrollmentDate: history.enrollmentDate,
+      completionDate: history.completionDate,
+      finalGrade: history.finalGrade,
+      status: history.status,
+      promotedToNextLevel: history.promotedToNextLevel,
+      createdUser: history.createdUser,
+      createdDate: history.createdDate,
     };
   }
 
@@ -406,5 +425,27 @@ export class FormationSchoolService {
   async findAttendanceByEnrollment(enrollmentId: string): Promise<AttendanceEntity[]> {
     const attendances = await this.attendanceModel.find({ studentEnrollmentId: enrollmentId }).exec();
     return attendances.map(a => this.toAttendanceEntity(a));
+  }
+
+  async createCourseHistory(input: CreateStudentCourseHistoryInput): Promise<StudentCourseHistoryEntity> {
+    const history = new this.courseHistoryModel({
+      ...input,
+      enrollmentDate: input.enrollmentDate || new Date(),
+      createdDate: new Date(),
+    });
+    const saved = await history.save();
+    return this.toStudentCourseHistoryEntity(saved);
+  }
+
+  async findCourseHistoriesByStudent(studentId: string): Promise<StudentCourseHistoryEntity[]> {
+    const histories = await this.courseHistoryModel.find({ studentId }).populate('courseId').exec();
+    return histories.map(h => this.toStudentCourseHistoryEntity(h));
+  }
+
+  async updateCourseHistory(input: UpdateStudentCourseHistoryInput): Promise<StudentCourseHistoryEntity> {
+    const { id, ...updateData } = input;
+    const updated = await this.courseHistoryModel.findByIdAndUpdate(id, updateData, { new: true }).exec();
+    if (!updated) throw new NotFoundException(`Course history ${id} not found`);
+    return this.toStudentCourseHistoryEntity(updated);
   }
 }
