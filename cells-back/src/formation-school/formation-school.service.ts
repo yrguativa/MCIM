@@ -46,7 +46,6 @@ export class FormationSchoolService {
       name: cycle.name,
       startDate: cycle.startDate,
       endDate: cycle.endDate,
-      requiredClasses: cycle.requiredClasses,
       active: cycle.active,
       createdUser: cycle.createdUser,
       createdDate: cycle.createdDate,

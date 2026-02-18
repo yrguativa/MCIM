@@ -27,7 +27,6 @@ export const CycleForm: React.FC<CycleFormProps> = ({ onSuccess }) => {
     defaultValues: {
       id: crypto.randomUUID(),
       name: '',
-      requiredClasses: 8,
       active: true,
       createdUser: userState?.id || '',
       createdDate: new Date(),
@@ -116,20 +115,6 @@ export const CycleForm: React.FC<CycleFormProps> = ({ onSuccess }) => {
             )}
           />
         </div>
-        
-        <FormField
-          control={form.control}
-          name="requiredClasses"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Cursos Requeridos</FormLabel>
-              <FormControl>
-                <Input type="number" min="1" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         
         <Button type="submit">
           <Save className="mr-2 h-4 w-4" />

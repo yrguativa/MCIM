@@ -12,9 +12,6 @@ export class Cycle extends Document {
   @Prop({ required: true })
   endDate: Date;
 
-  @Prop({ required: true })
-  requiredClasses: number;
-
   @Prop({ default: true })
   active: boolean;
 

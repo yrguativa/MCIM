@@ -3,7 +3,6 @@ export interface Cycle {
     name: string;
     startDate: Date;
     endDate: Date;
-    requiredClasses: number;
     active: boolean;
     createdUser: string;
     createdDate: Date;

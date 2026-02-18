@@ -16,11 +16,6 @@ export class CreateCycleInput {
   @IsDate()
   endDate: Date;
 
-  @Field()
-  @IsNumber()
-  @Min(1)
-  requiredClasses: number;
-
   @Field({ nullable: true })
   @IsOptional()
   @IsNumber()
@@ -49,12 +44,6 @@ export class UpdateCycleInput {
   @IsOptional()
   @IsDate()
   endDate?: Date;
-
-  @Field({ nullable: true })
-  @IsOptional()
-  @IsNumber()
-  @Min(1)
-  requiredClasses?: number;
 
   @Field({ nullable: true })
   @IsOptional()

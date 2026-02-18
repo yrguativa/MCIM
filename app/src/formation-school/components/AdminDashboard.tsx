@@ -47,7 +47,6 @@ export const AdminDashboard: React.FC = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <p>Cursos requeridos: {activeCycle.requiredClasses}</p>
           </CardContent>
         </Card>
       )}

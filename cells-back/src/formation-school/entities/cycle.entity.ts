@@ -14,9 +14,6 @@ export class CycleEntity {
   @Field()
   endDate: Date;
 
-  @Field()
-  requiredClasses: number;
-
   @Field(() => Boolean)
   active: boolean;
 
