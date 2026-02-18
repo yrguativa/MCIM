@@ -1,7 +1,7 @@
 export interface StudentEnrollment {
     id: string;
     studentId: string;
-    courseClassId: string;
+    courseId: string;
     enrollmentDate: Date;
     status: 'active' | 'completed' | 'withdrawn';
     finalGrade?: number;

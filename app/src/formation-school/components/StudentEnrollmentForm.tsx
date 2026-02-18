@@ -15,11 +15,11 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
 interface StudentEnrollmentFormProps {
-  courseClassId: string;
+  courseId: string;
   onSuccess?: () => void;
 }
 
-export const StudentEnrollmentForm: React.FC<StudentEnrollmentFormProps> = ({ courseClassId, onSuccess }) => {
+export const StudentEnrollmentForm: React.FC<StudentEnrollmentFormProps> = ({ courseId, onSuccess }) => {
   const userState = useAuthStore(state => state.user);
   const { searchByName, searchResults } = useDiscipleStore();
   const { enrollStudent } = useFormationSchoolStore();
@@ -32,7 +32,7 @@ export const StudentEnrollmentForm: React.FC<StudentEnrollmentFormProps> = ({ co
     defaultValues: {
       id: crypto.randomUUID(),
       studentId: '',
-      courseClassId,
+      courseId,
       enrollmentDate: new Date(),
       status: 'active',
       createdUser: userState?.id || '',
@@ -43,7 +43,7 @@ export const StudentEnrollmentForm: React.FC<StudentEnrollmentFormProps> = ({ co
   async function onSubmit(data: StudentEnrollmentInput) {
     const success = await enrollStudent({
       ...data,
-      courseClassId,
+      courseId,
     });
     
     if (success) {

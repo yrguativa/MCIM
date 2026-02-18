@@ -8,7 +8,7 @@ export const StudentEnrollmentSchema = z.object({
         .min(1, {
             message: "El estudiante es obligatorio.",
         }),
-    courseClassId: z.string()
+    courseId: z.string()
         .min(1, {
             message: "La clase es obligatoria.",
         }),

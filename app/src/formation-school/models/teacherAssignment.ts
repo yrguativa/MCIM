@@ -1,7 +1,7 @@
 export interface TeacherAssignment {
     id: string;
     teacherId: string;
-    courseClassId: string;
+    courseId: string;
     assignedDate: Date;
     active: boolean;
     createdUser: string;

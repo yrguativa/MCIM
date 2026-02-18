@@ -1,7 +1,7 @@
 export interface Attendance {
     id: string;
     studentEnrollmentId: string;
-    courseClassId: string;
+    courseId: string;
     attended: boolean;
     attendanceDate: Date;
     notes?: string;

@@ -60,7 +60,7 @@ export const AttendanceList: React.FC<AttendanceListProps> = ({
                       ) : (
                         <XCircle className="h-4 w-4 text-red-500" />
                       )}
-                      {attendedCount} / {attendances.filter(a => a.courseClassId === courseId).length || 0}
+                      {attendedCount} / {attendances.filter(a => a.courseId === courseId).length || 0}
                     </div>
                   </TableCell>
                 </TableRow>

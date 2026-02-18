@@ -74,7 +74,7 @@ export const StudentProgress: React.FC = () => {
             <Card key={enrollment.id} className="hover:shadow-lg transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  {enrollment.courseClassId?.levelId?.name || 'Curso'}
+                  {enrollment.courseId?.levelId?.name || 'Curso'}
                 </CardTitle>
                 <Badge variant={enrollment.status === 'active' ? 'default' : 'secondary'}>
                   {enrollment.status}

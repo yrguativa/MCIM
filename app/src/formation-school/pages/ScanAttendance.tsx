@@ -20,7 +20,7 @@ type StudentIdType = string | StudentWithDetails;
 interface EnrollmentWithStudent {
   id: string;
   studentId: StudentIdType;
-  courseClassId: string;
+  courseId: string;
   enrollmentDate: Date;
   status: 'active' | 'completed' | 'withdrawn';
   finalGrade?: number;
@@ -71,7 +71,7 @@ export const ScanAttendance: React.FC = () => {
     }
     
     const existingAttendance = attendances.find(
-      a => a.studentEnrollmentId === enrollment.id && a.courseClassId === courseId
+      a => a.studentEnrollmentId === enrollment.id && a.courseId === courseId
     );
     
     if (existingAttendance) {
@@ -83,7 +83,7 @@ export const ScanAttendance: React.FC = () => {
     try {
       await createAttendance({
         studentEnrollmentId: enrollment.id,
-        courseClassId: courseId,
+        courseId: courseId,
         attended: true,
         attendanceDate: new Date(),
         createdUser: userState?.id || '',

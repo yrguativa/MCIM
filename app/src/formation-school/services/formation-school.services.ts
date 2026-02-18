@@ -82,17 +82,17 @@ export const FormationSchoolService = {
   },
 
   async getEnrollmentsByCourse(courseId: string) {
-    const query = `query EnrollmentsByCourse($courseId: ID!) { enrollmentsByCourse(courseId: $courseId) { id studentId courseClassId enrollmentDate status finalGrade } }`;
+    const query = `query EnrollmentsByCourse($courseId: ID!) { enrollmentsByCourse(courseId: $courseId) { id studentId courseId enrollmentDate status finalGrade } }`;
     return graphqlRequest(query, { courseId });
   },
   
   async getEnrollmentsByStudent(studentId: string) {
-    const query = `query EnrollmentsByStudent($studentId: ID!) { enrollmentsByStudent(studentId: $studentId) { id studentId courseClassId enrollmentDate status finalGrade } }`;
+    const query = `query EnrollmentsByStudent($studentId: ID!) { enrollmentsByStudent(studentId: $studentId) { id studentId courseId enrollmentDate status finalGrade } }`;
     return graphqlRequest(query, { studentId });
   },
   
   async enrollStudent(input: Record<string, unknown>) {
-    const query = `mutation EnrollStudent($input: EnrollStudentInput!) { enrollStudent(input: $input) { id studentId courseClassId status } }`;
+    const query = `mutation EnrollStudent($input: EnrollStudentInput!) { enrollStudent(input: $input) { id studentId courseId status } }`;
     return graphqlRequest(query, { input });
   },
   
@@ -107,12 +107,12 @@ export const FormationSchoolService = {
   },
 
   async getAttendanceByCourse(courseId: string) {
-    const query = `query AttendanceByCourse($courseId: ID!) { attendanceByCourse(courseId: $courseId) { id studentEnrollmentId courseClassId attended attendanceDate notes } }`;
+    const query = `query AttendanceByCourse($courseId: ID!) { attendanceByCourse(courseId: $courseId) { id studentEnrollmentId courseId attended attendanceDate notes } }`;
     return graphqlRequest(query, { courseId });
   },
   
   async getAttendanceByEnrollment(enrollmentId: string) {
-    const query = `query AttendanceByEnrollment($enrollmentId: ID!) { attendanceByEnrollment(enrollmentId: $enrollmentId) { id studentEnrollmentId courseClassId attended attendanceDate notes } }`;
+    const query = `query AttendanceByEnrollment($enrollmentId: ID!) { attendanceByEnrollment(enrollmentId: $enrollmentId) { id studentEnrollmentId courseId attended attendanceDate notes } }`;
     return graphqlRequest(query, { enrollmentId });
   },
   
