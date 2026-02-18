@@ -1,9 +1,10 @@
 import { create, StateCreator } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { FormationSchoolService } from '../services/formation-school.services';
-import { Cycle, Level, Classroom, Schedule, Course, StudentEnrollment, TeacherAssignment, Attendance } from '../models';
+import { Student, Cycle, Level, Classroom, Schedule, Course, StudentEnrollment, TeacherAssignment, Attendance } from '../models';
 
 interface FormationSchoolState {
+  students: Student[];
   cycles: Cycle[];
   levels: Level[];
   classrooms: Classroom[];
@@ -14,6 +15,11 @@ interface FormationSchoolState {
   attendances: Attendance[];
   activeCycle: Cycle | null;
   
+  getStudents: () => Promise<void>;
+  getStudentById: (id: string) => Promise<Student | null>;
+  createStudent: (student: Partial<Student>) => Promise<boolean>;
+  updateStudent: (student: Partial<Student>) => Promise<boolean>;
+  deleteStudent: (id: string) => Promise<boolean>;
   getCycles: () => Promise<void>;
   getActiveCycle: () => Promise<void>;
   createCycle: (cycle: Partial<Cycle>) => Promise<boolean>;
@@ -46,6 +52,7 @@ interface FormationSchoolState {
 }
 
 const store: StateCreator<FormationSchoolState> = (set, get) => ({
+  students: [],
   cycles: [],
   levels: [],
   classrooms: [],
@@ -55,6 +62,53 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
   teacherAssignments: [],
   attendances: [],
   activeCycle: null,
+
+  getStudents: async () => {
+    const data = await FormationSchoolService.getStudents();
+    set({ students: data.students });
+  },
+
+  getStudentById: async (id: string) => {
+    const data = await FormationSchoolService.getStudentById(id);
+    return data.student;
+  },
+
+  createStudent: async (student) => {
+    try {
+      const { id, createdDate, ...studentData } = student as any;
+      await FormationSchoolService.createStudent({
+        ...studentData,
+        createdUser: studentData.createdUser || 'system',
+      });
+      await get().getStudents();
+      return true;
+    } catch (error) {
+      console.error('Error creating student:', error);
+      return false;
+    }
+  },
+
+  updateStudent: async (student) => {
+    try {
+      await FormationSchoolService.updateStudent(student);
+      await get().getStudents();
+      return true;
+    } catch (error) {
+      console.error('Error updating student:', error);
+      return false;
+    }
+  },
+
+  deleteStudent: async (id: string) => {
+    try {
+      await FormationSchoolService.deleteStudent(id);
+      await get().getStudents();
+      return true;
+    } catch (error) {
+      console.error('Error deleting student:', error);
+      return false;
+    }
+  },
 
   getCycles: async () => {
     const data = await FormationSchoolService.getCycles();

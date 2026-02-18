@@ -1,3 +1,4 @@
+export * from './student';
 export * from './cycle';
 export * from './level';
 export * from './classroom';

@@ -6,6 +6,7 @@ import { Level } from './schemas/level.schema';
 import { Classroom } from './schemas/classroom.schema';
 import { Schedule } from './schemas/schedule.schema';
 import { Course } from './schemas/course.schema';
+import { Student } from './schemas/student.schema';
 import { StudentEnrollment } from './schemas/student-enrollment.schema';
 import { TeacherAssignment } from './schemas/teacher-assignment.schema';
 import { Attendance } from './schemas/attendance.schema';
@@ -14,6 +15,7 @@ import { CreateLevelInput } from './dto/create-level.input';
 import { CreateClassroomInput } from './dto/create-classroom.input';
 import { CreateScheduleInput } from './dto/create-schedule.input';
 import { CreateCourseInput } from './dto/create-course.input';
+import { CreateStudentInput, UpdateStudentInput } from './dto/create-student.input';
 import { EnrollStudentInput, UpdateEnrollmentInput } from './dto/enroll-student.input';
 import { CreateTeacherAssignmentInput } from './dto/teacher-assignment.input';
 import { CreateAttendanceInput } from './dto/create-attendance.input';
@@ -22,6 +24,7 @@ import { LevelEntity } from './entities/level.entity';
 import { ClassroomEntity } from './entities/classroom.entity';
 import { ScheduleEntity } from './entities/schedule.entity';
 import { CourseEntity } from './entities/course.entity';
+import { StudentEntity } from './entities/student.entity';
 import { StudentEnrollmentEntity } from './entities/student-enrollment.entity';
 import { TeacherAssignmentEntity } from './entities/teacher-assignment.entity';
 import { AttendanceEntity } from './entities/attendance.entity';
@@ -35,6 +38,7 @@ export class FormationSchoolService {
     @InjectModel(Classroom.name) private classroomModel: Model<Classroom>,
     @InjectModel(Schedule.name) private scheduleModel: Model<Schedule>,
     @InjectModel(Course.name) private courseModel: Model<Course>,
+    @InjectModel(Student.name) private studentModel: Model<Student>,
     @InjectModel(StudentEnrollment.name) private enrollmentModel: Model<StudentEnrollment>,
     @InjectModel(TeacherAssignment.name) private teacherAssignmentModel: Model<TeacherAssignment>,
     @InjectModel(Attendance.name) private attendanceModel: Model<Attendance>,
@@ -103,6 +107,17 @@ export class FormationSchoolService {
       qrExpiration: course.qrExpiration,
       createdUser: course.createdUser,
       createdDate: course.createdDate,
+    };
+  }
+
+  private toStudentEntity(student: Student & { _id: unknown }): StudentEntity {
+    return {
+      id: student._id?.toString() ?? '',
+      discipleId: student.discipleId,
+      currentLevelId: student.currentLevelId,
+      status: student.status,
+      createdUser: student.createdUser,
+      createdDate: student.createdDate,
     };
   }
 
@@ -202,6 +217,46 @@ export class FormationSchoolService {
   async findAllSchedules(): Promise<ScheduleEntity[]> {
     const schedules = await this.scheduleModel.find().exec();
     return schedules.map(s => this.toScheduleEntity(s));
+  }
+
+  async createStudent(input: CreateStudentInput): Promise<StudentEntity> {
+    const existingStudent = await this.studentModel.findOne({ discipleId: input.discipleId }).exec();
+    if (existingStudent) {
+      throw new BadRequestException('Ya existe un estudiante asociado a este discípulo');
+    }
+    
+    const student = new this.studentModel({ ...input, createdDate: new Date() });
+    const saved = await student.save();
+    return this.toStudentEntity(saved);
+  }
+
+  async findAllStudents(): Promise<StudentEntity[]> {
+    const students = await this.studentModel.find().populate('discipleId currentLevelId').exec();
+    return students.map(s => this.toStudentEntity(s));
+  }
+
+  async findStudentById(id: string): Promise<StudentEntity> {
+    const student = await this.studentModel.findById(id).populate('discipleId currentLevelId').exec();
+    if (!student) throw new NotFoundException(`Student ${id} not found`);
+    return this.toStudentEntity(student);
+  }
+
+  async findStudentByDiscipleId(discipleId: string): Promise<StudentEntity | null> {
+    const student = await this.studentModel.findOne({ discipleId }).populate('currentLevelId').exec();
+    return student ? this.toStudentEntity(student) : null;
+  }
+
+  async updateStudent(input: UpdateStudentInput): Promise<StudentEntity> {
+    const { id, ...updateData } = input;
+    const updated = await this.studentModel.findByIdAndUpdate(id, updateData, { new: true }).exec();
+    if (!updated) throw new NotFoundException(`Student ${id} not found`);
+    return this.toStudentEntity(updated);
+  }
+
+  async deleteStudent(id: string): Promise<boolean> {
+    const deleted = await this.studentModel.findByIdAndDelete(id).exec();
+    if (!deleted) throw new NotFoundException(`Student ${id} not found`);
+    return true;
   }
 
   async createCourse(input: CreateCourseInput): Promise<CourseEntity> {

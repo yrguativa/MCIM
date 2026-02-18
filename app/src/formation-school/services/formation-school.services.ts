@@ -16,6 +16,31 @@ async function graphqlRequest(query: string, variables?: Record<string, unknown>
 }
 
 export const FormationSchoolService = {
+  async getStudents() {
+    const query = `query { students { id discipleId currentLevelId status createdUser createdDate } }`;
+    return graphqlRequest(query);
+  },
+
+  async getStudentById(id: string) {
+    const query = `query Student($id: ID!) { student(id: $id) { id discipleId currentLevelId status createdUser createdDate } }`;
+    return graphqlRequest(query, { id });
+  },
+
+  async createStudent(input: Record<string, unknown>) {
+    const query = `mutation CreateStudent($input: CreateStudentInput!) { createStudent(input: $input) { id discipleId currentLevelId status } }`;
+    return graphqlRequest(query, { input });
+  },
+
+  async updateStudent(input: Record<string, unknown>) {
+    const query = `mutation UpdateStudent($input: UpdateStudentInput!) { updateStudent(input: $input) { id discipleId currentLevelId status } }`;
+    return graphqlRequest(query, { input });
+  },
+
+  async deleteStudent(id: string) {
+    const query = `mutation DeleteStudent($id: ID!) { deleteStudent(id: $id) }`;
+    return graphqlRequest(query, { id });
+  },
+
   async getCycles() {
     const query = `query { cycles { id name startDate endDate requiredClasses active } }`;
     return graphqlRequest(query);

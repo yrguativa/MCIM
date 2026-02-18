@@ -5,6 +5,7 @@ import { LevelEntity } from './entities/level.entity';
 import { ClassroomEntity } from './entities/classroom.entity';
 import { ScheduleEntity } from './entities/schedule.entity';
 import { CourseEntity } from './entities/course.entity';
+import { StudentEntity } from './entities/student.entity';
 import { StudentEnrollmentEntity } from './entities/student-enrollment.entity';
 import { TeacherAssignmentEntity } from './entities/teacher-assignment.entity';
 import { AttendanceEntity } from './entities/attendance.entity';
@@ -13,6 +14,7 @@ import { CreateLevelInput } from './dto/create-level.input';
 import { CreateClassroomInput } from './dto/create-classroom.input';
 import { CreateScheduleInput } from './dto/create-schedule.input';
 import { CreateCourseInput } from './dto/create-course.input';
+import { CreateStudentInput, UpdateStudentInput } from './dto/create-student.input';
 import { EnrollStudentInput, UpdateEnrollmentInput } from './dto/enroll-student.input';
 import { CreateTeacherAssignmentInput } from './dto/teacher-assignment.input';
 import { CreateAttendanceInput } from './dto/create-attendance.input';
@@ -78,6 +80,37 @@ export class FormationSchoolResolver {
   @Mutation(() => ScheduleEntity)
   async createSchedule(@Args('input') input: CreateScheduleInput): Promise<ScheduleEntity> {
     return this.fsService.createSchedule(input);
+  }
+
+  // Students
+  @Query(() => [StudentEntity])
+  async students(): Promise<StudentEntity[]> {
+    return this.fsService.findAllStudents();
+  }
+
+  @Query(() => StudentEntity)
+  async student(@Args('id', { type: () => ID }) id: string): Promise<StudentEntity> {
+    return this.fsService.findStudentById(id);
+  }
+
+  @Query(() => StudentEntity, { nullable: true })
+  async studentByDisciple(@Args('discipleId', { type: () => ID }) discipleId: string): Promise<StudentEntity | null> {
+    return this.fsService.findStudentByDiscipleId(discipleId);
+  }
+
+  @Mutation(() => StudentEntity)
+  async createStudent(@Args('input') input: CreateStudentInput): Promise<StudentEntity> {
+    return this.fsService.createStudent(input);
+  }
+
+  @Mutation(() => StudentEntity)
+  async updateStudent(@Args('input') input: UpdateStudentInput): Promise<StudentEntity> {
+    return this.fsService.updateStudent(input);
+  }
+
+  @Mutation(() => Boolean)
+  async deleteStudent(@Args('id', { type: () => ID }) id: string): Promise<boolean> {
+    return this.fsService.deleteStudent(id);
   }
 
   // Courses

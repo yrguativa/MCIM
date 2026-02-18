@@ -7,6 +7,7 @@ import { Level, LevelSchema } from './schemas/level.schema';
 import { Classroom, ClassroomSchema } from './schemas/classroom.schema';
 import { Schedule, ScheduleSchema } from './schemas/schedule.schema';
 import { Course, CourseSchema } from './schemas/course.schema';
+import { Student, StudentSchema } from './schemas/student.schema';
 import { StudentEnrollment, StudentEnrollmentSchema } from './schemas/student-enrollment.schema';
 import { TeacherAssignment, TeacherAssignmentSchema } from './schemas/teacher-assignment.schema';
 import { Attendance, AttendanceSchema } from './schemas/attendance.schema';
@@ -19,6 +20,7 @@ import { Attendance, AttendanceSchema } from './schemas/attendance.schema';
       { name: Classroom.name, schema: ClassroomSchema },
       { name: Schedule.name, schema: ScheduleSchema },
       { name: Course.name, schema: CourseSchema },
+      { name: Student.name, schema: StudentSchema },
       { name: StudentEnrollment.name, schema: StudentEnrollmentSchema },
       { name: TeacherAssignment.name, schema: TeacherAssignmentSchema },
       { name: Attendance.name, schema: AttendanceSchema },
