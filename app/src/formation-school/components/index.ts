@@ -8,3 +8,4 @@ export { AdminDashboard } from './AdminDashboard';
 export { TeacherDashboard } from './TeacherDashboard';
 export { QRGenerator } from './QRGenerator';
 export { AttendanceList } from './AttendanceList';
+export { DashboardStats } from './DashboardStats';
