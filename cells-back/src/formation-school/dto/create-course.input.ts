@@ -31,6 +31,16 @@ export class CreateCourseInput {
   @Field({ nullable: true })
   @IsOptional()
   @IsString()
+  type?: 'vision' | 'doctrina';
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
+  requiredClasses?: number;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
   @IsNotEmpty()
   qrCode?: string;
 

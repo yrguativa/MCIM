@@ -5,6 +5,8 @@ export interface Course {
     classroomId: string;
     scheduleId: string;
     cycleId: string;
+    type?: 'vision' | 'doctrina';
+    requiredClasses?: number;
     qrCode?: string;
     qrExpiration?: Date;
     createdUser: string;

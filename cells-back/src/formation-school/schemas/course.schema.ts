@@ -19,6 +19,12 @@ export class Course extends Document {
   cycleId: string;
 
   @Prop()
+  type: 'vision' | 'doctrina';
+
+  @Prop()
+  requiredClasses: number;
+
+  @Prop()
   qrCode: string;
 
   @Prop()

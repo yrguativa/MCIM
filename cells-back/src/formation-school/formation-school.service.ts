@@ -96,6 +96,8 @@ export class FormationSchoolService {
       teacherId: course.teacherId,
       classroomId: course.classroomId,
       scheduleId: course.scheduleId,
+      type: course.type,
+      requiredClasses: course.requiredClasses,
       qrCode: course.qrCode,
       qrExpiration: course.qrExpiration,
       createdUser: course.createdUser,

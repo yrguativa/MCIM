@@ -21,6 +21,12 @@ export class CourseEntity {
   cycleId: string;
 
   @Field({ nullable: true })
+  type?: 'vision' | 'doctrina';
+
+  @Field({ nullable: true })
+  requiredClasses?: number;
+
+  @Field({ nullable: true })
   qrCode?: string;
 
   @Field({ nullable: true })

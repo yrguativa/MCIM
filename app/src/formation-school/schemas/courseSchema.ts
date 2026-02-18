@@ -24,6 +24,11 @@ export const CourseSchema = z.object({
         .min(1, {
             message: "El ciclo es obligatorio.",
         }),
+    type: z.enum(['vision', 'doctrina'])
+        .optional(),
+    requiredClasses: z.number()
+        .min(0)
+        .optional(),
     qrCode: z.string()
         .optional(),
     qrExpiration: z.date()
