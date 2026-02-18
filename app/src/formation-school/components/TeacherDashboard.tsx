@@ -10,20 +10,20 @@ import { AttendanceList } from './AttendanceList';
 
 export const TeacherDashboard: React.FC = () => {
   const userState = useAuthStore(state => state.user);
-  const { courseClasses, getCourseClassesByTeacher, getEnrollmentsByCourseClass, enrollments, getAttendanceByCourseClass, attendances } = useFormationSchoolStore();
-  const [selectedClass, setSelectedClass] = useState<string | null>(null);
+  const { courses, getCoursesByTeacher, getEnrollmentsByCourse, getAttendanceByCourse, enrollments, attendances } = useFormationSchoolStore();
+  const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
   const [showQR, setShowQR] = useState<string | null>(null);
   
   useEffect(() => {
     if (userState?.id) {
-      getCourseClassesByTeacher(userState.id);
+      getCoursesByTeacher(userState.id);
     }
   }, [userState?.id]);
   
-  const handleViewAttendance = async (classId: string) => {
-    setSelectedClass(classId);
-    await getEnrollmentsByCourseClass(classId);
-    await getAttendanceByCourseClass(classId);
+  const handleViewAttendance = async (courseId: string) => {
+    setSelectedCourse(courseId);
+    await getEnrollmentsByCourse(courseId);
+    await getAttendanceByCourse(courseId);
   };
 
   const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
@@ -35,29 +35,29 @@ export const TeacherDashboard: React.FC = () => {
       </div>
       
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {courseClasses.map((courseClass) => (
-          <Card key={courseClass.id} className="hover:shadow-lg transition-shadow">
+        {courses.map((course) => (
+          <Card key={course.id} className="hover:shadow-lg transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                {courseClass.levelId?.name || 'Clase'}
+                {course.levelId?.name || 'Curso'}
               </CardTitle>
-              <Badge variant={courseClass.qrExpiration && new Date(courseClass.qrExpiration) > new Date() ? 'default' : 'secondary'}>
-                {courseClass.qrExpiration && new Date(courseClass.qrExpiration) > new Date() ? 'QR Activo' : 'QR Inactivo'}
+              <Badge variant={course.qrExpiration && new Date(course.qrExpiration) > new Date() ? 'default' : 'secondary'}>
+                {course.qrExpiration && new Date(course.qrExpiration) > new Date() ? 'QR Activo' : 'QR Inactivo'}
               </Badge>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
                 <p className="text-sm text-muted-foreground">
-                  {courseClass.scheduleId ? `${days[courseClass.scheduleId.dayOfWeek]} ${courseClass.scheduleId.startTime}-${courseClass.scheduleId.endTime}` : 'Horario no definido'}
+                  {course.scheduleId ? `${days[course.scheduleId.dayOfWeek]} ${course.scheduleId.startTime}-${course.scheduleId.endTime}` : 'Horario no definido'}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  {courseClass.classroomId?.name || 'Salón no asignado'}
+                  {course.classroomId?.name || 'Salón no asignado'}
                 </p>
                 <div className="flex gap-2 pt-2">
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setShowQR(courseClass.id)}
+                    onClick={() => setShowQR(course.id)}
                   >
                     <QrCode className="mr-2 h-4 w-4" />
                     Generar QR
@@ -65,7 +65,7 @@ export const TeacherDashboard: React.FC = () => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => handleViewAttendance(courseClass.id)}
+                    onClick={() => handleViewAttendance(course.id)}
                   >
                     <Eye className="mr-2 h-4 w-4" />
                     Ver
@@ -77,28 +77,28 @@ export const TeacherDashboard: React.FC = () => {
         ))}
       </div>
       
-      {courseClasses.length === 0 && (
+      {courses.length === 0 && (
         <Card>
           <CardContent className="py-10 text-center">
             <Users className="mx-auto h-12 w-12 text-muted-foreground" />
-            <p className="mt-4 text-muted-foreground">No tienes clases asignadas</p>
+            <p className="mt-4 text-muted-foreground">No tienes cursos asignados</p>
           </CardContent>
         </Card>
       )}
       
       {showQR && (
         <QRGenerator
-          courseClassId={showQR}
+          courseId={showQR}
           onClose={() => setShowQR(null)}
         />
       )}
       
-      {selectedClass && (
+      {selectedCourse && (
         <AttendanceList
-          courseClassId={selectedClass}
+          courseId={selectedCourse}
           enrollments={enrollments}
           attendances={attendances}
-          onClose={() => setSelectedClass(null)}
+          onClose={() => setSelectedCourse(null)}
         />
       )}
     </div>

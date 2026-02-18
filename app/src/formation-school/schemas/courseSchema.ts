@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const CourseClassSchema = z.object({
+export const CourseSchema = z.object({
     id: z.string()
         .min(1)
         .default(crypto.randomUUID()),
@@ -33,4 +33,4 @@ export const CourseClassSchema = z.object({
     createdDate: z.date(),
 })
 
-export type CourseClassInput = z.infer<typeof CourseClassSchema>;
+export type CourseInput = z.infer<typeof CourseSchema>;

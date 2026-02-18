@@ -5,14 +5,14 @@ import { Badge } from '@/components/ui/badge';
 import { CheckCircle, XCircle } from 'lucide-react';
 
 interface AttendanceListProps {
-  courseClassId: string;
+  courseId: string;
   enrollments: Record<string, unknown>[];
   attendances: Record<string, unknown>[];
   onClose: () => void;
 }
 
 export const AttendanceList: React.FC<AttendanceListProps> = ({
-  courseClassId,
+  courseId,
   enrollments,
   attendances,
   onClose,
@@ -60,7 +60,7 @@ export const AttendanceList: React.FC<AttendanceListProps> = ({
                       ) : (
                         <XCircle className="h-4 w-4 text-red-500" />
                       )}
-                      {attendedCount} / {attendances.filter(a => a.courseClassId === courseClassId).length || 0}
+                      {attendedCount} / {attendances.filter(a => a.courseClassId === courseId).length || 0}
                     </div>
                   </TableCell>
                 </TableRow>

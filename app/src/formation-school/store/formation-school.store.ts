@@ -1,14 +1,14 @@
 import { create, StateCreator } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { FormationSchoolService } from '../services/formation-school.services';
-import { Cycle, Level, Classroom, Schedule, CourseClass, StudentEnrollment, Attendance } from '../models';
+import { Cycle, Level, Classroom, Schedule, Course, StudentEnrollment, Attendance } from '../models';
 
 interface FormationSchoolState {
   cycles: Cycle[];
   levels: Level[];
   classrooms: Classroom[];
   schedules: Schedule[];
-  courseClasses: CourseClass[];
+  courses: Course[];
   enrollments: StudentEnrollment[];
   attendances: Attendance[];
   activeCycle: Cycle | null;
@@ -26,18 +26,18 @@ interface FormationSchoolState {
   getSchedules: () => Promise<void>;
   createSchedule: (schedule: Partial<Schedule>) => Promise<boolean>;
   
-  getCourseClassesByCycle: (cycleId: string) => Promise<void>;
-  getCourseClassesByTeacher: (teacherId: string) => Promise<void>;
-  createCourseClass: (courseClass: Partial<CourseClass>) => Promise<boolean>;
-  generateQRCode: (courseClassId: string) => Promise<{ id: string; qrCode: string; qrExpiration: Date }>;
+  getCoursesByCycle: (cycleId: string) => Promise<void>;
+  getCoursesByTeacher: (teacherId: string) => Promise<void>;
+  createCourse: (course: Partial<Course>) => Promise<boolean>;
+  generateQRCode: (courseId: string) => Promise<{ id: string; qrCode: string; qrExpiration: Date }>;
   
-  getEnrollmentsByCourseClass: (courseClassId: string) => Promise<void>;
+  getEnrollmentsByCourse: (courseId: string) => Promise<void>;
   getEnrollmentsByStudent: (studentId: string) => Promise<void>;
   enrollStudent: (enrollment: Partial<StudentEnrollment>) => Promise<boolean>;
   updateEnrollment: (enrollment: Partial<StudentEnrollment>) => Promise<boolean>;
   calculateFinalGrade: (enrollmentId: string, requiredClasses: number) => Promise<number>;
   
-  getAttendanceByCourseClass: (courseClassId: string) => Promise<void>;
+  getAttendanceByCourse: (courseId: string) => Promise<void>;
   getAttendanceByEnrollment: (enrollmentId: string) => Promise<void>;
   createAttendance: (attendance: Partial<Attendance>) => Promise<boolean>;
 }
@@ -47,7 +47,7 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
   levels: [],
   classrooms: [],
   schedules: [],
-  courseClasses: [],
+  courses: [],
   enrollments: [],
   attendances: [],
   activeCycle: null,
@@ -73,7 +73,7 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
     }
   },
 
-  getLevelsByCycle: async (cycleId) => {
+  getLevelsByCycle: async (cycleId: string) => {
     const data = await FormationSchoolService.getLevelsByCycle(cycleId);
     set({ levels: data.levelsByCycle });
   },
@@ -121,38 +121,38 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
     }
   },
 
-  getCourseClassesByCycle: async (cycleId) => {
-    const data = await FormationSchoolService.getCourseClassesByCycle(cycleId);
-    set({ courseClasses: data.courseClassesByCycle });
+  getCoursesByCycle: async (cycleId: string) => {
+    const data = await FormationSchoolService.getCoursesByCycle(cycleId);
+    set({ courses: data.coursesByCycle });
   },
 
-  getCourseClassesByTeacher: async (teacherId) => {
-    const data = await FormationSchoolService.getCourseClassesByTeacher(teacherId);
-    set({ courseClasses: data.courseClassesByTeacher });
+  getCoursesByTeacher: async (teacherId: string) => {
+    const data = await FormationSchoolService.getCoursesByTeacher(teacherId);
+    set({ courses: data.coursesByTeacher });
   },
 
-  createCourseClass: async (courseClass) => {
+  createCourse: async (course) => {
     try {
-      await FormationSchoolService.createCourseClass(courseClass);
-      await get().getCourseClassesByCycle(courseClass.cycleId!);
+      await FormationSchoolService.createCourse(course);
+      await get().getCoursesByCycle(course.cycleId!);
       return true;
     } catch (error) {
-      console.error('Error creating course class:', error);
+      console.error('Error creating course:', error);
       return false;
     }
   },
 
-  generateQRCode: async (courseClassId) => {
-    const data = await FormationSchoolService.generateQRCode(courseClassId);
+  generateQRCode: async (courseId: string) => {
+    const data = await FormationSchoolService.generateQRCode(courseId);
     return data.generateQRCode;
   },
 
-  getEnrollmentsByCourseClass: async (courseClassId) => {
-    const data = await FormationSchoolService.getEnrollmentsByCourseClass(courseClassId);
-    set({ enrollments: data.enrollmentsByCourseClass });
+  getEnrollmentsByCourse: async (courseId: string) => {
+    const data = await FormationSchoolService.getEnrollmentsByCourse(courseId);
+    set({ enrollments: data.enrollmentsByCourse });
   },
 
-  getEnrollmentsByStudent: async (studentId) => {
+  getEnrollmentsByStudent: async (studentId: string) => {
     const data = await FormationSchoolService.getEnrollmentsByStudent(studentId);
     set({ enrollments: data.enrollmentsByStudent });
   },
@@ -160,7 +160,7 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
   enrollStudent: async (enrollment) => {
     try {
       await FormationSchoolService.enrollStudent(enrollment);
-      await get().getEnrollmentsByCourseClass(enrollment.courseClassId!);
+      await get().getEnrollmentsByCourse(enrollment.courseClassId!);
       return true;
     } catch (error) {
       console.error('Error enrolling student:', error);
@@ -182,12 +182,12 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
     return FormationSchoolService.calculateFinalGrade(enrollmentId, requiredClasses);
   },
 
-  getAttendanceByCourseClass: async (courseClassId) => {
-    const data = await FormationSchoolService.getAttendanceByCourseClass(courseClassId);
-    set({ attendances: data.attendanceByCourseClass });
+  getAttendanceByCourse: async (courseId: string) => {
+    const data = await FormationSchoolService.getAttendanceByCourse(courseId);
+    set({ attendances: data.attendanceByCourse });
   },
 
-  getAttendanceByEnrollment: async (enrollmentId) => {
+  getAttendanceByEnrollment: async (enrollmentId: string) => {
     const data = await FormationSchoolService.getAttendanceByEnrollment(enrollmentId);
     set({ attendances: data.attendanceByEnrollment });
   },
@@ -195,7 +195,7 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
   createAttendance: async (attendance) => {
     try {
       await FormationSchoolService.createAttendance(attendance);
-      await get().getAttendanceByCourseClass(attendance.courseClassId!);
+      await get().getAttendanceByCourse(attendance.courseClassId!);
       return true;
     } catch (error) {
       console.error('Error creating attendance:', error);

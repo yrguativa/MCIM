@@ -8,22 +8,22 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command';
 import { CaretSortIcon } from '@radix-ui/react-icons';
-import { CourseClassInput, CourseClassSchema } from '../schemas/courseClassSchema';
+import { CourseInput, CourseSchema } from '../schemas/courseSchema';
 import { useFormationSchoolStore } from '../store/formation-school.store';
 import { useAuthStore } from '@/src/app/stores';
 import { useDiscipleStore } from '@/src/disciples/store/disciple.store';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
-interface CourseClassFormProps {
+interface CourseFormProps {
   cycleId: string;
   onSuccess?: () => void;
 }
 
-export const CourseClassForm: React.FC<CourseClassFormProps> = ({ cycleId, onSuccess }) => {
+export const CourseForm: React.FC<CourseFormProps> = ({ cycleId, onSuccess }) => {
   const userState = useAuthStore(state => state.user);
   const { searchByName, searchResults } = useDiscipleStore();
-  const { levels, getLevelsByCycle, classrooms, getClassrooms, schedules, getSchedules, createCourseClass } = useFormationSchoolStore();
+  const { levels, getLevelsByCycle, classrooms, getClassrooms, schedules, getSchedules, createCourse } = useFormationSchoolStore();
   
   const [teacherSearchOpen, setTeacherSearchOpen] = useState(false);
   const [selectedTeacher, setSelectedTeacher] = useState<{id: string, name: string} | null>(null);
@@ -34,8 +34,8 @@ export const CourseClassForm: React.FC<CourseClassFormProps> = ({ cycleId, onSuc
     getSchedules();
   }, [cycleId]);
   
-  const form = useForm<CourseClassInput>({
-    resolver: zodResolver(CourseClassSchema),
+  const form = useForm<CourseInput>({
+    resolver: zodResolver(CourseSchema),
     defaultValues: {
       id: crypto.randomUUID(),
       levelId: '',
@@ -48,16 +48,16 @@ export const CourseClassForm: React.FC<CourseClassFormProps> = ({ cycleId, onSuc
     },
   });
 
-  async function onSubmit(data: CourseClassInput) {
-    const success = await createCourseClass(data);
+  async function onSubmit(data: CourseInput) {
+    const success = await createCourse(data);
     
     if (success) {
-      toast.success('Clase creada exitosamente');
+      toast.success('Curso creado exitosamente');
       form.reset({ ...form.getValues(), id: crypto.randomUUID() });
       setSelectedTeacher(null);
       onSuccess?.();
     } else {
-      toast.error('Error al crear la clase. Verifica que no haya conflicto de horario.');
+      toast.error('Error al crear el curso. Verifica que no haya conflicto de horario.');
     }
   }
 
@@ -193,7 +193,7 @@ export const CourseClassForm: React.FC<CourseClassFormProps> = ({ cycleId, onSuc
         
         <Button type="submit">
           <Save className="mr-2 h-4 w-4" />
-          Crear Clase
+          Crear Curso
         </Button>
       </form>
     </Form>

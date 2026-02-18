@@ -40,38 +40,38 @@ const getStudentName = (studentId: StudentIdType): string => {
 export const ScanAttendance: React.FC = () => {
   const [searchParams] = useSearchParams();
   const userState = useAuthStore(state => state.user);
-  const { createAttendance, getEnrollmentsByCourseClass, enrollments, getAttendanceByCourseClass, attendances } = useFormationSchoolStore();
+  const { createAttendance, getEnrollmentsByCourse, enrollments, getAttendanceByCourse, attendances } = useFormationSchoolStore();
   
   const [scanResult, setScanResult] = useState<'success' | 'error' | 'expired' | null>(null);
   const [lastStudent, setLastStudent] = useState<string | null>(null);
   const [mode, setMode] = useState<'manual' | 'scan'>('manual');
   
-  const courseClassId = searchParams.get('classId');
+  const courseId = searchParams.get('courseId');
   
   useEffect(() => {
-    if (courseClassId) {
-      getEnrollmentsByCourseClass(courseClassId);
-      getAttendanceByCourseClass(courseClassId);
+    if (courseId) {
+      getEnrollmentsByCourse(courseId);
+      getAttendanceByCourse(courseId);
     }
-  }, [courseClassId]);
+  }, [courseId]);
   
   const handleManualAttendance = async (studentId: string) => {
-    if (!courseClassId) {
-      toast.error('No se ha proporcionado el ID de la clase');
+    if (!courseId) {
+      toast.error('No se ha proporcionado el ID del curso');
       return;
     }
     
     const enrollment = enrollments.find(e => getStudentId(e.studentId) === studentId);
     
     if (!enrollment) {
-      toast.error('El estudiante no está inscrito en esta clase');
+      toast.error('El estudiante no está inscrito en este curso');
       setScanResult('error');
       setLastStudent(studentId);
       return;
     }
     
     const existingAttendance = attendances.find(
-      a => a.studentEnrollmentId === enrollment.id && a.courseClassId === courseClassId
+      a => a.studentEnrollmentId === enrollment.id && a.courseClassId === courseId
     );
     
     if (existingAttendance) {
@@ -83,7 +83,7 @@ export const ScanAttendance: React.FC = () => {
     try {
       await createAttendance({
         studentEnrollmentId: enrollment.id,
-        courseClassId,
+        courseClassId: courseId,
         attended: true,
         attendanceDate: new Date(),
         createdUser: userState?.id || '',
@@ -95,7 +95,7 @@ export const ScanAttendance: React.FC = () => {
       setLastStudent(studentName);
       toast.success(`Asistencia registrada para ${studentName}`);
       
-      await getAttendanceByCourseClass(courseClassId);
+      await getAttendanceByCourse(courseId);
     } catch {
       setScanResult('error');
       toast.error('Error al registrar asistencia');

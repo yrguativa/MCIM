@@ -122,7 +122,7 @@ export const CycleForm: React.FC<CycleFormProps> = ({ onSuccess }) => {
           name="requiredClasses"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Clases Requeridas</FormLabel>
+              <FormLabel>Cursos Requeridos</FormLabel>
               <FormControl>
                 <Input type="number" min="1" {...field} />
               </FormControl>

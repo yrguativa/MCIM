@@ -58,7 +58,7 @@ export const StudentProgress: React.FC = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <p>Clases requeridas para aprobar: {activeCycle.requiredClasses}</p>
+            <p>Cursos requeridos para aprobar: {activeCycle.requiredClasses}</p>
           </CardContent>
         </Card>
       )}

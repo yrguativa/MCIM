@@ -6,22 +6,22 @@ import { useFormationSchoolStore } from '../store/formation-school.store';
 import { toast } from 'sonner';
 
 interface QRGeneratorProps {
-  courseClassId: string;
+  courseId: string;
   onClose: () => void;
 }
 
-export const QRGenerator: React.FC<QRGeneratorProps> = ({ courseClassId, onClose }) => {
-  const { generateQRCode, courseClasses } = useFormationSchoolStore();
+export const QRGenerator: React.FC<QRGeneratorProps> = ({ courseId, onClose }) => {
+  const { generateQRCode, courses } = useFormationSchoolStore();
   const [qrCode, setQrCode] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [expiration, setExpiration] = useState<Date | null>(null);
   
-  const courseClass = courseClasses.find(c => c.id === courseClassId);
+  const course = courses.find(c => c.id === courseId);
   
   const handleGenerateQR = async () => {
     setLoading(true);
     try {
-      const result = await generateQRCode(courseClassId);
+      const result = await generateQRCode(courseId);
       setQrCode(result.qrCode);
       setExpiration(new Date(result.qrExpiration));
       toast.success('QR generado exitosamente');
@@ -33,13 +33,13 @@ export const QRGenerator: React.FC<QRGeneratorProps> = ({ courseClassId, onClose
   };
   
   useEffect(() => {
-    if (courseClass?.qrCode && courseClass?.qrExpiration) {
-      setQrCode(courseClass.qrCode);
-      setExpiration(new Date(courseClass.qrExpiration));
+    if (course?.qrCode && course?.qrExpiration) {
+      setQrCode(course.qrCode);
+      setExpiration(new Date(course.qrExpiration));
     } else {
       handleGenerateQR();
     }
-  }, [courseClassId]);
+  }, [courseId]);
 
   return (
     <Dialog open onOpenChange={onClose}>

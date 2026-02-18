@@ -61,29 +61,29 @@ export const FormationSchoolService = {
     return graphqlRequest(query, { input });
   },
 
-  async getCourseClassesByCycle(cycleId: string) {
-    const query = `query CourseClassesByCycle($cycleId: ID!) { courseClassesByCycle(cycleId: $cycleId) { id levelId teacherId classroomId scheduleId cycleId qrCode qrExpiration } }`;
+  async getCoursesByCycle(cycleId: string) {
+    const query = `query CoursesByCycle($cycleId: ID!) { coursesByCycle(cycleId: $cycleId) { id levelId teacherId classroomId scheduleId cycleId qrCode qrExpiration } }`;
     return graphqlRequest(query, { cycleId });
   },
   
-  async getCourseClassesByTeacher(teacherId: string) {
-    const query = `query CourseClassesByTeacher($teacherId: ID!) { courseClassesByTeacher(teacherId: $teacherId) { id levelId teacherId classroomId scheduleId cycleId qrCode qrExpiration } }`;
+  async getCoursesByTeacher(teacherId: string) {
+    const query = `query CoursesByTeacher($teacherId: ID!) { coursesByTeacher(teacherId: $teacherId) { id levelId teacherId classroomId scheduleId cycleId qrCode qrExpiration } }`;
     return graphqlRequest(query, { teacherId });
   },
   
-  async createCourseClass(input: Record<string, unknown>) {
-    const query = `mutation CreateCourseClass($input: CreateCourseClassInput!) { createCourseClass(input: $input) { id } }`;
+  async createCourse(input: Record<string, unknown>) {
+    const query = `mutation CreateCourse($input: CreateCourseInput!) { createCourse(input: $input) { id } }`;
     return graphqlRequest(query, { input });
   },
   
-  async generateQRCode(courseClassId: string) {
-    const query = `mutation GenerateQRCode($courseClassId: ID!) { generateQRCode(courseClassId: $courseClassId) { id qrCode qrExpiration } }`;
-    return graphqlRequest(query, { courseClassId });
+  async generateQRCode(courseId: string) {
+    const query = `mutation GenerateQRCode($courseId: ID!) { generateQRCode(courseId: $courseId) { id qrCode qrExpiration } }`;
+    return graphqlRequest(query, { courseId });
   },
 
-  async getEnrollmentsByCourseClass(courseClassId: string) {
-    const query = `query EnrollmentsByCourseClass($courseClassId: ID!) { enrollmentsByCourseClass(courseClassId: $courseClassId) { id studentId courseClassId enrollmentDate status finalGrade } }`;
-    return graphqlRequest(query, { courseClassId });
+  async getEnrollmentsByCourse(courseId: string) {
+    const query = `query EnrollmentsByCourse($courseId: ID!) { enrollmentsByCourse(courseId: $courseId) { id studentId courseClassId enrollmentDate status finalGrade } }`;
+    return graphqlRequest(query, { courseId });
   },
   
   async getEnrollmentsByStudent(studentId: string) {
@@ -106,9 +106,9 @@ export const FormationSchoolService = {
     return graphqlRequest(query, { enrollmentId, cycleRequiredClasses });
   },
 
-  async getAttendanceByCourseClass(courseClassId: string) {
-    const query = `query AttendanceByCourseClass($courseClassId: ID!) { attendanceByCourseClass(courseClassId: $courseClassId) { id studentEnrollmentId courseClassId attended attendanceDate notes } }`;
-    return graphqlRequest(query, { courseClassId });
+  async getAttendanceByCourse(courseId: string) {
+    const query = `query AttendanceByCourse($courseId: ID!) { attendanceByCourse(courseId: $courseId) { id studentEnrollmentId courseClassId attended attendanceDate notes } }`;
+    return graphqlRequest(query, { courseId });
   },
   
   async getAttendanceByEnrollment(enrollmentId: string) {

@@ -6,11 +6,11 @@ import { CycleForm } from './CycleForm';
 import { LevelForm } from './LevelForm';
 import { ClassroomForm } from './ClassroomForm';
 import { ScheduleForm } from './ScheduleForm';
-import { CourseClassForm } from './CourseClassForm';
+import { CourseForm } from './CourseForm';
 import { useFormationSchoolStore } from '../store/formation-school.store';
 
 export const AdminDashboard: React.FC = () => {
-  const { activeCycle, getActiveCycle, getCourseClassesByCycle } = useFormationSchoolStore();
+  const { activeCycle, getActiveCycle, getCoursesByCycle } = useFormationSchoolStore();
   const [selectedCycleId, setSelectedCycleId] = useState<string>('');
   
   useEffect(() => {
@@ -20,7 +20,7 @@ export const AdminDashboard: React.FC = () => {
   useEffect(() => {
     if (activeCycle) {
       setSelectedCycleId(activeCycle.id);
-      getCourseClassesByCycle(activeCycle.id);
+      getCoursesByCycle(activeCycle.id);
     }
   }, [activeCycle]);
 
@@ -39,7 +39,7 @@ export const AdminDashboard: React.FC = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <p>Clases requeridas: {activeCycle.requiredClasses}</p>
+            <p>Cursos requeridos: {activeCycle.requiredClasses}</p>
           </CardContent>
         </Card>
       )}
@@ -50,7 +50,7 @@ export const AdminDashboard: React.FC = () => {
           <TabsTrigger value="levels">Niveles</TabsTrigger>
           <TabsTrigger value="classrooms">Salones</TabsTrigger>
           <TabsTrigger value="schedules">Horarios</TabsTrigger>
-          <TabsTrigger value="classes">Clases</TabsTrigger>
+          <TabsTrigger value="courses">Cursos</TabsTrigger>
         </TabsList>
         
         <TabsContent value="cycles" className="space-y-4">
@@ -113,17 +113,17 @@ export const AdminDashboard: React.FC = () => {
           </Card>
         </TabsContent>
         
-        <TabsContent value="classes" className="space-y-4">
+        <TabsContent value="courses" className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5" />
-                Crear Clase
+                Crear Curso
               </CardTitle>
             </CardHeader>
             <CardContent>
               {selectedCycleId ? (
-                <CourseClassForm cycleId={selectedCycleId} />
+                <CourseForm cycleId={selectedCycleId} />
               ) : (
                 <p>Selecciona un ciclo activo primero</p>
               )}

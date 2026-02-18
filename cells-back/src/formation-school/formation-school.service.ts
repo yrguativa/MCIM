@@ -5,7 +5,7 @@ import { Cycle } from './schemas/cycle.schema';
 import { Level } from './schemas/level.schema';
 import { Classroom } from './schemas/classroom.schema';
 import { Schedule } from './schemas/schedule.schema';
-import { CourseClass } from './schemas/course-class.schema';
+import { Course } from './schemas/course.schema';
 import { StudentEnrollment } from './schemas/student-enrollment.schema';
 import { TeacherAssignment } from './schemas/teacher-assignment.schema';
 import { Attendance } from './schemas/attendance.schema';
@@ -13,14 +13,14 @@ import { CreateCycleInput } from './dto/create-cycle.input';
 import { CreateLevelInput } from './dto/create-level.input';
 import { CreateClassroomInput } from './dto/create-classroom.input';
 import { CreateScheduleInput } from './dto/create-schedule.input';
-import { CreateCourseClassInput } from './dto/create-course-class.input';
+import { CreateCourseInput } from './dto/create-course.input';
 import { EnrollStudentInput, UpdateEnrollmentInput } from './dto/enroll-student.input';
 import { CreateAttendanceInput } from './dto/create-attendance.input';
 import { CycleEntity } from './entities/cycle.entity';
 import { LevelEntity } from './entities/level.entity';
 import { ClassroomEntity } from './entities/classroom.entity';
 import { ScheduleEntity } from './entities/schedule.entity';
-import { CourseClassEntity } from './entities/course-class.entity';
+import { CourseEntity } from './entities/course.entity';
 import { StudentEnrollmentEntity } from './entities/student-enrollment.entity';
 import { AttendanceEntity } from './entities/attendance.entity';
 import * as QRCode from 'qrcode';
@@ -32,7 +32,7 @@ export class FormationSchoolService {
     @InjectModel(Level.name) private levelModel: Model<Level>,
     @InjectModel(Classroom.name) private classroomModel: Model<Classroom>,
     @InjectModel(Schedule.name) private scheduleModel: Model<Schedule>,
-    @InjectModel(CourseClass.name) private courseClassModel: Model<CourseClass>,
+    @InjectModel(Course.name) private courseModel: Model<Course>,
     @InjectModel(StudentEnrollment.name) private enrollmentModel: Model<StudentEnrollment>,
     @InjectModel(TeacherAssignment.name) private teacherAssignmentModel: Model<TeacherAssignment>,
     @InjectModel(Attendance.name) private attendanceModel: Model<Attendance>,
@@ -87,18 +87,18 @@ export class FormationSchoolService {
     };
   }
 
-  private toCourseClassEntity(courseClass: CourseClass & { _id: unknown }): CourseClassEntity {
+  private toCourseEntity(course: Course & { _id: unknown }): CourseEntity {
     return {
-      id: courseClass._id?.toString() ?? '',
-      cycleId: courseClass.cycleId,
-      levelId: courseClass.levelId,
-      teacherId: courseClass.teacherId,
-      classroomId: courseClass.classroomId,
-      scheduleId: courseClass.scheduleId,
-      qrCode: courseClass.qrCode,
-      qrExpiration: courseClass.qrExpiration,
-      createdUser: courseClass.createdUser,
-      createdDate: courseClass.createdDate,
+      id: course._id?.toString() ?? '',
+      cycleId: course.cycleId,
+      levelId: course.levelId,
+      teacherId: course.teacherId,
+      classroomId: course.classroomId,
+      scheduleId: course.scheduleId,
+      qrCode: course.qrCode,
+      qrExpiration: course.qrExpiration,
+      createdUser: course.createdUser,
+      createdDate: course.createdDate,
     };
   }
 
@@ -183,7 +183,7 @@ export class FormationSchoolService {
     return schedules.map(s => this.toScheduleEntity(s));
   }
 
-  async createCourseClass(input: CreateCourseClassInput): Promise<CourseClassEntity> {
+  async createCourse(input: CreateCourseInput): Promise<CourseEntity> {
     const hasConflict = await this.checkScheduleConflict(
       input.classroomId,
       input.scheduleId,
@@ -192,46 +192,46 @@ export class FormationSchoolService {
       throw new BadRequestException('Ya existe una clase en este salón con este horario');
     }
     
-    const courseClass = new this.courseClassModel({ ...input, createdDate: new Date() });
-    const saved = await courseClass.save();
-    return this.toCourseClassEntity(saved);
+    const course = new this.courseModel({ ...input, createdDate: new Date() });
+    const saved = await course.save();
+    return this.toCourseEntity(saved);
   }
 
   async checkScheduleConflict(classroomId: string, scheduleId: string): Promise<boolean> {
-    const existing = await this.courseClassModel.findOne({
+    const existing = await this.courseModel.findOne({
       classroomId,
       scheduleId,
     }).exec();
     return !!existing;
   }
 
-  async findCourseClassesByCycle(cycleId: string): Promise<CourseClassEntity[]> {
-    const courseClasses = await this.courseClassModel.find({ cycleId }).populate('levelId teacherId classroomId scheduleId').exec();
-    return courseClasses.map(c => this.toCourseClassEntity(c));
+  async findCoursesByCycle(cycleId: string): Promise<CourseEntity[]> {
+    const courses = await this.courseModel.find({ cycleId }).populate('levelId teacherId classroomId scheduleId').exec();
+    return courses.map(c => this.toCourseEntity(c));
   }
 
-  async findCourseClassesByTeacher(teacherId: string): Promise<CourseClassEntity[]> {
-    const courseClasses = await this.courseClassModel.find({ teacherId }).populate('levelId classroomId scheduleId cycleId').exec();
-    return courseClasses.map(c => this.toCourseClassEntity(c));
+  async findCoursesByTeacher(teacherId: string): Promise<CourseEntity[]> {
+    const courses = await this.courseModel.find({ teacherId }).populate('levelId classroomId scheduleId cycleId').exec();
+    return courses.map(c => this.toCourseEntity(c));
   }
 
-  async generateQRCode(courseClassId: string): Promise<CourseClassEntity> {
+  async generateQRCode(courseId: string): Promise<CourseEntity> {
     const qrData = JSON.stringify({
-      courseClassId,
+      courseId,
       expiration: Date.now() + 15 * 60 * 1000,
     });
     
     const qrCode = await QRCode.toDataURL(qrData);
     const qrExpiration = new Date(Date.now() + 15 * 60 * 1000);
     
-    const updated = await this.courseClassModel.findByIdAndUpdate(
-      courseClassId,
+    const updated = await this.courseModel.findByIdAndUpdate(
+      courseId,
       { qrCode, qrExpiration },
       { new: true },
     ).exec();
     
-    if (!updated) throw new NotFoundException(`CourseClass ${courseClassId} not found`);
-    return this.toCourseClassEntity(updated);
+    if (!updated) throw new NotFoundException(`Course ${courseId} not found`);
+    return this.toCourseEntity(updated);
   }
 
   async enrollStudent(input: EnrollStudentInput): Promise<StudentEnrollmentEntity> {
@@ -244,8 +244,8 @@ export class FormationSchoolService {
     return this.toStudentEnrollmentEntity(saved);
   }
 
-  async findEnrollmentsByCourseClass(courseClassId: string): Promise<StudentEnrollmentEntity[]> {
-    const enrollments = await this.enrollmentModel.find({ courseClassId }).populate('studentId').exec();
+  async findEnrollmentsByCourse(courseId: string): Promise<StudentEnrollmentEntity[]> {
+    const enrollments = await this.enrollmentModel.find({ courseClassId: courseId }).populate('studentId').exec();
     return enrollments.map(e => this.toStudentEnrollmentEntity(e));
   }
 
@@ -310,8 +310,8 @@ export class FormationSchoolService {
     return this.toAttendanceEntity(saved);
   }
 
-  async findAttendanceByCourseClass(courseClassId: string): Promise<AttendanceEntity[]> {
-    const attendances = await this.attendanceModel.find({ courseClassId })
+  async findAttendanceByCourse(courseId: string): Promise<AttendanceEntity[]> {
+    const attendances = await this.attendanceModel.find({ courseClassId: courseId })
       .populate('studentEnrollmentId')
       .exec();
     return attendances.map(a => this.toAttendanceEntity(a));

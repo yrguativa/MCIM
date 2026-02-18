@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
 @Schema()
-export class CourseClass extends Document {
+export class Course extends Document {
   @Prop({ required: true })
   levelId: string;
 
@@ -31,4 +31,4 @@ export class CourseClass extends Document {
   createdDate: Date;
 }
 
-export const CourseClassSchema = SchemaFactory.createForClass(CourseClass);
+export const CourseSchema = SchemaFactory.createForClass(Course);

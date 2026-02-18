@@ -109,6 +109,82 @@ type User {
   exampleField: Int!
 }
 
+type CycleEntity {
+  id: ID!
+  name: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  requiredClasses: Float!
+  active: Boolean!
+  createdUser: String!
+  createdDate: DateTime!
+  updatedUser: String
+  updatedDate: DateTime
+}
+
+type LevelEntity {
+  id: ID!
+  name: String!
+  description: String
+  order: Float!
+  cycleId: ID!
+  createdUser: String!
+  createdDate: DateTime!
+}
+
+type ClassroomEntity {
+  id: ID!
+  name: String!
+  capacity: Float!
+  location: String!
+  createdUser: String!
+  createdDate: DateTime!
+}
+
+type ScheduleEntity {
+  id: ID!
+  dayOfWeek: Float!
+  startTime: String!
+  endTime: String!
+  createdUser: String!
+  createdDate: DateTime!
+}
+
+type CourseEntity {
+  id: ID!
+  levelId: ID!
+  teacherId: ID!
+  classroomId: ID!
+  scheduleId: ID!
+  cycleId: ID!
+  qrCode: String
+  qrExpiration: DateTime
+  createdUser: String!
+  createdDate: DateTime!
+}
+
+type StudentEnrollmentEntity {
+  id: ID!
+  studentId: ID!
+  courseClassId: ID!
+  enrollmentDate: DateTime!
+  status: String!
+  finalGrade: Float
+  createdUser: String!
+  createdDate: DateTime!
+}
+
+type AttendanceEntity {
+  id: ID!
+  studentEnrollmentId: ID!
+  courseClassId: ID!
+  attended: Boolean!
+  attendanceDate: DateTime!
+  notes: String
+  createdUser: String!
+  createdDate: DateTime!
+}
+
 type Query {
   me: Users!
 
@@ -127,6 +203,18 @@ type Query {
   subMinistries(ministryId: ID!): [Ministry!]!
   users: [User!]!
   user(id: ID!): User!
+  cycles: [CycleEntity!]!
+  cycle(id: ID!): CycleEntity!
+  activeCycle: CycleEntity!
+  levelsByCycle(cycleId: ID!): [LevelEntity!]!
+  classrooms: [ClassroomEntity!]!
+  schedules: [ScheduleEntity!]!
+  coursesByCycle(cycleId: ID!): [CourseEntity!]!
+  coursesByTeacher(teacherId: ID!): [CourseEntity!]!
+  enrollmentsByCourse(courseId: ID!): [StudentEnrollmentEntity!]!
+  enrollmentsByStudent(studentId: ID!): [StudentEnrollmentEntity!]!
+  attendanceByCourse(courseId: ID!): [AttendanceEntity!]!
+  attendanceByEnrollment(enrollmentId: ID!): [AttendanceEntity!]!
 }
 
 type Mutation {
@@ -145,6 +233,16 @@ type Mutation {
   createMinistry(ministry: CreateMinistryInput!): Ministry!
   updateMinistry(ministry: UpdateMinistryInput!): Ministry!
   deleteMinistry(id: ID!): Boolean!
+  createCycle(input: CreateCycleInput!): CycleEntity!
+  createLevel(input: CreateLevelInput!): LevelEntity!
+  createClassroom(input: CreateClassroomInput!): ClassroomEntity!
+  createSchedule(input: CreateScheduleInput!): ScheduleEntity!
+  createCourse(input: CreateCourseInput!): CourseEntity!
+  generateQRCode(courseId: ID!): CourseEntity!
+  enrollStudent(input: EnrollStudentInput!): StudentEnrollmentEntity!
+  updateEnrollment(input: UpdateEnrollmentInput!): StudentEnrollmentEntity!
+  calculateFinalGrade(enrollmentId: ID!, cycleRequiredClasses: Float!): Float!
+  createAttendance(input: CreateAttendanceInput!): AttendanceEntity!
 }
 
 input LoginInput {
@@ -266,4 +364,73 @@ input UpdateMinistryInput {
   createdUser: ID!
   active: Boolean! = true
   id: ID!
+}
+
+input CreateCycleInput {
+  name: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  requiredClasses: Float!
+  active: Boolean
+  createdUser: String!
+}
+
+input CreateLevelInput {
+  name: String!
+  description: String
+  order: Float!
+  cycleId: String!
+  createdUser: String!
+}
+
+input CreateClassroomInput {
+  name: String!
+  capacity: Float!
+  location: String!
+  createdUser: String!
+}
+
+input CreateScheduleInput {
+  dayOfWeek: Float!
+  startTime: String!
+  endTime: String!
+  createdUser: String!
+}
+
+input CreateCourseInput {
+  levelId: String!
+  teacherId: String!
+  classroomId: String!
+  scheduleId: String!
+  cycleId: String!
+  qrCode: String
+  qrExpiration: DateTime
+  createdUser: String!
+}
+
+input EnrollStudentInput {
+  studentId: String!
+  courseClassId: String!
+  enrollmentDate: DateTime!
+  status: String
+  finalGrade: Float
+  createdUser: String!
+}
+
+input UpdateEnrollmentInput {
+  id: String!
+  studentId: String
+  courseClassId: String
+  enrollmentDate: DateTime
+  status: String
+  finalGrade: Float
+}
+
+input CreateAttendanceInput {
+  studentEnrollmentId: ID!
+  courseClassId: ID!
+  attended: Boolean!
+  attendanceDate: DateTime!
+  notes: String
+  createdUser: String!
 }

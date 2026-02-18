@@ -12,10 +12,10 @@ export const FormationSchoolRoutes: React.FC = () => {
       <Route path="admin" element={<AdminDashboard />} />
       <Route path="teacher" element={<TeacherDashboard />} />
       <Route path="attendance" element={<ScanAttendance />} />
-      <Route path="attendance/:classId" element={<ScanAttendance />} />
+      <Route path="attendance/:courseId" element={<ScanAttendance />} />
       <Route path="progress" element={<StudentProgress />} />
       <Route path="progress/manage" element={<ProgressManagement />} />
-      <Route path="progress/manage/:courseClassId" element={<ProgressManagement />} />
+      <Route path="progress/manage/:courseId" element={<ProgressManagement />} />
       <Route path="/" element={<AdminDashboard />} />
     </Routes>
   );

@@ -9,16 +9,16 @@ import { useFormationSchoolStore } from '../store/formation-school.store';
 import { toast } from 'sonner';
 
 interface ProgressManagementProps {
-  courseClassId?: string;
+  courseId?: string;
 }
 
-export const ProgressManagement: React.FC<ProgressManagementProps> = ({ courseClassId }) => {
+export const ProgressManagement: React.FC<ProgressManagementProps> = ({ courseId }) => {
   const { 
     enrollments, 
-    getEnrollmentsByCourseClass,
+    getEnrollmentsByCourse,
     activeCycle,
     getActiveCycle,
-    getAttendanceByCourseClass,
+    getAttendanceByCourse,
     attendances,
     calculateFinalGrade,
     getLevelsByCycle,
@@ -26,11 +26,11 @@ export const ProgressManagement: React.FC<ProgressManagementProps> = ({ courseCl
   
   useEffect(() => {
     getActiveCycle();
-    if (courseClassId) {
-      getEnrollmentsByCourseClass(courseClassId);
-      getAttendanceByCourseClass(courseClassId);
+    if (courseId) {
+      getEnrollmentsByCourse(courseId);
+      getAttendanceByCourse(courseId);
     }
-  }, [courseClassId]);
+  }, [courseId]);
   
   useEffect(() => {
     if (activeCycle) {
