@@ -10,13 +10,13 @@ import { LevelInput, LevelSchema } from '../schemas/levelSchema';
 import { useFormationSchoolStore } from '../store/formation-school.store';
 import { useAuthStore } from '@/src/app/stores';
 import { toast } from 'sonner';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface LevelFormProps {
-  cycleId: string;
   onSuccess?: () => void;
 }
 
-export const LevelForm: React.FC<LevelFormProps> = ({ cycleId, onSuccess }) => {
+export const LevelForm: React.FC<LevelFormProps> = ({ onSuccess }) => {
   const userState = useAuthStore(state => state.user);
   const createLevel = useFormationSchoolStore(state => state.createLevel);
   
@@ -27,7 +27,7 @@ export const LevelForm: React.FC<LevelFormProps> = ({ cycleId, onSuccess }) => {
       name: '',
       description: '',
       order: 1,
-      cycleId,
+      type: 'vision',
       createdUser: userState?.id || '',
       createdDate: new Date(),
     },
@@ -85,6 +85,28 @@ export const LevelForm: React.FC<LevelFormProps> = ({ cycleId, onSuccess }) => {
               <FormControl>
                 <Input type="number" min="1" {...field} />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="type"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Tipo</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecciona el tipo de nivel" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="vision">Visión</SelectItem>
+                  <SelectItem value="doctrina">Doctrina</SelectItem>
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}

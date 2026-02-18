@@ -1,5 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { IsString, IsNotEmpty, IsOptional, IsNumber, Min } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsNumber, Min, IsIn } from 'class-validator';
 
 @InputType()
 export class CreateLevelInput {
@@ -20,9 +20,8 @@ export class CreateLevelInput {
   order: number;
 
   @Field()
-  @IsString()
-  @IsNotEmpty()
-  cycleId: string;
+  @IsIn(['vision', 'doctrina'])
+  type: 'vision' | 'doctrina';
 
   @Field()
   @IsString()
@@ -52,7 +51,6 @@ export class UpdateLevelInput {
 
   @Field({ nullable: true })
   @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  cycleId?: string;
+  @IsIn(['vision', 'doctrina'])
+  type?: 'vision' | 'doctrina';
 }

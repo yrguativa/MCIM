@@ -14,8 +14,8 @@ export class LevelEntity {
   @Field()
   order: number;
 
-  @Field(() => ID)
-  cycleId: string;
+  @Field()
+  type: 'vision' | 'doctrina';
 
   @Field(() => String)
   createdUser: string;

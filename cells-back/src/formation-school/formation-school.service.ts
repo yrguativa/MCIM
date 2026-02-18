@@ -15,6 +15,7 @@ import { CreateClassroomInput } from './dto/create-classroom.input';
 import { CreateScheduleInput } from './dto/create-schedule.input';
 import { CreateCourseInput } from './dto/create-course.input';
 import { EnrollStudentInput, UpdateEnrollmentInput } from './dto/enroll-student.input';
+import { CreateTeacherAssignmentInput } from './dto/teacher-assignment.input';
 import { CreateAttendanceInput } from './dto/create-attendance.input';
 import { CycleEntity } from './entities/cycle.entity';
 import { LevelEntity } from './entities/level.entity';
@@ -22,6 +23,7 @@ import { ClassroomEntity } from './entities/classroom.entity';
 import { ScheduleEntity } from './entities/schedule.entity';
 import { CourseEntity } from './entities/course.entity';
 import { StudentEnrollmentEntity } from './entities/student-enrollment.entity';
+import { TeacherAssignmentEntity } from './entities/teacher-assignment.entity';
 import { AttendanceEntity } from './entities/attendance.entity';
 import * as QRCode from 'qrcode';
 
@@ -56,7 +58,7 @@ export class FormationSchoolService {
   private toLevelEntity(level: Level & { _id: unknown }): LevelEntity {
     return {
       id: level._id?.toString() ?? '',
-      cycleId: level.cycleId,
+      type: level.type,
       name: level.name,
       description: level.description,
       order: level.order,
@@ -115,6 +117,18 @@ export class FormationSchoolService {
     };
   }
 
+  private toTeacherAssignmentEntity(assignment: TeacherAssignment & { _id: unknown }): TeacherAssignmentEntity {
+    return {
+      id: assignment._id?.toString() ?? '',
+      teacherId: assignment.teacherId,
+      courseId: assignment.courseId,
+      assignedDate: assignment.assignedDate,
+      active: assignment.active,
+      createdUser: assignment.createdUser,
+      createdDate: assignment.createdDate,
+    };
+  }
+
   private toAttendanceEntity(attendance: Attendance & { _id: unknown }): AttendanceEntity {
     return {
       id: attendance._id?.toString() ?? '',
@@ -158,6 +172,11 @@ export class FormationSchoolService {
 
   async findLevelsByCycle(cycleId: string): Promise<LevelEntity[]> {
     const levels = await this.levelModel.find({ cycleId }).sort({ order: 1 }).exec();
+    return levels.map(l => this.toLevelEntity(l));
+  }
+
+  async findAllLevels(): Promise<LevelEntity[]> {
+    const levels = await this.levelModel.find().sort({ order: 1 }).exec();
     return levels.map(l => this.toLevelEntity(l));
   }
 
@@ -242,6 +261,16 @@ export class FormationSchoolService {
     });
     const saved = await enrollment.save();
     return this.toStudentEnrollmentEntity(saved);
+  }
+
+  async enrollTeacher(input: CreateTeacherAssignmentInput): Promise<TeacherAssignmentEntity> {
+    const assignment = new this.teacherAssignmentModel({
+      ...input,
+      assignedDate: new Date(),
+      createdDate: new Date(),
+    });
+    const saved = await assignment.save();
+    return this.toTeacherAssignmentEntity(saved);
   }
 
   async findEnrollmentsByCourse(courseId: string): Promise<StudentEnrollmentEntity[]> {

@@ -12,8 +12,8 @@ export class Level extends Document {
   @Prop({ required: true })
   order: number;
 
-  @Prop({ required: true })
-  cycleId: string;
+  @Prop({ required: true, enum: ['vision', 'doctrina'] })
+  type: 'vision' | 'doctrina';
 
   @Prop({ required: true })
   createdUser: string;

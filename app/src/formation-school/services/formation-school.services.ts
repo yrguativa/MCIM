@@ -32,8 +32,13 @@ export const FormationSchoolService = {
   },
 
   async getLevelsByCycle(cycleId: string) {
-    const query = `query LevelsByCycle($cycleId: ID!) { levelsByCycle(cycleId: $cycleId) { id name description order cycleId } }`;
+    const query = `query LevelsByCycle($cycleId: ID!) { levelsByCycle(cycleId: $cycleId) { id name description order type } }`;
     return graphqlRequest(query, { cycleId });
+  },
+
+  async getLevels() {
+    const query = `query { levels { id name description order type } }`;
+    return graphqlRequest(query);
   },
   
   async createLevel(input: Record<string, unknown>) {
@@ -96,6 +101,11 @@ export const FormationSchoolService = {
     return graphqlRequest(query, { input });
   },
   
+  async enrollTeacher(input: Record<string, unknown>) {
+    const query = `mutation EnrollTeacher($input: EnrollTeacherInput!) { enrollTeacher(input: $input) { id teacherId courseId active } }`;
+    return graphqlRequest(query, { input });
+  },
+   
   async updateEnrollment(input: Record<string, unknown>) {
     const query = `mutation UpdateEnrollment($input: UpdateEnrollmentInput!) { updateEnrollment(input: $input) { id status finalGrade } }`;
     return graphqlRequest(query, { input });

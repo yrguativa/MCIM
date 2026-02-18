@@ -1,7 +1,7 @@
 import { create, StateCreator } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { FormationSchoolService } from '../services/formation-school.services';
-import { Cycle, Level, Classroom, Schedule, Course, StudentEnrollment, Attendance } from '../models';
+import { Cycle, Level, Classroom, Schedule, Course, StudentEnrollment, TeacherAssignment, Attendance } from '../models';
 
 interface FormationSchoolState {
   cycles: Cycle[];
@@ -10,6 +10,7 @@ interface FormationSchoolState {
   schedules: Schedule[];
   courses: Course[];
   enrollments: StudentEnrollment[];
+  teacherAssignments: TeacherAssignment[];
   attendances: Attendance[];
   activeCycle: Cycle | null;
   
@@ -18,6 +19,7 @@ interface FormationSchoolState {
   createCycle: (cycle: Partial<Cycle>) => Promise<boolean>;
   
   getLevelsByCycle: (cycleId: string) => Promise<void>;
+  getLevels: () => Promise<void>;
   createLevel: (level: Partial<Level>) => Promise<boolean>;
   
   getClassrooms: () => Promise<void>;
@@ -34,6 +36,7 @@ interface FormationSchoolState {
   getEnrollmentsByCourse: (courseId: string) => Promise<void>;
   getEnrollmentsByStudent: (studentId: string) => Promise<void>;
   enrollStudent: (enrollment: Partial<StudentEnrollment>) => Promise<boolean>;
+  enrollTeacher: (assignment: Partial<TeacherAssignment>) => Promise<boolean>;
   updateEnrollment: (enrollment: Partial<StudentEnrollment>) => Promise<boolean>;
   calculateFinalGrade: (enrollmentId: string, requiredClasses: number) => Promise<number>;
   
@@ -49,6 +52,7 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
   schedules: [],
   courses: [],
   enrollments: [],
+  teacherAssignments: [],
   attendances: [],
   activeCycle: null,
 
@@ -64,8 +68,11 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
 
   createCycle: async (cycle) => {
     try {
-      const { id, createdDate, createdUser, ...cycleData } = cycle as any;
-      await FormationSchoolService.createCycle(cycleData);
+      const { id, createdDate, ...cycleData } = cycle as any;
+      await FormationSchoolService.createCycle({
+        ...cycleData,
+        createdUser: cycleData.createdUser || 'system',
+      });
       await get().getCycles();
       return true;
     } catch (error) {
@@ -79,11 +86,19 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
     set({ levels: data.levelsByCycle });
   },
 
+  getLevels: async () => {
+    const data = await FormationSchoolService.getLevels();
+    set({ levels: data.levels });
+  },
+
   createLevel: async (level) => {
     try {
-      const { id, createdDate, createdUser, ...levelData } = level as any;
-      await FormationSchoolService.createLevel(levelData);
-      await get().getLevelsByCycle(level.cycleId!);
+      const { id, createdDate, ...levelData } = level as any;
+      await FormationSchoolService.createLevel({
+        ...levelData,
+        createdUser: levelData.createdUser || 'system',
+      });
+      await get().getLevels();
       return true;
     } catch (error) {
       console.error('Error creating level:', error);
@@ -98,8 +113,11 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
 
   createClassroom: async (classroom) => {
     try {
-      const { id, createdDate, createdUser, ...classroomData } = classroom as any;
-      await FormationSchoolService.createClassroom(classroomData);
+      const { id, createdDate, ...classroomData } = classroom as any;
+      await FormationSchoolService.createClassroom({
+        ...classroomData,
+        createdUser: classroomData.createdUser || 'system',
+      });
       await get().getClassrooms();
       return true;
     } catch (error) {
@@ -115,8 +133,11 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
 
   createSchedule: async (schedule) => {
     try {
-      const { id, createdDate, createdUser, ...scheduleData } = schedule as any;
-      await FormationSchoolService.createSchedule(scheduleData);
+      const { id, createdDate, ...scheduleData } = schedule as any;
+      await FormationSchoolService.createSchedule({
+        ...scheduleData,
+        createdUser: scheduleData.createdUser || 'system',
+      });
       await get().getSchedules();
       return true;
     } catch (error) {
@@ -137,8 +158,11 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
 
   createCourse: async (course) => {
     try {
-      const { id, createdDate, createdUser, ...courseData } = course as any;
-      await FormationSchoolService.createCourse(courseData);
+      const { id, createdDate, ...courseData } = course as any;
+      await FormationSchoolService.createCourse({
+        ...courseData,
+        createdUser: courseData.createdUser || 'system',
+      });
       await get().getCoursesByCycle(course.cycleId!);
       return true;
     } catch (error) {
@@ -164,12 +188,31 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
 
   enrollStudent: async (enrollment) => {
     try {
-      const { id, createdDate, createdUser, enrollmentDate, ...enrollmentData } = enrollment as any;
-      await FormationSchoolService.enrollStudent(enrollmentData);
+      const { id, createdDate, enrollmentDate, ...enrollmentData } = enrollment as any;
+      await FormationSchoolService.enrollStudent({
+        ...enrollmentData,
+        createdUser: enrollmentData.createdUser || 'system',
+        enrollmentDate: new Date(),
+      });
       await get().getEnrollmentsByCourse(enrollment.courseId!);
       return true;
     } catch (error) {
       console.error('Error enrolling student:', error);
+      return false;
+    }
+  },
+
+  enrollTeacher: async (assignment) => {
+    try {
+      const { id, createdDate, assignedDate, ...assignmentData } = assignment as any;
+      await FormationSchoolService.enrollTeacher({
+        ...assignmentData,
+        createdUser: assignmentData.createdUser || 'system',
+        assignedDate: new Date(),
+      });
+      return true;
+    } catch (error) {
+      console.error('Error enrolling teacher:', error);
       return false;
     }
   },
@@ -200,8 +243,12 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
 
   createAttendance: async (attendance) => {
     try {
-      const { id, createdDate, createdUser, attendanceDate, ...attendanceData } = attendance as any;
-      await FormationSchoolService.createAttendance(attendanceData);
+      const { id, createdDate, attendanceDate, ...attendanceData } = attendance as any;
+      await FormationSchoolService.createAttendance({
+        ...attendanceData,
+        createdUser: attendanceData.createdUser || 'system',
+        attendanceDate: new Date(),
+      });
       await get().getAttendanceByCourse(attendance.courseId!);
       return true;
     } catch (error) {

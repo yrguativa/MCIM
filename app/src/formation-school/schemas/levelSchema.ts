@@ -1,5 +1,7 @@
 import { z } from "zod"
 
+const LevelTypeSchema = z.enum(['vision', 'doctrina'])
+
 export const LevelSchema = z.object({
     id: z.string()
         .min(1)
@@ -15,10 +17,7 @@ export const LevelSchema = z.object({
         .min(1, {
             message: "El orden debe ser al menos 1.",
         }),
-    cycleId: z.string()
-        .min(1, {
-            message: "El ciclo es obligatorio.",
-        }),
+    type: LevelTypeSchema,
     createdUser: z.string()
         .min(2),
     createdDate: z.date(),

@@ -3,7 +3,7 @@ export interface Level {
     name: string;
     description: string;
     order: number;
-    cycleId: string;
+    type: 'vision' | 'doctrina';
     createdUser: string;
     createdDate: Date;
 }
