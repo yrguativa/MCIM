@@ -6,6 +6,7 @@ import { ScanAttendance } from './pages/ScanAttendance';
 import { StudentProgress } from './pages/StudentProgress';
 import { ProgressManagement } from './pages/ProgressManagement';
 import { FormationDashboard } from './pages/FormationDashboard';
+import { StudentEnrollmentPage } from './pages/StudentEnrollmentPage';
 
 export const FormationSchoolRoutes: React.FC = () => {
   return (
@@ -17,7 +18,7 @@ export const FormationSchoolRoutes: React.FC = () => {
       <Route path="admin/schedules" element={<AdminDashboard />} />
       <Route path="admin/courses" element={<AdminDashboard />} />
       <Route path="enrollment/teacher" element={<AdminDashboard />} />
-      <Route path="enrollment/student" element={<AdminDashboard />} />
+      <Route path="enrollment/student" element={<StudentEnrollmentPage />} />
       <Route path="teacher/my-courses" element={<TeacherDashboard />} />
       <Route path="teacher/attendance" element={<ScanAttendance />} />
       <Route path="teacher/attendance/:courseId" element={<ScanAttendance />} />
