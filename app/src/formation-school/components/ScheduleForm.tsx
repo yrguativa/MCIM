@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Save } from 'lucide-react';
@@ -27,7 +27,18 @@ interface ScheduleFormProps {
 
 export const ScheduleForm: React.FC<ScheduleFormProps> = ({ onSuccess }) => {
   const userState = useAuthStore(state => state.user);
-  const createSchedule = useFormationSchoolStore(state => state.createSchedule);
+  const { createSchedule, getSchedules, courses, getCoursesByCycle, activeCycle, getActiveCycle } = useFormationSchoolStore();
+  
+  useEffect(() => {
+    getSchedules();
+    getActiveCycle();
+  }, []);
+
+  useEffect(() => {
+    if (activeCycle?.id) {
+      getCoursesByCycle(activeCycle.id);
+    }
+  }, [activeCycle]);
   
   const form = useForm<ScheduleInput>({
     resolver: zodResolver(ScheduleSchema),
@@ -36,6 +47,7 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({ onSuccess }) => {
       dayOfWeek: 1,
       startTime: '08:00',
       endTime: '10:00',
+      courseId: '',
       createdUser: userState?.id || '',
       createdDate: new Date(),
     },
@@ -110,6 +122,31 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({ onSuccess }) => {
             )}
           />
         </div>
+        
+        <FormField
+          control={form.control}
+          name="courseId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Curso (Opcional)</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value || undefined}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccionar curso" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {courses.map((course) => (
+                    <SelectItem key={course.id} value={course.id}>
+                      {course.levelId} - {course.type}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         
         <Button type="submit">
           <Save className="mr-2 h-4 w-4" />

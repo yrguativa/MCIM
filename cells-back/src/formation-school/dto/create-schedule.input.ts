@@ -19,6 +19,11 @@ export class CreateScheduleInput {
   @IsNotEmpty()
   endTime: string;
 
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
+  courseId?: string;
+
   @Field()
   @IsString()
   @IsNotEmpty()

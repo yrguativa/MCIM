@@ -2,9 +2,8 @@ import { z } from "zod"
 
 export const ScheduleSchema = z.object({
     id: z.string()
-        .min(1)
-        .default(crypto.randomUUID()),
-    dayOfWeek: z.coerce
+        .min(1),
+    dayOfWeek: z
         .number()
         .min(0)
         .max(6, {
@@ -18,6 +17,8 @@ export const ScheduleSchema = z.object({
         .regex(/^([01]?\d|2[0-3]):[0-5]\d$/, {
             message: "La hora de fin debe tener formato HH:MM",
         }),
+    courseId: z.string()
+        .optional(),
     createdUser: z.string()
         .min(2),
     createdDate: z.date(),

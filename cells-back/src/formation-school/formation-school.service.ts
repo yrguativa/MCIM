@@ -83,6 +83,7 @@ export class FormationSchoolService {
       dayOfWeek: schedule.dayOfWeek,
       startTime: schedule.startTime,
       endTime: schedule.endTime,
+      courseId: schedule.courseId,
       createdUser: schedule.createdUser,
       createdDate: schedule.createdDate,
     };
