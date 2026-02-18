@@ -166,6 +166,13 @@
         "delete": "Eliminar ministerio",
         "ministry": "Ministerio"
     },
+    "formation-school": {
+        "title": "Escuela de Formación",
+        "admin": "Administración",
+        "teacher": "Mi Aula",
+        "attendance": "Asistencia",
+        "progress": "Mi Progreso"
+    },
     "html5-qrcode-scanner": {
         "scanningStatus": "Escaneando",
         "idleStatus": "Inactivo",

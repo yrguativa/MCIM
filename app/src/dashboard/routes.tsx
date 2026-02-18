@@ -6,6 +6,7 @@ const CellsRoutes = React.lazy(() => import("../cells/routes"));
 const DisciplesRoutes = React.lazy(() => import("../disciples/routes"));
 const EventsRoutes = React.lazy(() => import("../events/routes"));
 const MinistryRoutes = React.lazy(() => import("../ministries/routes"));
+const FormationSchoolRoutes = React.lazy(() => import("../formation-school/routes").then(m => ({ default: m.FormationSchoolRoutes })));
 
 export const DashboardRoutes: React.FC = () => {
     return (
@@ -16,6 +17,7 @@ export const DashboardRoutes: React.FC = () => {
             <Route path="disciples/*" element={<DisciplesRoutes />} />
             <Route path="events/*" element={<EventsRoutes />} />
             <Route path="ministries/*" element={<MinistryRoutes />} />
+            <Route path="formation-school/*" element={<FormationSchoolRoutes />} />
         </Routes>
     );
 };

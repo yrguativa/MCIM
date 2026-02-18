@@ -166,6 +166,13 @@
     "delete": "Delete ministry",
     "ministry": "Ministry"
   },
+  "formation-school": {
+    "title": "Formation School",
+    "admin": "Administration",
+    "teacher": "My Classroom",
+    "attendance": "Attendance",
+    "progress": "My Progress"
+  },
   "html5-qrcode-scanner": {
         "scanningStatus": "Scanning",
         "idleStatus": "Inactive",
