@@ -1,0 +1,1 @@
+export { ScanAttendance } from './ScanAttendance';
