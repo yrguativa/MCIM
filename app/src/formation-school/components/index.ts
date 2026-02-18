@@ -2,3 +2,6 @@ export { CycleForm } from './CycleForm';
 export { LevelForm } from './LevelForm';
 export { ClassroomForm } from './ClassroomForm';
 export { ScheduleForm } from './ScheduleForm';
+export { CourseClassForm } from './CourseClassForm';
+export { StudentEnrollmentForm } from './StudentEnrollmentForm';
+export { AdminDashboard } from './AdminDashboard';
