@@ -12,8 +12,8 @@ export class Schedule extends Document {
   @Prop({ required: true })
   endTime: string;
 
-  @Prop()
-  courseId: string;
+  @Prop({ required: true })
+  levelId: string;
 
   @Prop({ required: true })
   createdUser: string;

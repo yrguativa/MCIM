@@ -1,4 +1,4 @@
-import { InputType, Field } from '@nestjs/graphql';
+import { InputType, Field, ID } from '@nestjs/graphql';
 import { IsString, IsNotEmpty, IsOptional, IsNumber, Min, Max } from 'class-validator';
 
 @InputType()
@@ -18,6 +18,11 @@ export class CreateScheduleInput {
   @IsString()
   @IsNotEmpty()
   endTime: string;
+
+  @Field(() => ID)
+  @IsString()
+  @IsNotEmpty()
+  levelId: string;
 
   @Field({ nullable: true })
   @IsOptional()
@@ -50,4 +55,10 @@ export class UpdateScheduleInput {
   @IsString()
   @IsNotEmpty()
   endTime?: string;
+
+  @Field(() => ID, { nullable: true })
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  levelId?: string;
 }

@@ -3,7 +3,7 @@ export interface Schedule {
     dayOfWeek: number;
     startTime: string;
     endTime: string;
-    courseId?: string;
+    levelId: string;
     createdUser: string;
     createdDate: Date;
 }

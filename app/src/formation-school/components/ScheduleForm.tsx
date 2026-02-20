@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Save } from 'lucide-react';
+import { Save, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -10,6 +10,7 @@ import { ScheduleInput, ScheduleSchema } from '../schemas/scheduleSchema';
 import { useFormationSchoolStore } from '../store/formation-school.store';
 import { useAuthStore } from '@/src/app/stores';
 import { toast } from 'sonner';
+import { Schedule } from '../models';
 
 const DAYS_OF_WEEK = [
   { value: 0, label: 'Domingo' },
@@ -22,46 +23,74 @@ const DAYS_OF_WEEK = [
 ];
 
 interface ScheduleFormProps {
+  schedule?: Schedule | null;
   onSuccess?: () => void;
+  onCancel?: () => void;
 }
 
-export const ScheduleForm: React.FC<ScheduleFormProps> = ({ onSuccess }) => {
+export const ScheduleForm: React.FC<ScheduleFormProps> = ({ schedule, onSuccess, onCancel }) => {
   const userState = useAuthStore(state => state.user);
-  const { createSchedule, getSchedules, courses, getCoursesByCycle, activeCycle, getActiveCycle } = useFormationSchoolStore();
+  const { createSchedule, updateSchedule, levels, getLevels } = useFormationSchoolStore();
+  const isEditing = !!schedule;
   
   useEffect(() => {
-    getSchedules();
-    getActiveCycle();
+    getLevels();
   }, []);
-
-  useEffect(() => {
-    if (activeCycle?.id) {
-      getCoursesByCycle(activeCycle.id);
-    }
-  }, [activeCycle]);
   
   const form = useForm<ScheduleInput>({
-    resolver: zodResolver(ScheduleSchema),
+    resolver: zodResolver(ScheduleSchema) as any,
     defaultValues: {
       id: crypto.randomUUID(),
       dayOfWeek: 1,
       startTime: '08:00',
       endTime: '10:00',
-      courseId: '',
+      levelId: '',
       createdUser: userState?.id || '',
       createdDate: new Date(),
     },
   });
 
+  useEffect(() => {
+    if (schedule) {
+      console.log('Resetting form with schedule:', schedule);
+      form.reset({
+        id: schedule.id,
+        dayOfWeek: schedule.dayOfWeek,
+        startTime: schedule.startTime,
+        endTime: schedule.endTime,
+        levelId: schedule.levelId || '',
+        createdUser: schedule.createdUser,
+        createdDate: new Date(schedule.createdDate),
+      });
+    }
+  }, [schedule]);
+
   async function onSubmit(data: ScheduleInput) {
-    const success = await createSchedule(data);
+    let success;
     
-    if (success) {
-      toast.success('Horario creado exitosamente');
-      form.reset({ ...form.getValues(), id: crypto.randomUUID() });
-      onSuccess?.();
+    if (isEditing) {
+      success = await updateSchedule({
+        id: data.id,
+        dayOfWeek: data.dayOfWeek,
+        startTime: data.startTime,
+        endTime: data.endTime,
+        levelId: data.levelId,
+      });
+      if (success) {
+        toast.success('Horario actualizado exitosamente');
+        onSuccess?.();
+      } else {
+        toast.error('Error al actualizar el horario');
+      }
     } else {
-      toast.error('Error al crear el horario');
+      success = await createSchedule(data);
+      if (success) {
+        toast.success('Horario creado exitosamente');
+        form.reset({ ...form.getValues(), id: crypto.randomUUID() });
+        onSuccess?.();
+      } else {
+        toast.error('Error al crear el horario');
+      }
     }
   }
 
@@ -74,7 +103,7 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({ onSuccess }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Día de la Semana</FormLabel>
-              <Select onValueChange={(v) => field.onChange(parseInt(v))} defaultValue={field.value.toString()}>
+              <Select onValueChange={(v) => field.onChange(parseInt(v))} value={field.value?.toString()}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar día" />
@@ -125,20 +154,20 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({ onSuccess }) => {
         
         <FormField
           control={form.control}
-          name="courseId"
+          name="levelId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Curso (Opcional)</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value || undefined}>
+              <FormLabel>Nivel</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value || undefined}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar curso" />
+                    <SelectValue placeholder="Seleccionar nivel" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {courses.map((course) => (
-                    <SelectItem key={course.id} value={course.id}>
-                      {course.levelId} - {course.type}
+                  {levels.map((level) => (
+                    <SelectItem key={level.id} value={level.id}>
+                      {level.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -148,10 +177,18 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({ onSuccess }) => {
           )}
         />
         
-        <Button type="submit">
-          <Save className="mr-2 h-4 w-4" />
-          Guardar Horario
-        </Button>
+        <div className="flex gap-2">
+          <Button type="submit">
+            <Save className="mr-2 h-4 w-4" />
+            {isEditing ? 'Actualizar Horario' : 'Guardar Horario'}
+          </Button>
+          {isEditing && onCancel && (
+            <Button type="button" variant="outline" onClick={onCancel}>
+              <X className="mr-2 h-4 w-4" />
+              Cancelar
+            </Button>
+          )}
+        </div>
       </form>
     </Form>
   );

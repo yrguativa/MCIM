@@ -14,6 +14,9 @@ export class ScheduleEntity {
   @Field()
   endTime: string;
 
+  @Field(() => ID)
+  levelId: string;
+
   @Field({ nullable: true })
   courseId: string;
 

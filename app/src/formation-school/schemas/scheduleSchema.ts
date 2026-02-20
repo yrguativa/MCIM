@@ -17,8 +17,8 @@ export const ScheduleSchema = z.object({
         .regex(/^([01]?\d|2[0-3]):[0-5]\d$/, {
             message: "La hora de fin debe tener formato HH:MM",
         }),
-    courseId: z.string()
-        .optional(),
+    levelId: z.string()
+        .min(1, { message: "El nivel es obligatorio." }),
     createdUser: z.string()
         .min(2),
     createdDate: z.date(),
