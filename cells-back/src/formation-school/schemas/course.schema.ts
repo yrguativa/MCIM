@@ -22,9 +22,6 @@ export class Course extends Document {
   type: 'vision' | 'doctrina';
 
   @Prop()
-  requiredClasses: number;
-
-  @Prop()
   qrCode: string;
 
   @Prop()

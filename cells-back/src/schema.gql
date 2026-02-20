@@ -159,7 +159,6 @@ type CourseEntity {
   scheduleId: ID!
   cycleId: ID!
   type: String
-  requiredClasses: Float
   qrCode: String
   qrExpiration: DateTime
   createdUser: String!
@@ -169,10 +168,18 @@ type CourseEntity {
 type StudentEntity {
   id: ID!
   discipleId: ID!
+  disciple: DiscipleInfo
   currentLevelId: ID!
   status: String!
   createdUser: String!
   createdDate: DateTime!
+}
+
+type DiscipleInfo {
+  id: ID!
+  name: String
+  lastName: String
+  identification: String
 }
 
 type StudentEnrollmentEntity {

@@ -24,9 +24,6 @@ export class CourseEntity {
   type?: 'vision' | 'doctrina';
 
   @Field({ nullable: true })
-  requiredClasses?: number;
-
-  @Field({ nullable: true })
   qrCode?: string;
 
   @Field({ nullable: true })

@@ -107,7 +107,6 @@ export class FormationSchoolService {
       classroomId: course.classroomId,
       scheduleId: course.scheduleId,
       type: course.type,
-      requiredClasses: course.requiredClasses,
       qrCode: course.qrCode,
       qrExpiration: course.qrExpiration,
       createdUser: course.createdUser,
@@ -115,11 +114,18 @@ export class FormationSchoolService {
     };
   }
 
-  private toStudentEntity(student: Student & { _id: unknown }): StudentEntity {
+  private toStudentEntity(student: any): StudentEntity {
+    const disciple = student.discipleId;
     return {
       id: student._id?.toString() ?? '',
-      discipleId: student.discipleId,
-      currentLevelId: student.currentLevelId,
+      discipleId: typeof student.discipleId === 'string' ? student.discipleId : student.discipleId?._id?.toString() ?? '',
+      disciple: disciple && typeof disciple === 'object' ? {
+        id: disciple._id?.toString() ?? '',
+        name: disciple.name,
+        lastName: disciple.lastName,
+        identification: disciple.identification,
+      } : undefined,
+      currentLevelId: typeof student.currentLevelId === 'string' ? student.currentLevelId : student.currentLevelId?._id?.toString() ?? '',
       status: student.status,
       createdUser: student.createdUser,
       createdDate: student.createdDate,

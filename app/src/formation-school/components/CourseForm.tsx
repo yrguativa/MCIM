@@ -62,7 +62,6 @@ export const CourseForm: React.FC<CourseFormProps> = ({ cycleId, course, onSucce
         scheduleId: course.scheduleId,
         cycleId: course.cycleId,
         type: course.type,
-        requiredClasses: course.requiredClasses,
         createdUser: course.createdUser,
         createdDate: new Date(course.createdDate),
       });
@@ -84,7 +83,6 @@ export const CourseForm: React.FC<CourseFormProps> = ({ cycleId, course, onSucce
         scheduleId: data.scheduleId,
         cycleId: data.cycleId,
         type: data.type,
-        requiredClasses: data.requiredClasses,
       });
       if (success) {
         toast.success('Curso actualizado exitosamente');
@@ -142,28 +140,6 @@ export const CourseForm: React.FC<CourseFormProps> = ({ cycleId, course, onSucce
         <FormField
           control={form.control}
           name="type"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tipo</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar tipo" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="vision">Visión</SelectItem>
-                  <SelectItem value="doctrina">Doctrina</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="requiredClasses"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Clases Requeridas</FormLabel>

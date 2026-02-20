@@ -14,7 +14,6 @@ export interface Course {
     schedule?: Schedule;
     cycleId: string;
     type?: 'vision' | 'doctrina';
-    requiredClasses?: number;
     qrCode?: string;
     qrExpiration?: Date;
     createdUser: string;

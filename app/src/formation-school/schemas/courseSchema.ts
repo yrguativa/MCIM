@@ -24,9 +24,6 @@ export const CourseSchema = z.object({
         }),
     type: z.enum(['vision', 'doctrina'])
         .optional(),
-    requiredClasses: z.number()
-        .min(0)
-        .optional(),
     qrCode: z.string()
         .optional(),
     qrExpiration: z.date()
