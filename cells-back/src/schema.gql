@@ -114,8 +114,8 @@ type CycleEntity {
   name: String!
   startDate: DateTime!
   endDate: DateTime!
-  requiredClasses: Float!
   active: Boolean!
+  requiredClasses: Float
   createdUser: String!
   createdDate: DateTime!
   updatedUser: String
@@ -127,7 +127,6 @@ type LevelEntity {
   name: String!
   description: String
   order: Float!
-  cycleId: ID!
   createdUser: String!
   createdDate: DateTime!
 }
@@ -146,6 +145,8 @@ type ScheduleEntity {
   dayOfWeek: Float!
   startTime: String!
   endTime: String!
+  levelId: ID!
+  courseId: String
   createdUser: String!
   createdDate: DateTime!
 }
@@ -157,8 +158,19 @@ type CourseEntity {
   classroomId: ID!
   scheduleId: ID!
   cycleId: ID!
+  type: String
+  requiredClasses: Float
   qrCode: String
   qrExpiration: DateTime
+  createdUser: String!
+  createdDate: DateTime!
+}
+
+type StudentEntity {
+  id: ID!
+  discipleId: ID!
+  currentLevelId: ID!
+  status: String!
   createdUser: String!
   createdDate: DateTime!
 }
@@ -174,6 +186,16 @@ type StudentEnrollmentEntity {
   createdDate: DateTime!
 }
 
+type TeacherAssignmentEntity {
+  id: ID!
+  teacherId: ID!
+  courseId: ID!
+  assignedDate: DateTime!
+  active: Boolean!
+  createdUser: String!
+  createdDate: DateTime!
+}
+
 type AttendanceEntity {
   id: ID!
   studentEnrollmentId: ID!
@@ -181,6 +203,19 @@ type AttendanceEntity {
   attended: Boolean!
   attendanceDate: DateTime!
   notes: String
+  createdUser: String!
+  createdDate: DateTime!
+}
+
+type StudentCourseHistoryEntity {
+  id: ID!
+  studentId: ID!
+  courseId: ID!
+  enrollmentDate: DateTime!
+  completionDate: DateTime
+  finalGrade: Float
+  status: String!
+  promotedToNextLevel: Boolean!
   createdUser: String!
   createdDate: DateTime!
 }
@@ -206,15 +241,20 @@ type Query {
   cycles: [CycleEntity!]!
   cycle(id: ID!): CycleEntity!
   activeCycle: CycleEntity!
+  levels: [LevelEntity!]!
   levelsByCycle(cycleId: ID!): [LevelEntity!]!
   classrooms: [ClassroomEntity!]!
   schedules: [ScheduleEntity!]!
+  students: [StudentEntity!]!
+  student(id: ID!): StudentEntity!
+  studentByDisciple(discipleId: ID!): StudentEntity
   coursesByCycle(cycleId: ID!): [CourseEntity!]!
   coursesByTeacher(teacherId: ID!): [CourseEntity!]!
   enrollmentsByCourse(courseId: ID!): [StudentEnrollmentEntity!]!
   enrollmentsByStudent(studentId: ID!): [StudentEnrollmentEntity!]!
   attendanceByCourse(courseId: ID!): [AttendanceEntity!]!
   attendanceByEnrollment(enrollmentId: ID!): [AttendanceEntity!]!
+  courseHistoriesByStudent(studentId: ID!): [StudentCourseHistoryEntity!]!
 }
 
 type Mutation {
@@ -237,12 +277,19 @@ type Mutation {
   createLevel(input: CreateLevelInput!): LevelEntity!
   createClassroom(input: CreateClassroomInput!): ClassroomEntity!
   createSchedule(input: CreateScheduleInput!): ScheduleEntity!
+  updateSchedule(input: UpdateScheduleInputWithId!): ScheduleEntity!
+  createStudent(input: CreateStudentInput!): StudentEntity!
+  updateStudent(input: UpdateStudentInput!): StudentEntity!
+  deleteStudent(id: ID!): Boolean!
   createCourse(input: CreateCourseInput!): CourseEntity!
   generateQRCode(courseId: ID!): CourseEntity!
   enrollStudent(input: EnrollStudentInput!): StudentEnrollmentEntity!
+  enrollTeacher(input: CreateTeacherAssignmentInput!): TeacherAssignmentEntity!
   updateEnrollment(input: UpdateEnrollmentInput!): StudentEnrollmentEntity!
   calculateFinalGrade(enrollmentId: ID!, cycleRequiredClasses: Float!): Float!
   createAttendance(input: CreateAttendanceInput!): AttendanceEntity!
+  createCourseHistory(input: CreateStudentCourseHistoryInput!): StudentCourseHistoryEntity!
+  updateCourseHistory(input: UpdateStudentCourseHistoryInput!): StudentCourseHistoryEntity!
 }
 
 input LoginInput {
@@ -370,8 +417,8 @@ input CreateCycleInput {
   name: String!
   startDate: DateTime!
   endDate: DateTime!
-  requiredClasses: Float!
   active: Boolean
+  requiredClasses: Float
   createdUser: String!
 }
 
@@ -379,7 +426,6 @@ input CreateLevelInput {
   name: String!
   description: String
   order: Float!
-  cycleId: String!
   createdUser: String!
 }
 
@@ -394,7 +440,31 @@ input CreateScheduleInput {
   dayOfWeek: Float!
   startTime: String!
   endTime: String!
+  levelId: ID!
+  courseId: String
   createdUser: String!
+}
+
+input UpdateScheduleInputWithId {
+  id: ID!
+  dayOfWeek: Float
+  startTime: String
+  endTime: String
+  levelId: ID
+}
+
+input CreateStudentInput {
+  discipleId: ID!
+  currentLevelId: ID!
+  status: String!
+  createdUser: String!
+}
+
+input UpdateStudentInput {
+  id: ID!
+  discipleId: ID
+  currentLevelId: ID
+  status: String
 }
 
 input CreateCourseInput {
@@ -403,6 +473,8 @@ input CreateCourseInput {
   classroomId: String!
   scheduleId: String!
   cycleId: String!
+  type: String
+  requiredClasses: Float
   qrCode: String
   qrExpiration: DateTime
   createdUser: String!
@@ -414,6 +486,14 @@ input EnrollStudentInput {
   enrollmentDate: DateTime!
   status: String
   finalGrade: Float
+  createdUser: String!
+}
+
+input CreateTeacherAssignmentInput {
+  teacherId: String!
+  courseId: String!
+  assignedDate: DateTime!
+  active: Boolean
   createdUser: String!
 }
 
@@ -433,4 +513,25 @@ input CreateAttendanceInput {
   attendanceDate: DateTime!
   notes: String
   createdUser: String!
+}
+
+input CreateStudentCourseHistoryInput {
+  studentId: ID!
+  courseId: ID!
+  enrollmentDate: DateTime
+  completionDate: DateTime
+  finalGrade: Float
+  status: String!
+  promotedToNextLevel: Boolean!
+  createdUser: String!
+}
+
+input UpdateStudentCourseHistoryInput {
+  id: ID!
+  studentId: ID
+  courseId: ID
+  completionDate: DateTime
+  finalGrade: Float
+  status: String
+  promotedToNextLevel: Boolean
 }

@@ -13,7 +13,7 @@ import { StudentCourseHistoryEntity } from './entities/student-course-history.en
 import { CreateCycleInput } from './dto/create-cycle.input';
 import { CreateLevelInput } from './dto/create-level.input';
 import { CreateClassroomInput } from './dto/create-classroom.input';
-import { CreateScheduleInput, UpdateScheduleInput } from './dto/create-schedule.input';
+import { CreateScheduleInput, UpdateScheduleInput, UpdateScheduleInputWithId } from './dto/create-schedule.input';
 import { CreateCourseInput } from './dto/create-course.input';
 import { CreateStudentInput, UpdateStudentInput } from './dto/create-student.input';
 import { EnrollStudentInput, UpdateEnrollmentInput } from './dto/enroll-student.input';
@@ -85,7 +85,7 @@ export class FormationSchoolResolver {
   }
 
   @Mutation(() => ScheduleEntity)
-  async updateSchedule(@Args('input') input: UpdateScheduleInput & { id: string }): Promise<ScheduleEntity> {
+  async updateSchedule(@Args('input') input: UpdateScheduleInputWithId): Promise<ScheduleEntity> {
     return this.fsService.updateSchedule(input);
   }
 

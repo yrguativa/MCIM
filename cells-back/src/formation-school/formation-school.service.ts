@@ -14,7 +14,7 @@ import { StudentCourseHistory } from './schemas/student-course-history.schema';
 import { CreateCycleInput } from './dto/create-cycle.input';
 import { CreateLevelInput } from './dto/create-level.input';
 import { CreateClassroomInput } from './dto/create-classroom.input';
-import { CreateScheduleInput, UpdateScheduleInput } from './dto/create-schedule.input';
+import { CreateScheduleInput, UpdateScheduleInput, UpdateScheduleInputWithId } from './dto/create-schedule.input';
 import { CreateCourseInput } from './dto/create-course.input';
 import { CreateStudentInput, UpdateStudentInput } from './dto/create-student.input';
 import { EnrollStudentInput, UpdateEnrollmentInput } from './dto/enroll-student.input';
@@ -91,7 +91,7 @@ export class FormationSchoolService {
       dayOfWeek: schedule.dayOfWeek,
       startTime: schedule.startTime,
       endTime: schedule.endTime,
-      levelId: schedule.levelId,
+      levelId: schedule.levelId ?? '',
       courseId: undefined,
       createdUser: schedule.createdUser,
       createdDate: schedule.createdDate,
@@ -234,7 +234,7 @@ export class FormationSchoolService {
     return this.toScheduleEntity(saved);
   }
 
-  async updateSchedule(input: UpdateScheduleInput & { id: string }): Promise<ScheduleEntity> {
+  async updateSchedule(input: UpdateScheduleInputWithId): Promise<ScheduleEntity> {
     const schedule = await this.scheduleModel.findById(input.id).exec();
     if (!schedule) {
       throw new NotFoundException('Horario no encontrado');

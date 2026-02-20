@@ -62,3 +62,34 @@ export class UpdateScheduleInput {
   @IsNotEmpty()
   levelId?: string;
 }
+
+@InputType()
+export class UpdateScheduleInputWithId {
+  @Field(() => ID)
+  id: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Max(6)
+  dayOfWeek?: number;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  startTime?: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  endTime?: string;
+
+  @Field(() => ID, { nullable: true })
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  levelId?: string;
+}
