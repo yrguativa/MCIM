@@ -38,6 +38,7 @@ export const AdminDashboard: React.FC = () => {
   const [showClassroomForm, setShowClassroomForm] = useState(false);
   const [showScheduleForm, setShowScheduleForm] = useState(false);
   const [showCourseForm, setShowCourseForm] = useState(false);
+  const [showTeacherForm, setShowTeacherForm] = useState(false);
   
   const [editingCycle, setEditingCycle] = useState<Cycle | null>(null);
   const [editingLevel, setEditingLevel] = useState<Level | null>(null);
@@ -423,14 +424,54 @@ export const AdminDashboard: React.FC = () => {
         </TabsContent>
         
         <TabsContent value="teachers" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Lista de Maestros Asignados</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {courses.length > 0 ? (
-                <div className="space-y-4">
-                  <Select onValueChange={handleCourseSelect}>
+          <div className="flex justify-end">
+            <Button onClick={() => { setShowTeacherForm(!showTeacherForm); setSelectedCourseId(''); }}>
+              <Plus className="mr-2 h-4 w-4" />
+              {showTeacherForm ? 'Ver Lista' : 'Asignar Maestro'}
+            </Button>
+          </div>
+          
+          {showTeacherForm ? (
+            <Card>
+              <CardHeader>
+                <CardTitle>Asignar Maestro a Curso</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {courses.length > 0 ? (
+                  <div className="space-y-4">
+                    <Select onValueChange={handleCourseSelect} value={selectedCourseId || undefined}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecciona un curso" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {courses.map((course) => (
+                          <SelectItem key={course.id} value={course.id}>
+                            {course.level?.name || course.levelId || 'Curso'}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {selectedCourseId && (
+                      <TeacherEnrollmentForm 
+                        courseId={selectedCourseId} 
+                        onSuccess={() => { setShowTeacherForm(false); setSelectedCourseId(''); }}
+                      />
+                    )}
+                  </div>
+                ) : (
+                  <p>No hay cursos disponibles. Crea un curso primero.</p>
+                )}
+              </CardContent>
+            </Card>
+          ) : (
+            <Card>
+              <CardHeader>
+                <CardTitle>Maestros Asignados</CardTitle>
+                <CardDescription>Selecciona un curso para ver o asignar maestros</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {courses.length > 0 ? (
+                  <Select onValueChange={handleCourseSelect} value={selectedCourseId || undefined}>
                     <SelectTrigger>
                       <SelectValue placeholder="Selecciona un curso" />
                     </SelectTrigger>
@@ -442,15 +483,12 @@ export const AdminDashboard: React.FC = () => {
                       ))}
                     </SelectContent>
                   </Select>
-                  {selectedCourseId && (
-                    <TeacherEnrollmentForm courseId={selectedCourseId} />
-                  )}
-                </div>
-              ) : (
-                <p>No hay cursos disponibles. Crea un curso primero.</p>
-              )}
-            </CardContent>
-          </Card>
+                ) : (
+                  <p>No hay cursos disponibles.</p>
+                )}
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
         
         <TabsContent value="students" className="space-y-4">
@@ -470,7 +508,7 @@ export const AdminDashboard: React.FC = () => {
                 <TableBody>
                   {students.map((student) => (
                     <TableRow key={student.id}>
-                      <TableCell>{student.discipleId}</TableCell>
+                      <TableCell>{student.disciple ? `${student.disciple.name} ${student.disciple.lastName}` : student.discipleId}</TableCell>
                       <TableCell>{student.currentLevelId}</TableCell>
                       <TableCell><Badge>{student.status}</Badge></TableCell>
                     </TableRow>
