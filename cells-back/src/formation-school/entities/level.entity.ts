@@ -14,9 +14,6 @@ export class LevelEntity {
   @Field()
   order: number;
 
-  @Field()
-  type: 'vision' | 'doctrina';
-
   @Field(() => String)
   createdUser: string;
 

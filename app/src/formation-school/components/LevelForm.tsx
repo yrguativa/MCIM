@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Save } from 'lucide-react';
+import { Save, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -10,38 +10,70 @@ import { LevelInput, LevelSchema } from '../schemas/levelSchema';
 import { useFormationSchoolStore } from '../store/formation-school.store';
 import { useAuthStore } from '@/src/app/stores';
 import { toast } from 'sonner';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Level } from '../models';
 
 interface LevelFormProps {
+  level?: Level | null;
   onSuccess?: () => void;
+  onCancel?: () => void;
 }
 
-export const LevelForm: React.FC<LevelFormProps> = ({ onSuccess }) => {
+export const LevelForm: React.FC<LevelFormProps> = ({ level, onSuccess, onCancel }) => {
   const userState = useAuthStore(state => state.user);
   const createLevel = useFormationSchoolStore(state => state.createLevel);
+  const updateLevel = useFormationSchoolStore(state => state.updateLevel);
+  const isEditing = !!level;
   
   const form = useForm<LevelInput>({
-    resolver: zodResolver(LevelSchema),
+    resolver: zodResolver(LevelSchema) as any,
     defaultValues: {
       id: crypto.randomUUID(),
       name: '',
       description: '',
       order: 1,
-      type: 'vision',
       createdUser: userState?.id || '',
       createdDate: new Date(),
     },
   });
 
+  useEffect(() => {
+    if (level) {
+      form.reset({
+        id: level.id,
+        name: level.name,
+        description: level.description || '',
+        order: level.order,
+        createdUser: level.createdUser,
+        createdDate: new Date(level.createdDate),
+      });
+    }
+  }, [level]);
+
   async function onSubmit(data: LevelInput) {
-    const success = await createLevel(data);
+    let success;
     
-    if (success) {
-      toast.success('Nivel creado exitosamente');
-      form.reset({ ...form.getValues(), id: crypto.randomUUID() });
-      onSuccess?.();
+    if (isEditing) {
+      success = await updateLevel({
+        id: data.id,
+        name: data.name,
+        description: data.description,
+        order: data.order,
+      });
+      if (success) {
+        toast.success('Nivel actualizado exitosamente');
+        onSuccess?.();
+      } else {
+        toast.error('Error al actualizar el nivel');
+      }
     } else {
-      toast.error('Error al crear el nivel');
+      success = await createLevel(data);
+      if (success) {
+        toast.success('Nivel creado exitosamente');
+        form.reset({ ...form.getValues(), id: crypto.randomUUID() });
+        onSuccess?.();
+      } else {
+        toast.error('Error al crear el nivel');
+      }
     }
   }
 
@@ -89,33 +121,19 @@ export const LevelForm: React.FC<LevelFormProps> = ({ onSuccess }) => {
             </FormItem>
           )}
         />
-
-        <FormField
-          control={form.control}
-          name="type"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tipo</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecciona el tipo de nivel" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="vision">Visión</SelectItem>
-                  <SelectItem value="doctrina">Doctrina</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         
-        <Button type="submit">
-          <Save className="mr-2 h-4 w-4" />
-          Guardar Nivel
-        </Button>
+        <div className="flex gap-2">
+          <Button type="submit">
+            <Save className="mr-2 h-4 w-4" />
+            {isEditing ? 'Actualizar Nivel' : 'Guardar Nivel'}
+          </Button>
+          {isEditing && onCancel && (
+            <Button type="button" variant="outline" onClick={onCancel}>
+              <X className="mr-2 h-4 w-4" />
+              Cancelar
+            </Button>
+          )}
+        </div>
       </form>
     </Form>
   );
