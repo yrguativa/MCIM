@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Save } from 'lucide-react';
+import { Save, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -14,19 +14,23 @@ import { useAuthStore } from '@/src/app/stores';
 import { useDiscipleStore } from '@/src/disciples/store/disciple.store';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { Course } from '../models';
 
 interface CourseFormProps {
   cycleId: string;
+  course?: Course | null;
   onSuccess?: () => void;
+  onCancel?: () => void;
 }
 
-export const CourseForm: React.FC<CourseFormProps> = ({ cycleId, onSuccess }) => {
+export const CourseForm: React.FC<CourseFormProps> = ({ cycleId, course, onSuccess, onCancel }) => {
   const userState = useAuthStore(state => state.user);
   const { searchByName, searchResults } = useDiscipleStore();
-  const { levels, getLevelsByCycle, classrooms, getClassrooms, schedules, getSchedules, createCourse } = useFormationSchoolStore();
+  const { levels, getLevelsByCycle, classrooms, getClassrooms, schedules, getSchedules, createCourse, updateCourse } = useFormationSchoolStore();
   
   const [teacherSearchOpen, setTeacherSearchOpen] = useState(false);
   const [selectedTeacher, setSelectedTeacher] = useState<{id: string, name: string} | null>(null);
+  const isEditing = !!course;
   
   useEffect(() => {
     getLevelsByCycle(cycleId);
@@ -35,7 +39,7 @@ export const CourseForm: React.FC<CourseFormProps> = ({ cycleId, onSuccess }) =>
   }, [cycleId]);
   
   const form = useForm<CourseInput>({
-    resolver: zodResolver(CourseSchema),
+    resolver: zodResolver(CourseSchema) as any,
     defaultValues: {
       id: crypto.randomUUID(),
       levelId: '',
@@ -48,16 +52,56 @@ export const CourseForm: React.FC<CourseFormProps> = ({ cycleId, onSuccess }) =>
     },
   });
 
+  useEffect(() => {
+    if (course) {
+      form.reset({
+        id: course.id,
+        levelId: course.levelId,
+        teacherId: course.teacherId,
+        classroomId: course.classroomId,
+        scheduleId: course.scheduleId,
+        cycleId: course.cycleId,
+        type: course.type,
+        requiredClasses: course.requiredClasses,
+        createdUser: course.createdUser,
+        createdDate: new Date(course.createdDate),
+      });
+      if (course.teacher) {
+        setSelectedTeacher({ id: course.teacher.id, name: course.teacher.name || '' });
+      }
+    }
+  }, [course]);
+
   async function onSubmit(data: CourseInput) {
-    const success = await createCourse(data);
+    let success;
     
-    if (success) {
-      toast.success('Curso creado exitosamente');
-      form.reset({ ...form.getValues(), id: crypto.randomUUID() });
-      setSelectedTeacher(null);
-      onSuccess?.();
+    if (isEditing) {
+      success = await updateCourse({
+        id: data.id,
+        levelId: data.levelId,
+        teacherId: data.teacherId,
+        classroomId: data.classroomId,
+        scheduleId: data.scheduleId,
+        cycleId: data.cycleId,
+        type: data.type,
+        requiredClasses: data.requiredClasses,
+      });
+      if (success) {
+        toast.success('Curso actualizado exitosamente');
+        onSuccess?.();
+      } else {
+        toast.error('Error al actualizar el curso. Verifica que no haya conflicto de horario.');
+      }
     } else {
-      toast.error('Error al crear el curso. Verifica que no haya conflicto de horario.');
+      success = await createCourse(data);
+      if (success) {
+        toast.success('Curso creado exitosamente');
+        form.reset({ ...form.getValues(), id: crypto.randomUUID() });
+        setSelectedTeacher(null);
+        onSuccess?.();
+      } else {
+        toast.error('Error al crear el curso. Verifica que no haya conflicto de horario.');
+      }
     }
   }
 
@@ -233,10 +277,18 @@ export const CourseForm: React.FC<CourseFormProps> = ({ cycleId, onSuccess }) =>
           )}
         />
         
-        <Button type="submit">
-          <Save className="mr-2 h-4 w-4" />
-          Crear Curso
-        </Button>
+        <div className="flex gap-2">
+          <Button type="submit">
+            <Save className="mr-2 h-4 w-4" />
+            {isEditing ? 'Actualizar Curso' : 'Crear Curso'}
+          </Button>
+          {isEditing && onCancel && (
+            <Button type="button" variant="outline" onClick={onCancel}>
+              <X className="mr-2 h-4 w-4" />
+              Cancelar
+            </Button>
+          )}
+        </div>
       </form>
     </Form>
   );
