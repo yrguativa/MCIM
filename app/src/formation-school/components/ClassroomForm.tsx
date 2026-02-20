@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Save } from 'lucide-react';
+import { Save, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -9,17 +9,22 @@ import { ClassroomInput, ClassroomSchema } from '../schemas/classroomSchema';
 import { useFormationSchoolStore } from '../store/formation-school.store';
 import { useAuthStore } from '@/src/app/stores';
 import { toast } from 'sonner';
+import { Classroom } from '../models';
 
 interface ClassroomFormProps {
+  classroom?: Classroom | null;
   onSuccess?: () => void;
+  onCancel?: () => void;
 }
 
-export const ClassroomForm: React.FC<ClassroomFormProps> = ({ onSuccess }) => {
+export const ClassroomForm: React.FC<ClassroomFormProps> = ({ classroom, onSuccess, onCancel }) => {
   const userState = useAuthStore(state => state.user);
   const createClassroom = useFormationSchoolStore(state => state.createClassroom);
+  const updateClassroom = useFormationSchoolStore(state => state.updateClassroom);
+  const isEditing = !!classroom;
   
   const form = useForm<ClassroomInput>({
-    resolver: zodResolver(ClassroomSchema),
+    resolver: zodResolver(ClassroomSchema) as any,
     defaultValues: {
       id: crypto.randomUUID(),
       name: '',
@@ -30,15 +35,44 @@ export const ClassroomForm: React.FC<ClassroomFormProps> = ({ onSuccess }) => {
     },
   });
 
+  useEffect(() => {
+    if (classroom) {
+      form.reset({
+        id: classroom.id,
+        name: classroom.name,
+        capacity: classroom.capacity,
+        location: classroom.location,
+        createdUser: classroom.createdUser,
+        createdDate: new Date(classroom.createdDate),
+      });
+    }
+  }, [classroom]);
+
   async function onSubmit(data: ClassroomInput) {
-    const success = await createClassroom(data);
+    let success;
     
-    if (success) {
-      toast.success('Salón creado exitosamente');
-      form.reset({ ...form.getValues(), id: crypto.randomUUID() });
-      onSuccess?.();
+    if (isEditing) {
+      success = await updateClassroom({
+        id: data.id,
+        name: data.name,
+        capacity: data.capacity,
+        location: data.location,
+      });
+      if (success) {
+        toast.success('Salón actualizado exitosamente');
+        onSuccess?.();
+      } else {
+        toast.error('Error al actualizar el salón');
+      }
     } else {
-      toast.error('Error al crear el salón');
+      success = await createClassroom(data);
+      if (success) {
+        toast.success('Salón creado exitosamente');
+        form.reset({ ...form.getValues(), id: crypto.randomUUID() });
+        onSuccess?.();
+      } else {
+        toast.error('Error al crear el salón');
+      }
     }
   }
 
@@ -66,7 +100,12 @@ export const ClassroomForm: React.FC<ClassroomFormProps> = ({ onSuccess }) => {
             <FormItem>
               <FormLabel>Capacidad</FormLabel>
               <FormControl>
-                <Input type="number" min="1" {...field} />
+                <Input 
+                  type="number" 
+                  min="1" 
+                  {...field}
+                  onChange={e => field.onChange(parseInt(e.target.value) || 0)}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -87,10 +126,18 @@ export const ClassroomForm: React.FC<ClassroomFormProps> = ({ onSuccess }) => {
           )}
         />
         
-        <Button type="submit">
-          <Save className="mr-2 h-4 w-4" />
-          Guardar Salón
-        </Button>
+        <div className="flex gap-2">
+          <Button type="submit">
+            <Save className="mr-2 h-4 w-4" />
+            {isEditing ? 'Actualizar Salón' : 'Guardar Salón'}
+          </Button>
+          {isEditing && onCancel && (
+            <Button type="button" variant="outline" onClick={onCancel}>
+              <X className="mr-2 h-4 w-4" />
+              Cancelar
+            </Button>
+          )}
+        </div>
       </form>
     </Form>
   );
