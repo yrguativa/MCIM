@@ -15,6 +15,9 @@ export class Cycle extends Document {
   @Prop({ default: true })
   active: boolean;
 
+  @Prop({ default: 6 })
+  requiredClasses: number;
+
   @Prop({ required: true })
   createdUser: string;
 
