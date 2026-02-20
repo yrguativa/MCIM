@@ -14,7 +14,7 @@ import { StudentCourseHistory } from './schemas/student-course-history.schema';
 import { CreateCycleInput } from './dto/create-cycle.input';
 import { CreateLevelInput } from './dto/create-level.input';
 import { CreateClassroomInput } from './dto/create-classroom.input';
-import { CreateScheduleInput } from './dto/create-schedule.input';
+import { CreateScheduleInput, UpdateScheduleInput } from './dto/create-schedule.input';
 import { CreateCourseInput } from './dto/create-course.input';
 import { CreateStudentInput, UpdateStudentInput } from './dto/create-student.input';
 import { EnrollStudentInput, UpdateEnrollmentInput } from './dto/enroll-student.input';
@@ -55,6 +55,7 @@ export class FormationSchoolService {
       startDate: cycle.startDate,
       endDate: cycle.endDate,
       active: cycle.active,
+      requiredClasses: cycle.requiredClasses,
       createdUser: cycle.createdUser,
       createdDate: cycle.createdDate,
       updatedUser: cycle.updatedUser,
@@ -65,7 +66,6 @@ export class FormationSchoolService {
   private toLevelEntity(level: Level & { _id: unknown }): LevelEntity {
     return {
       id: level._id?.toString() ?? '',
-      type: level.type,
       name: level.name,
       description: level.description,
       order: level.order,
@@ -91,7 +91,8 @@ export class FormationSchoolService {
       dayOfWeek: schedule.dayOfWeek,
       startTime: schedule.startTime,
       endTime: schedule.endTime,
-      courseId: schedule.courseId,
+      levelId: schedule.levelId,
+      courseId: undefined,
       createdUser: schedule.createdUser,
       createdDate: schedule.createdDate,
     };
@@ -229,6 +230,21 @@ export class FormationSchoolService {
 
   async createSchedule(input: CreateScheduleInput): Promise<ScheduleEntity> {
     const schedule = new this.scheduleModel({ ...input, createdDate: new Date() });
+    const saved = await schedule.save();
+    return this.toScheduleEntity(saved);
+  }
+
+  async updateSchedule(input: UpdateScheduleInput & { id: string }): Promise<ScheduleEntity> {
+    const schedule = await this.scheduleModel.findById(input.id).exec();
+    if (!schedule) {
+      throw new NotFoundException('Horario no encontrado');
+    }
+    
+    if (input.dayOfWeek !== undefined) schedule.dayOfWeek = input.dayOfWeek;
+    if (input.startTime !== undefined) schedule.startTime = input.startTime;
+    if (input.endTime !== undefined) schedule.endTime = input.endTime;
+    if (input.levelId !== undefined) schedule.levelId = input.levelId;
+    
     const saved = await schedule.save();
     return this.toScheduleEntity(saved);
   }

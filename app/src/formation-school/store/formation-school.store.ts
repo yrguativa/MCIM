@@ -24,20 +24,25 @@ interface FormationSchoolState {
   getCycles: () => Promise<void>;
   getActiveCycle: () => Promise<void>;
   createCycle: (cycle: Partial<Cycle>) => Promise<boolean>;
+  updateCycle: (cycle: Partial<Cycle>) => Promise<boolean>;
   
   getLevelsByCycle: (cycleId: string) => Promise<void>;
   getLevels: () => Promise<void>;
   createLevel: (level: Partial<Level>) => Promise<boolean>;
+  updateLevel: (level: Partial<Level>) => Promise<boolean>;
   
   getClassrooms: () => Promise<void>;
   createClassroom: (classroom: Partial<Classroom>) => Promise<boolean>;
-  
+  updateClassroom: (classroom: Partial<Classroom>) => Promise<boolean>;
+
   getSchedules: () => Promise<void>;
   createSchedule: (schedule: Partial<Schedule>) => Promise<boolean>;
+  updateSchedule: (schedule: Partial<Schedule>) => Promise<boolean>;
   
   getCoursesByCycle: (cycleId: string) => Promise<void>;
   getCoursesByTeacher: (teacherId: string) => Promise<void>;
   createCourse: (course: Partial<Course>) => Promise<boolean>;
+  updateCourse: (course: Partial<Course>) => Promise<boolean>;
   generateQRCode: (courseId: string) => Promise<{ id: string; qrCode: string; qrExpiration: Date }>;
   
   getEnrollmentsByCourse: (courseId: string) => Promise<void>;
@@ -141,6 +146,17 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
     }
   },
 
+  updateCycle: async (cycle) => {
+    try {
+      await FormationSchoolService.updateCycle(cycle);
+      await get().getCycles();
+      return true;
+    } catch (error) {
+      console.error('Error updating cycle:', error);
+      return false;
+    }
+  },
+
   getLevelsByCycle: async (cycleId: string) => {
     const data = await FormationSchoolService.getLevelsByCycle(cycleId);
     set({ levels: data.levelsByCycle });
@@ -166,6 +182,17 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
     }
   },
 
+  updateLevel: async (level) => {
+    try {
+      await FormationSchoolService.updateLevel(level);
+      await get().getLevels();
+      return true;
+    } catch (error) {
+      console.error('Error updating level:', error);
+      return false;
+    }
+  },
+
   getClassrooms: async () => {
     const data = await FormationSchoolService.getClassrooms();
     set({ classrooms: data.classrooms });
@@ -186,6 +213,17 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
     }
   },
 
+  updateClassroom: async (classroom) => {
+    try {
+      await FormationSchoolService.updateClassroom(classroom);
+      await get().getClassrooms();
+      return true;
+    } catch (error) {
+      console.error('Error updating classroom:', error);
+      return false;
+    }
+  },
+
   getSchedules: async () => {
     const data = await FormationSchoolService.getSchedules();
     set({ schedules: data.schedules });
@@ -202,6 +240,17 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
       return true;
     } catch (error) {
       console.error('Error creating schedule:', error);
+      return false;
+    }
+  },
+
+  updateSchedule: async (schedule) => {
+    try {
+      await FormationSchoolService.updateSchedule(schedule);
+      await get().getSchedules();
+      return true;
+    } catch (error) {
+      console.error('Error updating schedule:', error);
       return false;
     }
   },
@@ -227,6 +276,17 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
       return true;
     } catch (error) {
       console.error('Error creating course:', error);
+      return false;
+    }
+  },
+
+  updateCourse: async (course) => {
+    try {
+      await FormationSchoolService.updateCourse(course);
+      await get().getCoursesByCycle(course.cycleId!);
+      return true;
+    } catch (error) {
+      console.error('Error updating course:', error);
       return false;
     }
   },

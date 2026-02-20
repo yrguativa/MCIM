@@ -17,6 +17,9 @@ export class CycleEntity {
   @Field(() => Boolean)
   active: boolean;
 
+  @Field(() => Number, { nullable: true })
+  requiredClasses?: number;
+
   @Field(() => String)
   createdUser: string;
 

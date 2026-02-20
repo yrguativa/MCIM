@@ -1,5 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { IsString, IsNotEmpty, IsDate, IsOptional, IsNumber, Min } from 'class-validator';
+import { IsString, IsNotEmpty, IsDate, IsOptional, IsNumber, IsBoolean, Min } from 'class-validator';
 
 @InputType()
 export class CreateCycleInput {
@@ -18,8 +18,14 @@ export class CreateCycleInput {
 
   @Field({ nullable: true })
   @IsOptional()
-  @IsNumber()
+  @IsBoolean()
   active?: boolean;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  requiredClasses?: number;
 
   @Field()
   @IsString()
@@ -47,8 +53,14 @@ export class UpdateCycleInput {
 
   @Field({ nullable: true })
   @IsOptional()
-  @IsNumber()
+  @IsBoolean()
   active?: boolean;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  requiredClasses?: number;
 
   @Field({ nullable: true })
   @IsOptional()

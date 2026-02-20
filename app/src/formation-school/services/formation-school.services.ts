@@ -56,18 +56,28 @@ export const FormationSchoolService = {
     return graphqlRequest(query, { input });
   },
 
+  async updateCycle(input: Record<string, unknown>) {
+    const query = `mutation UpdateCycle($input: UpdateCycleInput!) { updateCycle(input: $input) { id name active } }`;
+    return graphqlRequest(query, { input });
+  },
+
   async getLevelsByCycle(cycleId: string) {
-    const query = `query LevelsByCycle($cycleId: ID!) { levelsByCycle(cycleId: $cycleId) { id name description order type } }`;
+    const query = `query LevelsByCycle($cycleId: ID!) { levelsByCycle(cycleId: $cycleId) { id name description order } }`;
     return graphqlRequest(query, { cycleId });
   },
 
   async getLevels() {
-    const query = `query { levels { id name description order type } }`;
+    const query = `query { levels { id name description order } }`;
     return graphqlRequest(query);
   },
   
   async createLevel(input: Record<string, unknown>) {
     const query = `mutation CreateLevel($input: CreateLevelInput!) { createLevel(input: $input) { id name } }`;
+    return graphqlRequest(query, { input });
+  },
+
+  async updateLevel(input: Record<string, unknown>) {
+    const query = `mutation UpdateLevel($input: UpdateLevelInput!) { updateLevel(input: $input) { id name order } }`;
     return graphqlRequest(query, { input });
   },
 
@@ -81,13 +91,23 @@ export const FormationSchoolService = {
     return graphqlRequest(query, { input });
   },
 
+  async updateClassroom(input: Record<string, unknown>) {
+    const query = `mutation UpdateClassroom($input: UpdateClassroomInput!) { updateClassroom(input: $input) { id name } }`;
+    return graphqlRequest(query, { input });
+  },
+
   async getSchedules() {
-    const query = `query { schedules { id dayOfWeek startTime endTime } }`;
+    const query = `query { schedules { id dayOfWeek startTime endTime levelId } }`;
     return graphqlRequest(query);
   },
   
   async createSchedule(input: Record<string, unknown>) {
     const query = `mutation CreateSchedule($input: CreateScheduleInput!) { createSchedule(input: $input) { id } }`;
+    return graphqlRequest(query, { input });
+  },
+
+  async updateSchedule(input: Record<string, unknown>) {
+    const query = `mutation UpdateSchedule($input: UpdateScheduleInput!) { updateSchedule(input: $input) { id } }`;
     return graphqlRequest(query, { input });
   },
 
@@ -103,6 +123,11 @@ export const FormationSchoolService = {
   
   async createCourse(input: Record<string, unknown>) {
     const query = `mutation CreateCourse($input: CreateCourseInput!) { createCourse(input: $input) { id } }`;
+    return graphqlRequest(query, { input });
+  },
+
+  async updateCourse(input: Record<string, unknown>) {
+    const query = `mutation UpdateCourse($input: UpdateCourseInput!) { updateCourse(input: $input) { id } }`;
     return graphqlRequest(query, { input });
   },
   
