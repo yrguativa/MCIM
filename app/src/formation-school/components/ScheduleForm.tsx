@@ -103,7 +103,7 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({ schedule, onSuccess,
           render={({ field }) => (
             <FormItem>
               <FormLabel>Día de la Semana</FormLabel>
-              <Select onValueChange={(v) => field.onChange(parseInt(v))} value={field.value?.toString()}>
+              <Select onValueChange={(v) => field.onChange(parseInt(v))} defaultValue={field.value?.toString()}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar día" />
@@ -158,7 +158,7 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({ schedule, onSuccess,
           render={({ field }) => (
             <FormItem>
               <FormLabel>Nivel</FormLabel>
-              <Select onValueChange={field.onChange} value={field.value || undefined}>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar nivel" />

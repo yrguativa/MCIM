@@ -17,12 +17,12 @@ async function graphqlRequest(query: string, variables?: Record<string, unknown>
 
 export const FormationSchoolService = {
   async getStudents() {
-    const query = `query { students { id discipleId currentLevelId status createdUser createdDate } }`;
+    const query = `query { students { id discipleId disciple { id name lastName identification } currentLevelId status createdUser createdDate } }`;
     return graphqlRequest(query);
   },
 
   async getStudentById(id: string) {
-    const query = `query Student($id: ID!) { student(id: $id) { id discipleId currentLevelId status createdUser createdDate } }`;
+    const query = `query Student($id: ID!) { student(id: $id) { id discipleId disciple { id name lastName identification } currentLevelId status createdUser createdDate } }`;
     return graphqlRequest(query, { id });
   },
 
@@ -107,7 +107,7 @@ export const FormationSchoolService = {
   },
 
   async updateSchedule(input: Record<string, unknown>) {
-    const query = `mutation UpdateSchedule($input: UpdateScheduleInput!) { updateSchedule(input: $input) { id } }`;
+    const query = `mutation UpdateSchedule($input: UpdateScheduleInputWithId!) { updateSchedule(input: $input) { id } }`;
     return graphqlRequest(query, { input });
   },
 
