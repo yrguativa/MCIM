@@ -1,9 +1,7 @@
 import { z } from "zod"
 
 export const StudentCourseHistorySchema = z.object({
-    id: z.string()
-        .min(1)
-        .default(crypto.randomUUID()),
+    id: z.string().min(1),
     studentId: z.string()
         .min(1, {
             message: "El estudiante es obligatorio.",
@@ -14,7 +12,7 @@ export const StudentCourseHistorySchema = z.object({
         }),
     enrollmentDate: z.date(),
     completionDate: z.date().optional(),
-    finalGrade: z.number().optional(),
+    finalGrade: z.coerce.number().optional(),
     status: z.enum(['in_progress', 'completed', 'withdrawn']),
     promotedToNextLevel: z.boolean().default(false),
     createdUser: z.string()

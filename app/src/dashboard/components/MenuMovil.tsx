@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import FormationSchoolMenu from "@/formation-school/components/FormationSchoolMenu";
+import FormationSchoolMenu from "@/src/formation-school/components/FormationSchoolMenu";
 
 const MenuMovil: React.FC = () => {
   const { t } = useTranslation();

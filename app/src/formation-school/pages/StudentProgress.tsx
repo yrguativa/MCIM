@@ -27,7 +27,7 @@ export const StudentProgress: React.FC = () => {
   }, [userState?.id]);
   
   const handleCalculateGrade = async (enrollmentId: string) => {
-    if (!activeCycle) return;
+    if (!activeCycle || activeCycle.requiredClasses === undefined) return;
     
     try {
       const grade = await calculateFinalGrade(enrollmentId, activeCycle.requiredClasses);
@@ -68,13 +68,13 @@ export const StudentProgress: React.FC = () => {
           const attendanceCount = attendances.filter(
             a => a.studentEnrollmentId === enrollment.id && a.attended
           ).length;
-          const progress = activeCycle ? (attendanceCount / activeCycle.requiredClasses) * 100 : 0;
+          const progress = activeCycle ? (attendanceCount / (activeCycle.requiredClasses || 1)) * 100 : 0;
           
           return (
             <Card key={enrollment.id} className="hover:shadow-lg transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  {enrollment.courseId?.levelId?.name || 'Curso'}
+                  {enrollment.course?.levelId || 'Curso'}
                 </CardTitle>
                 <Badge variant={enrollment.status === 'active' ? 'default' : 'secondary'}>
                   {enrollment.status}

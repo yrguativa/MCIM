@@ -5,7 +5,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
 import { UserPlus, Search, BookOpen, GraduationCap } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -152,15 +151,6 @@ export const StudentEnrollmentPage: React.FC = () => {
       return;
     }
 
-    const level = levels.find(l => l.id === data.levelId);
-    const course = courses.find(c => c.id === data.courseId);
-
-    if (level && course && level.type !== course.type) {
-      setEnrollmentError('El nivel no corresponde al tipo de curso');
-      toast.error('El nivel no corresponde al tipo de curso');
-      return;
-    }
-
     const success = await enrollStudent({
       studentId,
       courseId: data.courseId,
@@ -286,12 +276,7 @@ export const StudentEnrollmentPage: React.FC = () => {
                             <SelectContent>
                               {levels.map((level) => (
                                 <SelectItem key={level.id} value={level.id}>
-                                  <div className="flex items-center gap-2">
-                                    <Badge variant={level.type === 'vision' ? 'default' : 'secondary'}>
-                                      {level.type}
-                                    </Badge>
-                                    {level.name}
-                                  </div>
+                                  {level.name}
                                 </SelectItem>
                               ))}
                             </SelectContent>

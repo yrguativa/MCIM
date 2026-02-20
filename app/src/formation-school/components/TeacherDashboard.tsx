@@ -39,7 +39,7 @@ export const TeacherDashboard: React.FC = () => {
           <Card key={course.id} className="hover:shadow-lg transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                {course.levelId?.name || 'Curso'}
+                {course.level?.name || 'Curso'}
               </CardTitle>
               <Badge variant={course.qrExpiration && new Date(course.qrExpiration) > new Date() ? 'default' : 'secondary'}>
                 {course.qrExpiration && new Date(course.qrExpiration) > new Date() ? 'QR Activo' : 'QR Inactivo'}
@@ -48,10 +48,10 @@ export const TeacherDashboard: React.FC = () => {
             <CardContent>
               <div className="space-y-2">
                 <p className="text-sm text-muted-foreground">
-                  {course.scheduleId ? `${days[course.scheduleId.dayOfWeek]} ${course.scheduleId.startTime}-${course.scheduleId.endTime}` : 'Horario no definido'}
+                  {course.scheduleId ? `${days[course.schedule?.dayOfWeek ?? 0]} ${course.schedule?.startTime ?? ''}-${course.schedule?.endTime ?? ''}` : 'Horario no definido'}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  {course.classroomId?.name || 'Salón no asignado'}
+                  {course.classroom?.name || 'Salón no asignado'}
                 </p>
                 <div className="flex gap-2 pt-2">
                   <Button

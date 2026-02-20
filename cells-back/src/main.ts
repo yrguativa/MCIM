@@ -13,6 +13,8 @@ async function bootstrap() {
   );
   await app.listen(process.env.PORT ?? 3000);
   const url = await app.getUrl();
+  console.log(`🚀 Server running at: ${url}`);
   console.log(`🚀 GraphQL endpoint: ${url}/graphql`);
+  console.log(`💡 Use Apollo Studio or Postman to query: POST ${url}/graphql`);
 }
 bootstrap();

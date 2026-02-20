@@ -1,9 +1,7 @@
 import { z } from "zod"
 
 export const CourseSchema = z.object({
-    id: z.string()
-        .min(1)
-        .default(crypto.randomUUID()),
+    id: z.string().min(1),
     levelId: z.string()
         .min(1, {
             message: "El nivel es obligatorio.",

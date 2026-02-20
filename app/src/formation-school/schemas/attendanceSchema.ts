@@ -1,9 +1,7 @@
 import { z } from "zod"
 
 export const AttendanceSchema = z.object({
-    id: z.string()
-        .min(1)
-        .default(crypto.randomUUID()),
+    id: z.string().min(1),
     studentEnrollmentId: z.string()
         .min(1, {
             message: "La inscripción es obligatoria.",

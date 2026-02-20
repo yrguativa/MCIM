@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Save, UserPlus } from 'lucide-react';
+import { UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { TeacherAssignmentInput, TeacherAssignmentSchema } from '../schemas/teacherAssignmentSchema';
 import { useFormationSchoolStore } from '../store/formation-school.store';
 import { useAuthStore } from '@/src/app/stores';
@@ -29,7 +28,7 @@ export const TeacherEnrollmentForm: React.FC<TeacherEnrollmentFormProps> = ({ co
   const [selectedTeacher, setSelectedTeacher] = useState<{id: string, name: string} | null>(null);
   
   const form = useForm<TeacherAssignmentInput>({
-    resolver: zodResolver(TeacherAssignmentSchema),
+    resolver: zodResolver(TeacherAssignmentSchema) as any,
     defaultValues: {
       id: crypto.randomUUID(),
       teacherId: '',

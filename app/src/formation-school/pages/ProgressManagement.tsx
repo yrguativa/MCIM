@@ -39,7 +39,7 @@ export const ProgressManagement: React.FC<ProgressManagementProps> = ({ courseId
   }, [activeCycle]);
   
   const handleCalculateAllGrades = async () => {
-    if (!activeCycle) return;
+    if (!activeCycle || activeCycle.requiredClasses === undefined) return;
     
     for (const enrollment of enrollments) {
       try {
@@ -99,14 +99,14 @@ export const ProgressManagement: React.FC<ProgressManagementProps> = ({ courseId
                   a => a.studentEnrollmentId === enrollment.id
                 );
                 const attendedCount = attendanceList.filter(a => a.attended).length;
-                const progress = activeCycle ? (attendedCount / activeCycle.requiredClasses) * 100 : 0;
+                const progress = activeCycle ? (attendedCount / (activeCycle.requiredClasses || 1)) * 100 : 0;
                 
                 return (
                   <TableRow key={enrollment.id}>
                     <TableCell className="font-medium">
                       <div className="flex items-center gap-2">
                         <User className="h-4 w-4" />
-                        {enrollment.studentId?.name} {enrollment.studentId?.lastName}
+                        {enrollment.student?.name} {enrollment.student?.lastName || enrollment.studentId}
                       </div>
                     </TableCell>
                     <TableCell>

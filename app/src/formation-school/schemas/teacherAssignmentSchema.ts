@@ -1,9 +1,7 @@
 import { z } from "zod"
 
 export const TeacherAssignmentSchema = z.object({
-    id: z.string()
-        .min(1)
-        .default(crypto.randomUUID()),
+    id: z.string().min(1),
     teacherId: z.string()
         .min(1, {
             message: "El maestro es obligatorio.",
