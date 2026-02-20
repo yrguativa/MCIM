@@ -8,6 +8,9 @@ export class StudentEntity {
   @Field(() => ID)
   discipleId: string;
 
+  @Field({ nullable: true })
+  disciple?: { id: string; name: string; lastName: string; identification: string };
+
   @Field(() => ID)
   currentLevelId: string;
 
