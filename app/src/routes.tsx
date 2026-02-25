@@ -5,6 +5,7 @@ import { useAuthStore } from "./app/stores/auth/auth.store";
 
 import DashboardPage from "./dashboard/pages/Dashboard";
 import { LoginPage } from "./public/pages/Login";
+import RegisterPage from "./public/pages/Register";
 import { PublicRoutes } from "./public/routes";
 
 
@@ -14,15 +15,13 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
 };
 
-import RegisterPage from "./public/pages/Register";
-
 export const GeneralRoutes: React.FC = () => {
     return (
         <Routes>
             {/* Public Routes - deben estar primero */}
-            <Route path="login" element={<LoginPage />} />
-            <Route path="register" element={<RegisterPage />} />
-            <Route path="public/*" element={<PublicRoutes />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/public/*" element={<PublicRoutes />} />
 
             {/* Protected Routes - deben estar al final */}
             <Route
