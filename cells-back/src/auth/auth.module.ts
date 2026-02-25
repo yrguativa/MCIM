@@ -6,12 +6,18 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthResolver } from './auth.resolver';
 import { User, UserSchema } from './schemas/user.schema';
+import { Disciple, DiscipleSchema } from '../disciples/schemas/disciple.schema';
+import { PasswordReset, PasswordResetSchema } from './schemas/password-reset.schema';
 import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: User.name, schema: UserSchema },
+      { name: Disciple.name, schema: DiscipleSchema },
+      { name: PasswordReset.name, schema: PasswordResetSchema },
+    ]),
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],

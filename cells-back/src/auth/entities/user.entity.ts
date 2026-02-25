@@ -40,4 +40,7 @@ export class UserEntity {
 
   @Field({ nullable: true })
   accessToken: string;
+
+  @Field({ nullable: true })
+  discipleId?: string;
 }
