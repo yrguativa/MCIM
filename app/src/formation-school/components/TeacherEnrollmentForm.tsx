@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { UserPlus } from 'lucide-react';
+import { UserPlus, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { TeacherAssignmentInput, TeacherAssignmentSchema } from '../schemas/teacherAssignmentSchema';
@@ -21,11 +21,12 @@ interface TeacherEnrollmentFormProps {
 
 export const TeacherEnrollmentForm: React.FC<TeacherEnrollmentFormProps> = ({ courseId, onSuccess }) => {
   const userState = useAuthStore(state => state.user);
-  const { searchByName, searchResults } = useDiscipleStore();
+  const { Disciples, getDisciples, searchByName, searchResults } = useDiscipleStore();
   const { enrollTeacher } = useFormationSchoolStore();
   
   const [teacherSearchOpen, setTeacherSearchOpen] = useState(false);
   const [selectedTeacher, setSelectedTeacher] = useState<{id: string, name: string} | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   
   const form = useForm<TeacherAssignmentInput>({
     resolver: zodResolver(TeacherAssignmentSchema) as any,
@@ -39,6 +40,21 @@ export const TeacherEnrollmentForm: React.FC<TeacherEnrollmentFormProps> = ({ co
       createdDate: new Date(),
     },
   });
+
+  const loadTeachers = async () => {
+    setIsLoading(true);
+    try {
+      await getDisciples();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (teacherSearchOpen && Disciples.length === 0) {
+      loadTeachers();
+    }
+  }, [teacherSearchOpen]);
 
   async function onSubmit(data: TeacherAssignmentInput) {
     const success = await enrollTeacher({
@@ -62,6 +78,8 @@ export const TeacherEnrollmentForm: React.FC<TeacherEnrollmentFormProps> = ({ co
     }
   };
 
+  const teachersToShow = searchResults.length > 0 ? searchResults : Disciples;
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -79,7 +97,13 @@ export const TeacherEnrollmentForm: React.FC<TeacherEnrollmentFormProps> = ({ co
                       role="combobox"
                       className={cn(!field.value && "text-muted-foreground")}
                     >
-                      {selectedTeacher ? `${selectedTeacher.name}` : "Buscar maestro..."}
+                      {isLoading ? (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      ) : selectedTeacher ? (
+                        `${selectedTeacher.name}`
+                      ) : (
+                        "Seleccionar maestro..."
+                      )}
                       <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </FormControl>
@@ -87,22 +111,35 @@ export const TeacherEnrollmentForm: React.FC<TeacherEnrollmentFormProps> = ({ co
                 <PopoverContent className="w-[400px] p-0">
                   <Command>
                     <CommandInput placeholder="Buscar maestro..." onValueChange={handleTeacherSearch} />
-                    <CommandEmpty>No se encontró el maestro</CommandEmpty>
-                    <CommandGroup>
-                      {searchResults.map((disciple) => (
-                        <CommandItem
-                          value={`${disciple.name} ${disciple.lastName}`}
-                          key={disciple.id}
-                          onSelect={() => {
-                            form.setValue("teacherId", disciple.id);
-                            setSelectedTeacher({ id: disciple.id, name: `${disciple.name} ${disciple.lastName}` });
-                            setTeacherSearchOpen(false);
-                          }}
-                        >
-                          {disciple.name} {disciple.lastName} - {disciple.identification}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
+                    {isLoading && Disciples.length === 0 ? (
+                      <div className="flex items-center justify-center p-4">
+                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                        <span className="text-sm text-muted-foreground">Cargando maestros...</span>
+                      </div>
+                    ) : (
+                      <>
+                        <CommandEmpty>
+                          {searchResults.length === 0 && Disciples.length > 0 
+                            ? "Escribe para buscar" 
+                            : "No se encontró el maestro"}
+                        </CommandEmpty>
+                        <CommandGroup>
+                          {teachersToShow.map((disciple) => (
+                            <CommandItem
+                              value={`${disciple.name} ${disciple.lastName}`}
+                              key={disciple.id}
+                              onSelect={() => {
+                                form.setValue("teacherId", disciple.id);
+                                setSelectedTeacher({ id: disciple.id, name: `${disciple.name} ${disciple.lastName}` });
+                                setTeacherSearchOpen(false);
+                              }}
+                            >
+                              {disciple.name} {disciple.lastName} - {disciple.identification}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </>
+                    )}
                   </Command>
                 </PopoverContent>
               </Popover>

@@ -6,6 +6,8 @@ export const TeacherAssignmentSchema = z.object({
         .min(1, {
             message: "El maestro es obligatorio.",
         }),
+    type: z.enum(['teacher', 'tutor'])
+        .default('teacher'),
     courseId: z.string()
         .optional(),
     assignedDate: z.date()

@@ -39,9 +39,15 @@ const storeDisciple: StateCreator<DiscipleState> = (set, get) => (
         },
 
         getDisciples: async () => {
-            const disciples = await DisciplesService.getDisciples();
-            if (!disciples || disciples.length === 0) return;
-            set({ Disciples: disciples });
+            console.log('[DiscipleStore] getDisciples called');
+            try {
+                const disciples = await DisciplesService.getDisciples();
+                console.log('[DiscipleStore] getDisciples result:', disciples?.length);
+                if (!disciples || disciples.length === 0) return;
+                set({ Disciples: disciples });
+            } catch (error) {
+                console.error('[DiscipleStore] getDisciples error:', error);
+            }
         },
 
         addDisciple: async (disciple: Disciple) => {
