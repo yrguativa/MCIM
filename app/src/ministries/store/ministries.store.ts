@@ -5,6 +5,7 @@ import { MinistriesService } from "../services/ministries.services";
 
 export interface MinistryState {
     ministries: Ministry[];
+    isLoading: boolean;
 
     // Ministry methods
     getMinistries: () => Promise<void>;
@@ -16,12 +17,18 @@ export interface MinistryState {
 
 const storeMinistry: StateCreator<MinistryState> = (set, get) => ({
     ministries: [],
+    isLoading: false,
 
     getMinistries: async () => {
-        const ministries = await MinistriesService.getMinistries();
-        if (ministries && ministries.length > 0) {
-            set({ ministries: [...ministries] });
-        };
+        set({ isLoading: true });
+        try {
+            const ministries = await MinistriesService.getMinistries();
+            if (ministries && ministries.length > 0) {
+                set({ ministries: [...ministries] });
+            };
+        } finally {
+            set({ isLoading: false });
+        }
     },
 
     addMinistry: async (ministry: Ministry) => {

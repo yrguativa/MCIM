@@ -19,7 +19,7 @@ interface DiscipleInfo {
 interface StudentWithDisciple {
   id: string;
   discipleId: string;
-  currentLevelId: string;
+  currentLevelId?: string;
   status: 'active' | 'inactive';
   disciple?: DiscipleInfo;
   completedCourses: number;

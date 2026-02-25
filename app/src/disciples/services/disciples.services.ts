@@ -3,6 +3,8 @@ import { Disciple } from '../models/disciple';
 
 const API_URL = (import.meta.env.VITE_API_BASE_URL as string);
 
+console.log('[DisciplesService] API_URL:', API_URL);
+
 const api = axios.create({
     baseURL: API_URL,
     headers: {
@@ -10,9 +12,12 @@ const api = axios.create({
     },
 });
 
+console.log('[DisciplesService] API instance baseURL:', api.defaults.baseURL);
+
 
 export class DisciplesService {
     static async searchByName(name: string): Promise<Disciple[]> {
+        console.log('[DisciplesService] Starting search for:', name);
         try {
             const query = `
             query DiscipleByName($name: String!) {
@@ -26,7 +31,8 @@ export class DisciplesService {
                 }
             }
             `;
-            const { data } = await api.post(API_URL,
+            console.log('[DisciplesService] Making API request...');
+            const { data } = await api.post('',
                 JSON.stringify({
                     query,
                     variables: {
@@ -35,13 +41,22 @@ export class DisciplesService {
                 })
             );
 
-            return data.data.searchDisciples;
+            console.log('[DisciplesService] Response data:', data);
+
+            if (data.errors) {
+                console.error('GraphQL errors:', data.errors);
+                throw new Error(data.errors[0]?.message || 'GraphQL error');
+            }
+
+            const results = data.data.discipleByName || [];
+            console.log('[DisciplesService] Returning results:', results);
+            return results;
         } catch (error) {
             if (error instanceof AxiosError) {
-                console.error((error as AxiosError).response?.data);
+                console.error('[DisciplesService] Axios error:', (error as AxiosError).response?.data);
                 throw new Error(JSON.stringify((error as AxiosError).response?.data) || 'Error searching disciples');
             }
-            console.error(error);
+            console.error('[DisciplesService] Error:', error);
             throw new Error('Error searching disciples');
         }
     }
@@ -60,7 +75,7 @@ export class DisciplesService {
                 }
             }
             `;
-            const { data } = await api.post(API_URL,
+            const { data } = await api.post('',
                 JSON.stringify({
                     query,
                     variables: {
@@ -100,7 +115,7 @@ export class DisciplesService {
             }
                 
             `;
-            const { data } = await api.post(API_URL,
+            const { data } = await api.post('',
                 JSON.stringify({
                     query: queryDisciples,
                 })
@@ -138,7 +153,7 @@ export class DisciplesService {
                 }
             }
             `;
-            const { data } = await api.post(API_URL,
+            const { data } = await api.post('',
                 JSON.stringify({
                     query: queryDisciples,
                     variables: {
@@ -167,7 +182,7 @@ export class DisciplesService {
                 }
             }
             `;
-            const { data } = await api.post(API_URL,
+            const { data } = await api.post('',
                 JSON.stringify({
                     query: queryDisciples,
                     variables: {
@@ -194,7 +209,7 @@ export class DisciplesService {
                     id
                 }
             }`;
-            const { data } = await api.post(API_URL,
+            const { data } = await api.post('',
                 JSON.stringify({
                     query: queryDisciples,
                     variables: {

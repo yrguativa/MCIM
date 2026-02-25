@@ -36,7 +36,7 @@ interface LoginOtherDataProps {
 const LoginOtherData: React.FC<LoginOtherDataProps> = ({ isOpenSheet, setIsOpenSheet }: LoginOtherDataProps) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
-    const { ministries, getMinistries } = useMinistryStore();
+    const { ministries, getMinistries, isLoading } = useMinistryStore();
     const { user: userState, updateUser } = useAuthStore()
     
     const form = useForm<LoginOtherDataInput>({
@@ -55,10 +55,10 @@ const LoginOtherData: React.FC<LoginOtherDataProps> = ({ isOpenSheet, setIsOpenS
     };
 
     useEffect(() => {
-        if (!ministries || ministries.length === 0) {
+        if (isOpenSheet && (!ministries || ministries.length === 0)) {
             getMinistries();
         }
-    }, []);
+    }, [isOpenSheet, ministries, getMinistries]);
 
     return (
         <Sheet open={isOpenSheet} >
@@ -99,10 +99,14 @@ const LoginOtherData: React.FC<LoginOtherDataProps> = ({ isOpenSheet, setIsOpenS
                                         </FormControl>
                                         <SelectContent>
                                             {
-                                                Array.isArray(ministries) && ministries.length > 0 && (
+                                                isLoading ? (
+                                                    <div className="p-2 text-sm text-muted-foreground">Cargando ministerios...</div>
+                                                ) : Array.isArray(ministries) && ministries.length > 0 ? (
                                                     ministries.map((ministry) => (
                                                         <SelectItem value={ministry.id} key={ministry.id}> {ministry.name}</SelectItem>
                                                     ))
+                                                ) : (
+                                                    <div className="p-2 text-sm text-muted-foreground">No hay ministerios disponibles</div>
                                                 )
                                             }
                                         </SelectContent>

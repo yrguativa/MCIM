@@ -280,10 +280,10 @@ export const StudentEnrollmentForm: React.FC<StudentEnrollmentFormProps> = ({ on
                   </FormControl>
                   <SelectContent>
                     {courses
-                      .filter(c => c.levelId === selectedLevelId)
+                      .filter(c => c.levelId === selectedLevelId && c.scheduleId)
                       .map((course) => (
-                        <SelectItem key={course.scheduleId} value={course.scheduleId}>
-                          {getScheduleDisplay(course.scheduleId)}
+                        <SelectItem key={course.scheduleId!} value={course.scheduleId!}>
+                          {getScheduleDisplay(course.scheduleId!)}
                         </SelectItem>
                       ))}
                   </SelectContent>

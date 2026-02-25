@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Users, BookOpen, Building, Clock, Plus, Pencil } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { CycleForm } from './CycleForm';
 import { LevelForm } from './LevelForm';
@@ -19,6 +20,7 @@ import { Cycle, Level, Classroom, Course, Schedule } from '../models';
 
 export const AdminDashboard: React.FC = () => {
   const location = useLocation();
+  const { t } = useTranslation();
   const { 
     activeCycle, getActiveCycle, 
     courses, getCoursesByCycle,
@@ -80,7 +82,7 @@ export const AdminDashboard: React.FC = () => {
   }, [selectedCourseId]);
 
   const handleCourseSelect = (courseId: string) => {
-    setSelectedCourseId(courseId);
+    setSelectedCourseId(courseId === '__none__' ? '' : courseId);
   };
   
   return (
@@ -126,7 +128,7 @@ export const AdminDashboard: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <BookOpen className="h-5 w-5" />
-                  {editingCycle ? 'Editar Ciclo' : 'Crear Ciclo'}
+                  {editingCycle ? t('formation-school.cycles.edit') : t('formation-school.cycles.create')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -140,18 +142,18 @@ export const AdminDashboard: React.FC = () => {
           ) : (
             <Card>
               <CardHeader>
-                <CardTitle>Lista de Ciclos</CardTitle>
+                <CardTitle>{t('formation-school.cycles.title')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Nombre</TableHead>
-                      <TableHead>Inicio</TableHead>
-                      <TableHead>Fin</TableHead>
-                      <TableHead>Clases</TableHead>
-                      <TableHead>Estado</TableHead>
-                      <TableHead>Acciones</TableHead>
+                      <TableHead>{t('formation-school.common.name')}</TableHead>
+                      <TableHead>{t('formation-school.cycles.startDate')}</TableHead>
+                      <TableHead>{t('formation-school.cycles.endDate')}</TableHead>
+                      <TableHead>{t('formation-school.cycles.requiredClasses')}</TableHead>
+                      <TableHead>{t('formation-school.common.status')}</TableHead>
+                      <TableHead>{t('formation-school.common.actions')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -163,7 +165,7 @@ export const AdminDashboard: React.FC = () => {
                         <TableCell>{cycle.requiredClasses || '-'}</TableCell>
                         <TableCell>
                           <Badge variant={cycle.active ? 'default' : 'secondary'}>
-                            {cycle.active ? 'Activo' : 'Inactivo'}
+                            {cycle.active ? t('formation-school.common.active') : t('formation-school.common.inactive')}
                           </Badge>
                         </TableCell>
                         <TableCell>
@@ -184,7 +186,7 @@ export const AdminDashboard: React.FC = () => {
           <div className="flex justify-end">
             <Button onClick={() => { setShowLevelForm(!showLevelForm); setEditingLevel(null); }}>
               <Plus className="mr-2 h-4 w-4" />
-              {showLevelForm ? 'Ver Lista' : 'Nuevo Nivel'}
+              {showLevelForm ? t('formation-school.common.search') : t('formation-school.levels.create')}
             </Button>
           </div>
           
@@ -193,7 +195,7 @@ export const AdminDashboard: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <BookOpen className="h-5 w-5" />
-                  {editingLevel ? 'Editar Nivel' : 'Crear Nivel'}
+                  {editingLevel ? t('formation-school.levels.edit') : t('formation-school.levels.create')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -207,16 +209,16 @@ export const AdminDashboard: React.FC = () => {
           ) : (
             <Card>
               <CardHeader>
-                <CardTitle>Lista de Niveles</CardTitle>
+                <CardTitle>{t('formation-school.levels.title')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Nombre</TableHead>
-                      <TableHead>Descripción</TableHead>
-                      <TableHead>Orden</TableHead>
-                      <TableHead>Acciones</TableHead>
+                      <TableHead>{t('formation-school.common.name')}</TableHead>
+                      <TableHead>{t('formation-school.common.description')}</TableHead>
+                      <TableHead>{t('formation-school.levels.order')}</TableHead>
+                      <TableHead>{t('formation-school.common.actions')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -243,7 +245,7 @@ export const AdminDashboard: React.FC = () => {
           <div className="flex justify-end">
             <Button onClick={() => { setShowClassroomForm(!showClassroomForm); setEditingClassroom(null); }}>
               <Plus className="mr-2 h-4 w-4" />
-              {showClassroomForm ? 'Ver Lista' : 'Nuevo Salón'}
+              {showClassroomForm ? t('formation-school.common.search') : t('formation-school.classrooms.create')}
             </Button>
           </div>
           
@@ -378,7 +380,6 @@ export const AdminDashboard: React.FC = () => {
               <CardContent>
                 {selectedCycleId ? (
                   <CourseForm 
-                    cycleId={selectedCycleId} 
                     course={editingCourse}
                     onSuccess={() => { setEditingCourse(null); setShowCourseForm(false); }}
                     onCancel={() => setEditingCourse(null)}
@@ -434,16 +435,17 @@ export const AdminDashboard: React.FC = () => {
           {showTeacherForm ? (
             <Card>
               <CardHeader>
-                <CardTitle>Asignar Maestro a Curso</CardTitle>
+                <CardTitle>Asignar Maestro</CardTitle>
               </CardHeader>
               <CardContent>
-                {courses.length > 0 ? (
-                  <div className="space-y-4">
+                <div className="space-y-4">
+                  {courses.length > 0 && (
                     <Select onValueChange={handleCourseSelect} value={selectedCourseId || undefined}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Selecciona un curso" />
+                        <SelectValue placeholder="Selecciona un curso (opcional)" />
                       </SelectTrigger>
                       <SelectContent>
+                        <SelectItem value="__none__">Sin curso específico</SelectItem>
                         {courses.map((course) => (
                           <SelectItem key={course.id} value={course.id}>
                             {course.level?.name || course.levelId || 'Curso'}
@@ -451,16 +453,12 @@ export const AdminDashboard: React.FC = () => {
                         ))}
                       </SelectContent>
                     </Select>
-                    {selectedCourseId && (
-                      <TeacherEnrollmentForm 
-                        courseId={selectedCourseId} 
-                        onSuccess={() => { setShowTeacherForm(false); setSelectedCourseId(''); }}
-                      />
-                    )}
-                  </div>
-                ) : (
-                  <p>No hay cursos disponibles. Crea un curso primero.</p>
-                )}
+                  )}
+                  <TeacherEnrollmentForm 
+                    courseId={selectedCourseId || undefined}
+                    onSuccess={() => { setShowTeacherForm(false); setSelectedCourseId(''); }}
+                  />
+                </div>
               </CardContent>
             </Card>
           ) : (

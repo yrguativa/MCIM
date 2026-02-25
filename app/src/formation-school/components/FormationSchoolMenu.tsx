@@ -135,7 +135,6 @@ const FormationSchoolMenu: React.FC = () => {
           <DropdownMenuSubTrigger className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-muted transition-all">
             {item.icon}
             <span className="flex-1">{item.label}</span>
-            <ChevronRight className="h-4 w-4 ml-auto" />
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent className="w-56">
             {item.children.map((child, childIndex) => (

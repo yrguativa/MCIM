@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Save, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -17,27 +18,20 @@ import { cn } from '@/lib/utils';
 import { Course } from '../models';
 
 interface CourseFormProps {
-  cycleId: string;
   course?: Course | null;
   onSuccess?: () => void;
   onCancel?: () => void;
 }
 
-export const CourseForm: React.FC<CourseFormProps> = ({ cycleId, course, onSuccess, onCancel }) => {
+export const CourseForm: React.FC<CourseFormProps> = ({ course, onSuccess, onCancel }) => {
   const userState = useAuthStore(state => state.user);
   const { searchByName, searchResults } = useDiscipleStore();
-  const { levels, getLevelsByCycle, classrooms, getClassrooms, schedules, getSchedules, createCourse, updateCourse } = useFormationSchoolStore();
+  const { levels, cycles, getLevelsByCycle, getCycles, classrooms, getClassrooms, schedules, getSchedules, createCourse, updateCourse } = useFormationSchoolStore();
   
   const [teacherSearchOpen, setTeacherSearchOpen] = useState(false);
   const [selectedTeacher, setSelectedTeacher] = useState<{id: string, name: string} | null>(null);
   const isEditing = !!course;
-  
-  useEffect(() => {
-    getLevelsByCycle(cycleId);
-    getClassrooms();
-    getSchedules();
-  }, [cycleId]);
-  
+
   const form = useForm<CourseInput>({
     resolver: zodResolver(CourseSchema) as any,
     defaultValues: {
@@ -46,11 +40,24 @@ export const CourseForm: React.FC<CourseFormProps> = ({ cycleId, course, onSucce
       teacherId: '',
       classroomId: '',
       scheduleId: '',
-      cycleId,
+      cycleId: '',
       createdUser: userState?.id || '',
       createdDate: new Date(),
     },
   });
+  
+  useEffect(() => {
+    getCycles();
+    getClassrooms();
+    getSchedules();
+  }, []);
+  
+  useEffect(() => {
+    const cycleId = form.getValues('cycleId');
+    if (cycleId) {
+      getLevelsByCycle(cycleId);
+    }
+  }, [form.watch('cycleId')]);
 
   useEffect(() => {
     if (course) {
@@ -114,6 +121,31 @@ export const CourseForm: React.FC<CourseFormProps> = ({ cycleId, course, onSucce
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
+          name="cycleId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Ciclo</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccionar ciclo" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {cycles.map((cycle) => (
+                    <SelectItem key={cycle.id} value={cycle.id}>
+                      {cycle.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="levelId"
           render={({ field }) => (
             <FormItem>
@@ -139,15 +171,15 @@ export const CourseForm: React.FC<CourseFormProps> = ({ cycleId, course, onSucce
 
         <FormField
           control={form.control}
-          name="type"
+          name="requiredClasses"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Clases Requeridas</FormLabel>
               <FormControl>
-                <input
-                  type="number"
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  placeholder="Número de clases requeridas"
+                <Input 
+                  type="number" 
+                  min="1"
+                  placeholder="6"
                   value={field.value ?? ''}
                   onChange={e => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
                 />
@@ -208,7 +240,7 @@ export const CourseForm: React.FC<CourseFormProps> = ({ cycleId, course, onSucce
           name="classroomId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Salón</FormLabel>
+              <FormLabel>Salón (Opcional)</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -233,7 +265,7 @@ export const CourseForm: React.FC<CourseFormProps> = ({ cycleId, course, onSucce
           name="scheduleId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Horario</FormLabel>
+              <FormLabel>Horario (Opcional)</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>

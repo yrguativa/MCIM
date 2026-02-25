@@ -206,7 +206,179 @@
         "admin": "Administración",
         "teacher": "Mi Aula",
         "attendance": "Asistencia",
-        "progress": "Mi Progreso"
+        "progress": "Mi Progreso",
+        "cycles": {
+            "title": "Ciclos",
+            "create": "Crear ciclo",
+            "edit": "Editar ciclo",
+            "delete": "Eliminar ciclo",
+            "name": "Nombre del ciclo",
+            "startDate": "Fecha de inicio",
+            "endDate": "Fecha de fin",
+            "requiredClasses": "Clases requeridas",
+            "active": "Activo",
+            "inactive": "Inactivo"
+        },
+        "levels": {
+            "title": "Niveles",
+            "create": "Crear nivel",
+            "edit": "Editar nivel",
+            "delete": "Eliminar nivel",
+            "name": "Nombre del nivel",
+            "order": "Orden",
+            "description": "Descripción"
+        },
+        "courses": {
+            "title": "Cursos",
+            "create": "Crear curso",
+            "edit": "Editar curso",
+            "delete": "Eliminar curso",
+            "level": "Nivel",
+            "teacher": "Maestro",
+            "classroom": "Salón",
+            "schedule": "Horario",
+            "cycle": "Ciclo",
+            "type": "Tipo",
+            "types": {
+                "vision": "Visión",
+                "doctrina": "Doctrina"
+            },
+            "requiredClasses": "Clases requeridas",
+            "optional": "(Opcional)"
+        },
+        "classrooms": {
+            "title": "Salones",
+            "create": "Crear salón",
+            "edit": "Editar salón",
+            "delete": "Eliminar salón",
+            "name": "Nombre del salón",
+            "capacity": "Capacidad"
+        },
+        "schedules": {
+            "title": "Horarios",
+            "create": "Crear horario",
+            "edit": "Editar horario",
+            "delete": "Eliminar horario",
+            "dayOfWeek": "Día de la semana",
+            "startTime": "Hora de inicio",
+            "endTime": "Hora de fin",
+            "days": {
+                "0": "Domingo",
+                "1": "Lunes",
+                "2": "Martes",
+                "3": "Miércoles",
+                "4": "Jueves",
+                "5": "Viernes",
+                "6": "Sábado"
+            }
+        },
+        "enrollment": {
+            "student": {
+                "title": "Inscripción de Estudiantes",
+                "search": "Buscar discípulo",
+                "searchPlaceholder": "Buscar discípulo...",
+                "student": "Estudiante",
+                "level": "Nivel Inicial",
+                "course": "Curso",
+                "enroll": "Inscribir Estudiante",
+                "alreadyEnrolled": "El estudiante ya está inscrito en este curso",
+                "success": "Estudiante inscrito exitosamente",
+                "error": "Error al inscribir al estudiante",
+                "history": "Historial del Estudiante",
+                "noHistory": "Sin historial de cursos"
+            },
+            "teacher": {
+                "title": "Asignar Maestro",
+                "search": "Buscar maestro",
+                "searchPlaceholder": "Buscar maestro...",
+                "teacher": "Maestro",
+                "course": "Curso",
+                "assign": "Asignar Maestro",
+                "success": "Maestro asignado exitosamente",
+                "error": "Error al asignar el maestro",
+                "noCourse": "Sin curso específico",
+                "optional": "(Opcional)"
+            }
+        },
+        "attendance": {
+            "title": "Asistencia",
+            "mark": "Marcar asistencia",
+            "scanQR": "Escanear QR",
+            "manual": "Manual",
+            "date": "Fecha",
+            "present": "Presente",
+            "absent": "Ausente",
+            "late": "Tardanza",
+            "students": "Estudiantes",
+            "noStudents": "No hay estudiantes inscritos",
+            "selectCourse": "Selecciona un curso"
+        },
+        "progress": {
+            "title": "Gestión de Progreso",
+            "student": "Estudiante",
+            "course": "Curso",
+            "grade": "Calificación",
+            "finalGrade": "Nota Final",
+            "status": "Estado",
+            "statuses": {
+                "active": "Activo",
+                "inactive": "Inactivo",
+                "completed": "Completado",
+                "approved": "Aprobado",
+                "failed": "Reprobado"
+            },
+            "calculate": "Calcular nota final",
+            "approve": "Aprobar",
+            "noEnrollments": "No hay inscripciones"
+        },
+        "dashboard": {
+            "title": "Panel de Escuela de Formación",
+            "totalStudents": "Total Estudiantes",
+            "totalCourses": "Total Cursos",
+            "totalTeachers": "Total Maestros",
+            "activeCycle": "Ciclo Activo",
+            "selectCycle": "Selecciona un ciclo",
+            "filterByMinistry": "Filtrar por ministerio",
+            "allMinistries": "Todos los ministerios",
+            "noData": "No hay datos disponibles",
+            "students": "Estudiantes",
+            "courses": "Cursos"
+        },
+        "tabs": {
+            "cycles": "Ciclos",
+            "levels": "Niveles",
+            "courses": "Cursos",
+            "classrooms": "Salones",
+            "schedules": "Horarios",
+            "enrollment": "Inscripciones",
+            "teachers": "Maestros",
+            "students": "Estudiantes"
+        },
+        "common": {
+            "save": "Guardar",
+            "cancel": "Cancelar",
+            "edit": "Editar",
+            "delete": "Eliminar",
+            "create": "Crear",
+            "search": "Buscar",
+            "select": "Seleccionar",
+            "selectOption": "Seleccionar",
+            "noData": "No hay datos disponibles",
+            "loading": "Cargando...",
+            "error": "Error",
+            "success": "Éxito",
+            "confirm": "Confirmar",
+            "yes": "Sí",
+            "no": "No",
+            "actions": "Acciones",
+            "status": "Estado",
+            "name": "Nombre",
+            "description": "Descripción",
+            "date": "Fecha",
+            "time": "Hora",
+            "active": "Activo",
+            "inactive": "Inactivo"
+        }
     },
     "html5-qrcode-scanner": {
         "scanningStatus": "Escaneando",

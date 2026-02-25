@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { UserPlus, Search, BookOpen, GraduationCap } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -27,7 +27,24 @@ type EnrollmentFormData = z.infer<typeof enrollmentSchema>;
 
 export const StudentEnrollmentPage: React.FC = () => {
   const userState = useAuthStore(state => state.user);
-  const { searchByName, searchResults } = useDiscipleStore();
+  const { Disciples, getDisciples } = useDiscipleStore();
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  console.log('[EnrollmentPage] Disciples:', Disciples);
+  console.log('[EnrollmentPage] searchQuery:', searchQuery);
+  
+  const filteredDisciples = useMemo(() => {
+    if (!searchQuery) return Disciples;
+    const query = searchQuery.toLowerCase();
+    return Disciples.filter(d => 
+      d.name.toLowerCase().includes(query) || 
+      d.lastName.toLowerCase().includes(query) ||
+      (d.identification && d.identification.toLowerCase().includes(query))
+    );
+  }, [Disciples, searchQuery]);
+  
+  console.log('[EnrollmentPage] filteredDisciples:', filteredDisciples);
+  
   const {
     students,
     getStudents,
@@ -45,9 +62,13 @@ export const StudentEnrollmentPage: React.FC = () => {
     createStudent,
   } = useFormationSchoolStore();
 
+  console.log('[EnrollmentPage] levels:', levels);
+  console.log('[EnrollmentPage] courses:', courses);
+  console.log('[EnrollmentPage] activeCycle:', activeCycle);
+
   const [discipleSearchOpen, setDiscipleSearchOpen] = useState(false);
   const [selectedDisciple, setSelectedDisciple] = useState<Disciple | null>(null);
-  const [existingStudent, setExistingStudent] = useState<{ id: string; currentLevelId: string } | null>(null);
+  const [existingStudent, setExistingStudent] = useState<{ id: string; currentLevelId?: string } | null>(null);
   const [enrollmentError, setEnrollmentError] = useState<string | null>(null);
 
   const form = useForm<EnrollmentFormData>({
@@ -62,13 +83,17 @@ export const StudentEnrollmentPage: React.FC = () => {
   const selectedLevelId = form.watch('levelId');
 
   useEffect(() => {
+    console.log('[EnrollmentPage] Loading data...');
     getStudents();
     getActiveCycle();
     getLevels();
+    getDisciples();
   }, []);
 
   useEffect(() => {
+    console.log('[EnrollmentPage] activeCycle:', activeCycle);
     if (activeCycle) {
+      console.log('[EnrollmentPage] Loading courses for cycle:', activeCycle.id);
       getCoursesByCycle(activeCycle.id);
     }
   }, [activeCycle]);
@@ -86,9 +111,8 @@ export const StudentEnrollmentPage: React.FC = () => {
   }, [selectedDisciple, students]);
 
   const handleDiscipleSearch = (value: string) => {
-    if (value.length >= 2) {
-      searchByName(value);
-    }
+    console.log('[EnrollmentPage] handleDiscipleSearch called with:', value);
+    setSearchQuery(value);
   };
 
   const handleDiscipleSelect = (disciple: Disciple) => {
@@ -212,24 +236,26 @@ export const StudentEnrollmentPage: React.FC = () => {
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
-                      <PopoverContent className="w-[400px] p-0">
-                        <Command>
+                      <PopoverContent className="w-[400px] p-0" sideOffset={4}>
+                        <Command shouldFilter={false}>
                           <CommandInput
                             placeholder="Buscar discípulo..."
                             onValueChange={handleDiscipleSearch}
                           />
-                          <CommandEmpty>No se encontró el discípulo</CommandEmpty>
-                          <CommandGroup>
-                            {searchResults.map((disciple) => (
-                              <CommandItem
-                                value={`${disciple.name} ${disciple.lastName}`}
-                                key={disciple.id}
-                                onSelect={() => handleDiscipleSelect(disciple)}
-                              >
-                                {disciple.name} {disciple.lastName} - {disciple.identification}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
+                          <CommandList>
+                            <CommandEmpty>No se encontró el discípulo</CommandEmpty>
+                            <CommandGroup>
+                              {filteredDisciples.map((disciple: Disciple) => (
+                                <CommandItem
+                                  value={`${disciple.name} ${disciple.lastName}`}
+                                  key={disciple.id}
+                                  onSelect={() => handleDiscipleSelect(disciple)}
+                                >
+                                  {disciple.name} {disciple.lastName} - {disciple.identification}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
                         </Command>
                       </PopoverContent>
                     </Popover>

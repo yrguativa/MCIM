@@ -7,22 +7,18 @@ export const CourseSchema = z.object({
             message: "El nivel es obligatorio.",
         }),
     teacherId: z.string()
-        .min(1, {
-            message: "El maestro es obligatorio.",
-        }),
+        .optional(),
     classroomId: z.string()
-        .min(1, {
-            message: "El salón es obligatorio.",
-        }),
+        .optional(),
     scheduleId: z.string()
-        .min(1, {
-            message: "El horario es obligatorio.",
-        }),
+        .optional(),
     cycleId: z.string()
         .min(1, {
             message: "El ciclo es obligatorio.",
         }),
     type: z.enum(['vision', 'doctrina'])
+        .optional(),
+    requiredClasses: z.number()
         .optional(),
     qrCode: z.string()
         .optional(),

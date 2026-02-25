@@ -15,7 +15,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 interface TeacherEnrollmentFormProps {
-  courseId: string;
+  courseId?: string;
   onSuccess?: () => void;
 }
 
@@ -32,7 +32,7 @@ export const TeacherEnrollmentForm: React.FC<TeacherEnrollmentFormProps> = ({ co
     defaultValues: {
       id: crypto.randomUUID(),
       teacherId: '',
-      courseId,
+      courseId: courseId || undefined,
       assignedDate: new Date(),
       active: true,
       createdUser: userState?.id || '',
@@ -43,7 +43,7 @@ export const TeacherEnrollmentForm: React.FC<TeacherEnrollmentFormProps> = ({ co
   async function onSubmit(data: TeacherAssignmentInput) {
     const success = await enrollTeacher({
       ...data,
-      courseId,
+      courseId: data.courseId || '',
     });
     
     if (success) {

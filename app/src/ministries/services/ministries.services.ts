@@ -25,13 +25,18 @@ export class MinistriesService {
                 active
             }
             `;
-            const { data } = await api.post(API_URL,
+            const { data } = await api.post('',
                 JSON.stringify({
                     query,
                 })
             );
 
-            return data.data.ministries;
+            if (data.errors) {
+                console.error('GraphQL errors:', data.errors);
+                throw new Error(data.errors[0]?.message || 'GraphQL error');
+            }
+
+            return data.data.ministries || [];
         } catch (error) {
             if (error instanceof AxiosError) {
                 console.error((error as AxiosError).response?.data);
@@ -60,7 +65,7 @@ export class MinistriesService {
                 }
             }
             `;
-            const { data } = await api.post(API_URL,
+            const { data } = await api.post('',
                 JSON.stringify({
                     query,
                     variables: {
@@ -96,7 +101,7 @@ export class MinistriesService {
                 }
             }
             `;
-            const { data } = await api.post(API_URL,
+            const { data } = await api.post('',
                 JSON.stringify({
                     query,
                     variables: {
@@ -123,7 +128,7 @@ export class MinistriesService {
                     id
                 }
             }`;
-            const { data } = await api.post(API_URL,
+            const { data } = await api.post('',
                 JSON.stringify({
                     query,
                     variables: {
@@ -157,7 +162,7 @@ export class MinistriesService {
                 }
             }
             `;
-            const { data } = await api.post(API_URL,
+            const { data } = await api.post('',
                 JSON.stringify({
                     query,
                     variables: {
@@ -184,7 +189,7 @@ export class MinistriesService {
                 deleteMinistry(id: $id)
             }
             `;
-            const { data } = await api.post(API_URL,
+            const { data } = await api.post('',
                 JSON.stringify({
                     query,
                     variables: {

@@ -7,9 +7,7 @@ export const TeacherAssignmentSchema = z.object({
             message: "El maestro es obligatorio.",
         }),
     courseId: z.string()
-        .min(1, {
-            message: "La clase es obligatoria.",
-        }),
+        .optional(),
     assignedDate: z.date()
         .default(() => new Date()),
     active: z.boolean()

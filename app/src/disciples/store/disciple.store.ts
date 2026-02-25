@@ -26,11 +26,14 @@ const storeDisciple: StateCreator<DiscipleState> = (set, get) => (
         showModalNotFound: false,
 
         searchByName: async (name: string) => {
+            console.log('[DiscipleStore] Searching for:', name);
             try {
+                console.log('[DiscipleStore] Calling service...');
                 const results = await DisciplesService.searchByName(name);
+                console.log('[DiscipleStore] Results from service:', results);
                 set({ searchResults: results });
             } catch (error) {
-                console.error('Error searching disciples:', error);
+                console.error('[DiscipleStore] Error searching disciples:', error);
                 set({ searchResults: [] });
             }
         },
@@ -83,6 +86,9 @@ export const useDiscipleStore = create<DiscipleState>()(
             storeDisciple,
             {
                 name: 'disciple-storage',
+                onRehydrateStorage: () => (state) => {
+                    console.log('[DiscipleStore] Rehydration complete, searchResults:', state?.searchResults);
+                }
             }
         ),
     )
