@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -33,9 +34,11 @@ interface LoginOtherDataProps {
 }
 
 const LoginOtherData: React.FC<LoginOtherDataProps> = ({ isOpenSheet, setIsOpenSheet }: LoginOtherDataProps) => {
+    const { t } = useTranslation()
     const navigate = useNavigate()
     const { ministries, getMinistries } = useMinistryStore();
     const { user: userState, updateUser } = useAuthStore()
+    
     const form = useForm<LoginOtherDataInput>({
         resolver: zodResolver(LoginOtherDataSchema),
         defaultValues: {
@@ -43,7 +46,7 @@ const LoginOtherData: React.FC<LoginOtherDataProps> = ({ isOpenSheet, setIsOpenS
             ministryId: userState?.ministryId || "",
             phoneNumber: userState?.phoneNumber || "",
         }
-    });
+    })
 
 
     const handleSubmitOtherData = (data: LoginOtherDataInput) => {
@@ -62,9 +65,9 @@ const LoginOtherData: React.FC<LoginOtherDataProps> = ({ isOpenSheet, setIsOpenS
             <SheetContent>
                 <Form {...form} >
                     <SheetHeader>
-                        <SheetTitle>Datos Adicionales </SheetTitle>
+                        <SheetTitle>{t('auth.additionalData')}</SheetTitle>
                         <SheetDescription>
-                            Ingrese los datos adicionales para el registro del usuario
+                            {t('auth.additionalDataDescription')}
                         </SheetDescription>
                     </SheetHeader>
 
@@ -74,7 +77,7 @@ const LoginOtherData: React.FC<LoginOtherDataProps> = ({ isOpenSheet, setIsOpenS
                             name="identification"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Número de Identificación</FormLabel>
+                                    <FormLabel>{t('auth.identification')}</FormLabel>
                                     <FormControl>
                                         <Input placeholder="107445435" {...field} />
                                     </FormControl>
@@ -87,11 +90,11 @@ const LoginOtherData: React.FC<LoginOtherDataProps> = ({ isOpenSheet, setIsOpenS
                             name="ministryId"
                             render={({ field }) => (
                                 <FormItem >
-                                    <FormLabel>Ministerio</FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormLabel>{t('auth.ministry')}</FormLabel>
+                                    <Select onValueChange={field.onChange} value={field.value}>
                                         <FormControl>
                                             <SelectTrigger>
-                                                <SelectValue placeholder={field.value ? ministries.find((m) => m.id === field.value)?.name : "Selecciona un ministerio"} />
+                                                <SelectValue placeholder={field.value ? ministries?.find((m) => m.id === field.value)?.name : t('auth.selectMinistry')} />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
@@ -113,7 +116,9 @@ const LoginOtherData: React.FC<LoginOtherDataProps> = ({ isOpenSheet, setIsOpenS
                             name="phoneNumber"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Número de Celular</FormLabel>
+                                    <FormLabel>
+                                        {t('auth.phone')} {t('auth.optional')}
+                                    </FormLabel>
                                     <FormControl>
                                         <Input placeholder="3243432434" {...field} />
                                     </FormControl>
@@ -122,9 +127,9 @@ const LoginOtherData: React.FC<LoginOtherDataProps> = ({ isOpenSheet, setIsOpenS
                             )}
                         />
                         <SheetFooter>
-                            <Button type="submit">Save changes</Button>
+                            <Button type="submit">{t('auth.saveChanges')}</Button>
                             <SheetClose asChild>
-                                <Button onClick={() => setIsOpenSheet && setIsOpenSheet(false)} variant="outline">Close</Button>
+                                <Button onClick={() => setIsOpenSheet && setIsOpenSheet(false)} variant="outline">{t('auth.close')}</Button>
                             </SheetClose>
                         </SheetFooter>
                     </form>

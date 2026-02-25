@@ -1,10 +1,12 @@
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next"
+import { Resolver, useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { GalleryVerticalEnd } from "lucide-react"
-import { useAuthStore } from "@/src/app/stores/auth/auth.store"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import {
     Select,
     SelectContent,
@@ -12,44 +14,53 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-
-import { RegisterInput, RegisterSchema } from "../schemas/registerSchema"
 import { toast } from "sonner"
 
-const RegisterPage: React.FC = () => {
-    const navigate = useNavigate()
+import { RegisterInput, RegisterSchema } from "../schemas/registerSchema"
+import { useAuthStore } from "@/src/app/stores"
+import { useMinistryStore } from "@/src/ministries/store/ministries.store"
 
+const RegisterPage: React.FC = () => {
+    const { t } = useTranslation()
+    const navigate = useNavigate()
     const { register } = useAuthStore()
+    const { ministries, getMinistries } = useMinistryStore()
     const [isLoading, setIsLoading] = useState(false)
-    const [formData, setFormData] = useState<RegisterInput>({
-        email: "",
-        password: "",
-        identification: "",
-        ministryId: "",
-        phoneNumber: "",
+
+    const form = useForm<RegisterInput>({
+        resolver: zodResolver(RegisterSchema) as Resolver<RegisterInput>,
+        defaultValues: {
+            email: "",
+            password: "",
+            confirmPassword: "",
+            identification: "",
+            ministryId: "",
+            phoneNumber: "",
+            name: "",
+            lastName: "",
+        }
     })
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target
-        setFormData(prev => ({ ...prev, [name]: value }))
-    }
+    React.useEffect(() => {
+        if (!ministries || ministries.length === 0) {
+            getMinistries();
+        }
+    }, [ministries, getMinistries]);
 
-    const handleMinistryChange = (value: string) => {
-        setFormData(prev => ({ ...prev, ministryId: value }))
-    }
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
+    const onSubmit = async (data: RegisterInput) => {
         setIsLoading(true)
-
         try {
-            // Validar los datos
-            const validatedData = RegisterSchema.parse(formData)
-            await register(validatedData)
+            await register({
+                email: data.email,
+                password: data.password,
+                identification: data.identification,
+                ministryId: data.ministryId,
+                phoneNumber: data.phoneNumber || "",
+            })
             navigate("/dashboard")
         } catch (error) {
             console.error("Error to register user:", error)
-            toast("Error al registrar usuario")
+            toast(t("auth.registerError") || "Error al registrar usuario")
         } finally {
             setIsLoading(false)
         }
@@ -63,94 +74,145 @@ const RegisterPage: React.FC = () => {
                         <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
                             <GalleryVerticalEnd className="size-4" />
                         </div>
-                        App Administración
+                        {t('AppTitle')}
                     </a>
                 </div>
                 <div className="flex flex-1 items-center justify-center">
                     <div className="w-full max-w-xs">
-                        <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
-                            <div className="flex flex-col items-center gap-2 text-center">
-                                <h1 className="text-2xl font-bold">Crear una cuenta</h1>
-                                <p className="text-muted-foreground text-sm text-balance">
-                                    Ingresa tus datos para crear una cuenta
-                                </p>
-                            </div>
-                            <div className="grid gap-6">
-                                <div className="grid gap-3">
-                                    <Label htmlFor="email">Correo electrónico</Label>
-                                    <Input
-                                        id="email"
+                        <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
+                                <div className="flex flex-col items-center gap-2 text-center">
+                                    <h1 className="text-2xl font-bold">{t('auth.createAccount')}</h1>
+                                    <p className="text-muted-foreground text-sm text-balance">
+                                        {t('auth.registerDescription')}
+                                    </p>
+                                </div>
+                                <div className="grid gap-4">
+                                    <FormField
+                                        control={form.control}
                                         name="email"
-                                        type="email"
-                                        placeholder="correo@ejemplo.com"
-                                        value={formData.email}
-                                        onChange={handleInputChange}
-                                        required
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>{t('auth.email')}</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        type="email"
+                                                        placeholder="correo@ejemplo.com"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
                                     />
-                                </div>
-                                <div className="grid gap-3">
-                                    <Label htmlFor="password">Contraseña</Label>
-                                    <Input
-                                        id="password"
+                                    <FormField
+                                        control={form.control}
                                         name="password"
-                                        type="password"
-                                        value={formData.password}
-                                        onChange={handleInputChange}
-                                        required
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>{t('auth.password')}</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        type="password"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
                                     />
-                                </div>
-                                <div className="grid gap-3">
-                                    <Label htmlFor="identification">Número de identificación</Label>
-                                    <Input
-                                        id="identification"
+                                    <FormField
+                                        control={form.control}
+                                        name="confirmPassword"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>{t('auth.confirmPassword')}</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        type="password"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
                                         name="identification"
-                                        type="text"
-                                        value={formData.identification}
-                                        onChange={handleInputChange}
-                                        required
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>{t('auth.identification')}</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        type="text"
+                                                        placeholder="1234567890"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
                                     />
-                                </div>
-                                <div className="grid gap-3">
-                                    <Label htmlFor="ministry">Ministerio</Label>
-                                    <Select onValueChange={handleMinistryChange} value={formData.ministryId}>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Selecciona un ministerio" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="kids">Kids</SelectItem>
-                                            <SelectItem value="youth">Juventud</SelectItem>
-                                            <SelectItem value="adults">Adultos</SelectItem>
-                                            <SelectItem value="worship">Alabanza</SelectItem>
-                                            <SelectItem value="media">Medios</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <div className="grid gap-3">
-                                    <Label htmlFor="phoneNumber">Número de teléfono</Label>
-                                    <Input
-                                        id="phoneNumber"
+                                    <FormField
+                                        control={form.control}
+                                        name="ministryId"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>{t('auth.ministry')}</FormLabel>
+                                                <Select onValueChange={field.onChange} value={field.value}>
+                                                    <FormControl>
+                                                        <SelectTrigger>
+                                                            <SelectValue placeholder={t('auth.selectMinistry')} />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent>
+                                                        {ministries?.map((ministry) => (
+                                                            <SelectItem key={ministry.id} value={ministry.id}>
+                                                                {ministry.name}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
                                         name="phoneNumber"
-                                        type="tel"
-                                        value={formData.phoneNumber}
-                                        onChange={handleInputChange}
-                                        required
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>
+                                                    {t('auth.phone')} {t('auth.optional')}
+                                                </FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        type="tel"
+                                                        placeholder="3001234567"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
                                     />
+                                    <Button type="submit" className="w-full" disabled={isLoading}>
+                                        {isLoading ? t("common.loading") : t('auth.register')}
+                                    </Button>
                                 </div>
-                                <Button type="submit" className="w-full" disabled={isLoading}>
-                                    {isLoading ? "Registrando..." : "Registrarse"}
-                                </Button>
-                            </div>
-                            <div className="text-center text-sm">
-                                ¿Ya tienes una cuenta?{" "}
-                                <Button
-                                    variant="link"
-                                    className="p-0"
-                                    onClick={() => navigate("/login")}
-                                >
-                                    Iniciar sesión
-                                </Button>
-                            </div>
-                        </form>
+                                <div className="text-center text-sm">
+                                    {t('auth.alreadyHaveAccount')}{" "}
+                                    <Button
+                                        variant="link"
+                                        className="p-0"
+                                        onClick={() => navigate("/login")}
+                                    >
+                                        {t('auth.login')}
+                                    </Button>
+                                </div>
+                            </form>
+                        </Form>
                     </div>
                 </div>
             </div>
