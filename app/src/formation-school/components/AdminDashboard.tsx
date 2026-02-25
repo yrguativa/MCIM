@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Users, BookOpen, Building, Clock, Plus, Pencil } from 'lucide-react';
+import { Users, BookOpen, Building, Clock, Plus, Pencil, CalendarDays, GraduationCap, CalendarClock } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
@@ -106,13 +106,34 @@ export const AdminDashboard: React.FC = () => {
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-7">
-          <TabsTrigger value="cycles">Ciclos</TabsTrigger>
-          <TabsTrigger value="levels">Niveles</TabsTrigger>
-          <TabsTrigger value="classrooms">Salones</TabsTrigger>
-          <TabsTrigger value="schedules">Horarios</TabsTrigger>
-          <TabsTrigger value="courses">Cursos</TabsTrigger>
-          <TabsTrigger value="teachers">Maestros</TabsTrigger>
-          <TabsTrigger value="students">Estudiantes</TabsTrigger>
+          <TabsTrigger value="cycles" className="flex items-center gap-2">
+            <CalendarDays className="h-4 w-4" />
+            {t('formation-school.tabs.cycles')}
+          </TabsTrigger>
+          <TabsTrigger value="levels" className="flex items-center gap-2">
+            <GraduationCap className="h-4 w-4" />
+            {t('formation-school.tabs.levels')}
+          </TabsTrigger>
+          <TabsTrigger value="classrooms" className="flex items-center gap-2">
+            <Building className="h-4 w-4" />
+            {t('formation-school.tabs.classrooms')}
+          </TabsTrigger>
+          <TabsTrigger value="schedules" className="flex items-center gap-2">
+            <CalendarClock className="h-4 w-4" />
+            {t('formation-school.tabs.schedules')}
+          </TabsTrigger>
+          <TabsTrigger value="courses" className="flex items-center gap-2">
+            <BookOpen className="h-4 w-4" />
+            {t('formation-school.tabs.courses')}
+          </TabsTrigger>
+          <TabsTrigger value="teachers" className="flex items-center gap-2">
+            <GraduationCap className="h-4 w-4" />
+            {t('formation-school.tabs.teachers')}
+          </TabsTrigger>
+          <TabsTrigger value="students" className="flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            {t('formation-school.tabs.students')}
+          </TabsTrigger>
         </TabsList>
         
         <TabsContent value="cycles" className="space-y-4">
