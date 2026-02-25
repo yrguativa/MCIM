@@ -17,7 +17,11 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 export const GeneralRoutes: React.FC = () => {
     return (
         <Routes>
-            {/* Protected Routes */}
+            {/* Public Routes - deben estar primero */}
+            <Route path="login" element={<LoginPage />} />
+            <Route path="public/*" element={<PublicRoutes />} />
+
+            {/* Protected Routes - deben estar al final */}
             <Route
                 path="/*"
                 element={
@@ -26,11 +30,6 @@ export const GeneralRoutes: React.FC = () => {
                     </ProtectedRoute>
                 }
             />
-
-            {/* Public Routes */}
-            <Route path="login" element={<LoginPage />} />
-
-            <Route path="public/*" element={<PublicRoutes />} />
         </Routes>
     );
 };
