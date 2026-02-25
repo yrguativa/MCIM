@@ -292,12 +292,16 @@
                 "search": "Buscar maestro",
                 "searchPlaceholder": "Buscar maestro...",
                 "teacher": "Maestro",
+                "tutor": "Tutor",
+                "typeLabel": "Tipo",
                 "course": "Curso",
-                "assign": "Asignar Maestro",
-                "success": "Maestro asignado exitosamente",
-                "error": "Error al asignar el maestro",
+                "assign": "Asignar",
+                "success": "Asignación exitosa",
+                "error": "Error al asignar",
                 "noCourse": "Sin curso específico",
-                "optional": "(Opcional)"
+                "optional": "(Opcional)",
+                "notFound": "No se encontró",
+                "typeToSearch": "Escribe para buscar"
             }
         },
         "attendance": {

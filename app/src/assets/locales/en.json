@@ -292,12 +292,16 @@
         "search": "Search teacher",
         "searchPlaceholder": "Search teacher...",
         "teacher": "Teacher",
+        "tutor": "Tutor",
+        "typeLabel": "Type",
         "course": "Course",
-        "assign": "Assign Teacher",
-        "success": "Teacher assigned successfully",
-        "error": "Error assigning teacher",
+        "assign": "Assign",
+        "success": "Assigned successfully",
+        "error": "Error assigning",
         "noCourse": "No specific course",
-        "optional": "(Optional)"
+        "optional": "(Optional)",
+        "notFound": "Not found",
+        "typeToSearch": "Type to search"
       }
     },
     "attendance": {
