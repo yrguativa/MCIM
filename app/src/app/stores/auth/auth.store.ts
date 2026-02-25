@@ -11,7 +11,12 @@ interface AuthState {
     error: string | null
     login: (email: string, password: string) => Promise<void>
     loginWithGoogle: (credential: string) => Promise<number>
-    // loginWithApple: () => Promise<void>
+    loginWithApple: (appleData: {
+        code: string
+        idToken?: string
+        email?: string
+        name?: string
+    }) => Promise<number>
     register: (userData: {
         email: string
         password: string
@@ -81,22 +86,51 @@ export const storeAuth: StateCreator<AuthState> = (set, get) => ({
         }
     },
 
-    // loginWithApple: async () => {
-    //     set({ isLoading: true, error: null })
-    //     try {
-    //         const response = await authService.loginWithApple()
-    //         set({
-    //             user: response.user,
-    //             isAuthenticated: true,
-    //             isLoading: false
-    //         })
-    //     } catch (error: any) {
-    //         set({
-    //             error: error.message,
-    //             isLoading: false
-    //         })
-    //     }
-    // },
+    loginWithApple: async (appleData: {
+        code: string
+        idToken?: string
+        email?: string
+        name?: string
+    }) => {
+        set({ isLoading: true, error: null })
+        try {
+            const response = await authService.loginWithApple(appleData)
+
+            if (response && 'error' in response) {
+                set({
+                    error: 'Error al iniciar sesión con Apple',
+                    isLoading: false
+                });
+                return 0;
+            }
+            
+            if (response && response.data && response.data.loginWithApple) {
+                set({
+                    user: { ...response.data.loginWithApple },
+                    isAuthenticated: true,
+                    isLoading: false
+                })
+
+                if (!response.data.loginWithApple.identification || !response.data.loginWithApple.ministryId) {
+                    return -1
+                }
+                return 1;
+            }
+            
+            set({
+                error: 'Error al iniciar sesión con Apple',
+                isLoading: false
+            })
+            return 0;
+        } catch (error) {
+            console.error(error);
+            set({
+                error: 'Error al iniciar sesión con Apple',
+                isLoading: false
+            })
+            return 0;
+        }
+    },
 
     register: async (userData) => {
         set({ isLoading: true, error: null })
@@ -127,7 +161,7 @@ export const storeAuth: StateCreator<AuthState> = (set, get) => ({
                 ...userState,
                 identification: otherData.identification,
                 ministryId: otherData.ministryId,
-                phoneNumber: otherData.phoneNumber
+                phoneNumber: otherData.phoneNumber || ""
             }
         })
     },

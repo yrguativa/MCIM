@@ -85,44 +85,48 @@ export class AuthService {
     }
 
     async loginWithApple(appleData: {
-        email: string,
-        displayName: string,
-        photoURL: string,
-        identification: string,
-        ministryId: string,
-        phoneNumber: string
+        code: string
+        idToken?: string
+        email?: string
+        name?: string
     }) {
         try {
             const query = `
-                mutation SocialAuth($socialAuthInput: SocialAuthInput!) {
-                    socialAuth(socialAuthInput: $socialAuthInput) {
-                        access_token
-                        user {
-                            id
-                            email
-                            displayName
-                            photoURL
-                            identification
-                            ministryId
-                            phoneNumber
-                            authProvider
-                            createdAt
-                            lastLogin
-                            active
-                        }
+                mutation LoginWithApple($loginWithAppleInput: LoginWithAppleInput!) {
+                    loginWithApple(loginWithAppleInput: $loginWithAppleInput) {
+                        identification
+                        ministryId
+                        phoneNumber
+                        roles
+                        displayName
+                        photoURL
+                        accessToken
+                        id
+                        email
                     }
                 }
             `;
 
-            const data = await api.post(query, {
-                socialAuthInput: {
-                    ...appleData,
-                    provider: 'apple'
-                }
-            });
+            const { data } = await api.post(API_URL,
+                JSON.stringify({
+                    query,
+                    variables: {
+                        "loginWithAppleInput": {
+                            "code": appleData.code,
+                            "idToken": appleData.idToken,
+                            "email": appleData.email,
+                            "name": appleData.name,
+                        }
+                    }
+                }),
+            );
 
-            this.setToken(data.data.socialAuth.access_token);
-            return data.data.socialAuth;
+            if (data.errors) {
+                return { error: data.errors[0].message };
+            }
+
+            this.setToken(data.data.loginWithApple.accessToken);
+            return { data: { loginWithApple: data.data.loginWithApple } };
         } catch (error) {
             console.error('Apple login error:', error);
             throw error;
