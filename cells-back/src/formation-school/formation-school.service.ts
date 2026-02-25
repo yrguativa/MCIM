@@ -116,17 +116,13 @@ export class FormationSchoolService {
 
   private toStudentEntity(student: any): StudentEntity {
     const disciple = student.discipleId;
+    const discipleName = disciple && typeof disciple === 'object' ? `${disciple.name || ''} ${disciple.lastName || ''}`.trim() : undefined;
     return {
       id: student._id?.toString() ?? '',
       discipleId: typeof student.discipleId === 'string' ? student.discipleId : student.discipleId?._id?.toString() ?? '',
-      disciple: disciple && typeof disciple === 'object' ? {
-        id: disciple._id?.toString() ?? '',
-        name: disciple.name,
-        lastName: disciple.lastName,
-        identification: disciple.identification,
-      } : undefined,
+      discipleName: discipleName,
       currentLevelId: typeof student.currentLevelId === 'string' ? student.currentLevelId : student.currentLevelId?._id?.toString() ?? '',
-      status: student.status,
+      status: student.status || 'active',
       createdUser: student.createdUser,
       createdDate: student.createdDate,
     };

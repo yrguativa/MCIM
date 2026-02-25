@@ -36,8 +36,8 @@ export class FormationSchoolResolver {
     return this.fsService.findCycleById(id);
   }
 
-  @Query(() => CycleEntity)
-  async activeCycle(): Promise<CycleEntity> {
+  @Query(() => CycleEntity, { nullable: true })
+  async activeCycle(): Promise<CycleEntity | null> {
     return this.fsService.findActiveCycle();
   }
 

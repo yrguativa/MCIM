@@ -76,6 +76,11 @@ export class AuthService {
                 }),
             );
 
+            if (!data || !data.data || !data.data.loginSocial) {
+                console.error('Google login error: invalid response', data);
+                throw new Error('Invalid response from server');
+            }
+
             this.setToken(data.data.loginSocial.accessToken);
             return data;
         } catch (error) {

@@ -508,7 +508,7 @@ export const AdminDashboard: React.FC = () => {
                 <TableBody>
                   {students.map((student) => (
                     <TableRow key={student.id}>
-                      <TableCell>{student.disciple ? `${student.disciple.name} ${student.disciple.lastName}` : student.discipleId}</TableCell>
+                      <TableCell>{student.discipleName || student.discipleId}</TableCell>
                       <TableCell>{student.currentLevelId}</TableCell>
                       <TableCell><Badge>{student.status}</Badge></TableCell>
                     </TableRow>

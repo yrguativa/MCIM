@@ -102,6 +102,7 @@ type Users {
   active: Boolean!
   roles: [String!]
   accessToken: String
+  discipleId: String
 }
 
 type User {
@@ -168,18 +169,16 @@ type CourseEntity {
 type StudentEntity {
   id: ID!
   discipleId: ID!
-  disciple: DiscipleInfo
+  discipleName: String
   currentLevelId: ID!
-  status: String!
+  status: StudentStatus!
   createdUser: String!
   createdDate: DateTime!
 }
 
-type DiscipleInfo {
-  id: ID!
-  name: String
-  lastName: String
-  identification: String
+enum StudentStatus {
+  ACTIVE
+  INACTIVE
 }
 
 type StudentEnrollmentEntity {
@@ -247,7 +246,7 @@ type Query {
   user(id: ID!): User!
   cycles: [CycleEntity!]!
   cycle(id: ID!): CycleEntity!
-  activeCycle: CycleEntity!
+  activeCycle: CycleEntity
   levels: [LevelEntity!]!
   levelsByCycle(cycleId: ID!): [LevelEntity!]!
   classrooms: [ClassroomEntity!]!
@@ -269,6 +268,11 @@ type Mutation {
   loginSocial(loginSocialInput: LoginSocialInput!): Users!
   register(registerInput: RegisterInput!): Users!
   registerSocialLogin(RegisterSocialLoginInput: RegisterSocialLoginInput!): Users!
+  loginWithApple(loginWithAppleInput: LoginWithAppleInput!): Users!
+  completeSocialRegistration(completeSocialRegistrationInput: CompleteSocialRegistrationInput!): Users!
+  requestPasswordReset(requestPasswordResetInput: RequestPasswordResetInput!): Boolean!
+  verifyResetCode(verifyResetCodeInput: VerifyResetCodeInput!): Boolean!
+  resetPassword(resetPasswordInput: ResetPasswordInput!): Boolean!
   createCell(createCellInput: CreateCellInput!): Cell!
   updateCell(updateCellInput: UpdateCellInput!): Cell!
   removeCell(id: String!): Cell!
@@ -321,6 +325,37 @@ input RegisterSocialLoginInput {
   identification: String!
   ministryId: String!
   phoneNumber: String!
+}
+
+input LoginWithAppleInput {
+  code: String!
+  idToken: String
+  email: String
+  name: String
+}
+
+input CompleteSocialRegistrationInput {
+  userId: String!
+  identification: String!
+  ministryId: String!
+  phoneNumber: String
+  name: String
+  lastName: String
+}
+
+input RequestPasswordResetInput {
+  email: String!
+}
+
+input VerifyResetCodeInput {
+  email: String!
+  code: String!
+}
+
+input ResetPasswordInput {
+  email: String!
+  newPassword: String!
+  code: String!
 }
 
 input CreateCellInput {

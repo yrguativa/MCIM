@@ -61,16 +61,25 @@ export class AuthService {
           email: payload.email,
           displayName: payload.name,
           photoURL: payload.picture,
-          // identification: payload.sub, // Google ID as identification
-          // ministryId: '', // Set default or required value
-          // phoneNumber: '', // Set default or required value
           authProvider: 'google',
           createdAt: new Date(),
           lastLogin: new Date(),
           active: true,
         });
         await newUser.save();
-        return newUser.toObject();
+        
+        const jwt = this.jwtService.sign({
+          userId: newUser.id,
+          email: newUser.email,
+          identification: newUser.identification,
+          roles: newUser.roles,
+        });
+
+        return {
+          accessToken: jwt,
+          id: newUser._id,
+          ...newUser.toObject(),
+        };
       }
 
       if (
