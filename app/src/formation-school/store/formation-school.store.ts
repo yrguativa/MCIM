@@ -86,10 +86,11 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
 
   createStudent: async (student) => {
     try {
-      const { id, createdDate, ...studentData } = student as any;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id: _id, createdDate: _createdDate, ...studentData } = student as Record<string, unknown>;
       await FormationSchoolService.createStudent({
         ...studentData,
-        createdUser: studentData.createdUser || 'system',
+        createdUser: (studentData.createdUser as string) || 'system',
       });
       await get().getStudents();
       return true;
@@ -133,10 +134,11 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
 
   createCycle: async (cycle) => {
     try {
-      const { id, createdDate, ...cycleData } = cycle as any;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id: _id, createdDate: _createdDate, ...cycleData } = cycle as Record<string, unknown>;
       await FormationSchoolService.createCycle({
         ...cycleData,
-        createdUser: cycleData.createdUser || 'system',
+        createdUser: (cycleData.createdUser as string) || 'system',
       });
       await get().getCycles();
       return true;
@@ -169,10 +171,11 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
 
   createLevel: async (level) => {
     try {
-      const { id, createdDate, ...levelData } = level as any;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id: _id, createdDate: _createdDate, ...levelData } = level as Record<string, unknown>;
       await FormationSchoolService.createLevel({
         ...levelData,
-        createdUser: levelData.createdUser || 'system',
+        createdUser: (levelData.createdUser as string) || 'system',
       });
       await get().getLevels();
       return true;
@@ -200,10 +203,11 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
 
   createClassroom: async (classroom) => {
     try {
-      const { id, createdDate, ...classroomData } = classroom as any;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id: _id, createdDate: _createdDate, ...classroomData } = classroom as Record<string, unknown>;
       await FormationSchoolService.createClassroom({
         ...classroomData,
-        createdUser: classroomData.createdUser || 'system',
+        createdUser: (classroomData.createdUser as string) || 'system',
       });
       await get().getClassrooms();
       return true;
@@ -231,10 +235,11 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
 
   createSchedule: async (schedule) => {
     try {
-      const { id, createdDate, ...scheduleData } = schedule as any;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id: _id, createdDate: _createdDate, ...scheduleData } = schedule as Record<string, unknown>;
       await FormationSchoolService.createSchedule({
         ...scheduleData,
-        createdUser: scheduleData.createdUser || 'system',
+        createdUser: (scheduleData.createdUser as string) || 'system',
       });
       await get().getSchedules();
       return true;
@@ -267,12 +272,13 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
 
   createCourse: async (course) => {
     try {
-      const { id, createdDate, ...courseData } = course as any;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id: _id, createdDate: _createdDate, ...courseData } = course as Record<string, unknown>;
       await FormationSchoolService.createCourse({
         ...courseData,
-        createdUser: courseData.createdUser || 'system',
+        createdUser: (courseData.createdUser as string) || 'system',
       });
-      await get().getCoursesByCycle(course.cycleId!);
+      await get().getCoursesByCycle((course as Record<string, unknown>).cycleId as string);
       return true;
     } catch (error) {
       console.error('Error creating course:', error);
@@ -308,13 +314,14 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
 
   enrollStudent: async (enrollment) => {
     try {
-      const { id, createdDate, enrollmentDate, ...enrollmentData } = enrollment as any;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id: _id, createdDate: _createdDate, enrollmentDate: _enrollmentDate, ...enrollmentData } = enrollment as Record<string, unknown>;
       await FormationSchoolService.enrollStudent({
         ...enrollmentData,
-        createdUser: enrollmentData.createdUser || 'system',
+        createdUser: (enrollmentData.createdUser as string) || 'system',
         enrollmentDate: new Date(),
       });
-      await get().getEnrollmentsByCourse(enrollment.courseId!);
+      await get().getEnrollmentsByCourse((enrollment as Record<string, unknown>).courseId as string);
       return true;
     } catch (error) {
       console.error('Error enrolling student:', error);
@@ -324,10 +331,11 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
 
   enrollTeacher: async (assignment) => {
     try {
-      const { id, createdDate, assignedDate, ...assignmentData } = assignment as any;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id: _id, createdDate: _createdDate, assignedDate: _assignedDate, ...assignmentData } = assignment as Record<string, unknown>;
       await FormationSchoolService.enrollTeacher({
         ...assignmentData,
-        createdUser: assignmentData.createdUser || 'system',
+        createdUser: (assignmentData.createdUser as string) || 'system',
         assignedDate: new Date(),
       });
       return true;
@@ -363,13 +371,14 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
 
   createAttendance: async (attendance) => {
     try {
-      const { id, createdDate, attendanceDate, ...attendanceData } = attendance as any;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id: _id, createdDate: _createdDate, attendanceDate: _attendanceDate, ...attendanceData } = attendance as Record<string, unknown>;
       await FormationSchoolService.createAttendance({
         ...attendanceData,
-        createdUser: attendanceData.createdUser || 'system',
+        createdUser: (attendanceData.createdUser as string) || 'system',
         attendanceDate: new Date(),
       });
-      await get().getAttendanceByCourse(attendance.courseId!);
+      await get().getAttendanceByCourse((attendance as Record<string, unknown>).courseId as string);
       return true;
     } catch (error) {
       console.error('Error creating attendance:', error);
@@ -384,13 +393,14 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
 
   createCourseHistory: async (history) => {
     try {
-      const { id, createdDate, enrollmentDate, ...historyData } = history as any;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id: _id, createdDate: _createdDate, enrollmentDate: _enrollmentDate, ...historyData } = history as Record<string, unknown>;
       await FormationSchoolService.createCourseHistory({
         ...historyData,
-        createdUser: historyData.createdUser || 'system',
-        enrollmentDate: enrollmentDate ? new Date(enrollmentDate) : new Date(),
+        createdUser: (historyData.createdUser as string) || 'system',
+        enrollmentDate: (historyData.enrollmentDate as Date) ? new Date(historyData.enrollmentDate as Date) : new Date(),
       });
-      await get().getCourseHistoriesByStudent(history.studentId!);
+      await get().getCourseHistoriesByStudent((history as Record<string, unknown>).studentId as string);
       return true;
     } catch (error) {
       console.error('Error creating course history:', error);

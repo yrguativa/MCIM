@@ -72,7 +72,7 @@ export const StudentEnrollmentForm: React.FC<StudentEnrollmentFormProps> = ({ on
   }, [selectedLevelId, selectedScheduleId, courses]);
 
   const form = useForm<StudentEnrollmentInput>({
-    resolver: zodResolver(StudentEnrollmentSchema) as any,
+    resolver: zodResolver(StudentEnrollmentSchema) as never,
     defaultValues: {
       id: crypto.randomUUID(),
       studentId: '',
@@ -314,7 +314,7 @@ export const StudentEnrollmentForm: React.FC<StudentEnrollmentFormProps> = ({ on
                   ⚠ No existe curso creado
                 </p>
                 <p className="text-xs text-yellow-600">
-                  Debe crear el curso primero en "Administración de Cursos"
+                  Debe crear el curso primero en &quot;Administración de Cursos&quot;
                 </p>
               </>
             )}

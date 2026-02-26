@@ -24,7 +24,7 @@ export const ClassroomForm: React.FC<ClassroomFormProps> = ({ classroom, onSucce
   const isEditing = !!classroom;
   
   const form = useForm<ClassroomInput>({
-    resolver: zodResolver(ClassroomSchema) as any,
+    resolver: zodResolver(ClassroomSchema) as never,
     defaultValues: {
       id: crypto.randomUUID(),
       name: '',

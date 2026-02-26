@@ -33,7 +33,7 @@ export const CourseForm: React.FC<CourseFormProps> = ({ course, onSuccess, onCan
   const isEditing = !!course;
 
   const form = useForm<CourseInput>({
-    resolver: zodResolver(CourseSchema) as any,
+    resolver: zodResolver(CourseSchema) as never,
     defaultValues: {
       id: crypto.randomUUID(),
       levelId: '',

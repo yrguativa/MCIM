@@ -172,7 +172,7 @@
       "other": "Other"
     },
     "validation": {
-      "identificationE": {
+      "identification": {
         "min": "The identification must be at least {{min}} characters",
         "max": "The identification must be at most {{max}} characters"
       }
@@ -200,6 +200,46 @@
     "edit": "Edit ministry",
     "delete": "Delete ministry",
     "ministry": "Ministry"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome to the church dashboard",
+    "hello": "Hello",
+    "user": "User",
+    "stats": {
+      "totalDisciples": "Total Disciples",
+      "registeredInSystem": "Registered in the system",
+      "phonesRegistered": "Phones Registered",
+      "percentageOfTotal": "% of total",
+      "studentsFormation": "Formation Students",
+      "active": "active",
+      "activeCycle": "Active Cycle",
+      "noActiveCycle": "No active cycle",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "charts": {
+      "phoneDistribution": "Phone Distribution",
+      "phoneDistributionDesc": "Disciples with and without phone registration",
+      "withPhone": "With phone",
+      "withoutPhone": "Without phone",
+      "formationSchoolStatus": "Formation School Status",
+      "formationSchoolStatusDesc": "Active vs inactive students",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "notifications": {
+      "title": "Important Notifications",
+      "description": "Summary of alerts and reminders",
+      "incompletePhoneRecords": "Incomplete phone records",
+      "disciplesWithoutPhone": "disciples do not have a phone number registered",
+      "noActiveCycle": "No active cycle",
+      "noActiveCycleMessage": "There is no active formation school cycle",
+      "allUpToDate": "All up to date",
+      "allRecordsComplete": "All records are complete"
+    },
+    "noData": "No data available",
+    "noStudentsRegistered": "No students registered"
   },
   "formation-school": {
     "title": "Formation School",
@@ -385,35 +425,35 @@
     }
   },
   "html5-qrcode-scanner": {
-        "scanningStatus": "Scanning",
-        "idleStatus": "Inactive",
-        "errorStatus": "Error",
-        "permissionStatus": "Permission",
-        "noCameraFoundErrorStatus": "No cameras found",
-        "lastMatch": "Last match: {{decodedText}}",
-        "codeScannerTitle": "QR Code Scanner",
-        "cameraPermissionTitle": "Request for camera permission",
-        "cameraPermissionRequesting": "Requesting camera permission...",
-        "noCameraFound": "No camera found on this device.",
-        "scanButtonStopScanningText": "Stop Scanning",
-        "scanButtonStartScanningText": "Start Scanning",
-        "torchOnButton": "",
-        "torchOffButton": "",
-        "torchOnFailedMessage": "Could not turn on the torch",
-        "torchOffFailedMessage": "Could not turn off the torch",
-        "scanButtonScanningStarting": "Starting...",
-        "textIfCameraScanSelected": "Scan using camera",
-        "textIfFileScanSelected": "Scan using file upload",
-        "selectCamera": "Select Camera",
-        "fileSelectionChooseImage": "Choose image to scan",
-        "fileSelectionChooseAnother": "Choose another image",
-        "fileSelectionNoImageSelected": "No image selected",
-        "anonymousCameraPrefix": "Camera Anonymous",
-        "dragAndDropMessage": "Drop or click to select an image to scan",
-        "dragAndDropMessageOnlyImages": "Only image files are supported (no other files)",
-        "zoom": "zoom",
-        "loadingImage": "Loading image...",
-        "cameraScanAltText": "Scanning using camera",
-        "fileScanAltText": "Scanning using file upload"
-    }
+    "scanningStatus": "Scanning",
+    "idleStatus": "Inactive",
+    "errorStatus": "Error",
+    "permissionStatus": "Permission",
+    "noCameraFoundErrorStatus": "No cameras found",
+    "lastMatch": "Last match: {{decodedText}}",
+    "codeScannerTitle": "QR Code Scanner",
+    "cameraPermissionTitle": "Request for camera permission",
+    "cameraPermissionRequesting": "Requesting camera permission...",
+    "noCameraFound": "No camera found on this device.",
+    "scanButtonStopScanningText": "Stop Scanning",
+    "scanButtonStartScanningText": "Start Scanning",
+    "torchOnButton": "Turn on torch",
+    "torchOffButton": "Turn off torch",
+    "torchOnFailedMessage": "Could not turn on the torch",
+    "torchOffFailedMessage": "Could not turn off the torch",
+    "scanButtonScanningStarting": "Starting...",
+    "textIfCameraScanSelected": "Scan using camera",
+    "textIfFileScanSelected": "Scan using file upload",
+    "selectCamera": "Select Camera",
+    "fileSelectionChooseImage": "Choose image to scan",
+    "fileSelectionChooseAnother": "Choose another image",
+    "fileSelectionNoImageSelected": "No image selected",
+    "anonymousCameraPrefix": "Camera Anonymous",
+    "dragAndDropMessage": "Drop or click to select an image to scan",
+    "dragAndDropMessageOnlyImages": "Only image files are supported (no other files)",
+    "zoom": "zoom",
+    "loadingImage": "Loading image...",
+    "cameraScanAltText": "Scanning using camera",
+    "fileScanAltText": "Scanning using file upload"
+  }
 }

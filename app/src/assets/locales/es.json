@@ -92,7 +92,7 @@
         "title": "Discípulos",
         "create": "Crear discípulo",
         "edit": "Editar discípulo",
-        "delete": "Eliminar discípulo",
+        "delete": "Eliminar dúvulo",
         "names": "Nombres",
         "name": "Nombre",
         "lastName": "Apellidos",
@@ -190,7 +190,7 @@
             "name": "Nombres ",
             "ministerio": "Ministerio",
             "discipleNotFound": "Discípulo no encontrado",
-            "search": "Buscar discípulo",
+            "search": "Buscar dúvulo",
             "registerAttendance": "Registrar asistencia"
         }
     },
@@ -200,6 +200,46 @@
         "edit": "Editar ministerio",
         "delete": "Eliminar ministerio",
         "ministry": "Ministerio"
+    },
+    "dashboard": {
+        "title": "Panel Principal",
+        "welcome": "Bienvenido al dashboard de la iglesia",
+        "hello": "¡Hola",
+        "user": "Usuario",
+        "stats": {
+            "totalDisciples": "Total Discípulos",
+            "registeredInSystem": "Registrados en el sistema",
+            "phonesRegistered": "Celulares Registrados",
+            "percentageOfTotal": "% del total",
+            "studentsFormation": "Estudiantes Formación",
+            "active": "activos",
+            "activeCycle": "Ciclo Activo",
+            "noActiveCycle": "Sin ciclo activo",
+            "yes": "Sí",
+            "no": "No"
+        },
+        "charts": {
+            "phoneDistribution": "Distribución de Celulares",
+            "phoneDistributionDesc": "Discípulos con y sin registro de celular",
+            "withPhone": "Con celular",
+            "withoutPhone": "Sin celular",
+            "formationSchoolStatus": "Estado Escuela Formación",
+            "formationSchoolStatusDesc": "Estudiantes activos vs inactivos",
+            "active": "Activos",
+            "inactive": "Inactivos"
+        },
+        "notifications": {
+            "title": "Notificaciones Importantes",
+            "description": "Resumen de alertas y recordatorios",
+            "incompletePhoneRecords": "Registros de celular incompletos",
+            "disciplesWithoutPhone": "discípulos no tienen número de celular registrado",
+            "noActiveCycle": "Sin ciclo activo",
+            "noActiveCycleMessage": "No hay un ciclo de escuela de formación activo",
+            "allUpToDate": "Todo al día",
+            "allRecordsComplete": "Todos los registros están completos"
+        },
+        "noData": "No hay datos disponibles",
+        "noStudentsRegistered": "No hay estudiantes registrados"
     },
     "formation-school": {
         "title": "Escuela de Formación",
@@ -276,7 +316,7 @@
             "student": {
                 "title": "Inscripción de Estudiantes",
                 "search": "Buscar discípulo",
-                "searchPlaceholder": "Buscar discípulo...",
+                "searchPlaceholder": "Buscar dúvulo...",
                 "student": "Estudiante",
                 "level": "Nivel Inicial",
                 "course": "Curso",
