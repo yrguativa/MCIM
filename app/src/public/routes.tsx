@@ -5,6 +5,7 @@ const RegisterPage = React.lazy(() => import("./pages/Register"));
 const ForgotPasswordPage = React.lazy(() => import("./pages/ForgotPassword"));
 const EventPage = React.lazy(() => import("./pages/EventPage"));
 const EventRegisterPage = React.lazy(() => import("./pages/EventRegister"));
+const InitialInformationForm = React.lazy(() => import("@/src/initial-information/pages/InitialInformationForm"));
 
 export const PublicRoutes: React.FC = () => {
     return (
@@ -15,6 +16,7 @@ export const PublicRoutes: React.FC = () => {
             {/* Public Routes without authentication check */}
             <Route path="eventPage/:id" element={<EventPage />} />
             <Route path="registerInEvent" element={<EventRegisterPage />} />
+            <Route path="initial-information" element={<InitialInformationForm />} />
         </Routes>
     );
 };

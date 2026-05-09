@@ -104,7 +104,7 @@ export const AdminDashboard: React.FC = () => {
       toast.success('Asignación eliminada correctamente');
       setShowDeleteTeacherDialog(false);
       setDeletingTeacherId(null);
-    } catch (_error) {
+    } catch {
       toast.error('Error al eliminar la asignación');
     }
   };
