@@ -5,9 +5,33 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { CircleUser, Home, LineChart, Menu, Package, Package2, Search, ShoppingCart, Users } from "lucide-react";
+import * as Avatar from "@radix-ui/react-avatar";
+import { Home, LineChart, Menu, Package, Package2, Search, ShoppingCart, Users } from "lucide-react";
 import { useAuthStore } from "@/src/app/stores";
 import { useTranslation } from "react-i18next";
+
+const getInitials = (name: string | null | undefined): string => {
+    if (!name) return "U";
+    const parts = name.trim().split(" ");
+    if (parts.length >= 2) {
+        return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
+};
+
+const getColorFromName = (name: string | null | undefined): string => {
+    if (!name) return "#6366f1";
+    const colors = [
+        "#ef4444", "#f97316", "#f59e0b", "#84cc16", "#22c55e",
+        "#14b8a6", "#06b6d4", "#3b82f6", "#6366f1", "#8b5cf6",
+        "#a855f7", "#d946ef", "#ec4899", "#f43f5e"
+    ];
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+        hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return colors[Math.abs(hash) % colors.length];
+};
 
 const MenuMain: React.FC = () => {
     const { t } = useTranslation();
@@ -107,17 +131,29 @@ const MenuMain: React.FC = () => {
                 <DropdownMenuTrigger asChild>
                     <Button variant="secondary" size="icon" className="rounded-full">
                         {userState?.photoURL ? (
-                            <img
-                                src={userState.photoURL || ""}
-                                alt={userState?.displayName || "User Avatar"}
-                                className="h-5 w-5 rounded-full"
-                            />
+                            <Avatar.Root className="flex h-8 w-8 shrink-0 overflow-hidden rounded-full">
+                                <Avatar.Image
+                                    src={userState.photoURL}
+                                    alt={userState?.displayName || "User Avatar"}
+                                    className="h-full w-full object-cover"
+                                />
+                                <Avatar.Fallback
+                                    className="flex h-full w-full items-center justify-center rounded-full text-white text-sm font-medium"
+                                    style={{ backgroundColor: getColorFromName(userState?.displayName) }}
+                                >
+                                    {getInitials(userState?.displayName)}
+                                </Avatar.Fallback>
+                            </Avatar.Root>
                         ) :
                             (
-                                <>
-                                    <CircleUser className="h-5 w-5" />
-                                    <span className="sr-only">Toggle user menu</span>
-                                </>
+                                <Avatar.Root className="flex h-8 w-8 shrink-0 overflow-hidden rounded-full">
+                                    <Avatar.Fallback
+                                        className="flex h-full w-full items-center justify-center rounded-full text-white text-sm font-medium"
+                                        style={{ backgroundColor: getColorFromName(userState?.displayName) }}
+                                    >
+                                        {getInitials(userState?.displayName)}
+                                    </Avatar.Fallback>
+                                </Avatar.Root>
                             )}
                     </Button>
                 </DropdownMenuTrigger>

@@ -8,8 +8,8 @@ export class TeacherAssignmentEntity {
   @Field(() => ID)
   teacherId: string;
 
-  @Field(() => ID)
-  courseId: string;
+  @Field(() => String)
+  type: string;
 
   @Field()
   assignedDate: Date;

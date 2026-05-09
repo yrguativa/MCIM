@@ -16,11 +16,10 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { useTranslation } from 'react-i18next';
 
 interface TeacherEnrollmentFormProps {
-  courseId?: string;
   onSuccess?: () => void;
 }
 
-export const TeacherEnrollmentForm: React.FC<TeacherEnrollmentFormProps> = ({ courseId, onSuccess }) => {
+export const TeacherEnrollmentForm: React.FC<TeacherEnrollmentFormProps> = ({ onSuccess }) => {
   const { t } = useTranslation();
   const userState = useAuthStore(state => state.user);
   const { Disciples, getDisciples, searchByName, searchResults } = useDiscipleStore();
@@ -36,7 +35,6 @@ export const TeacherEnrollmentForm: React.FC<TeacherEnrollmentFormProps> = ({ co
       id: crypto.randomUUID(),
       teacherId: '',
       type: 'teacher',
-      courseId: courseId || undefined,
       assignedDate: new Date(),
       active: true,
       createdUser: userState?.id || '',
@@ -60,18 +58,20 @@ export const TeacherEnrollmentForm: React.FC<TeacherEnrollmentFormProps> = ({ co
   }, [teacherSearchOpen]);
 
   async function onSubmit(data: TeacherAssignmentInput) {
-    const success = await enrollTeacher({
-      ...data,
-      courseId: data.courseId || '',
-    });
-    
-    if (success) {
-      toast.success(t('formation-school.enrollment.teacher.success'));
-      form.reset({ ...form.getValues(), id: crypto.randomUUID() });
-      setSelectedTeacher(null);
-      onSuccess?.();
-    } else {
-      toast.error(t('formation-school.enrollment.teacher.error'));
+    try {
+      const success = await enrollTeacher(data);
+      
+      if (success) {
+        toast.success(t('formation-school.enrollment.teacher.success'));
+        form.reset({ ...form.getValues(), id: crypto.randomUUID() });
+        setSelectedTeacher(null);
+        onSuccess?.();
+      } else {
+        toast.error(t('formation-school.enrollment.teacher.error'));
+      }
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Error al asignar maestro';
+      toast.error(errorMessage);
     }
   }
 

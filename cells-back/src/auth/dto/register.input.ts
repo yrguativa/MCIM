@@ -23,4 +23,10 @@ export class RegisterInput {
   @Field()
   @IsNotEmpty()
   phoneNumber: string;
+
+  @Field({ nullable: true })
+  name?: string;
+
+  @Field({ nullable: true })
+  lastName?: string;
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Users, BookOpen, Building, Clock, Plus, Pencil, CalendarDays, GraduationCap, CalendarClock } from 'lucide-react';
+import { Users, BookOpen, Building, Clock, Plus, Pencil, CalendarDays, GraduationCap, CalendarClock, Trash2 } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
@@ -13,10 +13,21 @@ import { CourseForm } from './CourseForm';
 import { StudentEnrollmentForm } from './StudentEnrollmentForm';
 import { TeacherEnrollmentForm } from './TeacherEnrollmentForm';
 import { useFormationSchoolStore } from '../store/formation-school.store';
+import { useDiscipleStore } from '@/src/disciples/store/disciple.store';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Cycle, Level, Classroom, Course, Schedule } from '../models';
+import { toast } from 'sonner';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { TeacherAssignment } from '../models';
 
 export const AdminDashboard: React.FC = () => {
   const location = useLocation();
@@ -29,8 +40,11 @@ export const AdminDashboard: React.FC = () => {
     schedules, getSchedules,
     students, getStudents,
     cycles, getCycles,
-    getEnrollmentsByCourse
+    getEnrollmentsByCourse,
+    teacherAssignments, getTeacherAssignments,
+    updateTeacherAssignment, deleteTeacherAssignment
   } = useFormationSchoolStore();
+  const { getDisciples, Disciples } = useDiscipleStore();
   const [selectedCycleId, setSelectedCycleId] = useState<string>('');
   const [selectedCourseId, setSelectedCourseId] = useState<string>('');
   const [activeTab, setActiveTab] = useState('cycles');
@@ -47,6 +61,53 @@ export const AdminDashboard: React.FC = () => {
   const [editingClassroom, setEditingClassroom] = useState<Classroom | null>(null);
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
   const [editingSchedule, setEditingSchedule] = useState<Schedule | null>(null);
+  
+  const [editingTeacher, setEditingTeacher] = useState<{id: string; type: string; active: boolean} | null>(null);
+  const [showEditTeacherDialog, setShowEditTeacherDialog] = useState(false);
+  const [showDeleteTeacherDialog, setShowDeleteTeacherDialog] = useState(false);
+  const [deletingTeacherId, setDeletingTeacherId] = useState<string | null>(null);
+
+  const handleEditTeacher = (assignment: TeacherAssignment) => {
+    setEditingTeacher({
+      id: assignment.id,
+      type: assignment.type || 'teacher',
+      active: assignment.active
+    });
+    setShowEditTeacherDialog(true);
+  };
+
+  const handleSaveTeacher = async () => {
+    if (!editingTeacher) return;
+    try {
+      await updateTeacherAssignment({
+        id: editingTeacher.id,
+        type: editingTeacher.type,
+        active: editingTeacher.active
+      });
+      toast.success('Asignación actualizada correctamente');
+      setShowEditTeacherDialog(false);
+      setEditingTeacher(null);
+    } catch {
+      toast.error('Error al actualizar la asignación');
+    }
+  };
+
+  const handleDeleteTeacher = (id: string) => {
+    setDeletingTeacherId(id);
+    setShowDeleteTeacherDialog(true);
+  };
+
+  const confirmDeleteTeacher = async () => {
+    if (!deletingTeacherId) return;
+    try {
+      await deleteTeacherAssignment(deletingTeacherId);
+      toast.success('Asignación eliminada correctamente');
+      setShowDeleteTeacherDialog(false);
+      setDeletingTeacherId(null);
+    } catch (_error) {
+      toast.error('Error al eliminar la asignación');
+    }
+  };
 
   useEffect(() => {
     const path = location.pathname;
@@ -66,6 +127,8 @@ export const AdminDashboard: React.FC = () => {
     getSchedules();
     getStudents();
     getCycles();
+    getTeacherAssignments();
+    getDisciples();
   }, []);
   
   useEffect(() => {
@@ -80,10 +143,6 @@ export const AdminDashboard: React.FC = () => {
       getEnrollmentsByCourse(selectedCourseId);
     }
   }, [selectedCourseId]);
-
-  const handleCourseSelect = (courseId: string) => {
-    setSelectedCourseId(courseId === '__none__' ? '' : courseId);
-  };
   
   return (
     <div className="space-y-6">
@@ -459,51 +518,63 @@ export const AdminDashboard: React.FC = () => {
                 <CardTitle>Asignar Maestro</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {courses.length > 0 && (
-                    <Select onValueChange={handleCourseSelect} value={selectedCourseId || undefined}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecciona un curso (opcional)" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="__none__">Sin curso específico</SelectItem>
-                        {courses.map((course) => (
-                          <SelectItem key={course.id} value={course.id}>
-                            {course.level?.name || course.levelId || 'Curso'}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
-                  <TeacherEnrollmentForm 
-                    courseId={selectedCourseId || undefined}
-                    onSuccess={() => { setShowTeacherForm(false); setSelectedCourseId(''); }}
-                  />
-                </div>
+                <TeacherEnrollmentForm 
+                  onSuccess={() => { setShowTeacherForm(false); getTeacherAssignments(); }}
+                />
               </CardContent>
             </Card>
           ) : (
             <Card>
               <CardHeader>
                 <CardTitle>Maestros Asignados</CardTitle>
-                <CardDescription>Selecciona un curso para ver o asignar maestros</CardDescription>
+                <CardDescription>Lista de maestros registrados en la Escuela de Formación</CardDescription>
               </CardHeader>
               <CardContent>
-                {courses.length > 0 ? (
-                  <Select onValueChange={handleCourseSelect} value={selectedCourseId || undefined}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecciona un curso" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {courses.map((course) => (
-                        <SelectItem key={course.id} value={course.id}>
-                          {course.level?.name || course.levelId || 'Curso'}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                {teacherAssignments.length > 0 ? (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Nombre</TableHead>
+                        <TableHead>Identificación</TableHead>
+                        <TableHead>Tipo</TableHead>
+                        <TableHead>Fecha de Asignación</TableHead>
+                        <TableHead>Estado</TableHead>
+                        <TableHead>Acciones</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {teacherAssignments.map((assignment) => {
+                        const disciple = Disciples.find(d => d.id === assignment.teacherId);
+                        return (
+                          <TableRow key={assignment.id}>
+                            <TableCell>{disciple ? `${disciple.name} ${disciple.lastName}` : assignment.teacherId}</TableCell>
+                            <TableCell>{disciple?.identification || '-'}</TableCell>
+                            <TableCell>
+                              <Badge variant={assignment.type === 'teacher' ? 'default' : 'outline'}>
+                                {assignment.type === 'teacher' ? 'Maestro' : 'Tutor'}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>{new Date(assignment.assignedDate).toLocaleDateString()}</TableCell>
+                            <TableCell>
+                              <Badge variant={assignment.active ? 'default' : 'secondary'}>
+                                {assignment.active ? 'Activo' : 'Inactivo'}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="flex gap-2">
+                              <Button variant="ghost" size="sm" onClick={() => handleEditTeacher(assignment)}>
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                              <Button variant="ghost" size="sm" onClick={() => handleDeleteTeacher(assignment.id)}>
+                                <Trash2 className="h-4 w-4 text-red-500" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
                 ) : (
-                  <p>No hay cursos disponibles.</p>
+                  <p>No hay maestros asignados.</p>
                 )}
               </CardContent>
             </Card>
@@ -549,6 +620,64 @@ export const AdminDashboard: React.FC = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <Dialog open={showEditTeacherDialog} onOpenChange={setShowEditTeacherDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Editar Asignación</DialogTitle>
+            <DialogDescription>
+              Modifica el tipo y estado de la asignación del maestro/tutor
+            </DialogDescription>
+          </DialogHeader>
+          {editingTeacher && (
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Tipo</label>
+                <Select 
+                  value={editingTeacher.type} 
+                  onValueChange={(value) => setEditingTeacher({...editingTeacher, type: value})}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="teacher">Maestro</SelectItem>
+                    <SelectItem value="tutor">Tutor</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="active"
+                  checked={editingTeacher.active}
+                  onChange={(e) => setEditingTeacher({...editingTeacher, active: e.target.checked})}
+                />
+                <label htmlFor="active" className="text-sm font-medium">Activo</label>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowEditTeacherDialog(false)}>Cancelar</Button>
+            <Button onClick={handleSaveTeacher}>Guardar</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showDeleteTeacherDialog} onOpenChange={setShowDeleteTeacherDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Eliminar Asignación</DialogTitle>
+            <DialogDescription>
+              ¿Estás seguro de que deseas eliminar esta asignación? Esta acción no se puede deshacer.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowDeleteTeacherDialog(false)}>Cancelar</Button>
+            <Button variant="destructive" onClick={confirmDeleteTeacher}>Eliminar</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

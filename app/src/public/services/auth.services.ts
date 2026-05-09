@@ -18,30 +18,33 @@ export class AuthService {
             const query = `
                 mutation Login($loginInput: LoginInput!) {
                     login(loginInput: $loginInput) {
-                        access_token
-                        user {
-                            id
-                            email
-                            displayName
-                            photoURL
-                            identification
-                            ministryId
-                            phoneNumber
-                            authProvider
-                            createdAt
-                            lastLogin
-                            active
-                        }
+                        id
+                        email
+                        displayName
+                        photoURL
+                        identification
+                        ministryId
+                        phoneNumber
+                        authProvider
+                        createdAt
+                        lastLogin
+                        active
+                        accessToken
                     }
                 }
             `;
 
-            const { data } = await api.post(query, {
-                loginInput: { email, password }
+            const { data } = await api.post('', {
+                query,
+                variables: { loginInput: { email, password } }
             });
 
-            this.setToken(data.data.login.access_token);
-            return data.login;
+            if (data.errors) {
+                throw new Error(data.errors[0].message);
+            }
+
+            this.setToken(data.data.login.accessToken);
+            return data.data.login;
         } catch (error) {
             console.error('Login error:', error);
             throw error;
@@ -149,7 +152,7 @@ export class AuthService {
             const query = `
                 mutation Register($registerInput: RegisterInput!) {
                     register(registerInput: $registerInput) {
-                        access_token
+                        accessToken
                         user {
                             id
                             email
@@ -167,11 +170,12 @@ export class AuthService {
                 }
             `;
 
-            const data = await api.post(query, {
-                registerInput: userData
+            const { data } = await api.post('', {
+                query,
+                variables: { registerInput: userData }
             });
 
-            this.setToken(data.data.register.access_token);
+            this.setToken(data.data.register.accessToken);
             return data.data.register;
         } catch (error) {
             console.error('Register error:', error);
@@ -189,17 +193,15 @@ export class AuthService {
             }
             `;
 
-            const { data } = await api.post(API_URL,
-                JSON.stringify({
-                    query,
-                    variables: {
-                        "registerSocialLoginInput": {
-                            id,
-                            ...otherData
-                        }
+            const { data } = await api.post('', {
+                query,
+                variables: {
+                    "registerSocialLoginInput": {
+                        id,
+                        ...otherData
                     }
-                }),
-            );
+                }
+            });
 
             return !data.error ? 1 : 0;
 
@@ -229,7 +231,7 @@ export class AuthService {
                 }
             `;
 
-            const data = await api.post(query);
+            const data = await api.post('', { query });
             return data.data.me;
         } catch (error) {
             console.error('Get current user error:', error);

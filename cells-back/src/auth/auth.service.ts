@@ -112,9 +112,12 @@ export class AuthService {
 
   async login(user: any) {
     const payload = { email: user.email, sub: user._id };
+    const userObject = user.toObject ? user.toObject() : user;
+    const { password, ...userResult } = userObject;
     return {
-      access_token: this.jwtService.sign(payload),
-      user,
+      accessToken: this.jwtService.sign(payload),
+      ...userResult,
+      id: userObject._id ? userObject._id.toString() : userObject.id,
     };
   }
 
@@ -189,7 +192,9 @@ export class AuthService {
     });
 
     await user.save();
-    const { password, ...result } = user.toObject();
+    const userObject = user.toObject();
+    const { password, ...result } = userObject;
+    result.id = userObject._id.toString();
     return result;
   }
 

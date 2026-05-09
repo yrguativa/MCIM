@@ -17,7 +17,7 @@ import { CreateScheduleInput, UpdateScheduleInput, UpdateScheduleInputWithId } f
 import { CreateCourseInput } from './dto/create-course.input';
 import { CreateStudentInput, UpdateStudentInput } from './dto/create-student.input';
 import { EnrollStudentInput, UpdateEnrollmentInput } from './dto/enroll-student.input';
-import { CreateTeacherAssignmentInput } from './dto/teacher-assignment.input';
+import { CreateTeacherAssignmentInput, EnrollTeacherInput, UpdateTeacherAssignmentInput } from './dto/teacher-assignment.input';
 import { CreateAttendanceInput } from './dto/create-attendance.input';
 import { CreateStudentCourseHistoryInput, UpdateStudentCourseHistoryInput } from './dto/create-student-course-history.input';
 
@@ -158,8 +158,32 @@ export class FormationSchoolResolver {
   }
 
   @Mutation(() => TeacherAssignmentEntity)
-  async enrollTeacher(@Args('input') input: CreateTeacherAssignmentInput): Promise<TeacherAssignmentEntity> {
+  async enrollTeacher(@Args('input') input: EnrollTeacherInput): Promise<TeacherAssignmentEntity> {
     return this.fsService.enrollTeacher(input);
+  }
+
+  @Query(() => [TeacherAssignmentEntity])
+  async teacherAssignments(): Promise<TeacherAssignmentEntity[]> {
+    return this.fsService.findAllTeacherAssignments();
+  }
+
+  @Query(() => [TeacherAssignmentEntity])
+  async teacherAssignmentsByTeacher(@Args('teacherId', { type: () => ID }) teacherId: string): Promise<TeacherAssignmentEntity[]> {
+    return this.fsService.findTeacherAssignmentsByTeacher(teacherId);
+  }
+
+  @Mutation(() => TeacherAssignmentEntity)
+  async updateTeacherAssignment(@Args('input') input: UpdateTeacherAssignmentInput): Promise<TeacherAssignmentEntity> {
+    return this.fsService.updateTeacherAssignment({
+      id: input.id,
+      active: input.active,
+      type: input.type
+    });
+  }
+
+  @Mutation(() => Boolean)
+  async deleteTeacherAssignment(@Args('id', { type: () => ID }) id: string): Promise<boolean> {
+    return this.fsService.deleteTeacherAssignment(id);
   }
 
   @Mutation(() => StudentEnrollmentEntity)

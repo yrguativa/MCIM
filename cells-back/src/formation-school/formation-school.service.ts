@@ -18,7 +18,7 @@ import { CreateScheduleInput, UpdateScheduleInput, UpdateScheduleInputWithId } f
 import { CreateCourseInput } from './dto/create-course.input';
 import { CreateStudentInput, UpdateStudentInput } from './dto/create-student.input';
 import { EnrollStudentInput, UpdateEnrollmentInput } from './dto/enroll-student.input';
-import { CreateTeacherAssignmentInput } from './dto/teacher-assignment.input';
+import { CreateTeacherAssignmentInput, EnrollTeacherInput } from './dto/teacher-assignment.input';
 import { CreateAttendanceInput } from './dto/create-attendance.input';
 import { CreateStudentCourseHistoryInput, UpdateStudentCourseHistoryInput } from './dto/create-student-course-history.input';
 import { CycleEntity } from './entities/cycle.entity';
@@ -145,7 +145,7 @@ export class FormationSchoolService {
     return {
       id: assignment._id?.toString() ?? '',
       teacherId: assignment.teacherId,
-      courseId: assignment.courseId,
+      type: assignment.type || 'teacher',
       assignedDate: assignment.assignedDate,
       active: assignment.active,
       createdUser: assignment.createdUser,
@@ -357,14 +357,54 @@ export class FormationSchoolService {
     return this.toStudentEnrollmentEntity(saved);
   }
 
-  async enrollTeacher(input: CreateTeacherAssignmentInput): Promise<TeacherAssignmentEntity> {
+  async enrollTeacher(input: EnrollTeacherInput): Promise<TeacherAssignmentEntity> {
+    const type = input.type || 'teacher';
+    
+    const existingAssignment = await this.teacherAssignmentModel.findOne({
+      teacherId: input.teacherId,
+      type: type,
+      active: true,
+    }).exec();
+
+    if (existingAssignment) {
+      if (type === 'teacher') {
+        throw new BadRequestException('Este disciple ya está asignado como maestro');
+      } else {
+        throw new BadRequestException('Este disciple ya está asignado como tutor');
+      }
+    }
+
     const assignment = new this.teacherAssignmentModel({
       ...input,
+      type,
       assignedDate: new Date(),
       createdDate: new Date(),
     });
     const saved = await assignment.save();
     return this.toTeacherAssignmentEntity(saved);
+  }
+
+  async findAllTeacherAssignments(): Promise<TeacherAssignmentEntity[]> {
+    const assignments = await this.teacherAssignmentModel.find().exec();
+    return assignments.map(a => this.toTeacherAssignmentEntity(a));
+  }
+
+  async findTeacherAssignmentsByTeacher(teacherId: string): Promise<TeacherAssignmentEntity[]> {
+    const assignments = await this.teacherAssignmentModel.find({ teacherId }).exec();
+    return assignments.map(a => this.toTeacherAssignmentEntity(a));
+  }
+
+  async updateTeacherAssignment(input: { id: string; active?: boolean; type?: string }): Promise<TeacherAssignmentEntity> {
+    const { id, ...updateData } = input;
+    const updated = await this.teacherAssignmentModel.findByIdAndUpdate(id, updateData, { new: true }).exec();
+    if (!updated) throw new NotFoundException(`Teacher assignment ${id} not found`);
+    return this.toTeacherAssignmentEntity(updated);
+  }
+
+  async deleteTeacherAssignment(id: string): Promise<boolean> {
+    const result = await this.teacherAssignmentModel.findByIdAndDelete(id).exec();
+    if (!result) throw new NotFoundException(`Teacher assignment ${id} not found`);
+    return true;
   }
 
   async findEnrollmentsByCourse(courseId: string): Promise<StudentEnrollmentEntity[]> {

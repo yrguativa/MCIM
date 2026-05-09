@@ -49,6 +49,9 @@ interface FormationSchoolState {
   getEnrollmentsByStudent: (studentId: string) => Promise<void>;
   enrollStudent: (enrollment: Partial<StudentEnrollment>) => Promise<boolean>;
   enrollTeacher: (assignment: Partial<TeacherAssignment>) => Promise<boolean>;
+  getTeacherAssignments: () => Promise<void>;
+  updateTeacherAssignment: (assignment: { id: string; active?: boolean; type?: string }) => Promise<boolean>;
+  deleteTeacherAssignment: (id: string) => Promise<boolean>;
   updateEnrollment: (enrollment: Partial<StudentEnrollment>) => Promise<boolean>;
   calculateFinalGrade: (enrollmentId: string, requiredClasses: number) => Promise<number>;
   
@@ -341,7 +344,34 @@ const store: StateCreator<FormationSchoolState> = (set, get) => ({
       return true;
     } catch (error) {
       console.error('Error enrolling teacher:', error);
-      return false;
+      throw error;
+    }
+  },
+
+  getTeacherAssignments: async () => {
+    const data = await FormationSchoolService.getTeacherAssignments();
+    set({ teacherAssignments: data.teacherAssignments });
+  },
+
+  updateTeacherAssignment: async (assignment) => {
+    try {
+      await FormationSchoolService.updateTeacherAssignment(assignment);
+      await get().getTeacherAssignments();
+      return true;
+    } catch (error) {
+      console.error('Error updating teacher assignment:', error);
+      throw error;
+    }
+  },
+
+  deleteTeacherAssignment: async (id: string) => {
+    try {
+      await FormationSchoolService.deleteTeacherAssignment(id);
+      await get().getTeacherAssignments();
+      return true;
+    } catch (error) {
+      console.error('Error deleting teacher assignment:', error);
+      throw error;
     }
   },
 

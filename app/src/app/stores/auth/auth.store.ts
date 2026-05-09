@@ -41,7 +41,7 @@ export const storeAuth: StateCreator<AuthState> = (set, get) => ({
         try {
             const response = await authService.login(email, password)
             set({
-                user: response.user,
+                user: response,
                 isAuthenticated: true,
                 isLoading: false
             })

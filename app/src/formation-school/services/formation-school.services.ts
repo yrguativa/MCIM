@@ -152,8 +152,33 @@ export const FormationSchoolService = {
   },
   
   async enrollTeacher(input: Record<string, unknown>) {
-    const query = `mutation EnrollTeacher($input: EnrollTeacherInput!) { enrollTeacher(input: $input) { id teacherId courseId active } }`;
+    const query = `mutation EnrollTeacher($input: EnrollTeacherInput!) { enrollTeacher(input: $input) { id teacherId type active } }`;
     return graphqlRequest(query, { input });
+  },
+
+  async getTeacherAssignments() {
+    const query = `query { teacherAssignments { id teacherId type active assignedDate createdDate } }`;
+    return graphqlRequest(query);
+  },
+
+  async getTeacherAssignmentsByTeacher(teacherId: string) {
+    const query = `query TeacherAssignmentsByTeacher($teacherId: ID!) { teacherAssignmentsByTeacher(teacherId: $teacherId) { id teacherId type active assignedDate } }`;
+    return graphqlRequest(query, { teacherId });
+  },
+
+  async updateTeacherAssignment(input: Record<string, unknown>) {
+    const query = `mutation UpdateTeacherAssignment($input: UpdateTeacherAssignmentInput!) { updateTeacherAssignment(input: $input) { id teacherId type active } }`;
+    return graphqlRequest(query, { input });
+  },
+
+  async deleteTeacherAssignment(id: string) {
+    const query = `mutation DeleteTeacherAssignment($id: ID!) { deleteTeacherAssignment(id: $id) }`;
+    return graphqlRequest(query, { id });
+  },
+
+  async getTeacherAssignmentsByTeacher(teacherId: string) {
+    const query = `query TeacherAssignmentsByTeacher($teacherId: ID!) { teacherAssignmentsByTeacher(teacherId: $teacherId) { id teacherId active assignedDate } }`;
+    return graphqlRequest(query, { teacherId });
   },
    
   async updateEnrollment(input: Record<string, unknown>) {

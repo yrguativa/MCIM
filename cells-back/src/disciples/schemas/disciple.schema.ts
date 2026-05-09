@@ -6,10 +6,10 @@ export class Disciple extends Document {
   @Prop({ required: true, unique: true })
   identification: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   name: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   lastName: string;
 
   @Prop({ required: false })

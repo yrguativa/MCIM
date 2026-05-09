@@ -8,8 +8,6 @@ export const TeacherAssignmentSchema = z.object({
         }),
     type: z.enum(['teacher', 'tutor'])
         .default('teacher'),
-    courseId: z.string()
-        .optional(),
     assignedDate: z.date()
         .default(() => new Date()),
     active: z.boolean()

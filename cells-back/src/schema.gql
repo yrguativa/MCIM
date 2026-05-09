@@ -195,7 +195,7 @@ type StudentEnrollmentEntity {
 type TeacherAssignmentEntity {
   id: ID!
   teacherId: ID!
-  courseId: ID!
+  type: String!
   assignedDate: DateTime!
   active: Boolean!
   createdUser: String!
@@ -258,6 +258,8 @@ type Query {
   coursesByTeacher(teacherId: ID!): [CourseEntity!]!
   enrollmentsByCourse(courseId: ID!): [StudentEnrollmentEntity!]!
   enrollmentsByStudent(studentId: ID!): [StudentEnrollmentEntity!]!
+  teacherAssignments: [TeacherAssignmentEntity!]!
+  teacherAssignmentsByTeacher(teacherId: ID!): [TeacherAssignmentEntity!]!
   attendanceByCourse(courseId: ID!): [AttendanceEntity!]!
   attendanceByEnrollment(enrollmentId: ID!): [AttendanceEntity!]!
   courseHistoriesByStudent(studentId: ID!): [StudentCourseHistoryEntity!]!
@@ -295,7 +297,9 @@ type Mutation {
   createCourse(input: CreateCourseInput!): CourseEntity!
   generateQRCode(courseId: ID!): CourseEntity!
   enrollStudent(input: EnrollStudentInput!): StudentEnrollmentEntity!
-  enrollTeacher(input: CreateTeacherAssignmentInput!): TeacherAssignmentEntity!
+  enrollTeacher(input: EnrollTeacherInput!): TeacherAssignmentEntity!
+  updateTeacherAssignment(input: UpdateTeacherAssignmentInput!): TeacherAssignmentEntity!
+  deleteTeacherAssignment(id: ID!): Boolean!
   updateEnrollment(input: UpdateEnrollmentInput!): StudentEnrollmentEntity!
   calculateFinalGrade(enrollmentId: ID!, cycleRequiredClasses: Float!): Float!
   createAttendance(input: CreateAttendanceInput!): AttendanceEntity!
@@ -318,6 +322,8 @@ input RegisterInput {
   identification: String!
   ministryId: String!
   phoneNumber: String!
+  name: String
+  lastName: String
 }
 
 input RegisterSocialLoginInput {
@@ -531,12 +537,21 @@ input EnrollStudentInput {
   createdUser: String!
 }
 
-input CreateTeacherAssignmentInput {
+input EnrollTeacherInput {
   teacherId: String!
-  courseId: String!
+  type: String
   assignedDate: DateTime!
   active: Boolean
   createdUser: String!
+}
+
+input UpdateTeacherAssignmentInput {
+  id: ID!
+  teacherId: String
+  type: String
+  courseId: String
+  assignedDate: DateTime
+  active: Boolean
 }
 
 input UpdateEnrollmentInput {
