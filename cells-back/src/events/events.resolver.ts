@@ -11,6 +11,7 @@ import { EventsService } from './events.service';
 import { EventEntity } from './entities/event.entity';
 import { EventAttendanceEntity } from './entities/event-attendance.entity';
 import { CreateEventInput } from './dto/create-event.input';
+import { UpdateEventInput } from './dto/update-event.input';
 import { CreateEventAttendanceInput } from './dto/create-event-attendance.input';
 import { Logger } from '@nestjs/common';
 
@@ -36,6 +37,13 @@ export class EventsResolver {
     @Args('createEventInput') createEventInput: CreateEventInput,
   ): Promise<EventEntity> {
     return this.eventsService.create(createEventInput);
+  }
+
+  @Mutation(() => EventEntity)
+  async updateEvent(
+    @Args('updateEventInput') updateEventInput: UpdateEventInput,
+  ): Promise<EventEntity> {
+    return this.eventsService.update(updateEventInput.id, updateEventInput);
   }
 
   @Mutation(() => EventAttendanceEntity)

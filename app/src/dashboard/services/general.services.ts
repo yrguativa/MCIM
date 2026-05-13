@@ -29,7 +29,7 @@ export class GeneralService {
                 lastName
             }
             `;
-            const { data } = await api.post(API_URL,
+            const { data } = await api.post('',
                 JSON.stringify({
                     query: queryDisciples,
                 })

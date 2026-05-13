@@ -10,8 +10,9 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
 });
-export const eventService = {
-  async getEvent(id: string): Promise<Event> {
+
+export class EventService {
+  static async getEvent(id: string): Promise<Event> {
     try {
       const query = `
       query Event($eventId: ID!) {
@@ -61,28 +62,27 @@ export const eventService = {
         }
       }
       `;
-      const { data } = await api.post(API_URL,
+      const { data } = await api.post('',
         JSON.stringify({
           query,
           variables: {
             "eventId": id
           }
         }),
-
       );
 
       return data.data.event;
     } catch (error) {
       if (error instanceof AxiosError) {
         console.error((error as AxiosError).response?.data);
-        throw new Error(JSON.stringify((error as AxiosError).response?.data) || 'Error getting ministries');
+        throw new Error(JSON.stringify((error as AxiosError).response?.data) || 'Error getting event');
       }
       console.error(error);
-      throw new Error('Error getting ministries');
+      throw new Error('Error getting event');
     }
-  },
+  }
 
-  async getEvents(): Promise<Event[]> {
+  static async getEvents(): Promise<Event[]> {
     try {
       const query = `
       query GetEvents {
@@ -101,31 +101,29 @@ export const eventService = {
         }
       }
       `;
-      const { data } = await api.post(API_URL,
-        JSON.stringify({
-          query,
-        })
+      const { data } = await api.post('',
+        JSON.stringify({ query })
       );
 
       return data.data.events;
     } catch (error) {
       if (error instanceof AxiosError) {
         console.error((error as AxiosError).response?.data);
-        throw new Error(JSON.stringify((error as AxiosError).response?.data) || 'Error getting ministries');
+        throw new Error(JSON.stringify((error as AxiosError).response?.data) || 'Error getting events');
       }
       console.error(error);
-      throw new Error('Error getting ministries');
+      throw new Error('Error getting events');
     }
-  },
+  }
 
-  async createEvent(event: Partial<Event>): Promise<string> {
+  static async createEvent(event: Partial<Event>): Promise<string> {
     try {
       const query = `mutation CreateEvent($createEventInput: CreateEventInput!) {
         createEvent(createEventInput: $createEventInput) {
           id
         }
       }`;
-      const { data } = await api.post(API_URL,
+      const { data } = await api.post('',
         JSON.stringify({
           query,
           variables: {
@@ -135,7 +133,6 @@ export const eventService = {
               location: event.location,
               date: event.date,
               capacity: event.capacity,
-              //endDate: event.endDate,
               createdBy: event.createdBy
             }
           }
@@ -146,21 +143,21 @@ export const eventService = {
     } catch (error) {
       if (error instanceof AxiosError) {
         console.error((error as AxiosError).response?.data);
-        throw new Error(JSON.stringify((error as AxiosError).response?.data) || 'Error creating ministry');
+        throw new Error(JSON.stringify((error as AxiosError).response?.data) || 'Error creating event');
       }
       console.error(error);
-      throw new Error('Error creating ministry');
+      throw new Error('Error creating event');
     }
-  },
+  }
 
-  async updateEvent(event: Event): Promise<string> {
+  static async updateEvent(event: Event): Promise<string> {
     try {
-      const query = `mutation UpdateEvent($event: EventInput!) {
-        updateEvent(event: $event) {
+      const query = `mutation UpdateEvent($updateEventInput: UpdateEventInput!) {
+        updateEvent(updateEventInput: $updateEventInput) {
           id
         }
       }`;
-      const { data } = await api.post(API_URL,
+      const { data } = await api.post('',
         JSON.stringify({
           query,
           variables: {
@@ -169,18 +166,18 @@ export const eventService = {
         })
       );
 
-      return data.data.updateMinistry.id;
+      return data.data.updateEvent.id;
     } catch (error) {
       if (error instanceof AxiosError) {
         console.error((error as AxiosError).response?.data);
-        throw new Error(JSON.stringify((error as AxiosError).response?.data) || 'Error updating ministry');
+        throw new Error(JSON.stringify((error as AxiosError).response?.data) || 'Error updating event');
       }
       console.error(error);
-      throw new Error('Error updating ministry');
+      throw new Error('Error updating event');
     }
-  },
+  }
 
-  async registerAttendance(attendance: Partial<EventAttendance>): Promise<EventAttendance> {
+  static async registerAttendance(attendance: Partial<EventAttendance>): Promise<EventAttendance> {
     try {
       const query = `mutation CreateEventAttendance($createEventAttendanceInput: CreateEventAttendanceInput!) {
         createEventAttendance(createEventAttendanceInput: $createEventAttendanceInput) {
@@ -188,7 +185,7 @@ export const eventService = {
           dateRegister
         }
       }`;
-      const { data } = await api.post(API_URL,
+      const { data } = await api.post('',
         JSON.stringify({
           query,
           variables: {
@@ -201,14 +198,14 @@ export const eventService = {
     } catch (error) {
       if (error instanceof AxiosError) {
         console.error((error as AxiosError).response?.data);
-        throw new Error(JSON.stringify((error as AxiosError).response?.data) || 'Error updating ministry');
+        throw new Error(JSON.stringify((error as AxiosError).response?.data) || 'Error registering attendance');
       }
       console.error(error);
-      throw new Error('Error updating ministry');
+      throw new Error('Error registering attendance');
     }
-  },
+  }
 
-  async getEventAttendance(eventId: string): Promise<EventAttendance[]> {
+  static async getEventAttendance(eventId: string): Promise<EventAttendance[]> {
     try {
       const query = `query EventAttendance($eventId: ID!) {
         eventAttendance(eventId: $eventId) {
@@ -217,7 +214,7 @@ export const eventService = {
           timestamp
         }
       }`;
-      const { data } = await api.post(API_URL,
+      const { data } = await api.post('',
         JSON.stringify({
           query,
           variables: { eventId }
@@ -228,10 +225,10 @@ export const eventService = {
     } catch (error) {
       if (error instanceof AxiosError) {
         console.error((error as AxiosError).response?.data);
-        throw new Error(JSON.stringify((error as AxiosError).response?.data) || 'Error getting ministries');
+        throw new Error(JSON.stringify((error as AxiosError).response?.data) || 'Error getting event attendance');
       }
       console.error(error);
-      throw new Error('Error getting ministries');
+      throw new Error('Error getting event attendance');
     }
-  },
-};
+  }
+}

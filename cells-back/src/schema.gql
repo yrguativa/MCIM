@@ -28,7 +28,7 @@ type Cell {
   host: String!
   address: String!
   neighborhood: Int!
-  createdDate: String!
+  createdDate: DateTime!
   createdUser: String!
   records: [RecordCell!]
 }
@@ -226,6 +226,59 @@ type StudentCourseHistoryEntity {
   createdDate: DateTime!
 }
 
+type Assistant {
+  id: ID!
+  names: String!
+  lastNames: String!
+  email: String
+  phone: String!
+  identificationType: String!
+  identification: String!
+  directLeaderId: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type AssistantPersonalInfo {
+  id: ID!
+  assistantId: ID!
+  nationality: String!
+  gender: String!
+  maritalStatus: String
+  hasChildren: String!
+  childrenAttendChurch: String
+  address: String!
+  housingComplex: String
+  neighborhood: String!
+  municipality: String!
+  network: String!
+  birthDate: DateTime!
+  ministryId: String!
+  yearArrivedAtChurch: String!
+  hasAttendedEncounter: String!
+  yearAttendedEncounter: String
+  hasRepeatedEncounter: String
+  hasAttendedReencounter: String!
+  yearAttendedReencounter: String
+  baptizedAtMCI: String!
+  isLeader: String
+  generation: String!
+  formationSchoolLevel: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type AssistantFull {
+  assistant: Assistant!
+  personalInfo: AssistantPersonalInfo
+}
+
+type Leader {
+  id: ID!
+  names: String!
+  lastNames: String!
+}
+
 type Query {
   me: Users!
 
@@ -263,6 +316,8 @@ type Query {
   attendanceByCourse(courseId: ID!): [AttendanceEntity!]!
   attendanceByEnrollment(enrollmentId: ID!): [AttendanceEntity!]!
   courseHistoriesByStudent(studentId: ID!): [StudentCourseHistoryEntity!]!
+  assistantByIdentification(identification: String!): AssistantFull
+  assistantLeaders: [Leader!]!
 }
 
 type Mutation {
@@ -277,11 +332,13 @@ type Mutation {
   resetPassword(resetPasswordInput: ResetPasswordInput!): Boolean!
   createCell(createCellInput: CreateCellInput!): Cell!
   updateCell(updateCellInput: UpdateCellInput!): Cell!
+  createRecordCell(cellId: String!, createRecordCellInput: CreateRecordCellInput!): Cell!
   removeCell(id: String!): Cell!
   createDisciple(createDiscipleInput: CreateDiscipleInput!): Disciple!
   updateDisciple(updateDiscipleInput: UpdateDiscipleInput!): Disciple!
   removeDisciple(id: String!): Disciple!
   createEvent(createEventInput: CreateEventInput!): EventEntity!
+  updateEvent(updateEventInput: UpdateEventInput!): EventEntity!
   createEventAttendance(createEventAttendanceInput: CreateEventAttendanceInput!): EventAttendanceEntity!
   createMinistry(ministry: CreateMinistryInput!): Ministry!
   updateMinistry(ministry: UpdateMinistryInput!): Ministry!
@@ -305,6 +362,8 @@ type Mutation {
   createAttendance(input: CreateAttendanceInput!): AttendanceEntity!
   createCourseHistory(input: CreateStudentCourseHistoryInput!): StudentCourseHistoryEntity!
   updateCourseHistory(input: UpdateStudentCourseHistoryInput!): StudentCourseHistoryEntity!
+  createAssistant(createAssistantInput: CreateAssistantInput!, createPersonalInfoInput: CreateAssistantPersonalInfoInput!): Assistant!
+  updateAssistant(updateAssistantInput: UpdateAssistantInput!, updatePersonalInfoInput: UpdateAssistantPersonalInfoInput): Assistant!
 }
 
 input LoginInput {
@@ -387,6 +446,18 @@ input UpdateCellInput {
   id: String!
 }
 
+input CreateRecordCellInput {
+  topic: String!
+  date: DateTime!
+  createdUser: String!
+  assistants: [CreateAssistantRecordCellInput!]
+}
+
+input CreateAssistantRecordCellInput {
+  name: String!
+  disciple: String
+}
+
 input CreateDiscipleInput {
   """Identification number"""
   identification: String!
@@ -441,6 +512,16 @@ input CreateEventInput {
   location: String!
   capacity: Float
   createdBy: String!
+}
+
+input UpdateEventInput {
+  name: String
+  description: String
+  date: DateTime
+  location: String
+  capacity: Float
+  createdBy: String
+  id: String!
 }
 
 input CreateEventAttendanceInput {
@@ -591,4 +672,78 @@ input UpdateStudentCourseHistoryInput {
   finalGrade: Float
   status: String
   promotedToNextLevel: Boolean
+}
+
+input CreateAssistantInput {
+  names: String!
+  lastNames: String!
+  email: String
+  phone: String!
+  identificationType: String!
+  identification: String!
+  directLeaderId: String
+}
+
+input CreateAssistantPersonalInfoInput {
+  assistantId: ID
+  nationality: String!
+  gender: String!
+  maritalStatus: String
+  hasChildren: String!
+  childrenAttendChurch: String
+  address: String!
+  housingComplex: String
+  neighborhood: String!
+  municipality: String!
+  network: String!
+  birthDate: DateTime!
+  ministryId: String!
+  yearArrivedAtChurch: String!
+  hasAttendedEncounter: String!
+  yearAttendedEncounter: String
+  hasRepeatedEncounter: String
+  hasAttendedReencounter: String!
+  yearAttendedReencounter: String
+  baptizedAtMCI: String!
+  isLeader: String
+  generation: String!
+  formationSchoolLevel: String!
+}
+
+input UpdateAssistantInput {
+  names: String
+  lastNames: String
+  email: String
+  phone: String
+  identificationType: String
+  identification: String
+  directLeaderId: String
+  id: String!
+}
+
+input UpdateAssistantPersonalInfoInput {
+  assistantId: ID
+  nationality: String
+  gender: String
+  maritalStatus: String
+  hasChildren: String
+  childrenAttendChurch: String
+  address: String
+  housingComplex: String
+  neighborhood: String
+  municipality: String
+  network: String
+  birthDate: DateTime
+  ministryId: String
+  yearArrivedAtChurch: String
+  hasAttendedEncounter: String
+  yearAttendedEncounter: String
+  hasRepeatedEncounter: String
+  hasAttendedReencounter: String
+  yearAttendedReencounter: String
+  baptizedAtMCI: String
+  isLeader: String
+  generation: String
+  formationSchoolLevel: String
+  id: String
 }

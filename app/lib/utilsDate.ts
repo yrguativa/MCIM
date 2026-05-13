@@ -12,7 +12,10 @@ import { es } from 'date-fns/locale';
  * Any other day is formatted according to given argument or the DATE_FORMAT setting if no argument is given.
  */
 const HumanizeNaturalDay = (date: Date, formatOfDate: string | undefined = undefined) => {
-    const timestamp = (date === undefined) ? new Date().getTime() / 1000 : date.getTime() / 1000;
+    if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
+      date = new Date();
+    }
+    const timestamp = date.getTime() / 1000;
     formatOfDate = (formatOfDate === undefined) ? 'EEEE dd/LLLL/yyyy' : formatOfDate;
 
     const oneDay = 86400;

@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react';
 
 const Disciples: React.FC = () => {
     const discipleState = useDiscipleStore(state => state.Disciples);
+    const getDisciples = useDiscipleStore(state => state.getDisciples);
     const { ministries, getMinistries } = useMinistryStore(state => state);
 
     const [filterName, setFilterName] = useState("");
@@ -22,8 +23,9 @@ const Disciples: React.FC = () => {
     const [filterMinistry, setFilterMinistry] = useState("all");
 
     useEffect(() => {
+        getDisciples();
         getMinistries();
-    }, [getMinistries]);
+    }, []);
 
     const filteredDisciples = discipleState.filter(disciple => {
         const matchesName = (disciple.name + " " + disciple.lastName).toLowerCase().includes(filterName.toLowerCase());

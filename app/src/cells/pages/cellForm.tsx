@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm, Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Save } from 'lucide-react';
+import { CheckCircle, OctagonX, Save } from 'lucide-react';
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
 import { cn } from '@/lib/utils';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -12,10 +12,12 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { toast } from 'sonner';
 
 import { RecordCellComponent } from '../components/recordCellComponent';
 import { CellInput, CellSchema } from '../schemas/cellSchema';
 import { Neighborhood } from "@/src/cells/schemas/neighborhood.enum";
+import { CellsService } from '../services/cells.services';
 
 import { useDiscipleStore } from '@/src/disciples/store/disciple.store';
 import { useAuthStore } from '@/src/app/stores';
@@ -25,52 +27,70 @@ const CellForm: React.FC = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const userState = useAuthStore(state => state.user);
-    const { addCell: addCellState, updateCell: addUpdateState, getCell: getCellState } = useCellStore();
+    const { addCell, updateCell } = useCellStore();
     const disciplesState = useDiscipleStore(state => state.Disciples);
-
-    const cellDefault: CellInput = {
-        id: crypto.randomUUID(),
-        createdUser: userState?.id || "",
-        createdDate: new Date(),
-        address: "",
-        leader: "",
-        host: "",
-        network: 0,
-        neighborhood: Neighborhood[0].value,
-    }
-    if (id) {
-        const cellForUpdate = getCellState(id);
-        if (cellForUpdate) {
-            cellDefault.id = cellForUpdate.id as typeof cellDefault.id;
-            cellDefault.createdUser = cellForUpdate.createdUser;
-            cellDefault.createdDate = cellForUpdate.createdDate ? new Date(cellForUpdate.createdDate) : new Date();
-            cellDefault.network = cellForUpdate.network;
-            cellDefault.neighborhood = cellForUpdate.neighborhood;
-            cellDefault.address = cellForUpdate.address;
-            cellDefault.leader = cellForUpdate.leader;
-            cellDefault.host = cellForUpdate.host;
-        }
-    }
 
     const form = useForm<CellInput>({
         resolver: zodResolver(CellSchema) as Resolver<CellInput>,
         mode: "onChange",
-        defaultValues: cellDefault,
+        defaultValues: {
+            id: crypto.randomUUID(),
+            createdUser: userState?.id || "",
+            createdDate: new Date(),
+            address: "",
+            leader: "",
+            host: "",
+            network: 0,
+            neighborhood: Neighborhood[0].value,
+        },
     });
 
-    const onSubmit = (data: CellInput) => {
-        if (id) {
-            addUpdateState(data);
-        } else {
-            addCellState(data);
-        }
+    useEffect(() => {
+        if (!id) return;
 
-        navigate('/');
+        const fetchCell = async () => {
+            try {
+                const cell = await CellsService.getCell(id);
+                if (cell) {
+                    form.reset({
+                        id: cell.id as string,
+                        createdUser: cell.createdUser,
+                        createdDate: cell.createdDate ? new Date(cell.createdDate) : new Date(),
+                        network: cell.network,
+                        neighborhood: cell.neighborhood,
+                        address: cell.address,
+                        leader: cell.leader,
+                        host: cell.host,
+                    });
+                }
+            } catch (error) {
+                console.error('[CellForm] Error loading cell:', error);
+            }
+        };
+
+        fetchCell();
+    }, [id]);
+
+    const onSubmit = async (data: CellInput) => {
+        const isSuccess = id
+            ? await updateCell(data)
+            : await addCell(data);
+
+        if (isSuccess) {
+            toast("Célula guardada correctamente", {
+                icon: <CheckCircle className="h-4 w-4 text-green-500" />,
+            });
+            navigate('/cells');
+        } else {
+            toast("Error al guardar la célula", {
+                icon: <OctagonX className="h-4 w-4 text-red-500" />,
+            });
+        }
     }
 
     return <>
         <div className="flex items-center">
-            <h1 className="text-lg font-semibold md:text-2xl">Editar Celula</h1>
+            <h1 className="text-lg font-semibold md:text-2xl">{id ? 'Editar Celula' : 'Nueva Celula'}</h1>
         </div>
         <div className="flex items-center items-center justify-center text-start rounded-lg border border-dashed p-4 shadow-sm">
             <Form {...form}>
@@ -259,11 +279,6 @@ const CellForm: React.FC = () => {
                         )}
                     />
 
-                    {/* Values:
-                    <pre className="col-span-2 text-sm">{JSON.stringify(form.watch(), null, 2)}</pre>
-                    Errores:
-                    <pre className="col-span-2 text-sm">{JSON.stringify(form.formState.errors, null, 2)}</pre> */}
-
                     <Button type="submit" className="col-span-2">
                         <Save className='mr-2' /> Guardr cambios
                     </Button>
@@ -271,7 +286,7 @@ const CellForm: React.FC = () => {
             </Form>
         </div>
         {
-            id && <RecordCellComponent idCell={id}></RecordCellComponent>
+            id && id !== 'create' && <RecordCellComponent idCell={id}></RecordCellComponent>
         }
     </>;
 }

@@ -69,7 +69,7 @@ const storeDisciple: StateCreator<DiscipleState> = (set, get) => (
             try {
                 await DisciplesService.updateDisciple(disciple);
 
-                set({ Disciples: [...disciples.filter(d => d.identification == disciple.identification), { ...disciple }] });
+                set({ Disciples: disciples.map(d => d.id === disciple.id ? { ...disciple } : d) });
                 return true;
             } catch (error) {
                 console.error("Error updating disciple:", error);

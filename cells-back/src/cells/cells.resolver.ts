@@ -2,6 +2,7 @@ import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { CellsService } from './cells.service';
 import { CellEntity } from './entities/cell.entity';
 import { CreateCellInput } from './dto/create-cell.input';
+import { CreateRecordCellInput } from './dto/create-record-cell.input';
 import { UpdateCellInput } from './dto/update-cell.input';
 
 @Resolver(() => CellEntity)
@@ -26,6 +27,14 @@ export class CellsResolver {
   @Mutation(() => CellEntity)
   updateCell(@Args('updateCellInput') updateCellInput: UpdateCellInput) {
     return this.cellsService.update(updateCellInput.id, updateCellInput);
+  }
+
+  @Mutation(() => CellEntity)
+  async createRecordCell(
+    @Args('cellId', { type: () => String }) cellId: string,
+    @Args('createRecordCellInput') createRecordCellInput: CreateRecordCellInput,
+  ) {
+    return this.cellsService.addRecord(cellId, createRecordCellInput);
   }
 
   @Mutation(() => CellEntity)

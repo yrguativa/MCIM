@@ -13,7 +13,10 @@ export const ColumnsAssistants: ColumnDef<CellFull>[] = [
     header: "Fecha creación",
     accessorKey: "createdDate",
     cell: (info) => {
-      return <>{HumanizeNaturalDay.HumanizeNaturalDay(info.getValue() ? new Date(info.getValue() as string | number | Date) : new Date())}</>
+      const value = info.getValue();
+      const date = value ? new Date(value as string | number | Date) : new Date();
+      if (isNaN(date.getTime())) return <>{HumanizeNaturalDay.HumanizeNaturalDay(new Date())}</>;
+      return <>{HumanizeNaturalDay.HumanizeNaturalDay(date)}</>
     }
   },
   {
@@ -48,11 +51,11 @@ export const ColumnsAssistants: ColumnDef<CellFull>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigate('/cell/' + info.getValue())}>
+            <DropdownMenuItem onClick={() => navigate('/cells/' + info.getValue())}>
               <Pen className="mr-2" />Editar Celula
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigate(`/cell/${info.getValue()}/register`)}>
+            <DropdownMenuItem onClick={() => navigate(`/cells/${info.getValue()}/register`)}>
               <BookUp className='mr-2' /> Agregar Registro Celula
             </DropdownMenuItem>
           </DropdownMenuContent>

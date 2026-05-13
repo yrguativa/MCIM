@@ -4,48 +4,72 @@ import { devtools, persist } from 'zustand/middleware';
 import { CellInput } from '@/src/cells/schemas/cellSchema';
 import { CellRecordInput } from '@/src/cells/schemas/cellRecordsSchema';
 import { CellFull } from '@/src/cells/models/cellFull';
+import { CellsService } from '@/src/cells/services/cells.services';
 
 interface CellState {
   Cells: CellFull[],
   getCell: (id: string) => CellFull | undefined,
-  addCell: (by: CellInput) => void,
-  updateCell: (by: CellInput) => void,
-  addRecord: (id: string, by: CellRecordInput) => void
+  getCells: () => Promise<void>,
+  addCell: (by: CellInput) => Promise<boolean>,
+  updateCell: (by: CellInput) => Promise<boolean>,
+  addRecord: (id: string, by: CellRecordInput) => Promise<boolean>
 }
 
 const storeCell: StateCreator<CellState> = (set, get) => ({
-  Cells: [
-    {
-      id: crypto.randomUUID(),
-      leader: "678c06ec353c49781ac13d26",
-      host: "Andres Lopez",
-      neighborhood: 1,
-      network: 1,
-      address: "Calle 123",
-      createdUser: "678c06ec353c49781ac13d26",
-      createdDate: new Date(),
-      records: []
-    }
-  ],
+  Cells: [],
 
   getCell: (id: string) => get().Cells.find(cell => cell.id === id),
-  addCell: (by: CellInput) => set(state => ({ ...state, Cells: [...state.Cells, { ...by, records: [] }] })),
-  updateCell: (by: CellInput) => {
-    const cell = get().Cells.find(cell => cell.id === by.id);
-    const otherCells = get().Cells.filter(cell => cell.id !== by.id);
-    set(state => ({ ...state, Cells: [...otherCells, { ...by, records: cell?.records || [] }] }))
-  },
-  addRecord: (id: string, by: CellRecordInput) => {
-    const cell = get().Cells.find(cell => cell.id === id);
-    if (cell !== undefined && cell.records === undefined) {
-      cell.records = [];
+
+  getCells: async () => {
+    try {
+      const cells = await CellsService.getCells();
+      if (!cells || cells.length === 0) return;
+      set({ Cells: cells });
+    } catch (error) {
+      console.error('[CellStore] getCells error:', error);
     }
-    cell?.records.push(by);
+  },
 
-    const newCells = get().Cells.filter(cell => cell.id !== id);
-    newCells.push(cell!);
+  addCell: async (by: CellInput) => {
+    const cells = get().Cells;
+    try {
+      const cellId = await CellsService.createCell(by);
+      set({ Cells: [...cells, { ...by, id: cellId, records: [] }] });
+      return true;
+    } catch (error) {
+      console.error('[CellStore] addCell error:', error);
+      return false;
+    }
+  },
 
-    set(state => ({ ...state, Cells: newCells }));
+  updateCell: async (by: CellInput) => {
+    const cells = get().Cells;
+    try {
+      await CellsService.updateCell(by);
+      set({ Cells: cells.map(c => c.id === by.id ? { ...c, ...by } : c) });
+      return true;
+    } catch (error) {
+      console.error('[CellStore] updateCell error:', error);
+      return false;
+    }
+  },
+
+  addRecord: async (id: string, by: CellRecordInput) => {
+    try {
+      const recordId = await CellsService.createRecord(id, by);
+      const cells = get().Cells;
+      set({
+        Cells: cells.map(c =>
+          c.id === id
+            ? { ...c, records: [...(c.records || []), { ...by, assistants: by.assistants.map(a => ({ ...a, id: recordId })) }] }
+            : c
+        )
+      });
+      return true;
+    } catch (error) {
+      console.error('[CellStore] addRecord error:', error);
+      return false;
+    }
   }
 });
 

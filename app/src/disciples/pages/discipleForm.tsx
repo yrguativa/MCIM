@@ -33,7 +33,7 @@ const DiscipleForm: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const userState = useAuthStore(state => state.user);
-  const updateDisciple = useDiscipleStore(state => state.updateDisciple);
+  const { updateDisciple, addDisciple } = useDiscipleStore(state => state);
   const ministries = useMinistryStore(state => state.ministries);
 
   const form = useForm<DiscipleInput>({
@@ -45,36 +45,35 @@ const DiscipleForm: React.FC = () => {
     }
   });
 
+  useEffect(() => {
+    if (!id) return;
 
-  if (id) {
-    useEffect(() => {
-      const fetchData = async () => {
-        const cellForUpdate = await DisciplesService.getDisciple(id);
-        if (cellForUpdate) {
-          form.reset({
-            id: id,
-            createdUser: cellForUpdate.createdUser || userState?.id,
-            createdDate: cellForUpdate.createdDate ? new Date(cellForUpdate.createdDate) : new Date(),
-            name: cellForUpdate.name,
-            lastName: cellForUpdate.lastName,
-            identification: parseInt(cellForUpdate.identification),
-            number: cellForUpdate.phone ? parseInt(cellForUpdate.phone) : undefined,
-            email: cellForUpdate.email || undefined,
-            address: cellForUpdate.address || undefined,
-            birthday: cellForUpdate.birthDate ? new Date(cellForUpdate.birthDate) : undefined,
-            ministryId: cellForUpdate.ministryId,
-            network: cellForUpdate.network || undefined,
-            status: cellForUpdate.status || undefined,
-          });
-        }
-      };
+    const fetchData = async () => {
+      const cellForUpdate = await DisciplesService.getDisciple(id);
+      if (cellForUpdate) {
+        form.reset({
+          id: id,
+          createdUser: cellForUpdate.createdUser || userState?.id,
+          createdDate: cellForUpdate.createdDate ? new Date(cellForUpdate.createdDate) : new Date(),
+          name: cellForUpdate.name,
+          lastName: cellForUpdate.lastName,
+          identification: parseInt(cellForUpdate.identification),
+          number: cellForUpdate.phone ? parseInt(cellForUpdate.phone) : undefined,
+          email: cellForUpdate.email || undefined,
+          address: cellForUpdate.address || undefined,
+          birthday: cellForUpdate.birthDate ? new Date(cellForUpdate.birthDate) : undefined,
+          ministryId: cellForUpdate.ministryId,
+          network: cellForUpdate.network || undefined,
+          status: cellForUpdate.status || undefined,
+        });
+      }
+    };
 
-      fetchData();
-    }, [id]);
-  }
+    fetchData();
+  }, [id]);
 
   async function onSubmit(data: DiscipleInput) {
-    const isProcessSucess = await updateDisciple({
+    const discipleData = {
       id: data.id,
       name: data.name,
       lastName: data.lastName,
@@ -87,10 +86,15 @@ const DiscipleForm: React.FC = () => {
       status: data.status,
       createdUser: data.createdUser,
       createdDate: data.createdDate,
-      updatedUser: userState?.id || '', // Added required property
+      updatedUser: userState?.id || '',
       updatedDate: new Date(),
       phone: data.number?.toString(),
-    })
+    };
+
+    const isProcessSucess = id
+      ? await updateDisciple(discipleData)
+      : await addDisciple(discipleData);
+
     if (isProcessSucess) {
       toast("Discipulo registrado correctamente", {
         icon: <CheckCircle className="h-4 w-4 text-green-500" />,

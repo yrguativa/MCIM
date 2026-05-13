@@ -191,7 +191,7 @@ export class DisciplesService {
                 })
             );
 
-            return data.data.id;
+            return data.data.createDisciple.id;
         } catch (error) {
             if (error instanceof AxiosError) {
                 console.error((error as AxiosError).response?.data);
@@ -218,7 +218,7 @@ export class DisciplesService {
                 })
             );
 
-            return data.data.id;
+            return data.data.updateDisciple.id;
         } catch (error) {
             if (error instanceof AxiosError) {
                 console.error((error as AxiosError).response?.data);

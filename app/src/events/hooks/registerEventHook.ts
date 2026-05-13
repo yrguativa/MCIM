@@ -5,12 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import i18n from '@/src/i18n';
 import { useDebounce } from 'use-debounce';
-import { useMutation } from '@tanstack/react-query';
 
 import { useDiscipleStore } from '@/src/disciples/store/disciple.store';
 import { useMinistryStore } from '@/src/ministries/store/ministries.store';
 import { DisciplesService } from '@/src/disciples/services/disciples.services';
-import { eventService } from '../services/event.services';
+import { EventService } from '../services/event.services';
 import { SearchDiscipleInput, SearchDiscipleSchema } from '../schemas/registerEventSchema';
 import { ScanData } from '../models/scanData';
 import { EventAttendance } from '../models/eventAttendance';
@@ -34,6 +33,10 @@ export const useRegisterEventHook = () => {
     const [scanError, setScanError] = useState<string>('');
     const [attandance, setAttandance] = useState<Attendance | undefined>(undefined);
     const [isOpenModalRegister, setIsOpenModalRegister] = useState<boolean>(false);
+    const [isLoadingSearch, setIsLoadingSearch] = useState(false);
+    const [searchError, setSearchError] = useState<Error | null>(null);
+    const [isLoadingRegister, setIsLoadingRegister] = useState(false);
+    const [registerError, setRegisterError] = useState<Error | null>(null);
 
 
     const form = useForm<SearchDiscipleInput>({
@@ -94,34 +97,34 @@ export const useRegisterEventHook = () => {
 
     const onSearchDisciple = async (searchData: SearchDiscipleInput) => {
         if (searchData && searchData.identification && searchData.identification.length >= 5) {
-            searchDiscipleMutation.mutate(searchData.identification);
-        }
-    };
-    const searchDiscipleMutation = useMutation({
-        mutationFn: (identification: string) =>
-            DisciplesService.searchByIdentification(identification),
-        onSuccess: (data) => {
-            if (!data) {
-                onShowModalNotFound();
-                setAttandance(undefined);
-            }
-            else {
-                const ministry = ministries.find(m => m.id === data.ministryId);
-                console.log("🚀 ~ useRegisterEventHook ~ ministry:", ministry)
-                if (ministry) {
-                    setAttandance(
-                        {
+            setIsLoadingSearch(true);
+            setSearchError(null);
+            try {
+                const data = await DisciplesService.searchByIdentification(searchData.identification);
+                if (!data) {
+                    onShowModalNotFound();
+                    setAttandance(undefined);
+                } else {
+                    const ministry = ministries.find(m => m.id === data.ministryId);
+                    if (ministry) {
+                        setAttandance({
                             id: data.id,
                             name: data.name,
                             ministry: ministry.name,
                             lastName: data.lastName,
-                            identification: data.identification
-                        }
-                    );
+                            identification: data.identification,
+                        });
+                    }
                 }
+            } catch (error) {
+                if (error instanceof Error) {
+                    setSearchError(error);
+                }
+            } finally {
+                setIsLoadingSearch(false);
             }
-        },
-    });
+        }
+    };
 
     const onRegisterEvent = async () => {
         if (!scanData || scanData == null || !attandance) return;
@@ -131,19 +134,20 @@ export const useRegisterEventHook = () => {
             discipleId: attandance.id,
         };
 
-        registerAttendanceMutation.mutate(attendance);
-    };
-    const registerAttendanceMutation = useMutation({
-        mutationFn: (attendance: Partial<EventAttendance>) => eventService.registerAttendance(attendance),
-        onSuccess: () => {
+        setIsLoadingRegister(true);
+        setRegisterError(null);
+        try {
+            await EventService.registerAttendance(attendance);
             setIsOpenModalRegister(true);
-        },
-        onError: (error) => {
+        } catch (error) {
             if (error instanceof Error) {
+                setRegisterError(error);
                 setScanError(error.message);
             }
+        } finally {
+            setIsLoadingRegister(false);
         }
-    });
+    };
 
     const onCloseConfirmModal = () => {
         setIsOpenModalRegister(false);
@@ -159,13 +163,13 @@ export const useRegisterEventHook = () => {
         form,
         onSearchDisciple,
         attandance,
-        isLoadingSearch: searchDiscipleMutation.isPending,
-        searchError: searchDiscipleMutation.error,
+        isLoadingSearch,
+        searchError,
 
         onRegisterEvent,
-        isLoadingRegister: registerAttendanceMutation.isPending,
+        isLoadingRegister,
         isOpenModalRegister,
         onCloseConfirmModal,
-        registerError: registerAttendanceMutation.error,
+        registerError,
     };
 }

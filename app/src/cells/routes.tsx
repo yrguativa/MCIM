@@ -9,6 +9,7 @@ const CellsRoutes: React.FC = () => {
     return (
         <Routes>
             <Route path="/" element={<Cells />} />
+            <Route path="create" element={<CellForm />} />
             <Route path=":id" element={<CellForm />} />
             <Route path=":id/register" element={<CellRegister />} />
         </Routes>

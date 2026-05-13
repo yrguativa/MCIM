@@ -5,16 +5,19 @@ import MenuMovil from '@/src/dashboard/components/MenuMovil';
 
 import { useMinistryStore } from '@/src/ministries/store/ministries.store';
 import { useDiscipleStore } from '@/src/disciples/store/disciple.store';
+import { useCellStore } from '@/src/cells/store/cell.store';
 
 import { DashboardRoutes } from '../routes';
 
 const DashboardPage: React.FC = () => {
   const getDisciplesState = useDiscipleStore(state => state.getDisciples);
   const getMinistries = useMinistryStore(state => state.getMinistries);
+  const getCells = useCellStore(state => state.getCells);
 
   useEffect(() => {
     getDisciplesState();
     getMinistries();
+    getCells();
   }, []);
 
   return (

@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateCellInput } from './dto/create-cell.input';
+import { CreateRecordCellInput } from './dto/create-record-cell.input';
 import { UpdateCellInput } from './dto/update-cell.input';
 import { Cell } from './schemas/cell.schema';
 import { Model } from 'mongoose';
@@ -47,6 +48,27 @@ export class CellsService {
     }
 
     return this.toModel(updatedCell);
+  }
+
+  async addRecord(
+    cellId: string,
+    createRecordCellInput: CreateRecordCellInput,
+  ): Promise<CellEntity> {
+    const cell = await this.cellModel.findById(cellId).exec();
+
+    if (!cell) {
+      throw new NotFoundException(`Cell with ID ${cellId} not found`);
+    }
+
+    const record = {
+      topic: createRecordCellInput.topic,
+      date: createRecordCellInput.date,
+      createdUser: createRecordCellInput.createdUser,
+      assistants: createRecordCellInput.assistants || [],
+    };
+    cell.records.push(record as any);
+    const saved = await cell.save();
+    return this.toModel(saved);
   }
 
   remove(id: string) {

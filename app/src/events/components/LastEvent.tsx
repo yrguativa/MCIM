@@ -11,7 +11,7 @@ import TableComponent from '@/src/app/components/TableComponent';
 import { RecordsEventColumns } from './RecordsEventColumns';
 import { MinistryAttendanceTable } from './MinistryAttendanceTable';
 import { CalendarDays, Clock, ListChecks, MapPinCheckInside, Users, RefreshCw } from 'lucide-react';
-import { eventService } from '../services/event.services';
+import { EventService } from '../services/event.services';
 import { useEventStore } from '../store/event.store';
 import { Button } from '@/components/ui/button';
 
@@ -33,7 +33,7 @@ const LastEvent: React.FC<LastEventProps> = ({ event }) => {
 
         setIsRefreshing(true);
         try {
-            const updatedEvent = await eventService.getEvent(event.id);
+            const updatedEvent = await EventService.getEvent(event.id);
             setEventSelected(updatedEvent);
         } catch (error) {
             console.error('Error refreshing event:', error);

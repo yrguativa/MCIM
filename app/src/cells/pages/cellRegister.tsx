@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from 'date-fns';
 
 import { cn } from '@/lib/utils';
-import { BookUp, CalendarIcon, CheckCircle, PlusSquare, Trash2 } from "lucide-react"
+import { BookUp, CalendarIcon, CheckCircle, OctagonX, PlusSquare, Trash2 } from "lucide-react"
 import { Button } from '@/components/ui/button';
 import { Input } from "@/components/ui/input"
 import { Calendar } from "@/components/ui/calendar"
@@ -24,7 +24,8 @@ const CellRegister: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const userState = useAuthStore(state => state.user);
-  const addRecordState = useCellStore(state => state.addRecord);
+  const addRecord = useCellStore(state => state.addRecord);
+
   const form = useForm<CellRecordInput>({
     resolver: zodResolver(CellRecordSchema)as Resolver<CellRecordInput>,
     defaultValues: {
@@ -35,13 +36,19 @@ const CellRegister: React.FC = () => {
   });
 
   const { fields: assistantsSubForm, append: appendAssistant, remove: removeAssistant } = useFieldArray({ name: 'assistants', control: form.control });
-  function onSubmit(data: CellRecordInput) {
-    addRecordState(id!, data);
-    toast("El registro de la celula se guardo correctamente.", {
-      icon: <CheckCircle className="h-4 w-4 text-green-500" />,
-    });
 
-    navigate('/cell/' + id);
+  async function onSubmit(data: CellRecordInput) {
+    const isSuccess = await addRecord(id!, data);
+    if (isSuccess) {
+      toast("El registro de la celula se guardo correctamente.", {
+        icon: <CheckCircle className="h-4 w-4 text-green-500" />,
+      });
+      navigate('/cells/' + id);
+    } else {
+      toast("Error al guardar el registro de la celula", {
+        icon: <OctagonX className="h-4 w-4 text-red-500" />,
+      });
+    }
   }
 
   return <>
@@ -188,11 +195,6 @@ const CellRegister: React.FC = () => {
               </TableFooter>
             </Table>
           </div>
-
-          {/* Values:
-          <pre className="col-span-2 text-sm">{JSON.stringify(form.watch(), null, 2)}</pre>
-          Errores:
-          <pre className="col-span-2 text-sm">{JSON.stringify(form.formState.errors, null, 2)}</pre> */}
 
           <Button type="submit" className="col-span-2">
             <BookUp className='mr-2' /> Agregar Registro Celula

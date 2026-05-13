@@ -24,7 +24,7 @@ export class CellEntity {
   @Field(() => Int)
   neighborhood: number;
 
-  @Field(() => String)
+  @Field(() => Date)
   createdDate: Date;
 
   @Field(() => String)

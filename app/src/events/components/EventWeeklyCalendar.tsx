@@ -18,7 +18,7 @@ import { format } from 'date-fns';
 import { Event } from '../models/event';
 import { useTranslation } from 'react-i18next';
 import { es, enUS } from 'date-fns/locale';
-import { eventService } from '../services/event.services';
+import { EventService } from '../services/event.services';
 
 interface EventWeeklyCalendarProps {
     event: Event;
@@ -33,7 +33,7 @@ export const EventWeeklyCalendar: React.FC<EventWeeklyCalendarProps> = ({ event 
     const [percent, setPercent] = useState(0);
 
     const openSheet = async () => {
-        const eventInfo = await eventService.getEvent(event.id);
+        const eventInfo = await EventService.getEvent(event.id);
         let percentAttendance = 0;
 
         const capacity = event.capacity || 0;

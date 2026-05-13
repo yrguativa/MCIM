@@ -39,6 +39,22 @@ export class EventsService {
     return this.toEventModel(event);
   }
 
+  async update(
+    id: string,
+    updateEventInput: Partial<CreateEventInput>,
+  ): Promise<EventEntity> {
+    const updatedEvent = await this.eventModel
+      .findByIdAndUpdate(id, { $set: updateEventInput }, { new: true, runValidators: true })
+      .populate('ministryId')
+      .exec();
+
+    if (!updatedEvent) {
+      throw new NotFoundException(`Event with ID ${id} not found`);
+    }
+
+    return this.toEventModel(updatedEvent);
+  }
+
   async createAttendance(
     createAttendanceInput: CreateEventAttendanceInput,
   ): Promise<EventAttendanceEntity> {
