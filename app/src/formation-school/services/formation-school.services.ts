@@ -175,11 +175,6 @@ export const FormationSchoolService = {
     const query = `mutation DeleteTeacherAssignment($id: ID!) { deleteTeacherAssignment(id: $id) }`;
     return graphqlRequest(query, { id });
   },
-
-  async getTeacherAssignmentsByTeacher(teacherId: string) {
-    const query = `query TeacherAssignmentsByTeacher($teacherId: ID!) { teacherAssignmentsByTeacher(teacherId: $teacherId) { id teacherId active assignedDate } }`;
-    return graphqlRequest(query, { teacherId });
-  },
    
   async updateEnrollment(input: Record<string, unknown>) {
     const query = `mutation UpdateEnrollment($input: UpdateEnrollmentInput!) { updateEnrollment(input: $input) { id status finalGrade } }`;
