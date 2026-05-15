@@ -1,6 +1,7 @@
 import React from "react";
-import { GalleryVerticalEnd, CalendarDays, Home, LineChart, Package, Package2, ShoppingCart, Users } from "lucide-react";
+import { Bell, CalendarDays, Home, LineChart, Package, Package2, ShoppingCart, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import FormationSchoolMenu from "@/src/formation-school/components/FormationSchoolMenu";
@@ -8,15 +9,19 @@ import FormationSchoolMenu from "@/src/formation-school/components/FormationScho
 const MenuMovil: React.FC = () => {
   const { t } = useTranslation();
   return (
-    <div className="hidden border-r bg-muted/40 md:block sticky top-0 h-screen">
-      <div className="flex h-full flex-col gap-2">
-        <div className="flex items-center gap-2 border-b px-4 py-3">
-          <div className="bg-primary text-primary-foreground flex size-7 items-center justify-center rounded-md">
-            <GalleryVerticalEnd className="size-4" />
-          </div>
-          <span className="font-semibold text-lg">{t("AppTitle")}</span>
+    <div className="hidden border-r bg-muted/40 md:block">
+      <div className="flex h-full max-h-screen flex-col gap-2">
+        <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+          <a href="/" className="flex items-center gap-2 font-semibold">
+            <Package2 className="h-6 w-6" />
+            <span >App Administración</span>
+          </a>
+          <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
+            <Bell className="h-4 w-4" />
+            <span className="sr-only">Toggle notifications</span>
+          </Button>
         </div>
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1">
           <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
             <NavLink
               to="/"
@@ -28,7 +33,7 @@ const MenuMovil: React.FC = () => {
             <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
               <ShoppingCart className="h-4 w-4" />
               Reuniones Asistencia
-              <Badge className="ml-auto flex shrink-0 items-center justify-center rounded-full">
+              <Badge className="ml-auto flex  shrink-0 items-center justify-center rounded-full">
                 Comming soon
               </Badge>
             </a>
@@ -38,7 +43,7 @@ const MenuMovil: React.FC = () => {
             >
               <LineChart className="h-4 w-4" />
               EF MCIM
-              <Badge className="ml-auto flex shrink-0 items-center justify-center rounded-full">
+              <Badge className="ml-auto flex  shrink-0 items-center justify-center rounded-full">
                 Comming soon
               </Badge>
             </a>
