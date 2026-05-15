@@ -1,7 +1,6 @@
 import { create, StateCreator } from "zustand";
 import { devtools } from "zustand/middleware";
 import { InitialInformationService } from "../services/initialInformation.services";
-import { toast } from "sonner";
 
 export interface DiscipleBasic {
   id: string;
@@ -162,7 +161,6 @@ const storeInitialInformation: StateCreator<InitialInformationState> = (set, get
       const result = await InitialInformationService.create(data);
       if (result) {
         set({ isSaving: false, saveSuccess: true });
-        toast.success("Registro creado exitosamente");
         return true;
       }
       set({ isSaving: false });
@@ -173,7 +171,6 @@ const storeInitialInformation: StateCreator<InitialInformationState> = (set, get
         isSaving: false,
         saveError: "Error al guardar la información",
       });
-      toast.error("Error al guardar la información");
       return false;
     }
   },
@@ -184,7 +181,6 @@ const storeInitialInformation: StateCreator<InitialInformationState> = (set, get
       const result = await InitialInformationService.update(id, data);
       if (result) {
         set({ isSaving: false, saveSuccess: true });
-        toast.success("Información actualizada exitosamente");
         return true;
       }
       set({ isSaving: false });
@@ -195,7 +191,6 @@ const storeInitialInformation: StateCreator<InitialInformationState> = (set, get
         isSaving: false,
         saveError: "Error al guardar la información",
       });
-      toast.error("Error al guardar la información");
       return false;
     }
   },

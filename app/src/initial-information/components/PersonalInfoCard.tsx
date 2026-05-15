@@ -1,6 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useFormContext, useWatch } from "react-hook-form";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+import { CalendarIcon, User, Heart, Globe, MapPin, Network, Users, CalendarDays, Baby, Home } from "lucide-react";
+import { cn } from "@/lib/utils";
 import {
   FormField,
   FormItem,
@@ -17,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -25,16 +30,26 @@ import {
 } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 
 const PersonalInfoCard: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { control } = useFormContext();
   const hasChildren = useWatch({ control, name: "hasChildren" });
+  const dateLocale = i18n.language === "es" ? es : undefined;
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t("initialInformation.personalInfo.title")}</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <User className="h-5 w-5 text-primary" />
+          {t("initialInformation.personalInfo.title")}
+        </CardTitle>
       </CardHeader>
       <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormField
@@ -42,7 +57,10 @@ const PersonalInfoCard: React.FC = () => {
           name="nationality"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("initialInformation.personalInfo.nationality")} *</FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                <Globe className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.personalInfo.nationality")} *
+              </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -65,7 +83,10 @@ const PersonalInfoCard: React.FC = () => {
           name="gender"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("initialInformation.personalInfo.gender")} *</FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                <Heart className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.personalInfo.gender")} *
+              </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -87,7 +108,10 @@ const PersonalInfoCard: React.FC = () => {
           name="maritalStatus"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("initialInformation.personalInfo.maritalStatus")}</FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                <Heart className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.personalInfo.maritalStatus")}
+              </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -112,7 +136,10 @@ const PersonalInfoCard: React.FC = () => {
           name="hasChildren"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("initialInformation.personalInfo.hasChildren")} *</FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                <Baby className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.personalInfo.hasChildren")} *
+              </FormLabel>
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}
@@ -140,7 +167,10 @@ const PersonalInfoCard: React.FC = () => {
             name="childrenAttendChurch"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t("initialInformation.personalInfo.childrenAttendChurch")} *</FormLabel>
+                <FormLabel className="flex items-center gap-1.5">
+                  <Users className="h-3.5 w-3.5 text-muted-foreground" />
+                  {t("initialInformation.personalInfo.childrenAttendChurch")} *
+                </FormLabel>
                 <FormControl>
                   <RadioGroup
                     onValueChange={field.onChange}
@@ -168,7 +198,10 @@ const PersonalInfoCard: React.FC = () => {
           name="address"
           render={({ field }) => (
             <FormItem className="md:col-span-2">
-              <FormLabel>{t("initialInformation.personalInfo.address")} *</FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.personalInfo.address")} *
+              </FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -183,7 +216,10 @@ const PersonalInfoCard: React.FC = () => {
           name="housingComplex"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("initialInformation.personalInfo.housingComplex")}</FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                <Home className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.personalInfo.housingComplex")}
+              </FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -197,7 +233,10 @@ const PersonalInfoCard: React.FC = () => {
           name="neighborhood"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("initialInformation.personalInfo.neighborhood")} *</FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.personalInfo.neighborhood")} *
+              </FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -211,7 +250,10 @@ const PersonalInfoCard: React.FC = () => {
           name="municipality"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("initialInformation.personalInfo.municipality")} *</FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.personalInfo.municipality")} *
+              </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -238,7 +280,10 @@ const PersonalInfoCard: React.FC = () => {
           name="network"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("initialInformation.personalInfo.network")} *</FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                <Network className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.personalInfo.network")} *
+              </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -262,12 +307,42 @@ const PersonalInfoCard: React.FC = () => {
           control={control}
           name="birthDate"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t("initialInformation.personalInfo.birthDate")} *</FormLabel>
-              <FormControl>
-                <Input placeholder="dd/mm/aaaa" {...field} />
-              </FormControl>
-              <FormDescription>{t("initialInformation.personalInfo.birthDateHint")}</FormDescription>
+            <FormItem className="flex flex-col">
+              <FormLabel className="flex items-center gap-1.5">
+                <CalendarDays className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.personalInfo.birthDate")} *
+              </FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "pl-3 text-left font-normal",
+                        !field.value && "text-muted-foreground",
+                      )}
+                    >
+                      {field.value ? (
+                        format(field.value, "PPP", { locale: dateLocale })
+                      ) : (
+                        <span>{t("initialInformation.personalInfo.birthDateHint")}</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={field.onChange}
+                    disabled={(date) =>
+                      date > new Date() || date < new Date("1900-01-01")
+                    }
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
               <FormMessage />
             </FormItem>
           )}

@@ -166,8 +166,6 @@ export class InitialInformationService {
     },
   ): Promise<boolean> {
     try {
-      const hasPersonalInfo = data.updatePersonalInfoInput && Object.keys(data.updatePersonalInfoInput).length > 0;
-
       const mutation = `
         mutation UpdateDiscipleFull(
           $updateDiscipleInput: UpdateDiscipleInput!
@@ -189,7 +187,7 @@ export class InitialInformationService {
           query: mutation,
           variables: {
             updateDiscipleInput: { ...data.updateDiscipleInput, id },
-            updatePersonalInfoInput: hasPersonalInfo ? data.updatePersonalInfoInput : undefined,
+            updatePersonalInfoInput: data.updatePersonalInfoInput || undefined,
           },
         }),
       );

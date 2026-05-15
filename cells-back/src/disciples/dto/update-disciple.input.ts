@@ -55,7 +55,8 @@ export class UpdateDiscipleInput extends PartialType(CreateDiscipleInput) {
   @IsOptional()
   createdUser: string;
 
-  @Field(() => Date)
+  @Field(() => Date, { nullable: true })
+  @IsOptional()
   @Transform(({ value }) => new Date(value))
   @IsDate()
   @MaxDate(new Date(new Date().setDate(new Date().getDate() + 1)))

@@ -44,7 +44,7 @@ export class DiscipleEntity {
   @Field(() => String, { nullable: true })
   createdUser: string;
 
-  @Field(() => Date)
+  @Field(() => Date, { nullable: true })
   createdDate: Date;
 
   @Field(() => String, { nullable: true })

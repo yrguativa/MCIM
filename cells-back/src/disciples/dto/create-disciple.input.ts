@@ -5,6 +5,7 @@ import {
   IsEmail,
   IsNotEmpty,
   IsOptional,
+  IsString,
   MaxDate,
   MinDate,
 } from 'class-validator';
@@ -24,6 +25,7 @@ export class CreateDiscipleInput {
   name: string;
 
   @Field(() => String)
+  @IsString()
   lastName: string;
 
   @Field(() => String, { nullable: true })

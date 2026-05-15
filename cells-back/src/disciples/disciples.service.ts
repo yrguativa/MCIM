@@ -22,6 +22,9 @@ export class DisciplesService {
   ) { }
 
   async create(createUserInput: CreateDiscipleInput): Promise<DiscipleEntity> {
+    if (!createUserInput.createdDate) {
+      createUserInput.createdDate = new Date().toISOString();
+    }
     const createdDisciple = new this.discipleModel(createUserInput);
     const savedDisciple = await createdDisciple.save();
     return this.toModel(savedDisciple);
@@ -31,6 +34,9 @@ export class DisciplesService {
     createDiscipleInput: CreateDiscipleInput,
     createPersonalInfoInput: CreateDisciplePersonalInfoInput,
   ): Promise<DiscipleEntity> {
+    if (!createDiscipleInput.createdDate) {
+      createDiscipleInput.createdDate = new Date().toISOString();
+    }
     const createdDisciple = new this.discipleModel(createDiscipleInput);
     const savedDisciple = await createdDisciple.save();
 
@@ -72,20 +78,13 @@ export class DisciplesService {
   }
 
   async findLeaders(): Promise<LeaderEntity[]> {
-    const leaderInfos = await this.personalInfoModel
-      .find({ isLeader: 'YES' })
-      .select('discipleId')
-      .lean()
-      .exec();
-
-    const discipleIds = leaderInfos.map((l) => l.discipleId);
-    const leaders = await this.discipleModel
-      .find({ _id: { $in: discipleIds } })
+    const disciples = await this.discipleModel
+      .find()
       .select('name lastName names lastNames')
       .lean()
       .exec();
 
-    return leaders.map((l) => ({
+    return disciples.map((l) => ({
       id: l._id.toString(),
       names: l.names || l.name || '',
       lastNames: l.lastNames || l.lastName || '',

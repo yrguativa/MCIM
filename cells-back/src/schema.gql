@@ -48,7 +48,7 @@ type Disciple {
   network: String
   status: String
   createdUser: String
-  createdDate: DateTime!
+  createdDate: DateTime
   updatedUser: String
   updatedDate: DateTime
 }
@@ -506,7 +506,7 @@ input UpdateDiscipleInput {
   network: String
   status: String
   createdUser: String
-  createdDate: DateTime!
+  createdDate: DateTime
   id: String!
   updatedUser: String
   updatedDate: DateTime

@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useFormContext, useWatch } from "react-hook-form";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Building2, Users, Calendar, Award, Church, UserCheck, GraduationCap, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   FormField,
@@ -56,7 +56,10 @@ const ChurchInfoCard: React.FC = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t("initialInformation.churchInfo.title")}</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <Building2 className="h-5 w-5 text-primary" />
+          {t("initialInformation.churchInfo.title")}
+        </CardTitle>
       </CardHeader>
       <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormField
@@ -64,7 +67,10 @@ const ChurchInfoCard: React.FC = () => {
           name="ministryId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("initialInformation.churchInfo.ministry")} *</FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                <Church className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.churchInfo.ministry")} *
+              </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -91,7 +97,10 @@ const ChurchInfoCard: React.FC = () => {
           name="directLeaderId"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>{t("initialInformation.churchInfo.directLeader")}</FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                <Users className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.churchInfo.directLeader")}
+              </FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -159,7 +168,8 @@ const ChurchInfoCard: React.FC = () => {
           name="yearArrivedAtChurch"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
                 {t("initialInformation.churchInfo.yearArrivedAtChurch")} *
               </FormLabel>
               <FormControl>
@@ -178,7 +188,8 @@ const ChurchInfoCard: React.FC = () => {
           name="hasAttendedEncounter"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                <Award className="h-3.5 w-3.5 text-muted-foreground" />
                 {t("initialInformation.churchInfo.hasAttendedEncounter")} *
               </FormLabel>
               <FormControl>
@@ -209,7 +220,8 @@ const ChurchInfoCard: React.FC = () => {
               name="yearAttendedEncounter"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
+                  <FormLabel className="flex items-center gap-1.5">
+                    <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
                     {t("initialInformation.churchInfo.yearAttendedEncounter")} *
                   </FormLabel>
                   <FormControl>
@@ -228,7 +240,8 @@ const ChurchInfoCard: React.FC = () => {
               name="hasRepeatedEncounter"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
+                  <FormLabel className="flex items-center gap-1.5">
+                    <Award className="h-3.5 w-3.5 text-muted-foreground" />
                     {t("initialInformation.churchInfo.hasRepeatedEncounter")} *
                   </FormLabel>
                   <FormControl>
@@ -259,7 +272,8 @@ const ChurchInfoCard: React.FC = () => {
           name="hasAttendedReencounter"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                <Award className="h-3.5 w-3.5 text-muted-foreground" />
                 {t("initialInformation.churchInfo.hasAttendedReencounter")} *
               </FormLabel>
               <FormControl>
@@ -289,7 +303,8 @@ const ChurchInfoCard: React.FC = () => {
             name="yearAttendedReencounter"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>
+                <FormLabel className="flex items-center gap-1.5">
+                  <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
                   {t("initialInformation.churchInfo.yearAttendedReencounter")} *
                 </FormLabel>
                 <FormControl>
@@ -309,7 +324,8 @@ const ChurchInfoCard: React.FC = () => {
           name="baptizedAtMCI"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                <Church className="h-3.5 w-3.5 text-muted-foreground" />
                 {t("initialInformation.churchInfo.baptizedAtMCI")} *
               </FormLabel>
               <FormControl>
@@ -338,7 +354,10 @@ const ChurchInfoCard: React.FC = () => {
           name="isLeader"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("initialInformation.churchInfo.isLeader")}</FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                <UserCheck className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.churchInfo.isLeader")}
+              </FormLabel>
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}
@@ -365,7 +384,10 @@ const ChurchInfoCard: React.FC = () => {
           name="generation"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("initialInformation.churchInfo.generation")} *</FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                <GraduationCap className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.churchInfo.generation")} *
+              </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -393,7 +415,8 @@ const ChurchInfoCard: React.FC = () => {
           name="formationSchoolLevel"
           render={({ field }) => (
             <FormItem className="md:col-span-2">
-              <FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                <BookOpen className="h-3.5 w-3.5 text-muted-foreground" />
                 {t("initialInformation.churchInfo.formationSchoolLevel")} *
               </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>

@@ -23,6 +23,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  UserCircle,
+  Mail,
+  Phone,
+  IdCard,
+  FileText,
+} from "lucide-react";
 
 interface BasicInfoCardProps {
   isUpdateMode: boolean;
@@ -35,7 +42,10 @@ const BasicInfoCard: React.FC<BasicInfoCardProps> = ({ isUpdateMode }) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t("initialInformation.basicInfo.title")}</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <FileText className="h-5 w-5 text-primary" />
+          {t("initialInformation.basicInfo.title")}
+        </CardTitle>
       </CardHeader>
       <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormField
@@ -43,7 +53,10 @@ const BasicInfoCard: React.FC<BasicInfoCardProps> = ({ isUpdateMode }) => {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("initialInformation.basicInfo.names")} *</FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                <UserCircle className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.basicInfo.names")} *
+              </FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -57,7 +70,10 @@ const BasicInfoCard: React.FC<BasicInfoCardProps> = ({ isUpdateMode }) => {
           name="lastName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("initialInformation.basicInfo.lastNames")} *</FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                <UserCircle className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.basicInfo.lastNames")} *
+              </FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -71,7 +87,10 @@ const BasicInfoCard: React.FC<BasicInfoCardProps> = ({ isUpdateMode }) => {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("initialInformation.basicInfo.email")}</FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                <Mail className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.basicInfo.email")}
+              </FormLabel>
               <FormControl>
                 <Input type="email" {...field} />
               </FormControl>
@@ -85,7 +104,10 @@ const BasicInfoCard: React.FC<BasicInfoCardProps> = ({ isUpdateMode }) => {
           name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("initialInformation.basicInfo.phone")} *</FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                <Phone className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.basicInfo.phone")} *
+              </FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -99,7 +121,10 @@ const BasicInfoCard: React.FC<BasicInfoCardProps> = ({ isUpdateMode }) => {
           name="identificationType"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("initialInformation.basicInfo.identificationType")} *</FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                <IdCard className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.basicInfo.identificationType")} *
+              </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -127,7 +152,10 @@ const BasicInfoCard: React.FC<BasicInfoCardProps> = ({ isUpdateMode }) => {
           name="identification"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("initialInformation.basicInfo.identification")} *</FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                <IdCard className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.basicInfo.identification")} *
+              </FormLabel>
               <FormControl>
                 <Input
                   {...field}

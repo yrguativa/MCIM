@@ -1,13 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Save, ArrowLeft, GalleryVerticalEnd } from "lucide-react";
+import { Loader2, Save, ArrowLeft, GalleryVerticalEnd, CheckCircle } from "lucide-react";
+import { toast } from "sonner";
+import confetti from "canvas-confetti";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useMinistryStore } from "@/src/ministries/store/ministries.store";
 import {
-  InitialInformationSchema,
+  createInitialInformationSchema,
   type InitialInformationInput,
 } from "../schemas/initialInformationSchema";
 import { useInitialInformationStore } from "../store/initialInformation.store";
@@ -21,87 +23,111 @@ const InitialInformationForm: React.FC = () => {
   const store = useInitialInformationStore();
   const { getMinistries } = useMinistryStore();
 
+  const schema = useMemo(() => createInitialInformationSchema(t), [t]);
+
+  const buildUpdateValues = useCallback((): InitialInformationInput | null => {
+    if (store.mode !== "update" || !store.foundAssistant?.disciple) return null;
+    const d = store.foundAssistant.disciple;
+    const p = store.foundAssistant.personalInfo;
+    return {
+      name: d.name || "",
+      lastName: d.lastName || "",
+      email: d.email || "",
+      phone: d.phone || "",
+      identificationType:
+        (d.identificationType as InitialInformationInput["identificationType"]) ||
+        "",
+      identification: d.identification || "",
+      nationality:
+        (p?.nationality as InitialInformationInput["nationality"]) || "",
+      gender: (p?.gender as InitialInformationInput["gender"]) || "",
+      maritalStatus:
+        (p?.maritalStatus as InitialInformationInput["maritalStatus"]) || undefined,
+      hasChildren:
+        (p?.hasChildren as InitialInformationInput["hasChildren"]) || "",
+      childrenAttendChurch:
+        (p?.childrenAttendChurch as InitialInformationInput["childrenAttendChurch"]) ||
+        undefined,
+      address: p?.address || "",
+      housingComplex: p?.housingComplex || "",
+      neighborhood: p?.neighborhood || "",
+      municipality:
+        (p?.municipality as InitialInformationInput["municipality"]) || "",
+      network: (p?.network as InitialInformationInput["network"]) || "",
+      birthDate: p?.birthDate ? new Date(p.birthDate) : (undefined as unknown as Date),
+      ministryId: p?.ministryId || "",
+      directLeaderId: d.leaderId || "",
+      yearArrivedAtChurch: p?.yearArrivedAtChurch || "",
+      hasAttendedEncounter:
+        (p?.hasAttendedEncounter as InitialInformationInput["hasAttendedEncounter"]) ||
+        "",
+      yearAttendedEncounter: p?.yearAttendedEncounter || "",
+      hasRepeatedEncounter:
+        (p?.hasRepeatedEncounter as InitialInformationInput["hasRepeatedEncounter"]) ||
+        undefined,
+      hasAttendedReencounter:
+        (p?.hasAttendedReencounter as InitialInformationInput["hasAttendedReencounter"]) ||
+        "",
+      yearAttendedReencounter: p?.yearAttendedReencounter || "",
+      baptizedAtMCI:
+        (p?.baptizedAtMCI as InitialInformationInput["baptizedAtMCI"]) || "",
+      isLeader:
+        (p?.isLeader as InitialInformationInput["isLeader"]) || undefined,
+      generation:
+        (p?.generation as InitialInformationInput["generation"]) || "",
+      formationSchoolLevel:
+        (p?.formationSchoolLevel as InitialInformationInput["formationSchoolLevel"]) ||
+        "",
+    } as unknown as InitialInformationInput;
+  }, [store.foundAssistant, store.mode]);
+
   const form = useForm<InitialInformationInput>({
-    resolver: zodResolver(InitialInformationSchema),
+    resolver: zodResolver(schema),
     mode: "onChange",
     defaultValues: {
       name: "",
       lastName: "",
       email: "",
       phone: "",
-      identificationType: undefined,
+      identificationType: "",
       identification: "",
-      nationality: undefined,
-      gender: undefined,
+      nationality: "",
+      gender: "",
       maritalStatus: undefined,
-      hasChildren: undefined,
+      hasChildren: "",
       childrenAttendChurch: undefined,
       address: "",
       housingComplex: "",
       neighborhood: "",
-      municipality: undefined,
-      network: undefined,
-      birthDate: "",
+      municipality: "",
+      network: "",
+      birthDate: undefined as unknown as Date,
       ministryId: "",
       directLeaderId: "",
       yearArrivedAtChurch: "",
-      hasAttendedEncounter: undefined,
+      hasAttendedEncounter: "",
       yearAttendedEncounter: "",
       hasRepeatedEncounter: undefined,
-      hasAttendedReencounter: undefined,
+      hasAttendedReencounter: "",
       yearAttendedReencounter: "",
-      baptizedAtMCI: undefined,
+      baptizedAtMCI: "",
       isLeader: undefined,
-      generation: undefined,
-      formationSchoolLevel: undefined,
-    },
+      generation: "",
+      formationSchoolLevel: "",
+    } as InitialInformationInput,
   });
+
+  useEffect(() => {
+    const values = buildUpdateValues();
+    if (values) {
+      form.reset(values);
+    }
+  }, [buildUpdateValues, form]);
 
   useEffect(() => {
     getMinistries();
     store.loadLeaders();
   }, []);
-
-  useEffect(() => {
-    if (store.foundAssistant?.disciple) {
-      const d = store.foundAssistant.disciple;
-      const p = store.foundAssistant.personalInfo;
-
-      form.reset({
-        name: d.name || "",
-        lastName: d.lastName || "",
-        email: d.email || "",
-        phone: d.phone || "",
-        identificationType: (d.identificationType as InitialInformationInput["identificationType"]) || undefined,
-        identification: d.identification || "",
-        nationality: (p?.nationality as InitialInformationInput["nationality"]) || undefined,
-        gender: (p?.gender as InitialInformationInput["gender"]) || undefined,
-        maritalStatus: (p?.maritalStatus as InitialInformationInput["maritalStatus"]) || undefined,
-        hasChildren: (p?.hasChildren as InitialInformationInput["hasChildren"]) || undefined,
-        childrenAttendChurch: (p?.childrenAttendChurch as InitialInformationInput["childrenAttendChurch"]) || undefined,
-        address: p?.address || "",
-        housingComplex: p?.housingComplex || "",
-        neighborhood: p?.neighborhood || "",
-        municipality: (p?.municipality as InitialInformationInput["municipality"]) || undefined,
-        network: (p?.network as InitialInformationInput["network"]) || undefined,
-        birthDate: p?.birthDate
-          ? formatDateToDDMMYYYY(p.birthDate)
-          : "",
-        ministryId: p?.ministryId || "",
-        directLeaderId: d.leaderId || "",
-        yearArrivedAtChurch: p?.yearArrivedAtChurch || "",
-        hasAttendedEncounter: (p?.hasAttendedEncounter as InitialInformationInput["hasAttendedEncounter"]) || undefined,
-        yearAttendedEncounter: p?.yearAttendedEncounter || "",
-        hasRepeatedEncounter: (p?.hasRepeatedEncounter as InitialInformationInput["hasRepeatedEncounter"]) || undefined,
-        hasAttendedReencounter: (p?.hasAttendedReencounter as InitialInformationInput["hasAttendedReencounter"]) || undefined,
-        yearAttendedReencounter: p?.yearAttendedReencounter || "",
-        baptizedAtMCI: (p?.baptizedAtMCI as InitialInformationInput["baptizedAtMCI"]) || undefined,
-        isLeader: (p?.isLeader as InitialInformationInput["isLeader"]) || undefined,
-        generation: (p?.generation as InitialInformationInput["generation"]) || undefined,
-        formationSchoolLevel: (p?.formationSchoolLevel as InitialInformationInput["formationSchoolLevel"]) || undefined,
-      });
-    }
-  }, [store.foundAssistant]);
 
   const onSubmit = async (data: InitialInformationInput) => {
     const personalInfoData = {
@@ -115,7 +141,7 @@ const InitialInformationForm: React.FC = () => {
       neighborhood: data.neighborhood,
       municipality: data.municipality,
       network: data.network,
-      birthDate: parseDDMMYYYY(data.birthDate),
+      birthDate: data.birthDate?.toISOString() || undefined,
       ministryId: data.ministryId,
       yearArrivedAtChurch: data.yearArrivedAtChurch,
       hasAttendedEncounter: data.hasAttendedEncounter,
@@ -146,6 +172,10 @@ const InitialInformationForm: React.FC = () => {
       });
 
       if (success) {
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        toast.success(t("initialInformation.messages.createSuccess"), {
+          icon: <CheckCircle className="h-4 w-4 text-green-500" />,
+        });
         store.resetForm();
         form.reset();
       }
@@ -171,10 +201,14 @@ const InitialInformationForm: React.FC = () => {
               id: personalInfoId,
               ...personalInfoData,
             }
-          : undefined,
+          : personalInfoData,
       });
 
       if (success) {
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        toast.success(t("initialInformation.messages.updateSuccess"), {
+          icon: <CheckCircle className="h-4 w-4 text-green-500" />,
+        });
         store.resetForm();
         form.reset();
       }
@@ -267,27 +301,5 @@ const InitialInformationForm: React.FC = () => {
     </div>
   );
 };
-
-function formatDateToDDMMYYYY(dateStr: string): string {
-  try {
-    const date = new Date(dateStr);
-    const day = String(date.getUTCDate()).padStart(2, "0");
-    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-    const year = date.getUTCFullYear();
-    return `${day}/${month}/${year}`;
-  } catch {
-    return "";
-  }
-}
-
-function parseDDMMYYYY(dateStr: string): string {
-  try {
-    const [day, month, year] = dateStr.split("/");
-    const date = new Date(`${year}-${month}-${day}T00:00:00.000Z`);
-    return date.toISOString();
-  } catch {
-    return new Date().toISOString();
-  }
-}
 
 export default InitialInformationForm;
