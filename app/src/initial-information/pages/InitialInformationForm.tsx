@@ -114,7 +114,7 @@ const InitialInformationForm: React.FC = () => {
       isLeader: undefined,
       generation: "",
       formationSchoolLevel: "",
-    } as InitialInformationInput,
+    } as unknown as InitialInformationInput,
   });
 
   useEffect(() => {

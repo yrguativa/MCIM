@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Resolver, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { cn } from '@/lib/utils';
 import { CaretSortIcon } from '@radix-ui/react-icons';
-import { Check as CheckIcon, CheckCircle, OctagonX, Save } from "lucide-react";
+import { Check as CheckIcon, CheckCircle, OctagonX, Save, Loader2 } from "lucide-react";
 import {
   Command,
   CommandEmpty,
@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "sonner"
 
 import { DiscipleInput, DiscipleSchema } from '../schemas/discipleSchema';
@@ -25,13 +26,15 @@ import { DisciplesService } from '../services/disciples.services';
 import { useMinistryStore } from '@/src/ministries/store/ministries.store';
 import { useAuthStore } from '@/src/app/stores';
 import { useDiscipleStore } from '../store/disciple.store';
+import CurriculumVitaeSection from '../components/CurriculumVitaeSection';
 
 const DiscipleForm: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const userState = useAuthStore(state => state.user);
-  const { updateDisciple, addDisciple } = useDiscipleStore(state => state);
+  const { addDiscipleFull, updateDiscipleFull, addDisciple, updateDisciple, isSaving, getLeaders } = useDiscipleStore(state => state);
   const ministries = useMinistryStore(state => state.ministries);
+  const [personalInfoId, setPersonalInfoId] = useState<string | undefined>(undefined);
 
   const form = useForm<DiscipleInput>({
     resolver: zodResolver(DiscipleSchema) as Resolver<DiscipleInput>,
@@ -43,31 +46,70 @@ const DiscipleForm: React.FC = () => {
   });
 
   useEffect(() => {
+    getLeaders();
+  }, []);
+
+  useEffect(() => {
     if (!id) return;
 
     const fetchData = async () => {
-      const cellForUpdate = await DisciplesService.getDisciple(id);
-      if (cellForUpdate) {
+      const full = await DisciplesService.getDiscipleFull(id);
+      if (full) {
+        const d = full.disciple;
+        const p = full.personalInfo;
+
         form.reset({
           id: id,
-          createdUser: cellForUpdate.createdUser || userState?.id,
-          createdDate: cellForUpdate.createdDate ? new Date(cellForUpdate.createdDate) : new Date(),
-          name: cellForUpdate.name,
-          lastName: cellForUpdate.lastName,
-          identification: parseInt(cellForUpdate.identification),
-          identificationType: cellForUpdate.identificationType as DiscipleInput["identificationType"],
-          number: cellForUpdate.phone ? parseInt(cellForUpdate.phone) : undefined,
-          email: cellForUpdate.email || undefined,
-          ministryId: cellForUpdate.ministryId,
-          leaderId: cellForUpdate.leaderId || undefined,
-          network: cellForUpdate.network || undefined,
-          status: cellForUpdate.status || undefined,
+          createdUser: d.createdUser || userState?.id,
+          createdDate: d.createdDate ? new Date(d.createdDate) : new Date(),
+          name: d.name,
+          lastName: d.lastName,
+          identification: parseInt(d.identification),
+          identificationType: d.identificationType as DiscipleInput["identificationType"],
+          number: d.phone ? parseInt(d.phone) : undefined,
+          email: d.email || undefined,
+          ministryId: d.ministryId,
+          network: p?.network || d.network || undefined,
+          status: d.status || undefined,
+
+          nationality: p?.nationality as DiscipleInput["nationality"] || undefined,
+          gender: p?.gender as DiscipleInput["gender"] || undefined,
+          maritalStatus: p?.maritalStatus as DiscipleInput["maritalStatus"] || undefined,
+          hasChildren: p?.hasChildren as DiscipleInput["hasChildren"] || undefined,
+          childrenAttendChurch: p?.childrenAttendChurch as DiscipleInput["childrenAttendChurch"] || undefined,
+          address: p?.address || undefined,
+          housingComplex: p?.housingComplex || undefined,
+          neighborhood: p?.neighborhood || undefined,
+          municipality: p?.municipality as DiscipleInput["municipality"] || undefined,
+          birthDate: p?.birthDate ? new Date(p.birthDate) : undefined,
+          directLeaderId: d.leaderId || undefined,
+          yearArrivedAtChurch: p?.yearArrivedAtChurch || undefined,
+          hasAttendedEncounter: p?.hasAttendedEncounter as DiscipleInput["hasAttendedEncounter"] || undefined,
+          yearAttendedEncounter: p?.yearAttendedEncounter || undefined,
+          hasRepeatedEncounter: p?.hasRepeatedEncounter as DiscipleInput["hasRepeatedEncounter"] || undefined,
+          hasAttendedReencounter: p?.hasAttendedReencounter as DiscipleInput["hasAttendedReencounter"] || undefined,
+          yearAttendedReencounter: p?.yearAttendedReencounter || undefined,
+          baptizedAtMCI: p?.baptizedAtMCI as DiscipleInput["baptizedAtMCI"] || undefined,
+          isLeader: p?.isLeader as DiscipleInput["isLeader"] || undefined,
+          generation: p?.generation as DiscipleInput["generation"] || undefined,
+          formationSchoolLevel: p?.formationSchoolLevel as DiscipleInput["formationSchoolLevel"] || undefined,
         });
+
+        if (p?.id) {
+          setPersonalInfoId(p.id);
+        }
       }
     };
 
     fetchData();
   }, [id]);
+
+  function hasPersonalInfoData(data: DiscipleInput): boolean {
+    return !!(data.nationality || data.gender || data.address || data.neighborhood ||
+      data.municipality || data.birthDate || data.hasChildren || data.network ||
+      data.yearArrivedAtChurch || data.hasAttendedEncounter || data.hasAttendedReencounter ||
+      data.baptizedAtMCI || data.generation || data.formationSchoolLevel);
+  }
 
   async function onSubmit(data: DiscipleInput) {
     const discipleData = {
@@ -78,7 +120,7 @@ const DiscipleForm: React.FC = () => {
       identificationType: data.identificationType,
       email: data.email,
       ministryId: data.ministryId,
-      leaderId: data.leaderId,
+      leaderId: data.directLeaderId || undefined,
       network: data.network,
       status: data.status,
       createdUser: data.createdUser,
@@ -88,11 +130,42 @@ const DiscipleForm: React.FC = () => {
       phone: data.number?.toString(),
     };
 
-    const isProcessSucess = id
-      ? await updateDisciple(discipleData)
-      : await addDisciple(discipleData);
+    const personalInfoData = {
+      nationality: data.nationality || undefined,
+      gender: data.gender || undefined,
+      maritalStatus: data.maritalStatus || undefined,
+      hasChildren: data.hasChildren || undefined,
+      childrenAttendChurch: data.childrenAttendChurch || undefined,
+      address: data.address || undefined,
+      housingComplex: data.housingComplex || undefined,
+      neighborhood: data.neighborhood || undefined,
+      municipality: data.municipality || undefined,
+      network: data.network || undefined,
+      birthDate: data.birthDate?.toISOString() || undefined,
+      ministryId: data.ministryId,
+      yearArrivedAtChurch: data.yearArrivedAtChurch || undefined,
+      hasAttendedEncounter: data.hasAttendedEncounter || undefined,
+      yearAttendedEncounter: data.yearAttendedEncounter || undefined,
+      hasRepeatedEncounter: data.hasRepeatedEncounter || undefined,
+      hasAttendedReencounter: data.hasAttendedReencounter || undefined,
+      yearAttendedReencounter: data.yearAttendedReencounter || undefined,
+      baptizedAtMCI: data.baptizedAtMCI || undefined,
+      isLeader: data.isLeader || undefined,
+      generation: data.generation || undefined,
+      formationSchoolLevel: data.formationSchoolLevel || undefined,
+    };
 
-    if (isProcessSucess) {
+    const hasPersonalInfo = hasPersonalInfoData(data);
+
+    const isProcessSuccess = id
+      ? hasPersonalInfo
+        ? await updateDiscipleFull(id, discipleData, personalInfoData, personalInfoId)
+        : await updateDisciple(discipleData)
+      : hasPersonalInfo
+        ? await addDiscipleFull(discipleData, personalInfoData)
+        : await addDisciple(discipleData);
+
+    if (isProcessSuccess) {
       toast("Discipulo registrado correctamente", {
         icon: <CheckCircle className="h-4 w-4 text-green-500" />,
       });
@@ -106,214 +179,209 @@ const DiscipleForm: React.FC = () => {
   }
 
   return <>
-    <div className="flex items-center">
+    <div className="flex items-center mb-4">
       <h1 className="text-lg font-semibold md:text-2xl">Registro de Discipulo</h1>
     </div>
     <div className="flex items-center items-center justify-center text-start rounded-lg border border-dashed p-4 shadow-sm">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-2 grid-flow-row gap-2 w-full">
-          <FormField
-            control={form.control}
-            name="identificationType"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Tipo de Identificación</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="CC, TI, CE, etc." />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="CC">CC</SelectItem>
-                    <SelectItem value="TI">TI</SelectItem>
-                    <SelectItem value="CE">CE</SelectItem>
-                    <SelectItem value="PPT">PPT</SelectItem>
-                    <SelectItem value="PASSPORT">Pasaporte</SelectItem>
-                    <SelectItem value="OTHER">Otro</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="identification"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Identificaciòn</FormLabel>
-                <FormControl>
-                  <Input placeholder="1078934334" type='number' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+          <Tabs defaultValue="basic" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 mb-6">
+              <TabsTrigger value="basic">Información Básica</TabsTrigger>
+              <TabsTrigger value="cv">Hoja de Vida</TabsTrigger>
+            </TabsList>
 
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nombres</FormLabel>
-                <FormControl>
-                  <Input placeholder="Andres Camilo" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <TabsContent value="basic">
+              <div className="grid grid-cols-2 grid-flow-row gap-2 w-full">
+                <FormField
+                  control={form.control}
+                  name="identificationType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Tipo de Identificación</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="CC, TI, CE, etc." />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="CC">CC</SelectItem>
+                          <SelectItem value="TI">TI</SelectItem>
+                          <SelectItem value="CE">CE</SelectItem>
+                          <SelectItem value="PPT">PPT</SelectItem>
+                          <SelectItem value="PASSPORT">Pasaporte</SelectItem>
+                          <SelectItem value="OTHER">Otro</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="identification"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Identificación</FormLabel>
+                      <FormControl>
+                        <Input placeholder="1078934334" type='number' {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-          <FormField
-            control={form.control}
-            name="lastName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Apellidos</FormLabel>
-                <FormControl>
-                  <Input placeholder="Rodriguez Romero" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nombres</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Andres Camilo" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-          <FormField
-            control={form.control}
-            name="number"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Telefono</FormLabel>
-                <FormControl>
-                  <Input placeholder="3002354034" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                <FormField
+                  control={form.control}
+                  name="lastName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Apellidos</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Rodriguez Romero" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Correo Electrónico</FormLabel>
-                <FormControl>
-                  <Input placeholder="ejemplo@correo.com" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                <FormField
+                  control={form.control}
+                  name="number"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Telefono</FormLabel>
+                      <FormControl>
+                        <Input placeholder="3002354034" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-          <FormField
-            control={form.control}
-            name="ministryId"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel className="mt-1 mb-1">Ministerio</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        className={cn(
-                          "w-full justify-between",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value ? ministries.find((m) => m.id === field.value)?.name : "Selecciona un ministerio"}
-                        <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[400px] p-0">
-                    <Command>
-                      <CommandInput placeholder="Buscar ministerio..." />
-                      <CommandEmpty>No se encontró el ministerio</CommandEmpty>
-                      <CommandGroup>
-                        {ministries?.map((ministry) => (
-                          <CommandItem
-                            value={ministry.id}
-                            key={ministry.id}
-                            onSelect={() => {
-                              form.setValue("ministryId", ministry.id)
-                            }}
-                          >
-                            <CheckIcon
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Correo Electrónico</FormLabel>
+                      <FormControl>
+                        <Input placeholder="ejemplo@correo.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="ministryId"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel className="mt-1 mb-1">Ministerio</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
                               className={cn(
-                                "mr-2 h-4 w-4",
-                                ministry.id === field.value ? "opacity-100" : "opacity-0"
+                                "w-full justify-between",
+                                !field.value && "text-muted-foreground"
                               )}
-                            />
-                            {ministry.name}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                            >
+                              {field.value ? ministries.find((m) => m.id === field.value)?.name : "Selecciona un ministerio"}
+                              <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[400px] p-0">
+                          <Command>
+                            <CommandInput placeholder="Buscar ministerio..." />
+                            <CommandEmpty>No se encontró el ministerio</CommandEmpty>
+                            <CommandGroup>
+                              {ministries?.map((ministry) => (
+                                <CommandItem
+                                  value={ministry.id}
+                                  key={ministry.id}
+                                  onSelect={() => {
+                                    form.setValue("ministryId", ministry.id)
+                                  }}
+                                >
+                                  <CheckIcon
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      ministry.id === field.value ? "opacity-100" : "opacity-0"
+                                    )}
+                                  />
+                                  {ministry.name}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-          <FormField
-            control={form.control}
-            name="network"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Red</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecciona una red" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="hombres">Hombres</SelectItem>
-                    <SelectItem value="mujeres">Mujeres</SelectItem>
-                    <SelectItem value="jovenes">Jovenes</SelectItem>
-                    <SelectItem value="rocas">Rocas</SelectItem>
-                    <SelectItem value="pre">Pre</SelectItem>
-                    <SelectItem value="kids">Kids</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                <FormField
+                  control={form.control}
+                  name="status"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Estado</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value || ""}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecciona un estado" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="lider">Líder</SelectItem>
+                          <SelectItem value="prelider">Prelíder</SelectItem>
+                          <SelectItem value="universidad_vida">Universidad de la Vida</SelectItem>
+                          <SelectItem value="solo_celula">Solo Célula</SelectItem>
+                          <SelectItem value="deserto">Deserto</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </TabsContent>
 
-          <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Estado</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecciona un estado" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="lider">Líder</SelectItem>
-                    <SelectItem value="prelider">Prelíder</SelectItem>
-                    <SelectItem value="universidad_vida">Universidad de la Vida</SelectItem>
-                    <SelectItem value="solo_celula">Solo Célula</SelectItem>
-                    <SelectItem value="deserto">Deserto</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <TabsContent value="cv">
+              <CurriculumVitaeSection />
+            </TabsContent>
+          </Tabs>
 
-          <Button type="submit" className="col-span-2">
-            <Save className='mr-2' /> Guardr cambios
-          </Button>
+          <div className="flex justify-end mt-6">
+            <Button type="submit" disabled={isSaving}>
+              {isSaving ? (
+                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Guardando...</>
+              ) : (
+                <><Save className='mr-2' /> Guardar cambios</>
+              )}
+            </Button>
+          </div>
         </form>
       </Form>
     </div>

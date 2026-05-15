@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { Disciple } from '../models/disciple';
+import { Disciple, DiscipleFull, Leader } from '../models/disciple';
 
 const API_URL = (import.meta.env.VITE_API_BASE_URL as string);
 
@@ -171,6 +171,108 @@ export class DisciplesService {
         }
     }
 
+    static async getDiscipleFull(id: string): Promise<DiscipleFull | null> {
+        try {
+            const query = `
+            query DiscipleFull($discipleId: String!) {
+                disciple(id: $discipleId) {
+                    id
+                    identification
+                    identificationType
+                    name
+                    lastName
+                    email
+                    phone
+                    ministryId
+                    leaderId
+                    network
+                    status
+                    createdUser
+                    createdDate
+                    updatedUser
+                    updatedDate
+                }
+                disciplePersonalInfo(discipleId: $discipleId) {
+                    id
+                    discipleId
+                    nationality
+                    gender
+                    maritalStatus
+                    hasChildren
+                    childrenAttendChurch
+                    address
+                    housingComplex
+                    neighborhood
+                    municipality
+                    network
+                    birthDate
+                    ministryId
+                    yearArrivedAtChurch
+                    hasAttendedEncounter
+                    yearAttendedEncounter
+                    hasRepeatedEncounter
+                    hasAttendedReencounter
+                    yearAttendedReencounter
+                    baptizedAtMCI
+                    isLeader
+                    generation
+                    formationSchoolLevel
+                }
+            }
+            `;
+            const { data } = await api.post('',
+                JSON.stringify({
+                    query,
+                    variables: { discipleId: id }
+                })
+            );
+
+            if (data.errors) {
+                console.error('GraphQL errors:', data.errors);
+                return null;
+            }
+
+            return {
+                disciple: data.data.disciple,
+                personalInfo: data.data.disciplePersonalInfo || null,
+            };
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                console.error((error as AxiosError).response?.data);
+            }
+            console.error(error);
+            return null;
+        }
+    }
+
+    static async getLeaders(): Promise<Leader[]> {
+        try {
+            const query = `
+            query {
+                discipleLeaders {
+                    id
+                    names
+                    lastNames
+                }
+            }
+            `;
+            const { data } = await api.post('', JSON.stringify({ query }));
+
+            if (data.errors) {
+                console.error('GraphQL errors:', data.errors);
+                return [];
+            }
+
+            return data.data.discipleLeaders || [];
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                console.error((error as AxiosError).response?.data);
+            }
+            console.error(error);
+            return [];
+        }
+    }
+
     static async addDisciple(disciple: Disciple): Promise<string> {
         try {
             const queryDisciples = `
@@ -203,6 +305,46 @@ export class DisciplesService {
         }
     }
 
+    static async addDiscipleFull(data: {
+        createDiscipleInput: Record<string, unknown>;
+        createPersonalInfoInput: Record<string, unknown>;
+    }): Promise<boolean> {
+        try {
+            const mutation = `
+            mutation CreateDiscipleFull(
+                $createDiscipleInput: CreateDiscipleInput!
+                $createPersonalInfoInput: CreateDisciplePersonalInfoInput!
+            ) {
+                createDiscipleFull(
+                    createDiscipleInput: $createDiscipleInput
+                    createPersonalInfoInput: $createPersonalInfoInput
+                ) {
+                    id
+                }
+            }
+            `;
+            const response = await api.post('',
+                JSON.stringify({
+                    query: mutation,
+                    variables: data,
+                })
+            );
+
+            if (response.data.errors) {
+                console.error('GraphQL errors:', response.data.errors);
+                return false;
+            }
+
+            return !!response.data.data.createDiscipleFull;
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                console.error((error as AxiosError).response?.data);
+            }
+            console.error(error);
+            return false;
+        }
+    }
+
     static async updateDisciple(disciple: Disciple): Promise<string> {
         try {
             const queryDisciples = `mutation UpdateDisciple($updateDiscipleInput: UpdateDiscipleInput!) {
@@ -230,6 +372,52 @@ export class DisciplesService {
             }
             console.error(error);
             throw new Error('In get disciples');
+        }
+    }
+
+    static async updateDiscipleFull(
+        id: string,
+        data: {
+            updateDiscipleInput: Record<string, unknown>;
+            updatePersonalInfoInput?: Record<string, unknown>;
+        },
+    ): Promise<boolean> {
+        try {
+            const mutation = `
+            mutation UpdateDiscipleFull(
+                $updateDiscipleInput: UpdateDiscipleInput!
+                $updatePersonalInfoInput: UpdateDisciplePersonalInfoInput
+            ) {
+                updateDiscipleFull(
+                    updateDiscipleInput: $updateDiscipleInput
+                    updatePersonalInfoInput: $updatePersonalInfoInput
+                ) {
+                    id
+                }
+            }
+            `;
+            const response = await api.post('',
+                JSON.stringify({
+                    query: mutation,
+                    variables: {
+                        updateDiscipleInput: { ...data.updateDiscipleInput, id },
+                        updatePersonalInfoInput: data.updatePersonalInfoInput || undefined,
+                    },
+                })
+            );
+
+            if (response.data.errors) {
+                console.error('GraphQL errors:', response.data.errors);
+                return false;
+            }
+
+            return !!response.data.data.updateDiscipleFull;
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                console.error((error as AxiosError).response?.data);
+            }
+            console.error(error);
+            return false;
         }
     }
 }

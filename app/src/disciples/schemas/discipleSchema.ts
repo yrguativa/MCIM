@@ -34,13 +34,41 @@ export const DiscipleSchema = z.object({
             message: "El correo debe tener minimo 5 caracteres.",
         })
         .email("El correo no es valido").optional(),
+
+    // Personal info
+    nationality: z.enum(["COLOMBIAN", "VENEZUELAN", "FOREIGN"], {
+        error: "La nacionalidad es obligatoria.",
+    }).optional(),
+    gender: z.enum(["FEMALE", "MALE"], {
+        error: "El genero es obligatorio.",
+    }).optional(),
+    maritalStatus: z.enum(["SINGLE", "MARRIED", "WIDOWED", "FREE_UNION", "DIVORCED"]).optional(),
+    hasChildren: z.enum(["YES", "NO"]).optional(),
+    childrenAttendChurch: z.enum(["YES", "NO"]).optional(),
+    address: z.string().optional(),
+    housingComplex: z.string().optional(),
+    neighborhood: z.string().optional(),
+    municipality: z.enum(["MOSQUERA", "FUNZA", "MADRID", "BOJACA", "FACATATIVA", "FONTIBON", "BOGOTA"]).optional(),
+    network: z.string().optional(),
+    birthDate: z.date().optional(),
+
+    // Church info
     ministryId: z.string()
         .min(2, {
             message: "El ministerio es obligatorio.",
         }),
-    leaderId: z.string().optional(),
-    network: z.string()
-        .optional(),
+    directLeaderId: z.string().optional(),
+    yearArrivedAtChurch: z.string().optional(),
+    hasAttendedEncounter: z.enum(["YES", "NO"]).optional(),
+    yearAttendedEncounter: z.string().optional(),
+    hasRepeatedEncounter: z.enum(["YES", "NO"]).optional(),
+    hasAttendedReencounter: z.enum(["YES", "NO"]).optional(),
+    yearAttendedReencounter: z.string().optional(),
+    baptizedAtMCI: z.enum(["YES", "NO"]).optional(),
+    isLeader: z.enum(["YES", "NO"]).optional(),
+    generation: z.enum(["12", "144", "1728", "20736", "248832", "2985984"]).optional(),
+    formationSchoolLevel: z.enum(["BASIC_1", "BASIC_2", "BASIC_3", "ADVANCED_1", "ADVANCED_2", "ADVANCED_3", "GRADUATE", "NOT_STARTED"]).optional(),
+
     status: z.string()
         .optional(),
     createdUser: z.string()

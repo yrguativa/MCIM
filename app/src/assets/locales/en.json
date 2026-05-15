@@ -88,11 +88,13 @@
     "delete": "Delete cell",
     "new": "New cell"
   },
-  "disciples": {
-    "title": "Disciples",
-    "create": "Create disciple",
-    "edit": "Edit disciple",
-    "delete": "Delete disciple",
+    "disciples": {
+        "title": "Disciples",
+        "create": "Create disciple",
+        "edit": "Edit disciple",
+        "delete": "Delete disciple",
+        "basicInfo": "Basic Information",
+        "curriculumVitae": "Curriculum Vitae",
     "name": "Name",
     "names": "Names",
     "lastName": "Last names",

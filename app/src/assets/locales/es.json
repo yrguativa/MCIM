@@ -93,6 +93,8 @@
         "create": "Crear discípulo",
         "edit": "Editar discípulo",
         "delete": "Eliminar dúvulo",
+        "basicInfo": "Información Básica",
+        "curriculumVitae": "Hoja de Vida",
         "names": "Nombres",
         "name": "Nombre",
         "lastName": "Apellidos",
