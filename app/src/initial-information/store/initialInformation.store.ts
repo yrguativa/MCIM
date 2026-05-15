@@ -3,22 +3,25 @@ import { devtools } from "zustand/middleware";
 import { InitialInformationService } from "../services/initialInformation.services";
 import { toast } from "sonner";
 
-export interface Assistant {
+export interface DiscipleBasic {
   id: string;
-  names: string;
-  lastNames: string;
+  identification: string;
+  identificationType: string;
+  name: string;
+  lastName: string;
+  names?: string;
+  lastNames?: string;
   email?: string;
   phone: string;
-  identificationType: string;
-  identification: string;
-  directLeaderId?: string;
-  createdAt: string;
-  updatedAt: string;
+  leaderId?: string;
+  createdUser: string;
+  createdDate: string;
+  updatedDate: string;
 }
 
-export interface AssistantPersonalInfo {
+export interface DisciplePersonalInfo {
   id: string;
-  assistantId: string;
+  discipleId: string;
   nationality: string;
   gender: string;
   maritalStatus?: string;
@@ -45,9 +48,9 @@ export interface AssistantPersonalInfo {
   updatedAt: string;
 }
 
-export interface AssistantFull {
-  assistant: Assistant;
-  personalInfo?: AssistantPersonalInfo | null;
+export interface DiscipleFull {
+  disciple: DiscipleBasic;
+  personalInfo?: DisciplePersonalInfo | null;
 }
 
 export interface Leader {
@@ -60,7 +63,7 @@ interface InitialInformationState {
   searchIdentification: string;
   isSearching: boolean;
   searchError: string | null;
-  foundAssistant: AssistantFull | null;
+  foundAssistant: DiscipleFull | null;
 
   mode: "idle" | "create" | "update";
   isSaving: boolean;
@@ -75,14 +78,14 @@ interface InitialInformationState {
   resetSearch: () => void;
 
   createAssistant: (data: {
-    createAssistantInput: Record<string, unknown>;
+    createDiscipleInput: Record<string, unknown>;
     createPersonalInfoInput: Record<string, unknown>;
   }) => Promise<boolean>;
 
   updateAssistant: (
     id: string,
     data: {
-      updateAssistantInput: Record<string, unknown>;
+      updateDiscipleInput: Record<string, unknown>;
       updatePersonalInfoInput?: Record<string, unknown>;
     },
   ) => Promise<boolean>;
@@ -122,7 +125,7 @@ const storeInitialInformation: StateCreator<InitialInformationState> = (set, get
         searchIdentification.trim(),
       );
 
-      if (result && result.assistant) {
+      if (result && result.disciple) {
         set({
           foundAssistant: result,
           mode: "update",
@@ -198,8 +201,8 @@ const storeInitialInformation: StateCreator<InitialInformationState> = (set, get
   },
 
   loadLeaders: async () => {
-    const { isLoadingLeaders, leaders } = get();
-    if (isLoadingLeaders || leaders.length > 0) return;
+    const { isLoadingLeaders } = get();
+    if (isLoadingLeaders) return;
 
     set({ isLoadingLeaders: true });
     try {

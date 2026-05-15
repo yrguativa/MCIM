@@ -6,6 +6,9 @@ export class Disciple extends Document {
   @Prop({ required: true, unique: true })
   identification: string;
 
+  @Prop({ required: true, enum: ['CC', 'TI', 'CE', 'PPT', 'PASSPORT', 'OTHER'] })
+  identificationType: string;
+
   @Prop({ required: false })
   name: string;
 
@@ -13,16 +16,16 @@ export class Disciple extends Document {
   lastName: string;
 
   @Prop({ required: false })
+  names: string;
+
+  @Prop({ required: false })
+  lastNames: string;
+
+  @Prop({ required: false })
   email: string;
 
   @Prop({ required: false })
   phone: string;
-
-  @Prop({ required: false })
-  address: string;
-
-  @Prop({ required: false })
-  birthDate: Date;
 
   @Prop({ required: true })
   ministryId: string;

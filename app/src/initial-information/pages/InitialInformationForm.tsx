@@ -25,8 +25,8 @@ const InitialInformationForm: React.FC = () => {
     resolver: zodResolver(InitialInformationSchema),
     mode: "onChange",
     defaultValues: {
-      names: "",
-      lastNames: "",
+      name: "",
+      lastName: "",
       email: "",
       phone: "",
       identificationType: undefined,
@@ -63,17 +63,17 @@ const InitialInformationForm: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (store.foundAssistant?.assistant) {
-      const a = store.foundAssistant.assistant;
+    if (store.foundAssistant?.disciple) {
+      const d = store.foundAssistant.disciple;
       const p = store.foundAssistant.personalInfo;
 
       form.reset({
-        names: a.names || "",
-        lastNames: a.lastNames || "",
-        email: a.email || "",
-        phone: a.phone || "",
-        identificationType: (a.identificationType as InitialInformationInput["identificationType"]) || undefined,
-        identification: a.identification || "",
+        name: d.name || "",
+        lastName: d.lastName || "",
+        email: d.email || "",
+        phone: d.phone || "",
+        identificationType: (d.identificationType as InitialInformationInput["identificationType"]) || undefined,
+        identification: d.identification || "",
         nationality: (p?.nationality as InitialInformationInput["nationality"]) || undefined,
         gender: (p?.gender as InitialInformationInput["gender"]) || undefined,
         maritalStatus: (p?.maritalStatus as InitialInformationInput["maritalStatus"]) || undefined,
@@ -88,7 +88,7 @@ const InitialInformationForm: React.FC = () => {
           ? formatDateToDDMMYYYY(p.birthDate)
           : "",
         ministryId: p?.ministryId || "",
-        directLeaderId: a.directLeaderId || "",
+        directLeaderId: d.leaderId || "",
         yearArrivedAtChurch: p?.yearArrivedAtChurch || "",
         hasAttendedEncounter: (p?.hasAttendedEncounter as InitialInformationInput["hasAttendedEncounter"]) || undefined,
         yearAttendedEncounter: p?.yearAttendedEncounter || "",
@@ -131,14 +131,16 @@ const InitialInformationForm: React.FC = () => {
 
     if (store.mode === "create") {
       const success = await store.createAssistant({
-        createAssistantInput: {
-          names: data.names,
-          lastNames: data.lastNames,
+        createDiscipleInput: {
+          name: data.name,
+          lastName: data.lastName,
           email: data.email || undefined,
           phone: data.phone,
           identificationType: data.identificationType,
           identification: data.identification,
-          directLeaderId: data.directLeaderId || undefined,
+          leaderId: data.directLeaderId || undefined,
+          ministryId: data.ministryId,
+          createdUser: "initial-info-form",
         },
         createPersonalInfoInput: personalInfoData,
       });
@@ -147,18 +149,22 @@ const InitialInformationForm: React.FC = () => {
         store.resetForm();
         form.reset();
       }
-    } else if (store.mode === "update" && store.foundAssistant?.assistant.id) {
-      const assistantId = store.foundAssistant.assistant.id;
+    } else if (store.mode === "update" && store.foundAssistant?.disciple.id) {
+      const discipleId = store.foundAssistant.disciple.id;
       const personalInfoId = store.foundAssistant.personalInfo?.id;
 
-      const success = await store.updateAssistant(assistantId, {
-        updateAssistantInput: {
-          names: data.names,
-          lastNames: data.lastNames,
+      const success = await store.updateAssistant(discipleId, {
+        updateDiscipleInput: {
+          name: data.name,
+          lastName: data.lastName,
           email: data.email || undefined,
           phone: data.phone,
           identificationType: data.identificationType,
-          directLeaderId: data.directLeaderId || undefined,
+          leaderId: data.directLeaderId || undefined,
+          ministryId: data.ministryId,
+          createdUser: store.foundAssistant.disciple.createdUser,
+          createdDate: store.foundAssistant.disciple.createdDate,
+          identification: data.identification,
         },
         updatePersonalInfoInput: personalInfoId
           ? {
@@ -218,8 +224,8 @@ const InitialInformationForm: React.FC = () => {
                   : t("initialInformation.search.updatingRecord")}
               </h1>
               <p className="text-muted-foreground text-sm mt-1">
-                {store.foundAssistant?.assistant.names}{" "}
-                {store.foundAssistant?.assistant.lastNames}
+                {store.foundAssistant?.disciple.name}{" "}
+                {store.foundAssistant?.disciple.lastName}
               </p>
             </div>
 

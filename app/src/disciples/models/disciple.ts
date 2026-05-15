@@ -1,13 +1,15 @@
 export interface Disciple {
     id: string;
     identification: string;
+    identificationType: string;
     name: string;
     lastName: string;
+    names?: string;
+    lastNames?: string;
     email: string | undefined;
     phone: string | undefined;
-    address: string | undefined;
-    birthDate: Date | undefined;
     ministryId: string;
+    leaderId?: string;
     network?: string;
     status?: string;
 

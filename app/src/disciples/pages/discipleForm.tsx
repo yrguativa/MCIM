@@ -2,11 +2,9 @@ import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Resolver, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { format } from 'date-fns';
-
 import { cn } from '@/lib/utils';
 import { CaretSortIcon } from '@radix-ui/react-icons';
-import { CalendarIcon, Check as CheckIcon, CheckCircle, OctagonX, Save } from "lucide-react";
+import { Check as CheckIcon, CheckCircle, OctagonX, Save } from "lucide-react";
 import {
   Command,
   CommandEmpty,
@@ -16,7 +14,6 @@ import {
 } from "@/components/ui/command";
 import { Button } from '@/components/ui/button';
 import { Input } from "@/components/ui/input"
-import { Calendar } from "@/components/ui/calendar"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -58,11 +55,11 @@ const DiscipleForm: React.FC = () => {
           name: cellForUpdate.name,
           lastName: cellForUpdate.lastName,
           identification: parseInt(cellForUpdate.identification),
+          identificationType: cellForUpdate.identificationType as DiscipleInput["identificationType"],
           number: cellForUpdate.phone ? parseInt(cellForUpdate.phone) : undefined,
           email: cellForUpdate.email || undefined,
-          address: cellForUpdate.address || undefined,
-          birthday: cellForUpdate.birthDate ? new Date(cellForUpdate.birthDate) : undefined,
           ministryId: cellForUpdate.ministryId,
+          leaderId: cellForUpdate.leaderId || undefined,
           network: cellForUpdate.network || undefined,
           status: cellForUpdate.status || undefined,
         });
@@ -78,10 +75,10 @@ const DiscipleForm: React.FC = () => {
       name: data.name,
       lastName: data.lastName,
       identification: data.identification?.toString() || '',
+      identificationType: data.identificationType,
       email: data.email,
-      address: data.address,
-      birthDate: data.birthday,
       ministryId: data.ministryId,
+      leaderId: data.leaderId,
       network: data.network,
       status: data.status,
       createdUser: data.createdUser,
@@ -115,6 +112,31 @@ const DiscipleForm: React.FC = () => {
     <div className="flex items-center items-center justify-center text-start rounded-lg border border-dashed p-4 shadow-sm">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-2 grid-flow-row gap-2 w-full">
+          <FormField
+            control={form.control}
+            name="identificationType"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Tipo de Identificación</FormLabel>
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="CC, TI, CE, etc." />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="CC">CC</SelectItem>
+                    <SelectItem value="TI">TI</SelectItem>
+                    <SelectItem value="CE">CE</SelectItem>
+                    <SelectItem value="PPT">PPT</SelectItem>
+                    <SelectItem value="PASSPORT">Pasaporte</SelectItem>
+                    <SelectItem value="OTHER">Otro</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="identification"
@@ -179,20 +201,6 @@ const DiscipleForm: React.FC = () => {
                 <FormLabel>Correo Electrónico</FormLabel>
                 <FormControl>
                   <Input placeholder="ejemplo@correo.com" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="address"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Direccion</FormLabel>
-                <FormControl>
-                  <Input placeholder="Calle 12 N2-47 Alejandria 3 Torre 3 Apartamento 502 " {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -302,52 +310,6 @@ const DiscipleForm: React.FC = () => {
               </FormItem>
             )}
           />
-
-          <FormField
-            control={form.control}
-            name="birthday"
-            render={({ field }) => (
-              <FormItem className="flex flex-col pt-2">
-                <FormLabel>Fecha de nacimiento</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={"outline"}
-                        className={cn("pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value ? (
-                          format(field.value, "PPP")
-                        ) : (
-                          <span>Elige una fecha</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
-                      }
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Values:
-          <pre className="col-span-2 text-sm">{JSON.stringify(form.watch(), null, 2)}</pre>
-          Errores:
-          <pre className="col-span-2 text-sm">{JSON.stringify(form.formState.errors, null, 2)}</pre> */}
 
           <Button type="submit" className="col-span-2">
             <Save className='mr-2' /> Guardr cambios

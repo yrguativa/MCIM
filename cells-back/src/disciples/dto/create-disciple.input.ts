@@ -11,9 +11,13 @@ import {
 
 @InputType()
 export class CreateDiscipleInput {
-  @Field(() => String, { description: 'Identification number' })
+  @Field(() => String)
   @IsNotEmpty()
   identification: string;
+
+  @Field(() => String)
+  @IsNotEmpty()
+  identificationType: string;
 
   @Field()
   @IsNotEmpty()
@@ -21,6 +25,12 @@ export class CreateDiscipleInput {
 
   @Field(() => String)
   lastName: string;
+
+  @Field(() => String, { nullable: true })
+  names: string;
+
+  @Field(() => String, { nullable: true })
+  lastNames: string;
 
   @Field(() => String, { nullable: true })
   @IsOptional()
@@ -31,26 +41,13 @@ export class CreateDiscipleInput {
   @IsOptional()
   phone: string;
 
-  @Field(() => String, { nullable: true })
-  @IsOptional()
-  address?: string;
-
-  @Field(() => Date, { description: 'DOF (Date OF Birth)', nullable: true })
-  @IsOptional()
-  @Transform(({ value }) => new Date(value))
-  @IsDate({ message: 'The date of birth must be a valid date' })
-  @MaxDate(new Date(), {
-    message: 'The date of birth cannot be in the future',
-  })
-  @MinDate(new Date('1900-01-01'), {
-    message: 'The date of birth is not valid',
-  })
-  @IsOptional()
-  birthDate?: string;
-
   @Field(() => String, { description: 'Ministry ID' })
   @IsNotEmpty({ message: 'The ministry ID is required' })
   ministryId: string;
+
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  leaderId: string;
 
   @Field(() => String, { nullable: true })
   @IsOptional()
@@ -60,19 +57,15 @@ export class CreateDiscipleInput {
   @IsOptional()
   status: string;
 
-  @Field(() => String)
-  @IsNotEmpty()
+  @Field(() => String, { nullable: true })
+  @IsOptional()
   createdUser: string;
 
-  @Field(() => Date, { description: 'DOF (Date OF Birth)', nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @Transform(({ value }) => new Date(value))
-  @IsDate({ message: 'The date of birth must be a valid date' })
-  @MaxDate(new Date(), {
-    message: 'The date of birth cannot be in the future',
-  })
-  @MinDate(new Date('1900-01-01'), {
-    message: 'The date of birth is not valid',
-  })
+  @IsDate()
+  @MaxDate(new Date())
+  @MinDate(new Date('1900-01-01'))
   createdDate: string;
 }

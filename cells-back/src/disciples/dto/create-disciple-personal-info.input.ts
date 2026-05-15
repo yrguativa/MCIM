@@ -3,10 +3,10 @@ import { IsDate, IsNotEmpty, IsOptional, MaxDate, MinDate } from 'class-validato
 import { Transform } from 'class-transformer';
 
 @InputType()
-export class CreateAssistantPersonalInfoInput {
+export class CreateDisciplePersonalInfoInput {
   @Field(() => ID, { nullable: true })
   @IsOptional()
-  assistantId: string;
+  discipleId: string;
 
   @Field()
   @IsNotEmpty({ message: 'Nationality is required' })

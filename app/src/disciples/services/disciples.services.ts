@@ -3,8 +3,6 @@ import { Disciple } from '../models/disciple';
 
 const API_URL = (import.meta.env.VITE_API_BASE_URL as string);
 
-console.log('[DisciplesService] API_URL:', API_URL);
-
 const api = axios.create({
     baseURL: API_URL,
     headers: {
@@ -12,18 +10,15 @@ const api = axios.create({
     },
 });
 
-console.log('[DisciplesService] API instance baseURL:', api.defaults.baseURL);
-
-
 export class DisciplesService {
     static async searchByName(name: string): Promise<Disciple[]> {
-        console.log('[DisciplesService] Starting search for:', name);
         try {
             const query = `
             query DiscipleByName($name: String!) {
                 discipleByName(name: $name) {
                     id
                     identification
+                    identificationType
                     name
                     lastName
                     phone
@@ -31,26 +26,19 @@ export class DisciplesService {
                 }
             }
             `;
-            console.log('[DisciplesService] Making API request...');
             const { data } = await api.post('',
                 JSON.stringify({
                     query,
-                    variables: {
-                        name
-                    }
+                    variables: { name }
                 })
             );
-
-            console.log('[DisciplesService] Response data:', data);
 
             if (data.errors) {
                 console.error('GraphQL errors:', data.errors);
                 throw new Error(data.errors[0]?.message || 'GraphQL error');
             }
 
-            const results = data.data.discipleByName || [];
-            console.log('[DisciplesService] Returning results:', results);
-            return results;
+            return data.data.discipleByName || [];
         } catch (error) {
             if (error instanceof AxiosError) {
                 console.error('[DisciplesService] Axios error:', (error as AxiosError).response?.data);
@@ -66,25 +54,31 @@ export class DisciplesService {
             const query = `
             query DiscipleByIdentification($identification: String!) {
                 discipleByIdentification(identification: $identification) {
-                    id
-                    identification
-                    name
-                    lastName
-                    phone
-                    ministryId
+                    disciple {
+                        id
+                        identification
+                        identificationType
+                        name
+                        lastName
+                        phone
+                        ministryId
+                    }
                 }
             }
             `;
             const { data } = await api.post('',
                 JSON.stringify({
                     query,
-                    variables: {
-                        identification
-                    }
+                    variables: { identification }
                 })
             );
 
-            return data.data != null ? data.data.discipleByIdentification : undefined
+            if (data.errors) {
+                console.error('GraphQL errors:', data.errors);
+                throw new Error(data.errors[0]?.message || 'GraphQL error');
+            }
+
+            return data.data?.discipleByIdentification?.disciple ?? undefined;
         } catch (error) {
             if (error instanceof AxiosError) {
                 console.error((error as AxiosError).response?.data);
@@ -99,29 +93,28 @@ export class DisciplesService {
         try {
             const queryDisciples = `
             query {
-                disciples
-                {
-                    ...fieldsBasic
+                disciples {
+                    id
+                    identification
+                    identificationType
+                    name
+                    lastName
+                    email
+                    network
+                    ministryId
                 }
             }
-            fragment fieldsBasic on Disciple {
-                id
-                identification
-                name
-                lastName
-                email
-                network
-                ministryId
-            }
-                
             `;
             const { data } = await api.post('',
-                JSON.stringify({
-                    query: queryDisciples,
-                })
+                JSON.stringify({ query: queryDisciples })
             );
 
-            return data.data.disciples;
+            if (data.errors) {
+                console.error('GraphQL errors:', data.errors);
+                throw new Error(data.errors[0]?.message || 'GraphQL error');
+            }
+
+            return data.data?.disciples ?? [];
         } catch (error) {
             if (error instanceof AxiosError) {
                 console.error((error as AxiosError).response?.data);
@@ -139,13 +132,15 @@ export class DisciplesService {
                 disciple(id: $discipleId) {
                     id
                     identification
+                    identificationType
                     name
                     lastName
                     email
                     phone
-                    address
-                    birthDate
                     ministryId
+                    leaderId
+                    network
+                    status
                     createdUser
                     createdDate
                     updatedUser
@@ -156,11 +151,14 @@ export class DisciplesService {
             const { data } = await api.post('',
                 JSON.stringify({
                     query: queryDisciples,
-                    variables: {
-                        "discipleId": id
-                    }
+                    variables: { "discipleId": id }
                 })
             );
+
+            if (data.errors) {
+                console.error('GraphQL errors:', data.errors);
+                throw new Error(data.errors[0]?.message || 'GraphQL error');
+            }
 
             return data.data.disciple;
         } catch (error) {
@@ -185,13 +183,16 @@ export class DisciplesService {
             const { data } = await api.post('',
                 JSON.stringify({
                     query: queryDisciples,
-                    variables: {
-                        "createDiscipleInput": disciple
-                    }
+                    variables: { "createDiscipleInput": disciple }
                 })
             );
 
-            return data.data.createDisciple.id;
+            if (data.errors) {
+                console.error('GraphQL errors:', data.errors);
+                throw new Error(data.errors[0]?.message || 'GraphQL error');
+            }
+
+            return data.data?.createDisciple?.id ?? '';
         } catch (error) {
             if (error instanceof AxiosError) {
                 console.error((error as AxiosError).response?.data);
@@ -212,13 +213,16 @@ export class DisciplesService {
             const { data } = await api.post('',
                 JSON.stringify({
                     query: queryDisciples,
-                    variables: {
-                        "updateDiscipleInput": disciple
-                    }
+                    variables: { "updateDiscipleInput": disciple }
                 })
             );
 
-            return data.data.updateDisciple.id;
+            if (data.errors) {
+                console.error('GraphQL errors:', data.errors);
+                throw new Error(data.errors[0]?.message || 'GraphQL error');
+            }
+
+            return data.data?.updateDisciple?.id ?? '';
         } catch (error) {
             if (error instanceof AxiosError) {
                 console.error((error as AxiosError).response?.data);

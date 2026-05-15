@@ -5,14 +5,23 @@ export class DiscipleEntity {
   @Field(() => ID)
   id: string;
 
-  @Field(() => String, { description: 'Example field (placeholder)' })
+  @Field(() => String)
   identification: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
+  identificationType: string;
+
+  @Field(() => String, { nullable: true })
   name: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   lastName: string;
+
+  @Field(() => String, { nullable: true })
+  names: string;
+
+  @Field(() => String, { nullable: true })
+  lastNames: string;
 
   @Field(() => String, { nullable: true })
   email: string;
@@ -20,14 +29,11 @@ export class DiscipleEntity {
   @Field(() => String, { nullable: true })
   phone: string;
 
-  @Field(() => String, { nullable: true })
-  address: string;
-
-  @Field(() => Date, { nullable: true })
-  birthDate: Date;
-
   @Field(() => String)
   ministryId: string;
+
+  @Field(() => String, { nullable: true })
+  leaderId: string;
 
   @Field(() => String, { nullable: true })
   network: string;
@@ -35,7 +41,7 @@ export class DiscipleEntity {
   @Field(() => String, { nullable: true })
   status: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   createdUser: string;
 
   @Field(() => Date)

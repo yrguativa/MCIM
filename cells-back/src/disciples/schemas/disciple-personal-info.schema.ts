@@ -2,11 +2,12 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
 @Schema({ timestamps: true })
-export class AssistantPersonalInfo extends Document {
+export class DisciplePersonalInfo extends Document {
   readonly createdAt: Date;
   readonly updatedAt: Date;
-  @Prop({ required: true, type: MongooseSchema.Types.ObjectId, ref: 'Assistant' })
-  assistantId: string;
+
+  @Prop({ required: true, type: MongooseSchema.Types.ObjectId, ref: 'Disciple' })
+  discipleId: string;
 
   @Prop({ required: true, enum: ['COLOMBIAN', 'VENEZUELAN', 'FOREIGN'] })
   nationality: string;
@@ -75,4 +76,4 @@ export class AssistantPersonalInfo extends Document {
   formationSchoolLevel: string;
 }
 
-export const AssistantPersonalInfoSchema = SchemaFactory.createForClass(AssistantPersonalInfo);
+export const DisciplePersonalInfoSchema = SchemaFactory.createForClass(DisciplePersonalInfo);

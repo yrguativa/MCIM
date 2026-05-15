@@ -16,7 +16,7 @@ import { MinistriesModule } from './ministries/ministries.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { FormationSchoolModule } from './formation-school/formation-school.module';
-import { InitialInformationModule } from './initial-information/initial-information.module';
+
 
 @Module({
   imports: [
@@ -38,7 +38,6 @@ import { InitialInformationModule } from './initial-information/initial-informat
     MinistriesModule,
     UsersModule,
     FormationSchoolModule,
-    InitialInformationModule,
   ],
   controllers: [AppController],
   providers: [

@@ -23,6 +23,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
 interface BasicInfoCardProps {
   isUpdateMode: boolean;
 }
@@ -39,7 +40,7 @@ const BasicInfoCard: React.FC<BasicInfoCardProps> = ({ isUpdateMode }) => {
       <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormField
           control={control}
-          name="names"
+          name="name"
           render={({ field }) => (
             <FormItem>
               <FormLabel>{t("initialInformation.basicInfo.names")} *</FormLabel>
@@ -53,7 +54,7 @@ const BasicInfoCard: React.FC<BasicInfoCardProps> = ({ isUpdateMode }) => {
 
         <FormField
           control={control}
-          name="lastNames"
+          name="lastName"
           render={({ field }) => (
             <FormItem>
               <FormLabel>{t("initialInformation.basicInfo.lastNames")} *</FormLabel>

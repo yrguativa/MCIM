@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import type { AssistantFull, Leader } from "../store/initialInformation.store";
+import type { DiscipleFull, Leader } from "../store/initialInformation.store";
 
 const API_URL = import.meta.env.VITE_API_BASE_URL as string;
 
@@ -13,26 +13,29 @@ const api = axios.create({
 export class InitialInformationService {
   static async findByIdentification(
     identification: string,
-  ): Promise<AssistantFull | null> {
+  ): Promise<DiscipleFull | null> {
     try {
       const query = `
-        query FindAssistant($identification: String!) {
-          assistantByIdentification(identification: $identification) {
-            assistant {
+        query FindDisciple($identification: String!) {
+          discipleByIdentification(identification: $identification) {
+            disciple {
               id
+              identification
+              identificationType
+              name
+              lastName
               names
               lastNames
               email
               phone
-              identificationType
-              identification
-              directLeaderId
-              createdAt
-              updatedAt
+              leaderId
+              createdUser
+              createdDate
+              updatedDate
             }
             personalInfo {
               id
-              assistantId
+              discipleId
               nationality
               gender
               maritalStatus
@@ -74,7 +77,7 @@ export class InitialInformationService {
         return null;
       }
 
-      return data.data.assistantByIdentification || null;
+      return data.data.discipleByIdentification || null;
     } catch (error) {
       if (error instanceof AxiosError) {
         console.error(error.response?.data);
@@ -88,7 +91,7 @@ export class InitialInformationService {
     try {
       const query = `
         query {
-          assistantLeaders {
+          discipleLeaders {
             id
             names
             lastNames
@@ -102,7 +105,7 @@ export class InitialInformationService {
         return [];
       }
 
-      return data.data.assistantLeaders || [];
+      return data.data.discipleLeaders || [];
     } catch (error) {
       if (error instanceof AxiosError) {
         console.error(error.response?.data);
@@ -113,21 +116,21 @@ export class InitialInformationService {
   }
 
   static async create(data: {
-    createAssistantInput: Record<string, unknown>;
+    createDiscipleInput: Record<string, unknown>;
     createPersonalInfoInput: Record<string, unknown>;
   }): Promise<boolean> {
     try {
       const mutation = `
-        mutation CreateAssistant(
-          $createAssistantInput: CreateAssistantInput!
-          $createPersonalInfoInput: CreateAssistantPersonalInfoInput!
+        mutation CreateDiscipleFull(
+          $createDiscipleInput: CreateDiscipleInput!
+          $createPersonalInfoInput: CreateDisciplePersonalInfoInput!
         ) {
-          createAssistant(
-            createAssistantInput: $createAssistantInput
+          createDiscipleFull(
+            createDiscipleInput: $createDiscipleInput
             createPersonalInfoInput: $createPersonalInfoInput
           ) {
             id
-            names
+            name
             identification
           }
         }
@@ -145,7 +148,7 @@ export class InitialInformationService {
         return false;
       }
 
-      return !!response.data.data.createAssistant;
+      return !!response.data.data.createDiscipleFull;
     } catch (error) {
       if (error instanceof AxiosError) {
         console.error(error.response?.data);
@@ -158,7 +161,7 @@ export class InitialInformationService {
   static async update(
     id: string,
     data: {
-      updateAssistantInput: Record<string, unknown>;
+      updateDiscipleInput: Record<string, unknown>;
       updatePersonalInfoInput?: Record<string, unknown>;
     },
   ): Promise<boolean> {
@@ -166,16 +169,16 @@ export class InitialInformationService {
       const hasPersonalInfo = data.updatePersonalInfoInput && Object.keys(data.updatePersonalInfoInput).length > 0;
 
       const mutation = `
-        mutation UpdateAssistant(
-          $updateAssistantInput: UpdateAssistantInput!
-          $updatePersonalInfoInput: UpdateAssistantPersonalInfoInput
+        mutation UpdateDiscipleFull(
+          $updateDiscipleInput: UpdateDiscipleInput!
+          $updatePersonalInfoInput: UpdateDisciplePersonalInfoInput
         ) {
-          updateAssistant(
-            updateAssistantInput: $updateAssistantInput
+          updateDiscipleFull(
+            updateDiscipleInput: $updateDiscipleInput
             updatePersonalInfoInput: $updatePersonalInfoInput
           ) {
             id
-            names
+            name
             identification
           }
         }
@@ -185,7 +188,7 @@ export class InitialInformationService {
         JSON.stringify({
           query: mutation,
           variables: {
-            updateAssistantInput: { ...data.updateAssistantInput, id },
+            updateDiscipleInput: { ...data.updateDiscipleInput, id },
             updatePersonalInfoInput: hasPersonalInfo ? data.updatePersonalInfoInput : undefined,
           },
         }),
@@ -196,7 +199,7 @@ export class InitialInformationService {
         return false;
       }
 
-      return !!response.data.data.updateAssistant;
+      return !!response.data.data.updateDiscipleFull;
     } catch (error) {
       if (error instanceof AxiosError) {
         console.error(error.response?.data);

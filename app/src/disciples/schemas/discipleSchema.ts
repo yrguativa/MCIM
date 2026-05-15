@@ -14,6 +14,9 @@ export const DiscipleSchema = z.object({
         .refine((val) => val !== undefined, {
             message: "La identificación es obligatoria.",
         }),
+    identificationType: z.enum(["CC", "TI", "CE", "PPT", "PASSPORT", "OTHER"], {
+        error: "El tipo de identificación es obligatorio.",
+    }),
     name: z.string()
         .min(2, {
             message: "Los nombres del discipulo es obligatorio.",
@@ -26,23 +29,16 @@ export const DiscipleSchema = z.object({
         error: "A telefono is required.",
     }).optional(),
 
-    address: z.string()
-        .min(5, {
-            message: "La dirección debe tener minimo 5 caracteres.",
-        }).optional(),
     email: z.string()
         .min(5, {
             message: "El correo debe tener minimo 5 caracteres.",
         })
         .email("El correo no es valido").optional(),
-    birthday: z.date({
-        error: "La fecha de nacimiento es obligatoria.",
-    })
-        .optional(),
     ministryId: z.string()
         .min(2, {
             message: "El ministerio es obligatorio.",
         }),
+    leaderId: z.string().optional(),
     network: z.string()
         .optional(),
     status: z.string()

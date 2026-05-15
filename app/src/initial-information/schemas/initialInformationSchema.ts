@@ -2,8 +2,8 @@ import { z } from "zod";
 
 export const InitialInformationSchema = z
   .object({
-    names: z.string().min(1, "initialInformation.validation.namesRequired"),
-    lastNames: z.string().min(1, "initialInformation.validation.lastNamesRequired"),
+    name: z.string().min(1, "initialInformation.validation.nameRequired"),
+    lastName: z.string().min(1, "initialInformation.validation.lastNameRequired"),
     email: z
       .string()
       .email("initialInformation.validation.emailInvalid")

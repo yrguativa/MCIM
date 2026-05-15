@@ -1,9 +1,9 @@
 import { InputType, Field, PartialType } from '@nestjs/graphql';
-import { CreateAssistantPersonalInfoInput } from './create-assistant-personal-info.input';
+import { CreateDisciplePersonalInfoInput } from './create-disciple-personal-info.input';
 import { IsMongoId, IsOptional } from 'class-validator';
 
 @InputType()
-export class UpdateAssistantPersonalInfoInput extends PartialType(CreateAssistantPersonalInfoInput) {
+export class UpdateDisciplePersonalInfoInput extends PartialType(CreateDisciplePersonalInfoInput) {
   @Field(() => String, { nullable: true })
   @IsOptional()
   @IsMongoId({ message: 'Invalid personal info ID' })

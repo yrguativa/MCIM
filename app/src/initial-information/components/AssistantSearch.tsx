@@ -80,10 +80,10 @@ const AssistantSearch: React.FC = () => {
             </AlertTitle>
             <AlertDescription className="text-green-600/80 dark:text-green-400/80">
               <span className="font-medium">
-                {foundAssistant.assistant.names} {foundAssistant.assistant.lastNames}
+                {foundAssistant.disciple.name} {foundAssistant.disciple.lastName}
               </span>
               {" — "}
-              {foundAssistant.assistant.identification}
+              {foundAssistant.disciple.identification}
             </AlertDescription>
           </Alert>
         )}

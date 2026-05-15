@@ -11,7 +11,6 @@ import {
   ValidateIf,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { Logger } from '@nestjs/common';
 
 @InputType()
 export class UpdateDiscipleInput extends PartialType(CreateDiscipleInput) {
@@ -19,9 +18,13 @@ export class UpdateDiscipleInput extends PartialType(CreateDiscipleInput) {
   @IsMongoId()
   id: string;
 
-  @Field(() => String, { description: 'Identification number' })
+  @Field(() => String)
   @IsNotEmpty()
   identification: string;
+
+  @Field(() => String)
+  @IsNotEmpty()
+  identificationType: string;
 
   @Field()
   @IsNotEmpty()
@@ -42,44 +45,21 @@ export class UpdateDiscipleInput extends PartialType(CreateDiscipleInput) {
 
   @Field(() => String, { nullable: true })
   @IsOptional()
-  address: string;
-
-  @Field(() => Date, { description: 'DOF (Date OF Birth)', nullable: true })
-  @IsOptional()
-  @Transform(({ value }) => {
-    Logger.log('Transforming birthDate:', value);
-    return value ? new Date(value) : undefined;
-  })
-  @IsDate({ message: 'The date of birth must be a valid date' })
-  @MaxDate(new Date(), {
-    message: 'The date of birth cannot be in the future',
-  })
-  @MinDate(new Date('1900-01-01'), {
-    message: 'The date of birth is not valid',
-  })
-  birthDate: string;
-
-  @Field(() => String, { nullable: true })
-  @IsOptional()
   network: string;
 
   @Field(() => String, { nullable: true })
   @IsOptional()
   status: string;
 
-  @Field(() => String)
-  @IsNotEmpty()
+  @Field(() => String, { nullable: true })
+  @IsOptional()
   createdUser: string;
 
-  @Field(() => Date, { description: 'DOF (Date OF Birth)', nullable: false })
+  @Field(() => Date)
   @Transform(({ value }) => new Date(value))
-  @IsDate({ message: 'The date of birth must be a valid date' })
-  @MaxDate(new Date(new Date().setDate(new Date().getDate() + 1)), {
-    message: 'The date of created cannot be in the future',
-  })
-  @MinDate(new Date('1900-01-01'), {
-    message: 'The date of birth is not valid',
-  })
+  @IsDate()
+  @MaxDate(new Date(new Date().setDate(new Date().getDate() + 1)))
+  @MinDate(new Date('1900-01-01'))
   createdDate: string;
 
   @Field(() => String, { nullable: true })
@@ -90,12 +70,8 @@ export class UpdateDiscipleInput extends PartialType(CreateDiscipleInput) {
   @IsOptional()
   @ValidateIf((o) => o.updatedDate !== undefined)
   @Transform(({ value }) => (value ? new Date(value) : undefined))
-  @IsDate({ message: 'The date of updated must be a valid date' })
-  @MaxDate(new Date(new Date().setDate(new Date().getDate() + 1)), {
-    message: 'The date of updated cannot be in the future',
-  })
-  @MinDate(new Date('1900-01-01'), {
-    message: 'The date of updated is not valid',
-  })
+  @IsDate()
+  @MaxDate(new Date(new Date().setDate(new Date().getDate() + 1)))
+  @MinDate(new Date('1900-01-01'))
   updatedDate: Date;
 }
