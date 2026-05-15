@@ -12,29 +12,44 @@ const api = axios.create({
   },
 });
 
+const CELL_FIELDS = `
+  id
+  leader
+  network
+  host
+  timoteo
+  address
+  neighborhood
+  day
+  time
+  createdDate
+  createdUser
+  assistants {
+    disciple
+    status
+    createdDate
+    createdUser
+    updatedDate
+    updatedUser
+  }
+  records {
+    topic
+    date
+    createdUser
+    assistants {
+      name
+      disciple
+    }
+  }
+`;
+
 export class CellsService {
   static async getCells(): Promise<CellFull[]> {
     try {
       const query = `
       query {
         cells {
-          id
-          leader
-          network
-          host
-          address
-          neighborhood
-          createdDate
-          createdUser
-          records {
-            topic
-            date
-            createdUser
-            assistants {
-              name
-              disciple
-            }
-          }
+          ${CELL_FIELDS}
         }
       }
       `;
@@ -42,6 +57,7 @@ export class CellsService {
         JSON.stringify({ query })
       );
 
+      if (data.errors) throw new Error(data.errors[0]?.message || 'GraphQL error fetching cells');
       return data.data.cells || [];
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -58,23 +74,7 @@ export class CellsService {
       const query = `
       query Cell($id: String!) {
         cell(id: $id) {
-          id
-          leader
-          network
-          host
-          address
-          neighborhood
-          createdDate
-          createdUser
-          records {
-            topic
-            date
-            createdUser
-            assistants {
-              name
-              disciple
-            }
-          }
+          ${CELL_FIELDS}
         }
       }
       `;
@@ -85,6 +85,7 @@ export class CellsService {
         })
       );
 
+      if (data.errors) throw new Error(data.errors[0]?.message || 'GraphQL error fetching cell');
       return data.data.cell;
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -111,8 +112,11 @@ export class CellsService {
               leader: cell.leader,
               network: cell.network,
               host: cell.host,
+              timoteo: cell.timoteo,
               address: cell.address,
               neighborhood: cell.neighborhood,
+              day: cell.day || null,
+              time: cell.time || null,
               createdUser: cell.createdUser,
             }
           }
@@ -141,7 +145,18 @@ export class CellsService {
         JSON.stringify({
           query,
           variables: {
-            "updateCellInput": cell
+            "updateCellInput": {
+              id: cell.id,
+              leader: cell.leader,
+              network: cell.network,
+              host: cell.host,
+              timoteo: cell.timoteo,
+              address: cell.address,
+              neighborhood: cell.neighborhood,
+              day: cell.day || null,
+              time: cell.time || null,
+              createdUser: cell.createdUser,
+            }
           }
         })
       );
@@ -173,9 +188,11 @@ export class CellsService {
               topic: record.topic,
               date: record.date,
               createdUser: record.createdUser,
-              assistants: record.assistants.map(a => ({
+              assistants: record.assistants
+                .filter(a => a.attended)
+                .map(a => ({
                 name: a.name,
-                disciple: a.id,
+                disciple: a.discipleId || a.id,
               })),
             }
           }
@@ -190,6 +207,68 @@ export class CellsService {
       }
       console.error(error);
       throw new Error('Error creating cell record');
+    }
+  }
+
+  static async addCellAssistant(cellId: string, discipleId: string, userId: string): Promise<void> {
+    try {
+      const query = `mutation AddCellAssistant($cellId: String!, $addCellAssistantInput: AddCellAssistantInput!) {
+        addCellAssistant(cellId: $cellId, addCellAssistantInput: $addCellAssistantInput) {
+          id
+        }
+      }`;
+      const { data } = await api.post('',
+        JSON.stringify({
+          query,
+          variables: {
+            cellId,
+            addCellAssistantInput: {
+              disciple: discipleId,
+              createdUser: userId,
+            },
+          },
+        })
+      );
+
+      if (data.errors) throw new Error(data.errors[0]?.message);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error((error as AxiosError).response?.data);
+        throw new Error(JSON.stringify((error as AxiosError).response?.data) || 'Error adding cell assistant');
+      }
+      console.error(error);
+      throw new Error('Error adding cell assistant');
+    }
+  }
+
+  static async deactivateCellAssistant(cellId: string, discipleId: string, userId: string): Promise<void> {
+    try {
+      const query = `mutation DeactivateCellAssistant($cellId: String!, $deactivateCellAssistantInput: DeactivateCellAssistantInput!) {
+        deactivateCellAssistant(cellId: $cellId, deactivateCellAssistantInput: $deactivateCellAssistantInput) {
+          id
+        }
+      }`;
+      const { data } = await api.post('',
+        JSON.stringify({
+          query,
+          variables: {
+            cellId,
+            deactivateCellAssistantInput: {
+              disciple: discipleId,
+              updatedUser: userId,
+            },
+          },
+        })
+      );
+
+      if (data.errors) throw new Error(data.errors[0]?.message);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error((error as AxiosError).response?.data);
+        throw new Error(JSON.stringify((error as AxiosError).response?.data) || 'Error deactivating cell assistant');
+      }
+      console.error(error);
+      throw new Error('Error deactivating cell assistant');
     }
   }
 }

@@ -4,6 +4,8 @@ import { CellEntity } from './entities/cell.entity';
 import { CreateCellInput } from './dto/create-cell.input';
 import { CreateRecordCellInput } from './dto/create-record-cell.input';
 import { UpdateCellInput } from './dto/update-cell.input';
+import { AddCellAssistantInput } from './dto/add-cell-assistant.input';
+import { DeactivateCellAssistantInput } from './dto/deactivate-cell-assistant.input';
 
 @Resolver(() => CellEntity)
 export class CellsResolver {
@@ -35,6 +37,22 @@ export class CellsResolver {
     @Args('createRecordCellInput') createRecordCellInput: CreateRecordCellInput,
   ) {
     return this.cellsService.addRecord(cellId, createRecordCellInput);
+  }
+
+  @Mutation(() => CellEntity)
+  addCellAssistant(
+    @Args('cellId', { type: () => String }) cellId: string,
+    @Args('addCellAssistantInput') addCellAssistantInput: AddCellAssistantInput,
+  ) {
+    return this.cellsService.addAssistant(cellId, addCellAssistantInput);
+  }
+
+  @Mutation(() => CellEntity)
+  deactivateCellAssistant(
+    @Args('cellId', { type: () => String }) cellId: string,
+    @Args('deactivateCellAssistantInput') deactivateCellAssistantInput: DeactivateCellAssistantInput,
+  ) {
+    return this.cellsService.deactivateAssistant(cellId, deactivateCellAssistantInput);
   }
 
   @Mutation(() => CellEntity)

@@ -1,5 +1,5 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
-import { IsMongoId, IsNotEmpty, IsPositive } from 'class-validator';
+import { IsMongoId, IsNotEmpty, IsOptional, IsPositive } from 'class-validator';
 
 @InputType()
 export class CreateCellInput {
@@ -18,7 +18,13 @@ export class CreateCellInput {
       'Enter the name of the host who will receive the cell in their home.',
   })
   @IsNotEmpty()
+  @IsMongoId()
   host: string;
+
+  @Field(() => String)
+  @IsNotEmpty()
+  @IsMongoId()
+  timoteo: string;
 
   @Field(() => String)
   @IsNotEmpty()
@@ -28,6 +34,14 @@ export class CreateCellInput {
   @IsNotEmpty()
   @IsPositive()
   neighborhood: number;
+
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  day?: string;
+
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  time?: string;
 
   @Field(() => String)
   @IsNotEmpty()

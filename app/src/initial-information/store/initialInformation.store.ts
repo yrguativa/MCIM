@@ -79,7 +79,7 @@ interface InitialInformationState {
   createAssistant: (data: {
     createDiscipleInput: Record<string, unknown>;
     createPersonalInfoInput: Record<string, unknown>;
-  }) => Promise<boolean>;
+  }) => Promise<string | null>;
 
   updateAssistant: (
     id: string,
@@ -158,20 +158,20 @@ const storeInitialInformation: StateCreator<InitialInformationState> = (set, get
   createAssistant: async (data) => {
     set({ isSaving: true, saveError: null, saveSuccess: false });
     try {
-      const result = await InitialInformationService.create(data);
-      if (result) {
+      const discipleId = await InitialInformationService.create(data);
+      if (discipleId) {
         set({ isSaving: false, saveSuccess: true });
-        return true;
+        return discipleId;
       }
       set({ isSaving: false });
-      return false;
+      return null;
     } catch (error) {
       console.error("Create error:", error);
       set({
         isSaving: false,
         saveError: "Error al guardar la información",
       });
-      return false;
+      return null;
     }
   },
 

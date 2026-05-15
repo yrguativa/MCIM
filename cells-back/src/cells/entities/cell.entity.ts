@@ -1,5 +1,6 @@
 import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
 import { RecordCellEntity } from './recordCell.entity';
+import { CellAssistantEntity } from './assistantCell.entity';
 
 @ObjectType('Cell')
 export class CellEntity {
@@ -18,17 +19,29 @@ export class CellEntity {
   })
   host: string;
 
+  @Field(() => String, { nullable: true })
+  timoteo?: string;
+
   @Field(() => String)
   address: string;
 
   @Field(() => Int)
   neighborhood: number;
 
+  @Field(() => String, { nullable: true })
+  day: string;
+
+  @Field(() => String, { nullable: true })
+  time: string;
+
   @Field(() => Date)
   createdDate: Date;
 
   @Field(() => String)
   createdUser: string;
+
+  @Field(() => [CellAssistantEntity], { nullable: true })
+  assistants: CellAssistantEntity[];
 
   @Field(() => [RecordCellEntity], { nullable: true })
   records: RecordCellEntity[];

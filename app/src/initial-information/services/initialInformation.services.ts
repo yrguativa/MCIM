@@ -118,7 +118,7 @@ export class InitialInformationService {
   static async create(data: {
     createDiscipleInput: Record<string, unknown>;
     createPersonalInfoInput: Record<string, unknown>;
-  }): Promise<boolean> {
+  }): Promise<string | null> {
     try {
       const mutation = `
         mutation CreateDiscipleFull(
@@ -145,16 +145,16 @@ export class InitialInformationService {
 
       if (response.data.errors) {
         console.error("GraphQL errors:", response.data.errors);
-        return false;
+        return null;
       }
 
-      return !!response.data.data.createDiscipleFull;
+      return response.data.data.createDiscipleFull?.id || null;
     } catch (error) {
       if (error instanceof AxiosError) {
         console.error(error.response?.data);
       }
       console.error(error);
-      return false;
+      return null;
     }
   }
 

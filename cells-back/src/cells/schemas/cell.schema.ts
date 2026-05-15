@@ -3,6 +3,29 @@ import { Document } from 'mongoose';
 import { RecordCell, RecordCellSchema } from './recordCell.schema';
 
 @Schema()
+export class CellAssistant {
+  @Prop({ required: true })
+  disciple: string;
+
+  @Prop({ default: 'active', enum: ['active', 'inactive'] })
+  status: string;
+
+  @Prop({ required: true })
+  createdDate: Date;
+
+  @Prop({ required: true })
+  createdUser: string;
+
+  @Prop({ required: true })
+  updatedDate: Date;
+
+  @Prop({ required: true })
+  updatedUser: string;
+}
+
+export const CellAssistantSchema = SchemaFactory.createForClass(CellAssistant);
+
+@Schema()
 export class Cell extends Document {
   @Prop()
   leader: string;
@@ -14,16 +37,28 @@ export class Cell extends Document {
   host: string;
 
   @Prop()
+  timoteo: string;
+
+  @Prop()
   address: string;
 
   @Prop()
   neighborhood: number;
 
   @Prop()
+  day: string;
+
+  @Prop()
+  time: string;
+
+  @Prop()
   createdDate: Date;
 
   @Prop({ required: true })
   createdUser: string;
+
+  @Prop({ type: [CellAssistantSchema], default: [] })
+  assistants: CellAssistant[];
 
   @Prop({ type: [RecordCellSchema], required: false })
   records: RecordCell[];

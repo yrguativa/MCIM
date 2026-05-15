@@ -8,6 +8,8 @@ export const CellAssistantSchema = z.object({
     .min(2, {
       message: "El nombre del asistente a la celula es obligatorio.",
     }),
+  discipleId: z.string()
+    .optional(),
   attended: z.boolean().default(false)
 })
 

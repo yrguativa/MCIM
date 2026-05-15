@@ -114,6 +114,13 @@ export const createInitialInformationSchema = (t: (key: string) => string) =>
           ),
         },
       ),
+
+      cellAddress: z.string().optional(),
+      cellNeighborhood: z.number().optional(),
+      cellDay: z.string().optional(),
+      cellTime: z.string().optional(),
+      cellHost: z.string().optional(),
+      cellTimoteo: z.string().optional(),
     })
     .superRefine((data, ctx) => {
       if (

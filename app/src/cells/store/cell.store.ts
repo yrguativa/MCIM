@@ -12,7 +12,9 @@ interface CellState {
   getCells: () => Promise<void>,
   addCell: (by: CellInput) => Promise<boolean>,
   updateCell: (by: CellInput) => Promise<boolean>,
-  addRecord: (id: string, by: CellRecordInput) => Promise<boolean>
+  addRecord: (id: string, by: CellRecordInput) => Promise<boolean>,
+  addAssistant: (cellId: string, discipleId: string, userId: string) => Promise<boolean>,
+  deactivateAssistant: (cellId: string, discipleId: string, userId: string) => Promise<boolean>,
 }
 
 const storeCell: StateCreator<CellState> = (set, get) => ({
@@ -70,7 +72,75 @@ const storeCell: StateCreator<CellState> = (set, get) => ({
       console.error('[CellStore] addRecord error:', error);
       return false;
     }
-  }
+  },
+
+  addAssistant: async (cellId: string, discipleId: string, userId: string) => {
+    try {
+      await CellsService.addCellAssistant(cellId, discipleId, userId);
+      const cells = get().Cells;
+      const now = new Date();
+      set({
+        Cells: cells.map(c =>
+          c.id === cellId
+            ? {
+                ...c,
+                assistants: (() => {
+                  const exists = c.assistants?.find(a => a.disciple === discipleId);
+                  if (exists) {
+                    return c.assistants!.map(a =>
+                      a.disciple === discipleId
+                        ? { ...a, status: 'active' as const, updatedDate: now, updatedUser: userId }
+                        : a
+                    );
+                  }
+                  return [
+                    ...(c.assistants || []),
+                    {
+                      disciple: discipleId,
+                      status: 'active' as const,
+                      createdDate: now,
+                      createdUser: userId,
+                      updatedDate: now,
+                      updatedUser: userId,
+                    },
+                  ];
+                })(),
+              }
+            : c
+        ),
+      });
+      return true;
+    } catch (error) {
+      console.error('[CellStore] addAssistant error:', error);
+      return false;
+    }
+  },
+
+  deactivateAssistant: async (cellId: string, discipleId: string, userId: string) => {
+    try {
+      await CellsService.deactivateCellAssistant(cellId, discipleId, userId);
+      const cells = get().Cells;
+      const now = new Date();
+      set({
+        Cells: cells.map(c =>
+          c.id === cellId
+            ? {
+                ...c,
+                assistants: c.assistants?.map(a =>
+                  a.disciple === discipleId
+                    ? { ...a, status: 'inactive' as const, updatedDate: now, updatedUser: userId }
+                    : a
+                ),
+              }
+            : c
+        ),
+      });
+      return true;
+    } catch (error) {
+      console.error('[CellStore] deactivateAssistant error:', error);
+      return false;
+    }
+  },
 });
 
 export const useCellStore = create<CellState>()(

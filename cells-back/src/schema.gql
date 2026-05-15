@@ -19,6 +19,15 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type CellAssistant {
+  disciple: String!
+  status: String!
+  createdDate: DateTime!
+  createdUser: String!
+  updatedDate: DateTime!
+  updatedUser: String!
+}
+
 type Cell {
   id: ID!
   leader: String!
@@ -26,10 +35,14 @@ type Cell {
 
   """Enter the name of the host who will receive the cell in their home."""
   host: String!
+  timoteo: String
   address: String!
   neighborhood: Int!
+  day: String
+  time: String
   createdDate: DateTime!
   createdUser: String!
+  assistants: [CellAssistant!]
   records: [RecordCell!]
 }
 
@@ -320,6 +333,8 @@ type Mutation {
   createCell(createCellInput: CreateCellInput!): Cell!
   updateCell(updateCellInput: UpdateCellInput!): Cell!
   createRecordCell(cellId: String!, createRecordCellInput: CreateRecordCellInput!): Cell!
+  addCellAssistant(cellId: String!, addCellAssistantInput: AddCellAssistantInput!): Cell!
+  deactivateCellAssistant(cellId: String!, deactivateCellAssistantInput: DeactivateCellAssistantInput!): Cell!
   removeCell(id: String!): Cell!
   createDisciple(createDiscipleInput: CreateDiscipleInput!): Disciple!
   createDiscipleFull(createDiscipleInput: CreateDiscipleInput!, createPersonalInfoInput: CreateDisciplePersonalInfoInput!): Disciple!
@@ -416,8 +431,11 @@ input CreateCellInput {
 
   """Enter the name of the host who will receive the cell in their home."""
   host: String!
+  timoteo: String!
   address: String!
   neighborhood: Int!
+  day: String
+  time: String
   createdUser: String!
 }
 
@@ -427,8 +445,11 @@ input UpdateCellInput {
 
   """Enter the name of the host who will receive the cell in their home."""
   host: String!
+  timoteo: String!
   address: String!
   neighborhood: Int!
+  day: String
+  time: String
   createdUser: String!
   id: String!
 }
@@ -443,6 +464,16 @@ input CreateRecordCellInput {
 input CreateAssistantRecordCellInput {
   name: String!
   disciple: String
+}
+
+input AddCellAssistantInput {
+  disciple: String!
+  createdUser: String!
+}
+
+input DeactivateCellAssistantInput {
+  disciple: String!
+  updatedUser: String!
 }
 
 input CreateDiscipleInput {

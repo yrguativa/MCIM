@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useCallback } from "react";
+import React, { useEffect, useMemo, useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, useWatch, useFormContext } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Save, ArrowLeft, GalleryVerticalEnd, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
@@ -8,6 +8,8 @@ import confetti from "canvas-confetti";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useMinistryStore } from "@/src/ministries/store/ministries.store";
+import { CellsService } from "@/src/cells/services/cells.services";
+import { NETWORK_MAP } from "../components/CellInfoCard";
 import {
   createInitialInformationSchema,
   type InitialInformationInput,
@@ -17,11 +19,31 @@ import AssistantSearch from "../components/AssistantSearch";
 import BasicInfoCard from "../components/BasicInfoCard";
 import PersonalInfoCard from "../components/PersonalInfoCard";
 import ChurchInfoCard from "../components/ChurchInfoCard";
+import CellInfoCard from "../components/CellInfoCard";
+
+const CellSection: React.FC<{
+  assistants: { id: string; name: string; lastName: string }[];
+  onAddAssistant: (a: { id: string; name: string; lastName: string }) => void;
+  onRemoveAssistant: (id: string) => void;
+}> = ({ assistants, onAddAssistant, onRemoveAssistant }) => {
+  const { control } = useFormContext();
+  const isLeader = useWatch({ control, name: 'isLeader' });
+  if (isLeader !== 'YES') return null;
+  return (
+    <CellInfoCard
+      assistants={assistants}
+      onAddAssistant={onAddAssistant}
+      onRemoveAssistant={onRemoveAssistant}
+    />
+  );
+};
 
 const InitialInformationForm: React.FC = () => {
   const { t } = useTranslation();
   const store = useInitialInformationStore();
   const { getMinistries } = useMinistryStore();
+
+  const [cellAssistants, setCellAssistants] = useState<{ id: string; name: string; lastName: string }[]>([]);
 
   const schema = useMemo(() => createInitialInformationSchema(t), [t]);
 
@@ -78,6 +100,12 @@ const InitialInformationForm: React.FC = () => {
       formationSchoolLevel:
         (p?.formationSchoolLevel as InitialInformationInput["formationSchoolLevel"]) ||
         "",
+      cellAddress: "",
+      cellNeighborhood: undefined,
+      cellDay: "",
+      cellTime: "",
+      cellHost: "",
+      cellTimoteo: "",
     } as unknown as InitialInformationInput;
   }, [store.foundAssistant, store.mode]);
 
@@ -114,6 +142,12 @@ const InitialInformationForm: React.FC = () => {
       isLeader: undefined,
       generation: "",
       formationSchoolLevel: "",
+      cellAddress: "",
+      cellNeighborhood: undefined,
+      cellDay: "",
+      cellTime: "",
+      cellHost: "",
+      cellTimoteo: "",
     } as unknown as InitialInformationInput,
   });
 
@@ -156,7 +190,7 @@ const InitialInformationForm: React.FC = () => {
     };
 
     if (store.mode === "create") {
-      const success = await store.createAssistant({
+      const discipleId = await store.createAssistant({
         createDiscipleInput: {
           name: data.name,
           lastName: data.lastName,
@@ -171,13 +205,47 @@ const InitialInformationForm: React.FC = () => {
         createPersonalInfoInput: personalInfoData,
       });
 
-      if (success) {
+      if (discipleId) {
+        if (data.isLeader === "YES") {
+          try {
+            const cellNetworkValue = NETWORK_MAP[data.network];
+            if (cellNetworkValue) {
+              const cellId = await CellsService.createCell({
+                id: crypto.randomUUID(),
+                leader: discipleId,
+                network: cellNetworkValue,
+                host: data.cellHost || '',
+                timoteo: data.cellTimoteo || '',
+                address: data.cellAddress || '',
+                neighborhood: data.cellNeighborhood || 0,
+                day: data.cellDay || undefined,
+                time: data.cellTime || undefined,
+                createdDate: new Date(),
+                createdUser: discipleId,
+                assistants: [],
+              });
+
+              for (const assistant of cellAssistants) {
+                try {
+                  await CellsService.addCellAssistant(cellId, assistant.id, discipleId);
+                } catch {
+                  console.error('Failed to add assistant to cell:', assistant.id);
+                }
+              }
+            }
+          } catch (error) {
+            console.error('Error creating cell for new leader:', error);
+            toast.error('Error al crear la célula. Contacta al administrador.');
+          }
+        }
+
         confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
         toast.success(t("initialInformation.messages.createSuccess"), {
           icon: <CheckCircle className="h-4 w-4 text-green-500" />,
         });
         store.resetForm();
         form.reset();
+        setCellAssistants([]);
       }
     } else if (store.mode === "update" && store.foundAssistant?.disciple.id) {
       const discipleId = store.foundAssistant.disciple.id;
@@ -268,6 +336,12 @@ const InitialInformationForm: React.FC = () => {
                 <BasicInfoCard isUpdateMode={store.mode === "update"} />
                 <PersonalInfoCard />
                 <ChurchInfoCard />
+
+                <CellSection
+                  assistants={cellAssistants}
+                  onAddAssistant={(a) => setCellAssistants(prev => [...prev, a])}
+                  onRemoveAssistant={(id) => setCellAssistants(prev => prev.filter(a => a.id !== id))}
+                />
 
                 <Separator />
 
