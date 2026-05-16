@@ -25,7 +25,7 @@ import { DisciplesService } from '../services/disciples.services';
 
 import { useMinistryStore } from '@/src/ministries/store/ministries.store';
 import { useAuthStore } from '@/src/app/stores';
-import { useDiscipleStore } from '../store/disciple.store';
+import { useDiscipleStore, type Disciple } from '../store/disciple.store';
 import CurriculumVitaeSection from '../components/CurriculumVitaeSection';
 
 const DiscipleForm: React.FC = () => {
@@ -34,6 +34,7 @@ const DiscipleForm: React.FC = () => {
   const userState = useAuthStore(state => state.user);
   const { addDiscipleFull, updateDiscipleFull, addDisciple, updateDisciple, isSaving, getLeaders } = useDiscipleStore(state => state);
   const ministries = useMinistryStore(state => state.ministries);
+  const getMinistries = useMinistryStore(state => state.getMinistries);
   const [personalInfoId, setPersonalInfoId] = useState<string | undefined>(undefined);
 
   const form = useForm<DiscipleInput>({
@@ -47,6 +48,9 @@ const DiscipleForm: React.FC = () => {
 
   useEffect(() => {
     getLeaders();
+    if (ministries.length === 0) {
+      getMinistries();
+    }
   }, []);
 
   useEffect(() => {
@@ -112,8 +116,7 @@ const DiscipleForm: React.FC = () => {
   }
 
   async function onSubmit(data: DiscipleInput) {
-    const discipleData = {
-      id: data.id,
+    const baseDiscipleData = {
       name: data.name,
       lastName: data.lastName,
       identification: data.identification?.toString() || '',
@@ -125,10 +128,17 @@ const DiscipleForm: React.FC = () => {
       status: data.status,
       createdUser: data.createdUser,
       createdDate: data.createdDate,
-      updatedUser: userState?.id || '',
-      updatedDate: new Date(),
       phone: data.number?.toString(),
     };
+
+    const discipleData = id
+      ? {
+          ...baseDiscipleData,
+          id,
+          updatedUser: userState?.id || '',
+          updatedDate: new Date(),
+        }
+      : baseDiscipleData;
 
     const personalInfoData = {
       nationality: data.nationality || undefined,
@@ -159,11 +169,11 @@ const DiscipleForm: React.FC = () => {
 
     const isProcessSuccess = id
       ? hasPersonalInfo
-        ? await updateDiscipleFull(id, discipleData, personalInfoData, personalInfoId)
-        : await updateDisciple(discipleData)
+        ? await updateDiscipleFull(id, discipleData as Record<string, unknown>, personalInfoData, personalInfoId)
+        : await updateDisciple(discipleData as Disciple)
       : hasPersonalInfo
-        ? await addDiscipleFull(discipleData, personalInfoData)
-        : await addDisciple(discipleData);
+        ? await addDiscipleFull(discipleData as Record<string, unknown>, personalInfoData)
+        : await addDisciple(discipleData as Disciple);
 
     if (isProcessSuccess) {
       toast("Discipulo registrado correctamente", {

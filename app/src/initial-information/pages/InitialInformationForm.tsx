@@ -8,6 +8,7 @@ import confetti from "canvas-confetti";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useMinistryStore } from "@/src/ministries/store/ministries.store";
+import { useDiscipleStore } from "@/src/disciples/store/disciple.store";
 import { CellsService } from "@/src/cells/services/cells.services";
 import { NETWORK_MAP } from "../components/CellInfoCard";
 import {
@@ -26,6 +27,7 @@ const InitialInformationForm: React.FC = () => {
   const { t } = useTranslation();
   const store = useInitialInformationStore();
   const { getMinistries } = useMinistryStore();
+  const getDisciples = useDiscipleStore(state => state.getDisciples);
 
   const [cellAssistants, setCellAssistants] = useState<{ id: string; name: string; lastName: string }[]>([]);
   const [step, setStep] = useState<1 | 2>(1);
@@ -146,6 +148,9 @@ const InitialInformationForm: React.FC = () => {
         }
         form.setValue("generation", p?.generation as "12" | "144" | "1728" | "20736" | "248832" | "2985984");
         form.setValue("formationSchoolLevel", p?.formationSchoolLevel as "BASIC_1" | "BASIC_2" | "BASIC_3" | "ADVANCED_1" | "ADVANCED_2" | "ADVANCED_3" | "GRADUATE" | "NOT_STARTED");
+        if (p?.ministryId) {
+          form.setValue("ministryId", p?.ministryId);
+        }
 
         form.clearErrors();
       }, 0);
@@ -156,6 +161,78 @@ const InitialInformationForm: React.FC = () => {
     getMinistries();
     store.loadLeaders();
   }, []);
+
+  useEffect(() => {
+    if (store.mode === "create" || store.mode === "idle") {
+      form.reset({
+        name: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        identificationType: undefined,
+        identification: store.mode === "create" ? store.searchIdentification : "",
+        nationality: undefined,
+        gender: undefined,
+        maritalStatus: undefined,
+        hasChildren: undefined,
+        childrenAttendChurch: undefined,
+        address: "",
+        housingComplex: "",
+        neighborhood: "",
+        municipality: undefined,
+        network: undefined,
+        birthDate: undefined,
+        ministryId: "",
+        directLeaderId: "",
+        yearArrivedAtChurch: "",
+        hasAttendedEncounter: undefined,
+        yearAttendedEncounter: "",
+        hasRepeatedEncounter: undefined,
+        hasAttendedReencounter: undefined,
+        yearAttendedReencounter: "",
+        baptizedAtMCI: undefined,
+        isLeader: undefined,
+        generation: undefined,
+        formationSchoolLevel: undefined,
+        cellAddress: "",
+        cellNeighborhood: undefined,
+        cellDay: "",
+        cellTime: "",
+        cellHost: "",
+        cellTimoteo: "",
+      });
+      setStep(1);
+      setCellAssistants([]);
+      sessionStorage.removeItem("discipleId");
+      sessionStorage.removeItem("personalInfoData");
+    }
+  }, [store.mode]);
+
+  const step1Fields: (keyof InitialInformationInput)[] = [
+    "name", "lastName", "email", "phone", "identificationType", "identification",
+    "nationality", "gender", "maritalStatus", "hasChildren", "childrenAttendChurch",
+    "address", "housingComplex", "neighborhood", "municipality", "network", "birthDate",
+    "ministryId", "directLeaderId", "yearArrivedAtChurch", "hasAttendedEncounter",
+    "yearAttendedEncounter", "hasRepeatedEncounter", "hasAttendedReencounter",
+    "yearAttendedReencounter", "baptizedAtMCI", "isLeader", "generation", "formationSchoolLevel"
+  ];
+
+  const handleSubmit = async (data: InitialInformationInput) => {
+    if (step === 1) {
+      const isValid = await form.trigger(step1Fields);
+      if (!isValid) return;
+
+      if (data.isLeader === "YES") {
+        if (store.mode === "update") {
+          setStep(2);
+          return;
+        }
+        setStep(2);
+      }
+    }
+
+    await onSubmit(data);
+  };
 
   const onSubmit = async (data: InitialInformationInput) => {
     const personalInfoData = {
@@ -246,9 +323,13 @@ const InitialInformationForm: React.FC = () => {
         }
       }
     } else {
-      const storedDiscipleId = sessionStorage.getItem("discipleId");
-      const storedPersonalInfo = sessionStorage.getItem("personalInfoData");
-      if (!storedDiscipleId || !storedPersonalInfo) return;
+      let storedDiscipleId = sessionStorage.getItem("discipleId");
+
+      if (!storedDiscipleId && store.mode === "update" && store.foundAssistant?.disciple.id) {
+        storedDiscipleId = store.foundAssistant.disciple.id;
+      }
+
+      if (!storedDiscipleId) return;
 
       try {
         const cellNetworkValue = NETWORK_MAP[data.network];
@@ -278,7 +359,10 @@ const InitialInformationForm: React.FC = () => {
         }
 
         confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-        toast.success(t("initialInformation.messages.createSuccess"), {
+        const successMsg = store.mode === "update"
+          ? t("initialInformation.messages.updateSuccess")
+          : t("initialInformation.messages.createSuccess");
+        toast.success(successMsg, {
           icon: <CheckCircle className="h-4 w-4 text-green-500" />,
         });
         store.resetForm();
@@ -343,7 +427,7 @@ const InitialInformationForm: React.FC = () => {
             </div>
 
             <FormProvider {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
                 <WizardHeader currentStep={step} totalSteps={2} />
                 
                 {step === 1 ? (
@@ -356,7 +440,10 @@ const InitialInformationForm: React.FC = () => {
                   <>
                     <CellInfoCard
                       assistants={cellAssistants}
-                      onAddAssistant={(a) => setCellAssistants(prev => [...prev, a])}
+                      onAddAssistant={(a) => {
+                        setCellAssistants(prev => [...prev, a]);
+                        getDisciples();
+                      }}
                       onRemoveAssistant={(id) => setCellAssistants(prev => prev.filter(a => a.id !== id))}
                     />
                   </>

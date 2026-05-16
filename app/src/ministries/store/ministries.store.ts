@@ -23,9 +23,7 @@ const storeMinistry: StateCreator<MinistryState> = (set, get) => ({
         set({ isLoading: true });
         try {
             const ministries = await MinistriesService.getMinistries();
-            if (ministries && ministries.length > 0) {
-                set({ ministries: [...ministries] });
-            };
+            set({ ministries: ministries || [] });
         } finally {
             set({ isLoading: false });
         }

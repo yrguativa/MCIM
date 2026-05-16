@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { useDiscipleStore } from '@/src/disciples/store/disciple.store';
+import { useDiscipleStore, type Disciple } from '@/src/disciples/store/disciple.store';
 import { useAuthStore } from '@/src/app/stores';
 
 interface AddAttendeeModalProps {
@@ -17,6 +17,8 @@ interface AddAttendeeModalProps {
   onClose: () => void;
   onSelect: (disciple: { id: string; name: string; lastName: string }) => void;
   cellLeaderId: string;
+  defaultMinistryId?: string;
+  defaultCreatedUser?: string;
 }
 
 const IDENTIFICATION_TYPES = [
@@ -28,7 +30,7 @@ const IDENTIFICATION_TYPES = [
   { value: 'OTHER', label: 'Otro' },
 ];
 
-export const AddAttendeeModal: React.FC<AddAttendeeModalProps> = ({ open, onClose, onSelect, cellLeaderId }) => {
+export const AddAttendeeModal: React.FC<AddAttendeeModalProps> = ({ open, onClose, onSelect, cellLeaderId, defaultMinistryId, defaultCreatedUser }) => {
   const disciplesState = useDiscipleStore(state => state.Disciples);
   const addDisciple = useDiscipleStore(state => state.addDisciple);
   const userState = useAuthStore(state => state.user);
@@ -66,29 +68,28 @@ export const AddAttendeeModal: React.FC<AddAttendeeModalProps> = ({ open, onClos
     setIsCreating(true);
     try {
       const leaderDisciple = disciplesState.find(d => d.id === cellLeaderId);
-      const defaultMinistryId = leaderDisciple?.ministryId || '';
+      const ministryId = leaderDisciple?.ministryId || defaultMinistryId || '';
 
       const newDisciple = {
-        id: crypto.randomUUID(),
         identification: newIdentification,
         identificationType: newIdentificationType,
         name: newName,
         lastName: newLastName,
-        ministryId: defaultMinistryId,
+        ministryId: ministryId,
         leaderId: cellLeaderId,
         email: undefined,
         phone: undefined,
-        network: undefined,
-        status: undefined,
-        createdUser: userState?.id || '',
-        createdDate: new Date(),
-        updatedUser: userState?.id || '',
-        updatedDate: new Date(),
+        createdUser: defaultCreatedUser || userState?.id || 'cell-edit',
       };
 
-      const success = await addDisciple(newDisciple);
+      const success = await addDisciple(newDisciple as unknown as Disciple);
       if (success) {
-        onSelect({ id: newDisciple.id, name: newName, lastName: newLastName });
+        const createdDisciple = useDiscipleStore.getState().Disciples.find(
+          d => d.identification === newIdentification && d.name === newName && d.lastName === newLastName
+        );
+        if (createdDisciple) {
+          onSelect({ id: createdDisciple.id, name: newName, lastName: newLastName });
+        }
         onClose();
       } else {
         toast('Error al crear el discípulo');

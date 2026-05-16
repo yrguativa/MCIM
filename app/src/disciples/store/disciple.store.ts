@@ -3,6 +3,7 @@ import { devtools, persist } from "zustand/middleware";
 
 import { Disciple, Leader } from "@/src/disciples/models/disciple";
 import { DisciplesService } from "@/src/disciples/services/disciples.services";
+export type { Disciple, Leader } from "@/src/disciples/models/disciple";
 
 interface DiscipleState {
     Disciples: Disciple[],
@@ -16,8 +17,8 @@ interface DiscipleState {
     updateDisciple: (disciple: Disciple) => Promise<boolean>,
     searchByName: (name: string) => Promise<void>,
     getLeaders: () => Promise<void>,
-    addDiscipleFull: (discipleData: Disciple, personalInfoData: Record<string, unknown>) => Promise<boolean>,
-    updateDiscipleFull: (discipleId: string, discipleData: Disciple, personalInfoData: Record<string, unknown>, personalInfoId?: string) => Promise<boolean>,
+    addDiscipleFull: (discipleData: Record<string, unknown>, personalInfoData: Record<string, unknown>) => Promise<boolean>,
+    updateDiscipleFull: (discipleId: string, discipleData: Record<string, unknown>, personalInfoData: Record<string, unknown>, personalInfoId?: string) => Promise<boolean>,
 
     toggleModalNotFound: () => void,
     onShowModalNotFound: () => void,
