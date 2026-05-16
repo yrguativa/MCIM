@@ -668,7 +668,18 @@
       "yearAttendedReencounterRequired": "Please indicate the year you attended Reencounter",
       "baptizedRequired": "Please indicate if you were baptized at MCI",
       "generationRequired": "Generation is required",
-      "formationSchoolLevelRequired": "Formation school level is required"
+      "formationSchoolLevelRequired": "Formation school level is required",
+      "nameMaxLength": "Names must not exceed 150 characters",
+      "lastNameMaxLength": "Last names must not exceed 150 characters",
+      "phoneNumeric": "Phone number must contain only digits",
+      "emailMaxLength": "Email must not exceed 254 characters",
+      "addressMaxLength": "Address must not exceed 300 characters",
+      "housingComplexMaxLength": "Housing complex must not exceed 200 characters",
+      "yearRange": "Year must be between 1900 and {{currentYear}}"
+    },
+    "privacy": {
+      "title": "Privacy Notice",
+      "description": "In accordance with Law 1581 of 2012 and its regulatory decrees, the information provided will be processed in accordance with the data protection policies of MCI Christian Church. Your personal data will be used only for administrative, follow-up and statistical purposes within the church."
     }
   }
 }

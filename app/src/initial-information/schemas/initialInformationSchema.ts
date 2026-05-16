@@ -1,20 +1,28 @@
 import { z } from "zod";
 
-export const createInitialInformationSchema = (t: (key: string) => string) =>
-  z
+export const createInitialInformationSchema = (t: (key: string, options?: Record<string, unknown>) => string) => {
+  const currentYear = new Date().getFullYear();
+
+  return z
     .object({
-      name: z.string().min(1, t("initialInformation.validation.namesRequired")),
+      name: z
+        .string()
+        .min(1, t("initialInformation.validation.namesRequired"))
+        .max(150, t("initialInformation.validation.nameMaxLength")),
       lastName: z
         .string()
-        .min(1, t("initialInformation.validation.lastNamesRequired")),
+        .min(1, t("initialInformation.validation.lastNamesRequired"))
+        .max(150, t("initialInformation.validation.lastNameMaxLength")),
       email: z
         .string()
         .email(t("initialInformation.validation.emailInvalid"))
+        .max(254, t("initialInformation.validation.emailMaxLength"))
         .optional()
         .or(z.literal("")),
       phone: z
         .string()
-        .min(7, t("initialInformation.validation.phoneMin")),
+        .min(7, t("initialInformation.validation.phoneMin"))
+        .regex(/^[0-9]+$/, t("initialInformation.validation.phoneNumeric")),
       identificationType: z.enum(
         ["CC", "TI", "CE", "PPT", "PASSPORT", "OTHER"],
         {
@@ -45,8 +53,12 @@ export const createInitialInformationSchema = (t: (key: string) => string) =>
       childrenAttendChurch: z.enum(["YES", "NO"]).optional(),
       address: z
         .string()
-        .min(5, t("initialInformation.validation.addressMin")),
-      housingComplex: z.string().optional(),
+        .min(5, t("initialInformation.validation.addressMin"))
+        .max(300, t("initialInformation.validation.addressMaxLength")),
+      housingComplex: z
+        .string()
+        .max(200, t("initialInformation.validation.housingComplexMaxLength"))
+        .optional(),
       neighborhood: z
         .string()
         .min(1, t("initialInformation.validation.neighborhoodRequired")),
@@ -75,21 +87,49 @@ export const createInitialInformationSchema = (t: (key: string) => string) =>
       directLeaderId: z.string().optional(),
       yearArrivedAtChurch: z
         .string()
-        .regex(
-          /^\d{4}$/,
-          t("initialInformation.validation.yearArrivedFormat"),
+        .regex(/^\d{4}$/, t("initialInformation.validation.yearArrivedFormat"))
+        .refine(
+          (val) => {
+            const year = parseInt(val);
+            return year >= 1900 && year <= currentYear;
+          },
+          {
+            message: t("initialInformation.validation.yearRange", {
+              currentYear,
+            }),
+          },
         ),
       hasAttendedEncounter: z.enum(["YES", "NO"], {
         error: t("initialInformation.validation.hasAttendedEncounterRequired"),
       }),
-      yearAttendedEncounter: z.string().optional(),
+      yearAttendedEncounter: z
+        .string()
+        .optional()
+        .refine(
+          (val) => !val || (parseInt(val) >= 1900 && parseInt(val) <= currentYear),
+          {
+            message: t("initialInformation.validation.yearRange", {
+              currentYear,
+            }),
+          },
+        ),
       hasRepeatedEncounter: z.enum(["YES", "NO"]).optional(),
       hasAttendedReencounter: z.enum(["YES", "NO"], {
         error: t(
           "initialInformation.validation.hasAttendedReencounterRequired",
         ),
       }),
-      yearAttendedReencounter: z.string().optional(),
+      yearAttendedReencounter: z
+        .string()
+        .optional()
+        .refine(
+          (val) => !val || (parseInt(val) >= 1900 && parseInt(val) <= currentYear),
+          {
+            message: t("initialInformation.validation.yearRange", {
+              currentYear,
+            }),
+          },
+        ),
       baptizedAtMCI: z.enum(["YES", "NO"], {
         error: t("initialInformation.validation.baptizedRequired"),
       }),
@@ -171,6 +211,7 @@ export const createInitialInformationSchema = (t: (key: string) => string) =>
         });
       }
     });
+};
 
 export type InitialInformationInput = z.infer<
   ReturnType<typeof createInitialInformationSchema>

@@ -664,7 +664,18 @@
             "yearAttendedReencounterRequired": "Debe indicar el año que asistió a reencuentro",
             "baptizedRequired": "Debe indicar si se bautizó en la MCI",
             "generationRequired": "La generación es obligatoria",
-            "formationSchoolLevelRequired": "El nivel de escuela de formación es obligatorio"
+            "formationSchoolLevelRequired": "El nivel de escuela de formación es obligatorio",
+            "nameMaxLength": "Los nombres no deben exceder 150 caracteres",
+            "lastNameMaxLength": "Los apellidos no deben exceder 150 caracteres",
+            "phoneNumeric": "El celular debe contener solo números",
+            "emailMaxLength": "El correo electrónico no debe exceder 254 caracteres",
+            "addressMaxLength": "La dirección no debe exceder 300 caracteres",
+            "housingComplexMaxLength": "El conjunto residencial no debe exceder 200 caracteres",
+            "yearRange": "El año debe estar entre 1900 y {{currentYear}}"
+        },
+        "privacy": {
+            "title": "Aviso de Privacidad",
+            "description": "De acuerdo con la Ley 1581 de 2012 y sus decretos reglamentarios, la información suministrada será tratada conforme a las políticas de protección de datos de la Iglesia Cristiana MCI. Sus datos personales serán utilizados únicamente para fines administrativos, de seguimiento y estadísticos dentro de la iglesia."
         }
     }
 }
