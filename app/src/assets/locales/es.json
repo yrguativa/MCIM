@@ -595,7 +595,8 @@
             "save": "Guardar información",
             "saving": "Guardando...",
             "cancel": "Cancelar",
-            "newSearch": "Nueva búsqueda"
+            "newSearch": "Nueva búsqueda",
+            "saveAndContinue": "Guardar y continuar"
         },
         "messages": {
             "createSuccess": "Registro creado exitosamente",

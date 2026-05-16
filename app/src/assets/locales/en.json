@@ -595,7 +595,8 @@
       "save": "Save information",
       "saving": "Saving...",
       "cancel": "Cancel",
-      "newSearch": "New search"
+      "newSearch": "New search",
+      "saveAndContinue": "Save and continue"
     },
     "messages": {
       "createSuccess": "Registration created successfully",
