@@ -1,5 +1,13 @@
 import { InputType, Field, ID } from '@nestjs/graphql';
-import { IsString, IsNotEmpty, IsOptional, IsIn, IsNumber, IsBoolean, IsDateString } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsIn,
+  IsNumber,
+  IsBoolean,
+  IsDateString,
+} from 'class-validator';
 
 @InputType()
 export class CreateStudentCourseHistoryInput {

@@ -13,13 +13,30 @@ import { StudentCourseHistoryEntity } from './entities/student-course-history.en
 import { CreateCycleInput } from './dto/create-cycle.input';
 import { CreateLevelInput } from './dto/create-level.input';
 import { CreateClassroomInput } from './dto/create-classroom.input';
-import { CreateScheduleInput, UpdateScheduleInput, UpdateScheduleInputWithId } from './dto/create-schedule.input';
+import {
+  CreateScheduleInput,
+  UpdateScheduleInput,
+  UpdateScheduleInputWithId,
+} from './dto/create-schedule.input';
 import { CreateCourseInput } from './dto/create-course.input';
-import { CreateStudentInput, UpdateStudentInput } from './dto/create-student.input';
-import { EnrollStudentInput, UpdateEnrollmentInput } from './dto/enroll-student.input';
-import { CreateTeacherAssignmentInput, EnrollTeacherInput, UpdateTeacherAssignmentInput } from './dto/teacher-assignment.input';
+import {
+  CreateStudentInput,
+  UpdateStudentInput,
+} from './dto/create-student.input';
+import {
+  EnrollStudentInput,
+  UpdateEnrollmentInput,
+} from './dto/enroll-student.input';
+import {
+  CreateTeacherAssignmentInput,
+  EnrollTeacherInput,
+  UpdateTeacherAssignmentInput,
+} from './dto/teacher-assignment.input';
 import { CreateAttendanceInput } from './dto/create-attendance.input';
-import { CreateStudentCourseHistoryInput, UpdateStudentCourseHistoryInput } from './dto/create-student-course-history.input';
+import {
+  CreateStudentCourseHistoryInput,
+  UpdateStudentCourseHistoryInput,
+} from './dto/create-student-course-history.input';
 
 @Resolver()
 export class FormationSchoolResolver {
@@ -32,7 +49,9 @@ export class FormationSchoolResolver {
   }
 
   @Query(() => CycleEntity)
-  async cycle(@Args('id', { type: () => ID }) id: string): Promise<CycleEntity> {
+  async cycle(
+    @Args('id', { type: () => ID }) id: string,
+  ): Promise<CycleEntity> {
     return this.fsService.findCycleById(id);
   }
 
@@ -42,7 +61,9 @@ export class FormationSchoolResolver {
   }
 
   @Mutation(() => CycleEntity)
-  async createCycle(@Args('input') input: CreateCycleInput): Promise<CycleEntity> {
+  async createCycle(
+    @Args('input') input: CreateCycleInput,
+  ): Promise<CycleEntity> {
     return this.fsService.createCycle(input);
   }
 
@@ -53,12 +74,16 @@ export class FormationSchoolResolver {
   }
 
   @Query(() => [LevelEntity])
-  async levelsByCycle(@Args('cycleId', { type: () => ID }) cycleId: string): Promise<LevelEntity[]> {
+  async levelsByCycle(
+    @Args('cycleId', { type: () => ID }) cycleId: string,
+  ): Promise<LevelEntity[]> {
     return this.fsService.findLevelsByCycle(cycleId);
   }
 
   @Mutation(() => LevelEntity)
-  async createLevel(@Args('input') input: CreateLevelInput): Promise<LevelEntity> {
+  async createLevel(
+    @Args('input') input: CreateLevelInput,
+  ): Promise<LevelEntity> {
     return this.fsService.createLevel(input);
   }
 
@@ -69,7 +94,9 @@ export class FormationSchoolResolver {
   }
 
   @Mutation(() => ClassroomEntity)
-  async createClassroom(@Args('input') input: CreateClassroomInput): Promise<ClassroomEntity> {
+  async createClassroom(
+    @Args('input') input: CreateClassroomInput,
+  ): Promise<ClassroomEntity> {
     return this.fsService.createClassroom(input);
   }
 
@@ -80,12 +107,16 @@ export class FormationSchoolResolver {
   }
 
   @Mutation(() => ScheduleEntity)
-  async createSchedule(@Args('input') input: CreateScheduleInput): Promise<ScheduleEntity> {
+  async createSchedule(
+    @Args('input') input: CreateScheduleInput,
+  ): Promise<ScheduleEntity> {
     return this.fsService.createSchedule(input);
   }
 
   @Mutation(() => ScheduleEntity)
-  async updateSchedule(@Args('input') input: UpdateScheduleInputWithId): Promise<ScheduleEntity> {
+  async updateSchedule(
+    @Args('input') input: UpdateScheduleInputWithId,
+  ): Promise<ScheduleEntity> {
     return this.fsService.updateSchedule(input);
   }
 
@@ -96,69 +127,95 @@ export class FormationSchoolResolver {
   }
 
   @Query(() => StudentEntity)
-  async student(@Args('id', { type: () => ID }) id: string): Promise<StudentEntity> {
+  async student(
+    @Args('id', { type: () => ID }) id: string,
+  ): Promise<StudentEntity> {
     return this.fsService.findStudentById(id);
   }
 
   @Query(() => StudentEntity, { nullable: true })
-  async studentByDisciple(@Args('discipleId', { type: () => ID }) discipleId: string): Promise<StudentEntity | null> {
+  async studentByDisciple(
+    @Args('discipleId', { type: () => ID }) discipleId: string,
+  ): Promise<StudentEntity | null> {
     return this.fsService.findStudentByDiscipleId(discipleId);
   }
 
   @Mutation(() => StudentEntity)
-  async createStudent(@Args('input') input: CreateStudentInput): Promise<StudentEntity> {
+  async createStudent(
+    @Args('input') input: CreateStudentInput,
+  ): Promise<StudentEntity> {
     return this.fsService.createStudent(input);
   }
 
   @Mutation(() => StudentEntity)
-  async updateStudent(@Args('input') input: UpdateStudentInput): Promise<StudentEntity> {
+  async updateStudent(
+    @Args('input') input: UpdateStudentInput,
+  ): Promise<StudentEntity> {
     return this.fsService.updateStudent(input);
   }
 
   @Mutation(() => Boolean)
-  async deleteStudent(@Args('id', { type: () => ID }) id: string): Promise<boolean> {
+  async deleteStudent(
+    @Args('id', { type: () => ID }) id: string,
+  ): Promise<boolean> {
     return this.fsService.deleteStudent(id);
   }
 
   // Courses
   @Query(() => [CourseEntity])
-  async coursesByCycle(@Args('cycleId', { type: () => ID }) cycleId: string): Promise<CourseEntity[]> {
+  async coursesByCycle(
+    @Args('cycleId', { type: () => ID }) cycleId: string,
+  ): Promise<CourseEntity[]> {
     return this.fsService.findCoursesByCycle(cycleId);
   }
 
   @Query(() => [CourseEntity])
-  async coursesByTeacher(@Args('teacherId', { type: () => ID }) teacherId: string): Promise<CourseEntity[]> {
+  async coursesByTeacher(
+    @Args('teacherId', { type: () => ID }) teacherId: string,
+  ): Promise<CourseEntity[]> {
     return this.fsService.findCoursesByTeacher(teacherId);
   }
 
   @Mutation(() => CourseEntity)
-  async createCourse(@Args('input') input: CreateCourseInput): Promise<CourseEntity> {
+  async createCourse(
+    @Args('input') input: CreateCourseInput,
+  ): Promise<CourseEntity> {
     return this.fsService.createCourse(input);
   }
 
   @Mutation(() => CourseEntity)
-  async generateQRCode(@Args('courseId', { type: () => ID }) courseId: string): Promise<CourseEntity> {
+  async generateQRCode(
+    @Args('courseId', { type: () => ID }) courseId: string,
+  ): Promise<CourseEntity> {
     return this.fsService.generateQRCode(courseId);
   }
 
   // Enrollments
   @Query(() => [StudentEnrollmentEntity])
-  async enrollmentsByCourse(@Args('courseId', { type: () => ID }) courseId: string): Promise<StudentEnrollmentEntity[]> {
+  async enrollmentsByCourse(
+    @Args('courseId', { type: () => ID }) courseId: string,
+  ): Promise<StudentEnrollmentEntity[]> {
     return this.fsService.findEnrollmentsByCourse(courseId);
   }
 
   @Query(() => [StudentEnrollmentEntity])
-  async enrollmentsByStudent(@Args('studentId', { type: () => ID }) studentId: string): Promise<StudentEnrollmentEntity[]> {
+  async enrollmentsByStudent(
+    @Args('studentId', { type: () => ID }) studentId: string,
+  ): Promise<StudentEnrollmentEntity[]> {
     return this.fsService.findEnrollmentsByStudent(studentId);
   }
 
   @Mutation(() => StudentEnrollmentEntity)
-  async enrollStudent(@Args('input') input: EnrollStudentInput): Promise<StudentEnrollmentEntity> {
+  async enrollStudent(
+    @Args('input') input: EnrollStudentInput,
+  ): Promise<StudentEnrollmentEntity> {
     return this.fsService.enrollStudent(input);
   }
 
   @Mutation(() => TeacherAssignmentEntity)
-  async enrollTeacher(@Args('input') input: EnrollTeacherInput): Promise<TeacherAssignmentEntity> {
+  async enrollTeacher(
+    @Args('input') input: EnrollTeacherInput,
+  ): Promise<TeacherAssignmentEntity> {
     return this.fsService.enrollTeacher(input);
   }
 
@@ -168,26 +225,34 @@ export class FormationSchoolResolver {
   }
 
   @Query(() => [TeacherAssignmentEntity])
-  async teacherAssignmentsByTeacher(@Args('teacherId', { type: () => ID }) teacherId: string): Promise<TeacherAssignmentEntity[]> {
+  async teacherAssignmentsByTeacher(
+    @Args('teacherId', { type: () => ID }) teacherId: string,
+  ): Promise<TeacherAssignmentEntity[]> {
     return this.fsService.findTeacherAssignmentsByTeacher(teacherId);
   }
 
   @Mutation(() => TeacherAssignmentEntity)
-  async updateTeacherAssignment(@Args('input') input: UpdateTeacherAssignmentInput): Promise<TeacherAssignmentEntity> {
+  async updateTeacherAssignment(
+    @Args('input') input: UpdateTeacherAssignmentInput,
+  ): Promise<TeacherAssignmentEntity> {
     return this.fsService.updateTeacherAssignment({
       id: input.id,
       active: input.active,
-      type: input.type
+      type: input.type,
     });
   }
 
   @Mutation(() => Boolean)
-  async deleteTeacherAssignment(@Args('id', { type: () => ID }) id: string): Promise<boolean> {
+  async deleteTeacherAssignment(
+    @Args('id', { type: () => ID }) id: string,
+  ): Promise<boolean> {
     return this.fsService.deleteTeacherAssignment(id);
   }
 
   @Mutation(() => StudentEnrollmentEntity)
-  async updateEnrollment(@Args('input') input: UpdateEnrollmentInput): Promise<StudentEnrollmentEntity> {
+  async updateEnrollment(
+    @Args('input') input: UpdateEnrollmentInput,
+  ): Promise<StudentEnrollmentEntity> {
     return this.fsService.updateEnrollment(input);
   }
 
@@ -196,38 +261,53 @@ export class FormationSchoolResolver {
     @Args('enrollmentId', { type: () => ID }) enrollmentId: string,
     @Args('cycleRequiredClasses') cycleRequiredClasses: number,
   ): Promise<number> {
-    return this.fsService.calculateFinalGrade(enrollmentId, cycleRequiredClasses);
+    return this.fsService.calculateFinalGrade(
+      enrollmentId,
+      cycleRequiredClasses,
+    );
   }
 
   // Attendance
   @Query(() => [AttendanceEntity])
-  async attendanceByCourse(@Args('courseId', { type: () => ID }) courseId: string): Promise<AttendanceEntity[]> {
+  async attendanceByCourse(
+    @Args('courseId', { type: () => ID }) courseId: string,
+  ): Promise<AttendanceEntity[]> {
     return this.fsService.findAttendanceByCourse(courseId);
   }
 
   @Query(() => [AttendanceEntity])
-  async attendanceByEnrollment(@Args('enrollmentId', { type: () => ID }) enrollmentId: string): Promise<AttendanceEntity[]> {
+  async attendanceByEnrollment(
+    @Args('enrollmentId', { type: () => ID }) enrollmentId: string,
+  ): Promise<AttendanceEntity[]> {
     return this.fsService.findAttendanceByEnrollment(enrollmentId);
   }
 
   @Mutation(() => AttendanceEntity)
-  async createAttendance(@Args('input') input: CreateAttendanceInput): Promise<AttendanceEntity> {
+  async createAttendance(
+    @Args('input') input: CreateAttendanceInput,
+  ): Promise<AttendanceEntity> {
     return this.fsService.createAttendance(input);
   }
 
   // Course History
   @Query(() => [StudentCourseHistoryEntity])
-  async courseHistoriesByStudent(@Args('studentId', { type: () => ID }) studentId: string): Promise<StudentCourseHistoryEntity[]> {
+  async courseHistoriesByStudent(
+    @Args('studentId', { type: () => ID }) studentId: string,
+  ): Promise<StudentCourseHistoryEntity[]> {
     return this.fsService.findCourseHistoriesByStudent(studentId);
   }
 
   @Mutation(() => StudentCourseHistoryEntity)
-  async createCourseHistory(@Args('input') input: CreateStudentCourseHistoryInput): Promise<StudentCourseHistoryEntity> {
+  async createCourseHistory(
+    @Args('input') input: CreateStudentCourseHistoryInput,
+  ): Promise<StudentCourseHistoryEntity> {
     return this.fsService.createCourseHistory(input);
   }
 
   @Mutation(() => StudentCourseHistoryEntity)
-  async updateCourseHistory(@Args('input') input: UpdateStudentCourseHistoryInput): Promise<StudentCourseHistoryEntity> {
+  async updateCourseHistory(
+    @Args('input') input: UpdateStudentCourseHistoryInput,
+  ): Promise<StudentCourseHistoryEntity> {
     return this.fsService.updateCourseHistory(input);
   }
 }

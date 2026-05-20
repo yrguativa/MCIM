@@ -8,10 +8,19 @@ import { Classroom, ClassroomSchema } from './schemas/classroom.schema';
 import { Schedule, ScheduleSchema } from './schemas/schedule.schema';
 import { Course, CourseSchema } from './schemas/course.schema';
 import { Student, StudentSchema } from './schemas/student.schema';
-import { StudentEnrollment, StudentEnrollmentSchema } from './schemas/student-enrollment.schema';
-import { TeacherAssignment, TeacherAssignmentSchema } from './schemas/teacher-assignment.schema';
+import {
+  StudentEnrollment,
+  StudentEnrollmentSchema,
+} from './schemas/student-enrollment.schema';
+import {
+  TeacherAssignment,
+  TeacherAssignmentSchema,
+} from './schemas/teacher-assignment.schema';
 import { Attendance, AttendanceSchema } from './schemas/attendance.schema';
-import { StudentCourseHistory, StudentCourseHistorySchema } from './schemas/student-course-history.schema';
+import {
+  StudentCourseHistory,
+  StudentCourseHistorySchema,
+} from './schemas/student-course-history.schema';
 
 @Module({
   imports: [

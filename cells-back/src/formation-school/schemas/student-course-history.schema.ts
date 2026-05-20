@@ -31,4 +31,5 @@ export class StudentCourseHistory extends Document {
   createdDate: Date;
 }
 
-export const StudentCourseHistorySchema = SchemaFactory.createForClass(StudentCourseHistory);
+export const StudentCourseHistorySchema =
+  SchemaFactory.createForClass(StudentCourseHistory);

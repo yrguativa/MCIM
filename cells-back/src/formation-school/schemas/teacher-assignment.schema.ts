@@ -22,4 +22,5 @@ export class TeacherAssignment extends Document {
   createdDate: Date;
 }
 
-export const TeacherAssignmentSchema = SchemaFactory.createForClass(TeacherAssignment);
+export const TeacherAssignmentSchema =
+  SchemaFactory.createForClass(TeacherAssignment);

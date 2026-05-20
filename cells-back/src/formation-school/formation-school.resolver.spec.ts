@@ -68,7 +68,7 @@ describe('FormationSchoolResolver', () => {
         active: true,
         createdUser: 'user-1',
       };
-      
+
       const result = await resolver.createCycle(input);
       expect(service.createCycle).toHaveBeenCalledWith(input);
     });
@@ -86,9 +86,15 @@ describe('FormationSchoolResolver', () => {
     it('should calculate final grade', async () => {
       const enrollmentId = 'enrollment-1';
       const cycleRequiredClasses = 8;
-      
-      const result = await resolver.calculateFinalGrade(enrollmentId, cycleRequiredClasses);
-      expect(service.calculateFinalGrade).toHaveBeenCalledWith(enrollmentId, cycleRequiredClasses);
+
+      const result = await resolver.calculateFinalGrade(
+        enrollmentId,
+        cycleRequiredClasses,
+      );
+      expect(service.calculateFinalGrade).toHaveBeenCalledWith(
+        enrollmentId,
+        cycleRequiredClasses,
+      );
       expect(result).toBe(75);
     });
   });

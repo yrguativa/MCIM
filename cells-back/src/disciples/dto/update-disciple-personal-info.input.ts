@@ -3,7 +3,9 @@ import { CreateDisciplePersonalInfoInput } from './create-disciple-personal-info
 import { IsMongoId, IsOptional } from 'class-validator';
 
 @InputType()
-export class UpdateDisciplePersonalInfoInput extends PartialType(CreateDisciplePersonalInfoInput) {
+export class UpdateDisciplePersonalInfoInput extends PartialType(
+  CreateDisciplePersonalInfoInput,
+) {
   @Field(() => String, { nullable: true })
   @IsOptional()
   @IsMongoId({ message: 'Invalid personal info ID' })

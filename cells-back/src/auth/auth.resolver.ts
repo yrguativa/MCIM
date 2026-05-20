@@ -76,7 +76,8 @@ export class AuthResolver {
 
   @Mutation(() => UserEntity)
   async completeSocialRegistration(
-    @Args('completeSocialRegistrationInput') input: CompleteSocialRegistrationInput,
+    @Args('completeSocialRegistrationInput')
+    input: CompleteSocialRegistrationInput,
   ) {
     return this.authService.completeSocialRegistration({
       userId: input.userId,
@@ -103,10 +104,12 @@ export class AuthResolver {
   }
 
   @Mutation(() => Boolean)
-  async resetPassword(
-    @Args('resetPasswordInput') input: ResetPasswordInput,
-  ) {
-    return this.authService.resetPassword(input.email, input.code, input.newPassword);
+  async resetPassword(@Args('resetPasswordInput') input: ResetPasswordInput) {
+    return this.authService.resetPassword(
+      input.email,
+      input.code,
+      input.newPassword,
+    );
   }
 
   @Query(() => UserEntity)

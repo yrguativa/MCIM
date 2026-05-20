@@ -35,7 +35,9 @@ describe('FormationSchool E2E Tests', () => {
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
-        MongooseModule.forRoot('mongodb://localhost:27017/formation-school-test'),
+        MongooseModule.forRoot(
+          'mongodb://localhost:27017/formation-school-test',
+        ),
         GraphQLModule.forRoot<ApolloDriverConfig>({
           driver: ApolloDriver,
           autoSchemaFile: true,
@@ -146,7 +148,9 @@ describe('FormationSchool E2E Tests', () => {
         });
 
       expect(result.status).toBe(200);
-      expect(result.body.data.createSchedule.dayOfWeek).toBe(testSchedule.dayOfWeek);
+      expect(result.body.data.createSchedule.dayOfWeek).toBe(
+        testSchedule.dayOfWeek,
+      );
     });
 
     it('should query all classrooms', async () => {
@@ -257,7 +261,8 @@ describe('FormationSchool E2E Tests', () => {
 
       expect(result.status).toBe(200);
       expect(
-        typeof result.body.data?.calculateFinalGrade === 'number' || result.body.errors,
+        typeof result.body.data?.calculateFinalGrade === 'number' ||
+          result.body.errors,
       ).toBe(true);
     });
   });

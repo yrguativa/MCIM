@@ -100,7 +100,10 @@ describe('FormationSchoolService', () => {
         exec: jest.fn().mockResolvedValue(null),
       }),
       findByIdAndUpdate: jest.fn().mockReturnValue({
-        exec: jest.fn().mockResolvedValue({ qrCode: 'data:image/png;base64,...', qrExpiration: new Date() }),
+        exec: jest.fn().mockResolvedValue({
+          qrCode: 'data:image/png;base64,...',
+          qrExpiration: new Date(),
+        }),
       }),
     };
 
@@ -134,11 +137,23 @@ describe('FormationSchoolService', () => {
         FormationSchoolService,
         { provide: getModelToken(Cycle.name), useValue: mockCycleModel },
         { provide: getModelToken(Level.name), useValue: mockLevelModel },
-        { provide: getModelToken(Classroom.name), useValue: mockClassroomModel },
+        {
+          provide: getModelToken(Classroom.name),
+          useValue: mockClassroomModel,
+        },
         { provide: getModelToken(Schedule.name), useValue: mockScheduleModel },
-        { provide: getModelToken(CourseClass.name), useValue: mockCourseClassModel },
-        { provide: getModelToken(StudentEnrollment.name), useValue: mockEnrollmentModel },
-        { provide: getModelToken(Attendance.name), useValue: mockAttendanceModel },
+        {
+          provide: getModelToken(CourseClass.name),
+          useValue: mockCourseClassModel,
+        },
+        {
+          provide: getModelToken(StudentEnrollment.name),
+          useValue: mockEnrollmentModel,
+        },
+        {
+          provide: getModelToken(Attendance.name),
+          useValue: mockAttendanceModel,
+        },
       ],
     }).compile();
 
@@ -185,7 +200,9 @@ describe('FormationSchoolService', () => {
         exec: jest.fn().mockResolvedValue(null),
       });
 
-      await expect(service.findCycleById('invalid-id')).rejects.toThrow(NotFoundException);
+      await expect(service.findCycleById('invalid-id')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -233,7 +250,10 @@ describe('FormationSchoolService', () => {
         exec: jest.fn().mockResolvedValue(null),
       });
 
-      const result = await service.checkScheduleConflict('classroom-1', 'schedule-1');
+      const result = await service.checkScheduleConflict(
+        'classroom-1',
+        'schedule-1',
+      );
       expect(result).toBe(false);
     });
 
@@ -242,7 +262,10 @@ describe('FormationSchoolService', () => {
         exec: jest.fn().mockResolvedValue({ _id: 'existing-class' }),
       });
 
-      const result = await service.checkScheduleConflict('classroom-1', 'schedule-1');
+      const result = await service.checkScheduleConflict(
+        'classroom-1',
+        'schedule-1',
+      );
       expect(result).toBe(true);
     });
 
@@ -260,9 +283,9 @@ describe('FormationSchoolService', () => {
         createdUser: 'user-1',
       };
 
-      await expect(service.createCourseClass(createCourseClassInput)).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(
+        service.createCourseClass(createCourseClassInput),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 
@@ -271,8 +294,11 @@ describe('FormationSchoolService', () => {
       const enrollmentId = 'enrollment-1';
       const requiredClasses = 8;
 
-      const result = await service.calculateFinalGrade(enrollmentId, requiredClasses);
-      
+      const result = await service.calculateFinalGrade(
+        enrollmentId,
+        requiredClasses,
+      );
+
       expect(typeof result).toBe('number');
       expect(result).toBe(62.5); // 5/8 * 100
     });

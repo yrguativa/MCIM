@@ -24,9 +24,13 @@ export class DisciplesResolver {
   @Mutation(() => DiscipleEntity)
   createDiscipleFull(
     @Args('createDiscipleInput') createDiscipleInput: CreateDiscipleInput,
-    @Args('createPersonalInfoInput') createPersonalInfoInput: CreateDisciplePersonalInfoInput,
+    @Args('createPersonalInfoInput')
+    createPersonalInfoInput: CreateDisciplePersonalInfoInput,
   ) {
-    return this.disciplesService.createFull(createDiscipleInput, createPersonalInfoInput);
+    return this.disciplesService.createFull(
+      createDiscipleInput,
+      createPersonalInfoInput,
+    );
   }
 
   @Query(() => [DiscipleEntity], { name: 'disciples' })
@@ -39,7 +43,10 @@ export class DisciplesResolver {
     return this.disciplesService.findOne(id);
   }
 
-  @Query(() => DiscipleFullEntity, { nullable: true, name: 'discipleByIdentification' })
+  @Query(() => DiscipleFullEntity, {
+    nullable: true,
+    name: 'discipleByIdentification',
+  })
   async findByIdentification(
     @Args('identification', { type: () => String }) identification: string,
   ) {
@@ -51,7 +58,10 @@ export class DisciplesResolver {
     return this.disciplesService.findLeaders();
   }
 
-  @Query(() => DisciplePersonalInfoEntity, { nullable: true, name: 'disciplePersonalInfo' })
+  @Query(() => DisciplePersonalInfoEntity, {
+    nullable: true,
+    name: 'disciplePersonalInfo',
+  })
   async findPersonalInfo(
     @Args('discipleId', { type: () => String }) discipleId: string,
   ) {
@@ -62,7 +72,10 @@ export class DisciplesResolver {
   updateDisciple(
     @Args('updateDiscipleInput') updateDiscipleInput: UpdateDiscipleInput,
   ) {
-    Logger.log('🚀 ~ DisciplesResolver ~ updateDiscipleInput:', updateDiscipleInput);
+    Logger.log(
+      '🚀 ~ DisciplesResolver ~ updateDiscipleInput:',
+      updateDiscipleInput,
+    );
     return this.disciplesService.update(
       updateDiscipleInput.id,
       updateDiscipleInput,
@@ -93,5 +106,4 @@ export class DisciplesResolver {
   ): Promise<DiscipleEntity[]> {
     return this.disciplesService.searchByName(name);
   }
-
 }

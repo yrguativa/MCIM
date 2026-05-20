@@ -39,7 +39,11 @@ export class User extends Document {
   @Prop({ type: [String], default: [] })
   roles: string[];
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Disciple', required: false })
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'Disciple',
+    required: false,
+  })
   discipleId: string;
 }
 

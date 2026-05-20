@@ -9,7 +9,7 @@ import { CreateEventAttendanceInput } from './dto/create-event-attendance.input'
 
 @Injectable()
 export class EventsService {
-  constructor(@InjectModel(Event.name) private eventModel: Model<Event>) { }
+  constructor(@InjectModel(Event.name) private eventModel: Model<Event>) {}
 
   async create(createEventInput: CreateEventInput): Promise<EventEntity> {
     const createdEvent = new this.eventModel({
@@ -44,7 +44,11 @@ export class EventsService {
     updateEventInput: Partial<CreateEventInput>,
   ): Promise<EventEntity> {
     const updatedEvent = await this.eventModel
-      .findByIdAndUpdate(id, { $set: updateEventInput }, { new: true, runValidators: true })
+      .findByIdAndUpdate(
+        id,
+        { $set: updateEventInput },
+        { new: true, runValidators: true },
+      )
       .populate('ministryId')
       .exec();
 
@@ -87,9 +91,10 @@ export class EventsService {
       .populate('attendance.disciple')
       .exec();
 
-    const createdAttendance = updatedEvent.attendance[updatedEvent.attendance.length - 1];
+    const createdAttendance =
+      updatedEvent.attendance[updatedEvent.attendance.length - 1];
 
-    // We need to map it to EventAttendanceEntity. 
+    // We need to map it to EventAttendanceEntity.
     // The populated disciple might be in the last element.
 
     return this.toAttendanceModel(createdAttendance);
@@ -113,7 +118,9 @@ export class EventsService {
       location: event.location,
       capacity: event.capacity,
       active: event.active,
-      attendees: event.attendance ? event.attendance.map(a => this.toAttendanceModel(a)) : [],
+      attendees: event.attendance
+        ? event.attendance.map((a) => this.toAttendanceModel(a))
+        : [],
       ministry: ministryIsObject ? populatedMinistry : null,
 
       createdUser: event.createdBy,
@@ -134,16 +141,19 @@ export class EventsService {
       return [];
     }
 
-    return event.attendance.map((attendance) => this.toAttendanceModel(attendance));
+    return event.attendance.map((attendance) =>
+      this.toAttendanceModel(attendance),
+    );
   }
 
-  private toAttendanceModel(
-    attendance: any,
-  ): EventAttendanceEntity {
+  private toAttendanceModel(attendance: any): EventAttendanceEntity {
     return {
       id: attendance._id ? attendance._id.toString() : '',
       disciple: attendance.disciple,
-      discipleId: attendance.disciple && attendance.disciple._id ? attendance.disciple._id.toString() : attendance.disciple,
+      discipleId:
+        attendance.disciple && attendance.disciple._id
+          ? attendance.disciple._id.toString()
+          : attendance.disciple,
       dateRegister: attendance.createdDate,
     };
   }

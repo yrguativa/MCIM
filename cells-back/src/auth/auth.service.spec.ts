@@ -40,7 +40,10 @@ describe('AuthService', () => {
         AuthService,
         { provide: getModelToken(User.name), useValue: mockUserModel },
         { provide: getModelToken(Disciple.name), useValue: mockDiscipleModel },
-        { provide: getModelToken(PasswordReset.name), useValue: mockPasswordResetModel },
+        {
+          provide: getModelToken(PasswordReset.name),
+          useValue: mockPasswordResetModel,
+        },
         { provide: JwtService, useValue: mockJwtService },
       ],
     }).compile();
@@ -68,8 +71,9 @@ describe('AuthService', () => {
     it('should throw if user not found', async () => {
       mockUserModel.findOne.mockResolvedValue(null);
 
-      await expect(service.validateUser('test@example.com', 'password'))
-        .rejects.toThrow(UnauthorizedException);
+      await expect(
+        service.validateUser('test@example.com', 'password'),
+      ).rejects.toThrow(UnauthorizedException);
     });
 
     it('should throw if password is invalid', async () => {
@@ -81,15 +85,16 @@ describe('AuthService', () => {
       mockUserModel.findOne.mockResolvedValue(mockUser);
       jest.spyOn(bcrypt, 'compare').mockResolvedValue(false);
 
-      await expect(service.validateUser('test@example.com', 'wrongPassword'))
-        .rejects.toThrow(UnauthorizedException);
+      await expect(
+        service.validateUser('test@example.com', 'wrongPassword'),
+      ).rejects.toThrow(UnauthorizedException);
     });
   });
 
   describe('requestPasswordReset', () => {
     it('should return true even if email does not exist', async () => {
       mockUserModel.findOne.mockResolvedValue(null);
-      
+
       const result = await service.requestPasswordReset('notfound@example.com');
       expect(result).toBe(true);
     });
@@ -98,9 +103,9 @@ describe('AuthService', () => {
       mockUserModel.findOne.mockResolvedValue({ email: 'test@example.com' });
       mockPasswordResetModel.updateMany.mockResolvedValue({});
       mockPasswordResetModel.save.mockResolvedValue({});
-      
+
       const result = await service.requestPasswordReset('test@example.com');
-      
+
       expect(result).toBe(true);
       expect(mockPasswordResetModel.save).toHaveBeenCalled();
     });
@@ -116,14 +121,20 @@ describe('AuthService', () => {
       };
       mockPasswordResetModel.findOne.mockResolvedValue(mockReset);
 
-      const result = await service.verifyResetCode('test@example.com', '123456');
+      const result = await service.verifyResetCode(
+        'test@example.com',
+        '123456',
+      );
       expect(result).toBe(true);
     });
 
     it('should return false for invalid code', async () => {
       mockPasswordResetModel.findOne.mockResolvedValue(null);
 
-      const result = await service.verifyResetCode('test@example.com', '000000');
+      const result = await service.verifyResetCode(
+        'test@example.com',
+        '000000',
+      );
       expect(result).toBe(false);
     });
   });
@@ -142,7 +153,11 @@ describe('AuthService', () => {
       mockPasswordResetModel.updateOne.mockResolvedValue({});
       jest.spyOn(bcrypt, 'hash').mockResolvedValue('newHashedPassword');
 
-      const result = await service.resetPassword('test@example.com', '123456', 'newpassword');
+      const result = await service.resetPassword(
+        'test@example.com',
+        '123456',
+        'newpassword',
+      );
 
       expect(result).toBe(true);
       expect(mockUserModel.updateOne).toHaveBeenCalled();
@@ -151,8 +166,9 @@ describe('AuthService', () => {
     it('should throw for invalid code', async () => {
       mockPasswordResetModel.findOne.mockResolvedValue(null);
 
-      await expect(service.resetPassword('test@example.com', '000000', 'newpassword'))
-        .rejects.toThrow();
+      await expect(
+        service.resetPassword('test@example.com', '000000', 'newpassword'),
+      ).rejects.toThrow();
     });
   });
 
@@ -180,15 +196,19 @@ describe('AuthService', () => {
     });
 
     it('should throw if email already exists', async () => {
-      mockUserModel.findOne.mockResolvedValue({ email: 'existing@example.com' });
-
-      await expect(service.registerWithEmailAndPassword({
+      mockUserModel.findOne.mockResolvedValue({
         email: 'existing@example.com',
-        password: 'password',
-        identification: '123',
-        ministryId: '1',
-        phoneNumber: '123',
-      })).rejects.toThrow(UnauthorizedException);
+      });
+
+      await expect(
+        service.registerWithEmailAndPassword({
+          email: 'existing@example.com',
+          password: 'password',
+          identification: '123',
+          ministryId: '1',
+          phoneNumber: '123',
+        }),
+      ).rejects.toThrow(UnauthorizedException);
     });
   });
 

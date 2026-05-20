@@ -17,14 +17,15 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { FormationSchoolModule } from './formation-school/formation-school.module';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
     }),
-    MongooseModule.forRoot(process.env.MONGODB_URI || 'mongodb://localhost:27017/MCI-APP-db'),
+    MongooseModule.forRoot(
+      process.env.MONGODB_URI || 'mongodb://localhost:27017/MCI-APP-db',
+    ),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
@@ -51,4 +52,4 @@ import { FormationSchoolModule } from './formation-school/formation-school.modul
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,5 +1,11 @@
 import { InputType, Field, ID } from '@nestjs/graphql';
-import { IsDate, IsNotEmpty, IsOptional, MaxDate, MinDate } from 'class-validator';
+import {
+  IsDate,
+  IsNotEmpty,
+  IsOptional,
+  MaxDate,
+  MinDate,
+} from 'class-validator';
 import { Transform } from 'class-transformer';
 
 @InputType()

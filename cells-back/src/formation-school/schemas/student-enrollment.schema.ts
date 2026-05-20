@@ -25,4 +25,5 @@ export class StudentEnrollment extends Document {
   createdDate: Date;
 }
 
-export const StudentEnrollmentSchema = SchemaFactory.createForClass(StudentEnrollment);
+export const StudentEnrollmentSchema =
+  SchemaFactory.createForClass(StudentEnrollment);

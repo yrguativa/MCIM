@@ -7,12 +7,10 @@ import { DisciplesModule } from '../disciples/disciples.module';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: Event.name, schema: EventSchema },
-    ]),
+    MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }]),
     DisciplesModule,
   ],
   providers: [EventsResolver, EventsService],
   exports: [EventsService],
 })
-export class EventsModule { }
+export class EventsModule {}

@@ -19,7 +19,7 @@ export class DisciplesService {
     @InjectModel(Disciple.name) private discipleModel: Model<Disciple>,
     @InjectModel(DisciplePersonalInfo.name)
     private personalInfoModel: Model<DisciplePersonalInfo>,
-  ) { }
+  ) {}
 
   async create(createUserInput: CreateDiscipleInput): Promise<DiscipleEntity> {
     if (!createUserInput.createdDate) {
@@ -41,10 +41,15 @@ export class DisciplesService {
     const savedDisciple = await createdDisciple.save();
 
     createPersonalInfoInput.discipleId = savedDisciple._id.toString();
-    const createdPersonalInfo = new this.personalInfoModel(createPersonalInfoInput);
+    const createdPersonalInfo = new this.personalInfoModel(
+      createPersonalInfoInput,
+    );
     await createdPersonalInfo.save();
 
-    Logger.log('Disciple created with personal info:', savedDisciple._id.toString());
+    Logger.log(
+      'Disciple created with personal info:',
+      savedDisciple._id.toString(),
+    );
     return this.toModel(savedDisciple);
   }
 
@@ -61,8 +66,12 @@ export class DisciplesService {
     return this.toModel(user);
   }
 
-  async findByIdentification(identification: string): Promise<DiscipleFullEntity | null> {
-    const disciple = await this.discipleModel.findOne({ identification }).exec();
+  async findByIdentification(
+    identification: string,
+  ): Promise<DiscipleFullEntity | null> {
+    const disciple = await this.discipleModel
+      .findOne({ identification })
+      .exec();
     if (!disciple) {
       return null;
     }
@@ -73,7 +82,9 @@ export class DisciplesService {
 
     return {
       disciple: this.toModel(disciple),
-      personalInfo: personalInfo ? this.toPersonalInfoModel(personalInfo) : null,
+      personalInfo: personalInfo
+        ? this.toPersonalInfoModel(personalInfo)
+        : null,
     };
   }
 
@@ -91,10 +102,10 @@ export class DisciplesService {
     }));
   }
 
-  async findPersonalInfo(discipleId: string): Promise<DisciplePersonalInfoEntity | null> {
-    const info = await this.personalInfoModel
-      .findOne({ discipleId })
-      .exec();
+  async findPersonalInfo(
+    discipleId: string,
+  ): Promise<DisciplePersonalInfoEntity | null> {
+    const info = await this.personalInfoModel.findOne({ discipleId }).exec();
     return info ? this.toPersonalInfoModel(info) : null;
   }
 
@@ -124,7 +135,11 @@ export class DisciplesService {
     personalInput?: UpdateDisciplePersonalInfoInput,
   ): Promise<DiscipleEntity> {
     const updatedDisciple = await this.discipleModel
-      .findByIdAndUpdate(id, { $set: updateDiscipleInput }, { new: true, runValidators: true })
+      .findByIdAndUpdate(
+        id,
+        { $set: updateDiscipleInput },
+        { new: true, runValidators: true },
+      )
       .lean()
       .exec();
 
@@ -137,7 +152,11 @@ export class DisciplesService {
 
       if (personalInfoId) {
         await this.personalInfoModel
-          .findByIdAndUpdate(personalInfoId, { $set: personalData }, { new: true, runValidators: true })
+          .findByIdAndUpdate(
+            personalInfoId,
+            { $set: personalData },
+            { new: true, runValidators: true },
+          )
           .lean()
           .exec();
       } else {
@@ -147,7 +166,11 @@ export class DisciplesService {
 
         if (existing) {
           await this.personalInfoModel
-            .findByIdAndUpdate(existing._id.toString(), { $set: personalData }, { new: true, runValidators: true })
+            .findByIdAndUpdate(
+              existing._id.toString(),
+              { $set: personalData },
+              { new: true, runValidators: true },
+            )
             .lean()
             .exec();
         } else {
@@ -214,7 +237,9 @@ export class DisciplesService {
     };
   }
 
-  private toPersonalInfoModel(info: DisciplePersonalInfo): DisciplePersonalInfoEntity {
+  private toPersonalInfoModel(
+    info: DisciplePersonalInfo,
+  ): DisciplePersonalInfoEntity {
     return {
       id: info._id.toString(),
       discipleId: info.discipleId,

@@ -7,7 +7,10 @@ import { AuthService } from './auth.service';
 import { AuthResolver } from './auth.resolver';
 import { User, UserSchema } from './schemas/user.schema';
 import { Disciple, DiscipleSchema } from '../disciples/schemas/disciple.schema';
-import { PasswordReset, PasswordResetSchema } from './schemas/password-reset.schema';
+import {
+  PasswordReset,
+  PasswordResetSchema,
+} from './schemas/password-reset.schema';
 import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({

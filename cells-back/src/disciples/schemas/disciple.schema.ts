@@ -6,7 +6,10 @@ export class Disciple extends Document {
   @Prop({ required: true, unique: true })
   identification: string;
 
-  @Prop({ required: true, enum: ['CC', 'TI', 'CE', 'PPT', 'PASSPORT', 'OTHER'] })
+  @Prop({
+    required: true,
+    enum: ['CC', 'TI', 'CE', 'PPT', 'PASSPORT', 'OTHER'],
+  })
   identificationType: string;
 
   @Prop({ required: false })

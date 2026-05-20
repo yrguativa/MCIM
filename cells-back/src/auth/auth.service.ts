@@ -20,7 +20,8 @@ export class AuthService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(Disciple.name) private discipleModel: Model<Disciple>,
-    @InjectModel(PasswordReset.name) private passwordResetModel: Model<PasswordReset>,
+    @InjectModel(PasswordReset.name)
+    private passwordResetModel: Model<PasswordReset>,
     private jwtService: JwtService,
   ) {
     this.googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -67,7 +68,7 @@ export class AuthService {
           active: true,
         });
         await newUser.save();
-        
+
         const jwt = this.jwtService.sign({
           userId: newUser.id,
           email: newUser.email,
@@ -150,8 +151,10 @@ export class AuthService {
       }
     }
 
-    let disciple = await this.discipleModel.findOne({ identification: userData.identification });
-    
+    let disciple = await this.discipleModel.findOne({
+      identification: userData.identification,
+    });
+
     if (disciple) {
       disciple.ministryId = userData.ministryId;
       if (userData.phoneNumber) {
@@ -210,8 +213,10 @@ export class AuthService {
       throw new NotFoundException('Usuario no encontrado');
     }
 
-    let disciple = await this.discipleModel.findOne({ identification: userData.identification });
-    
+    let disciple = await this.discipleModel.findOne({
+      identification: userData.identification,
+    });
+
     if (disciple) {
       disciple.ministryId = userData.ministryId;
       if (userData.phoneNumber) {
@@ -250,7 +255,7 @@ export class AuthService {
       // En una implementación real, verificarías el token de Apple aquí
       // Por ahora, usamos el email proporcionado por Apple Sign-In
       const email = appleData.email;
-      
+
       if (!email) {
         throw new Error('Email no proporcionado por Apple');
       }
@@ -272,7 +277,7 @@ export class AuthService {
           active: true,
         });
         await newUser.save();
-        
+
         const jwt = this.jwtService.sign({
           userId: newUser.id,
           email: newUser.email,
@@ -322,8 +327,10 @@ export class AuthService {
     name?: string;
     lastName?: string;
   }) {
-    let disciple = await this.discipleModel.findOne({ identification: data.identification });
-    
+    let disciple = await this.discipleModel.findOne({
+      identification: data.identification,
+    });
+
     if (disciple) {
       disciple.ministryId = data.ministryId;
       if (data.phoneNumber) {
@@ -357,7 +364,7 @@ export class AuthService {
         phoneNumber: disciple.phone,
         discipleId: disciple._id.toString(),
       },
-      { new: true }
+      { new: true },
     );
 
     const jwt = this.jwtService.sign({
@@ -381,10 +388,10 @@ export class AuthService {
     }
 
     const code = Math.floor(100000 + Math.random() * 900000).toString();
-    
+
     await this.passwordResetModel.updateMany(
       { email, used: false },
-      { used: true }
+      { used: true },
     );
 
     await new this.passwordResetModel({
@@ -394,7 +401,7 @@ export class AuthService {
     }).save();
 
     Logger.log(`Código de recuperación para ${email}: ${code}`);
-    
+
     return true;
   }
 
@@ -409,7 +416,11 @@ export class AuthService {
     return !!reset;
   }
 
-  async resetPassword(email: string, code: string, newPassword: string): Promise<boolean> {
+  async resetPassword(
+    email: string,
+    code: string,
+    newPassword: string,
+  ): Promise<boolean> {
     const reset = await this.passwordResetModel.findOne({
       email,
       code,
@@ -422,16 +433,10 @@ export class AuthService {
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    
-    await this.userModel.updateOne(
-      { email },
-      { password: hashedPassword }
-    );
 
-    await this.passwordResetModel.updateOne(
-      { _id: reset._id },
-      { used: true }
-    );
+    await this.userModel.updateOne({ email }, { password: hashedPassword });
+
+    await this.passwordResetModel.updateOne({ _id: reset._id }, { used: true });
 
     return true;
   }

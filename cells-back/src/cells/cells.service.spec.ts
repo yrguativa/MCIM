@@ -113,7 +113,9 @@ describe('CellsService', () => {
         }),
       };
 
-      const recordModel: any = jest.fn().mockImplementation(() => mockCellWithRecords);
+      const recordModel: any = jest
+        .fn()
+        .mockImplementation(() => mockCellWithRecords);
       recordModel.findById = jest.fn().mockReturnValue({
         exec: jest.fn().mockResolvedValue(mockCellWithRecords),
       });
@@ -128,7 +130,8 @@ describe('CellsService', () => {
         ],
       }).compile();
 
-      const serviceWithRecord = moduleWithRecord.get<CellsService>(CellsService);
+      const serviceWithRecord =
+        moduleWithRecord.get<CellsService>(CellsService);
 
       const recordInput = {
         topic: 'Test Topic',
@@ -177,17 +180,20 @@ describe('CellsService', () => {
         exec: jest.fn().mockResolvedValue(cellWithAssistants),
       });
 
-      const moduleWithAssistant: TestingModule = await Test.createTestingModule({
-        providers: [
-          CellsService,
-          {
-            provide: getModelToken(Cell.name),
-            useValue: model,
-          },
-        ],
-      }).compile();
+      const moduleWithAssistant: TestingModule = await Test.createTestingModule(
+        {
+          providers: [
+            CellsService,
+            {
+              provide: getModelToken(Cell.name),
+              useValue: model,
+            },
+          ],
+        },
+      ).compile();
 
-      const serviceWithAssistant = moduleWithAssistant.get<CellsService>(CellsService);
+      const serviceWithAssistant =
+        moduleWithAssistant.get<CellsService>(CellsService);
 
       const result = await serviceWithAssistant.addAssistant('cell-1', {
         disciple: 'disciple-1',
@@ -234,17 +240,19 @@ describe('CellsService', () => {
         exec: jest.fn().mockResolvedValue(cellWithActive),
       });
 
-      const moduleWithDeactivate: TestingModule = await Test.createTestingModule({
-        providers: [
-          CellsService,
-          {
-            provide: getModelToken(Cell.name),
-            useValue: model,
-          },
-        ],
-      }).compile();
+      const moduleWithDeactivate: TestingModule =
+        await Test.createTestingModule({
+          providers: [
+            CellsService,
+            {
+              provide: getModelToken(Cell.name),
+              useValue: model,
+            },
+          ],
+        }).compile();
 
-      const serviceWithDeactivate = moduleWithDeactivate.get<CellsService>(CellsService);
+      const serviceWithDeactivate =
+        moduleWithDeactivate.get<CellsService>(CellsService);
 
       const result = await serviceWithDeactivate.deactivateAssistant('cell-1', {
         disciple: 'disciple-1',

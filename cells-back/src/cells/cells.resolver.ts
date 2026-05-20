@@ -50,9 +50,13 @@ export class CellsResolver {
   @Mutation(() => CellEntity)
   deactivateCellAssistant(
     @Args('cellId', { type: () => String }) cellId: string,
-    @Args('deactivateCellAssistantInput') deactivateCellAssistantInput: DeactivateCellAssistantInput,
+    @Args('deactivateCellAssistantInput')
+    deactivateCellAssistantInput: DeactivateCellAssistantInput,
   ) {
-    return this.cellsService.deactivateAssistant(cellId, deactivateCellAssistantInput);
+    return this.cellsService.deactivateAssistant(
+      cellId,
+      deactivateCellAssistantInput,
+    );
   }
 
   @Mutation(() => CellEntity)

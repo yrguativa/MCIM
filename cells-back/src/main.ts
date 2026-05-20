@@ -5,8 +5,16 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   try {
     const app = await NestFactory.create(AppModule);
+    const corsOrigin = process.env.CORS_ORIGIN?.split(',').map((o) =>
+      o.trim(),
+    ) || [
+      'http://localhost:5173',
+      'http://localhost:4173',
+      'http://127.0.0.1:5173',
+      'http://127.0.0.1:4173',
+    ];
     app.enableCors({
-      origin: ['http://localhost:5173', 'http://localhost:4173', 'http://127.0.0.1:5173', 'http://127.0.0.1:4173'],
+      origin: corsOrigin,
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
       credentials: true,
     });
@@ -20,7 +28,9 @@ async function bootstrap() {
     const url = await app.getUrl();
     console.log(`🚀 Server running at: ${url}`);
     console.log(`🚀 GraphQL endpoint: ${url}/graphql`);
-    console.log(`💡 Use Apollo Studio or Postman to query: POST ${url}/graphql`);
+    console.log(
+      `💡 Use Apollo Studio or Postman to query: POST ${url}/graphql`,
+    );
   } catch (error) {
     console.error('Error starting server:', error);
   }

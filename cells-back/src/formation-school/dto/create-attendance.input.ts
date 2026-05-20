@@ -1,5 +1,11 @@
 import { InputType, Field, ID } from '@nestjs/graphql';
-import { IsString, IsNotEmpty, IsOptional, IsDate, IsBoolean } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsDate,
+  IsBoolean,
+} from 'class-validator';
 
 @InputType()
 export class CreateAttendanceInput {

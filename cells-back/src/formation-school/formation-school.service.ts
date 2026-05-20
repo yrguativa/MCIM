@@ -1,4 +1,9 @@
-import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Cycle } from './schemas/cycle.schema';
@@ -14,13 +19,29 @@ import { StudentCourseHistory } from './schemas/student-course-history.schema';
 import { CreateCycleInput } from './dto/create-cycle.input';
 import { CreateLevelInput } from './dto/create-level.input';
 import { CreateClassroomInput } from './dto/create-classroom.input';
-import { CreateScheduleInput, UpdateScheduleInput, UpdateScheduleInputWithId } from './dto/create-schedule.input';
+import {
+  CreateScheduleInput,
+  UpdateScheduleInput,
+  UpdateScheduleInputWithId,
+} from './dto/create-schedule.input';
 import { CreateCourseInput } from './dto/create-course.input';
-import { CreateStudentInput, UpdateStudentInput } from './dto/create-student.input';
-import { EnrollStudentInput, UpdateEnrollmentInput } from './dto/enroll-student.input';
-import { CreateTeacherAssignmentInput, EnrollTeacherInput } from './dto/teacher-assignment.input';
+import {
+  CreateStudentInput,
+  UpdateStudentInput,
+} from './dto/create-student.input';
+import {
+  EnrollStudentInput,
+  UpdateEnrollmentInput,
+} from './dto/enroll-student.input';
+import {
+  CreateTeacherAssignmentInput,
+  EnrollTeacherInput,
+} from './dto/teacher-assignment.input';
 import { CreateAttendanceInput } from './dto/create-attendance.input';
-import { CreateStudentCourseHistoryInput, UpdateStudentCourseHistoryInput } from './dto/create-student-course-history.input';
+import {
+  CreateStudentCourseHistoryInput,
+  UpdateStudentCourseHistoryInput,
+} from './dto/create-student-course-history.input';
 import { CycleEntity } from './entities/cycle.entity';
 import { LevelEntity } from './entities/level.entity';
 import { ClassroomEntity } from './entities/classroom.entity';
@@ -42,10 +63,13 @@ export class FormationSchoolService {
     @InjectModel(Schedule.name) private scheduleModel: Model<Schedule>,
     @InjectModel(Course.name) private courseModel: Model<Course>,
     @InjectModel(Student.name) private studentModel: Model<Student>,
-    @InjectModel(StudentEnrollment.name) private enrollmentModel: Model<StudentEnrollment>,
-    @InjectModel(TeacherAssignment.name) private teacherAssignmentModel: Model<TeacherAssignment>,
+    @InjectModel(StudentEnrollment.name)
+    private enrollmentModel: Model<StudentEnrollment>,
+    @InjectModel(TeacherAssignment.name)
+    private teacherAssignmentModel: Model<TeacherAssignment>,
     @InjectModel(Attendance.name) private attendanceModel: Model<Attendance>,
-    @InjectModel(StudentCourseHistory.name) private courseHistoryModel: Model<StudentCourseHistory>,
+    @InjectModel(StudentCourseHistory.name)
+    private courseHistoryModel: Model<StudentCourseHistory>,
   ) {}
 
   private toCycleEntity(cycle: Cycle & { _id: unknown }): CycleEntity {
@@ -74,7 +98,9 @@ export class FormationSchoolService {
     };
   }
 
-  private toClassroomEntity(classroom: Classroom & { _id: unknown }): ClassroomEntity {
+  private toClassroomEntity(
+    classroom: Classroom & { _id: unknown },
+  ): ClassroomEntity {
     return {
       id: classroom._id?.toString() ?? '',
       name: classroom.name,
@@ -85,7 +111,9 @@ export class FormationSchoolService {
     };
   }
 
-  private toScheduleEntity(schedule: Schedule & { _id: unknown }): ScheduleEntity {
+  private toScheduleEntity(
+    schedule: Schedule & { _id: unknown },
+  ): ScheduleEntity {
     return {
       id: schedule._id?.toString() ?? '',
       dayOfWeek: schedule.dayOfWeek,
@@ -116,19 +144,30 @@ export class FormationSchoolService {
 
   private toStudentEntity(student: any): StudentEntity {
     const disciple = student.discipleId;
-    const discipleName = disciple && typeof disciple === 'object' ? `${disciple.name || ''} ${disciple.lastName || ''}`.trim() : undefined;
+    const discipleName =
+      disciple && typeof disciple === 'object'
+        ? `${disciple.name || ''} ${disciple.lastName || ''}`.trim()
+        : undefined;
     return {
       id: student._id?.toString() ?? '',
-      discipleId: typeof student.discipleId === 'string' ? student.discipleId : student.discipleId?._id?.toString() ?? '',
+      discipleId:
+        typeof student.discipleId === 'string'
+          ? student.discipleId
+          : (student.discipleId?._id?.toString() ?? ''),
       discipleName: discipleName,
-      currentLevelId: typeof student.currentLevelId === 'string' ? student.currentLevelId : student.currentLevelId?._id?.toString() ?? '',
+      currentLevelId:
+        typeof student.currentLevelId === 'string'
+          ? student.currentLevelId
+          : (student.currentLevelId?._id?.toString() ?? ''),
       status: student.status || 'active',
       createdUser: student.createdUser,
       createdDate: student.createdDate,
     };
   }
 
-  private toStudentEnrollmentEntity(enrollment: StudentEnrollment & { _id: unknown }): StudentEnrollmentEntity {
+  private toStudentEnrollmentEntity(
+    enrollment: StudentEnrollment & { _id: unknown },
+  ): StudentEnrollmentEntity {
     return {
       id: enrollment._id?.toString() ?? '',
       studentId: enrollment.studentId,
@@ -141,7 +180,9 @@ export class FormationSchoolService {
     };
   }
 
-  private toTeacherAssignmentEntity(assignment: TeacherAssignment & { _id: unknown }): TeacherAssignmentEntity {
+  private toTeacherAssignmentEntity(
+    assignment: TeacherAssignment & { _id: unknown },
+  ): TeacherAssignmentEntity {
     return {
       id: assignment._id?.toString() ?? '',
       teacherId: assignment.teacherId,
@@ -153,7 +194,9 @@ export class FormationSchoolService {
     };
   }
 
-  private toAttendanceEntity(attendance: Attendance & { _id: unknown }): AttendanceEntity {
+  private toAttendanceEntity(
+    attendance: Attendance & { _id: unknown },
+  ): AttendanceEntity {
     return {
       id: attendance._id?.toString() ?? '',
       studentEnrollmentId: attendance.studentEnrollmentId,
@@ -166,7 +209,9 @@ export class FormationSchoolService {
     };
   }
 
-  private toStudentCourseHistoryEntity(history: StudentCourseHistory & { _id: unknown }): StudentCourseHistoryEntity {
+  private toStudentCourseHistoryEntity(
+    history: StudentCourseHistory & { _id: unknown },
+  ): StudentCourseHistoryEntity {
     return {
       id: history._id?.toString() ?? '',
       studentId: history.studentId,
@@ -188,8 +233,11 @@ export class FormationSchoolService {
   }
 
   async findAllCycles(): Promise<CycleEntity[]> {
-    const cycles = await this.cycleModel.find().sort({ createdDate: -1 }).exec();
-    return cycles.map(c => this.toCycleEntity(c));
+    const cycles = await this.cycleModel
+      .find()
+      .sort({ createdDate: -1 })
+      .exec();
+    return cycles.map((c) => this.toCycleEntity(c));
   }
 
   async findCycleById(id: string): Promise<CycleEntity> {
@@ -210,82 +258,113 @@ export class FormationSchoolService {
   }
 
   async findLevelsByCycle(cycleId: string): Promise<LevelEntity[]> {
-    const levels = await this.levelModel.find({ cycleId }).sort({ order: 1 }).exec();
-    return levels.map(l => this.toLevelEntity(l));
+    const levels = await this.levelModel
+      .find({ cycleId })
+      .sort({ order: 1 })
+      .exec();
+    return levels.map((l) => this.toLevelEntity(l));
   }
 
   async findAllLevels(): Promise<LevelEntity[]> {
     const levels = await this.levelModel.find().sort({ order: 1 }).exec();
-    return levels.map(l => this.toLevelEntity(l));
+    return levels.map((l) => this.toLevelEntity(l));
   }
 
   async createClassroom(input: CreateClassroomInput): Promise<ClassroomEntity> {
-    const classroom = new this.classroomModel({ ...input, createdDate: new Date() });
+    const classroom = new this.classroomModel({
+      ...input,
+      createdDate: new Date(),
+    });
     const saved = await classroom.save();
     return this.toClassroomEntity(saved);
   }
 
   async findAllClassrooms(): Promise<ClassroomEntity[]> {
     const classrooms = await this.classroomModel.find().exec();
-    return classrooms.map(c => this.toClassroomEntity(c));
+    return classrooms.map((c) => this.toClassroomEntity(c));
   }
 
   async createSchedule(input: CreateScheduleInput): Promise<ScheduleEntity> {
-    const schedule = new this.scheduleModel({ ...input, createdDate: new Date() });
+    const schedule = new this.scheduleModel({
+      ...input,
+      createdDate: new Date(),
+    });
     const saved = await schedule.save();
     return this.toScheduleEntity(saved);
   }
 
-  async updateSchedule(input: UpdateScheduleInputWithId): Promise<ScheduleEntity> {
+  async updateSchedule(
+    input: UpdateScheduleInputWithId,
+  ): Promise<ScheduleEntity> {
     const schedule = await this.scheduleModel.findById(input.id).exec();
     if (!schedule) {
       throw new NotFoundException('Horario no encontrado');
     }
-    
+
     if (input.dayOfWeek !== undefined) schedule.dayOfWeek = input.dayOfWeek;
     if (input.startTime !== undefined) schedule.startTime = input.startTime;
     if (input.endTime !== undefined) schedule.endTime = input.endTime;
     if (input.levelId !== undefined) schedule.levelId = input.levelId;
-    
+
     const saved = await schedule.save();
     return this.toScheduleEntity(saved);
   }
 
   async findAllSchedules(): Promise<ScheduleEntity[]> {
     const schedules = await this.scheduleModel.find().exec();
-    return schedules.map(s => this.toScheduleEntity(s));
+    return schedules.map((s) => this.toScheduleEntity(s));
   }
 
   async createStudent(input: CreateStudentInput): Promise<StudentEntity> {
-    const existingStudent = await this.studentModel.findOne({ discipleId: input.discipleId }).exec();
+    const existingStudent = await this.studentModel
+      .findOne({ discipleId: input.discipleId })
+      .exec();
     if (existingStudent) {
-      throw new BadRequestException('Ya existe un estudiante asociado a este discípulo');
+      throw new BadRequestException(
+        'Ya existe un estudiante asociado a este discípulo',
+      );
     }
-    
-    const student = new this.studentModel({ ...input, createdDate: new Date() });
+
+    const student = new this.studentModel({
+      ...input,
+      createdDate: new Date(),
+    });
     const saved = await student.save();
     return this.toStudentEntity(saved);
   }
 
   async findAllStudents(): Promise<StudentEntity[]> {
-    const students = await this.studentModel.find().populate('discipleId currentLevelId').exec();
-    return students.map(s => this.toStudentEntity(s));
+    const students = await this.studentModel
+      .find()
+      .populate('discipleId currentLevelId')
+      .exec();
+    return students.map((s) => this.toStudentEntity(s));
   }
 
   async findStudentById(id: string): Promise<StudentEntity> {
-    const student = await this.studentModel.findById(id).populate('discipleId currentLevelId').exec();
+    const student = await this.studentModel
+      .findById(id)
+      .populate('discipleId currentLevelId')
+      .exec();
     if (!student) throw new NotFoundException(`Student ${id} not found`);
     return this.toStudentEntity(student);
   }
 
-  async findStudentByDiscipleId(discipleId: string): Promise<StudentEntity | null> {
-    const student = await this.studentModel.findOne({ discipleId }).populate('currentLevelId').exec();
+  async findStudentByDiscipleId(
+    discipleId: string,
+  ): Promise<StudentEntity | null> {
+    const student = await this.studentModel
+      .findOne({ discipleId })
+      .populate('currentLevelId')
+      .exec();
     return student ? this.toStudentEntity(student) : null;
   }
 
   async updateStudent(input: UpdateStudentInput): Promise<StudentEntity> {
     const { id, ...updateData } = input;
-    const updated = await this.studentModel.findByIdAndUpdate(id, updateData, { new: true }).exec();
+    const updated = await this.studentModel
+      .findByIdAndUpdate(id, updateData, { new: true })
+      .exec();
     if (!updated) throw new NotFoundException(`Student ${id} not found`);
     return this.toStudentEntity(updated);
   }
@@ -302,30 +381,43 @@ export class FormationSchoolService {
       input.scheduleId,
     );
     if (hasConflict) {
-      throw new BadRequestException('Ya existe una clase en este salón con este horario');
+      throw new BadRequestException(
+        'Ya existe una clase en este salón con este horario',
+      );
     }
-    
+
     const course = new this.courseModel({ ...input, createdDate: new Date() });
     const saved = await course.save();
     return this.toCourseEntity(saved);
   }
 
-  async checkScheduleConflict(classroomId: string, scheduleId: string): Promise<boolean> {
-    const existing = await this.courseModel.findOne({
-      classroomId,
-      scheduleId,
-    }).exec();
+  async checkScheduleConflict(
+    classroomId: string,
+    scheduleId: string,
+  ): Promise<boolean> {
+    const existing = await this.courseModel
+      .findOne({
+        classroomId,
+        scheduleId,
+      })
+      .exec();
     return !!existing;
   }
 
   async findCoursesByCycle(cycleId: string): Promise<CourseEntity[]> {
-    const courses = await this.courseModel.find({ cycleId }).populate('levelId teacherId classroomId scheduleId').exec();
-    return courses.map(c => this.toCourseEntity(c));
+    const courses = await this.courseModel
+      .find({ cycleId })
+      .populate('levelId teacherId classroomId scheduleId')
+      .exec();
+    return courses.map((c) => this.toCourseEntity(c));
   }
 
   async findCoursesByTeacher(teacherId: string): Promise<CourseEntity[]> {
-    const courses = await this.courseModel.find({ teacherId }).populate('levelId classroomId scheduleId cycleId').exec();
-    return courses.map(c => this.toCourseEntity(c));
+    const courses = await this.courseModel
+      .find({ teacherId })
+      .populate('levelId classroomId scheduleId cycleId')
+      .exec();
+    return courses.map((c) => this.toCourseEntity(c));
   }
 
   async generateQRCode(courseId: string): Promise<CourseEntity> {
@@ -333,21 +425,21 @@ export class FormationSchoolService {
       courseId,
       expiration: Date.now() + 15 * 60 * 1000,
     });
-    
+
     const qrCode = await QRCode.toDataURL(qrData);
     const qrExpiration = new Date(Date.now() + 15 * 60 * 1000);
-    
-    const updated = await this.courseModel.findByIdAndUpdate(
-      courseId,
-      { qrCode, qrExpiration },
-      { new: true },
-    ).exec();
-    
+
+    const updated = await this.courseModel
+      .findByIdAndUpdate(courseId, { qrCode, qrExpiration }, { new: true })
+      .exec();
+
     if (!updated) throw new NotFoundException(`Course ${courseId} not found`);
     return this.toCourseEntity(updated);
   }
 
-  async enrollStudent(input: EnrollStudentInput): Promise<StudentEnrollmentEntity> {
+  async enrollStudent(
+    input: EnrollStudentInput,
+  ): Promise<StudentEnrollmentEntity> {
     const enrollment = new this.enrollmentModel({
       ...input,
       enrollmentDate: new Date(),
@@ -357,20 +449,28 @@ export class FormationSchoolService {
     return this.toStudentEnrollmentEntity(saved);
   }
 
-  async enrollTeacher(input: EnrollTeacherInput): Promise<TeacherAssignmentEntity> {
+  async enrollTeacher(
+    input: EnrollTeacherInput,
+  ): Promise<TeacherAssignmentEntity> {
     const type = input.type || 'teacher';
-    
-    const existingAssignment = await this.teacherAssignmentModel.findOne({
-      teacherId: input.teacherId,
-      type: type,
-      active: true,
-    }).exec();
+
+    const existingAssignment = await this.teacherAssignmentModel
+      .findOne({
+        teacherId: input.teacherId,
+        type: type,
+        active: true,
+      })
+      .exec();
 
     if (existingAssignment) {
       if (type === 'teacher') {
-        throw new BadRequestException('Este disciple ya está asignado como maestro');
+        throw new BadRequestException(
+          'Este disciple ya está asignado como maestro',
+        );
       } else {
-        throw new BadRequestException('Este disciple ya está asignado como tutor');
+        throw new BadRequestException(
+          'Este disciple ya está asignado como tutor',
+        );
       }
     }
 
@@ -386,71 +486,114 @@ export class FormationSchoolService {
 
   async findAllTeacherAssignments(): Promise<TeacherAssignmentEntity[]> {
     const assignments = await this.teacherAssignmentModel.find().exec();
-    return assignments.map(a => this.toTeacherAssignmentEntity(a));
+    return assignments.map((a) => this.toTeacherAssignmentEntity(a));
   }
 
-  async findTeacherAssignmentsByTeacher(teacherId: string): Promise<TeacherAssignmentEntity[]> {
-    const assignments = await this.teacherAssignmentModel.find({ teacherId }).exec();
-    return assignments.map(a => this.toTeacherAssignmentEntity(a));
+  async findTeacherAssignmentsByTeacher(
+    teacherId: string,
+  ): Promise<TeacherAssignmentEntity[]> {
+    const assignments = await this.teacherAssignmentModel
+      .find({ teacherId })
+      .exec();
+    return assignments.map((a) => this.toTeacherAssignmentEntity(a));
   }
 
-  async updateTeacherAssignment(input: { id: string; active?: boolean; type?: string }): Promise<TeacherAssignmentEntity> {
+  async updateTeacherAssignment(input: {
+    id: string;
+    active?: boolean;
+    type?: string;
+  }): Promise<TeacherAssignmentEntity> {
     const { id, ...updateData } = input;
-    const updated = await this.teacherAssignmentModel.findByIdAndUpdate(id, updateData, { new: true }).exec();
-    if (!updated) throw new NotFoundException(`Teacher assignment ${id} not found`);
+    const updated = await this.teacherAssignmentModel
+      .findByIdAndUpdate(id, updateData, { new: true })
+      .exec();
+    if (!updated)
+      throw new NotFoundException(`Teacher assignment ${id} not found`);
     return this.toTeacherAssignmentEntity(updated);
   }
 
   async deleteTeacherAssignment(id: string): Promise<boolean> {
-    const result = await this.teacherAssignmentModel.findByIdAndDelete(id).exec();
-    if (!result) throw new NotFoundException(`Teacher assignment ${id} not found`);
+    const result = await this.teacherAssignmentModel
+      .findByIdAndDelete(id)
+      .exec();
+    if (!result)
+      throw new NotFoundException(`Teacher assignment ${id} not found`);
     return true;
   }
 
-  async findEnrollmentsByCourse(courseId: string): Promise<StudentEnrollmentEntity[]> {
-    const enrollments = await this.enrollmentModel.find({ courseId: courseId }).populate('studentId').exec();
-    return enrollments.map(e => this.toStudentEnrollmentEntity(e));
+  async findEnrollmentsByCourse(
+    courseId: string,
+  ): Promise<StudentEnrollmentEntity[]> {
+    const enrollments = await this.enrollmentModel
+      .find({ courseId: courseId })
+      .populate('studentId')
+      .exec();
+    return enrollments.map((e) => this.toStudentEnrollmentEntity(e));
   }
 
-  async findEnrollmentsByStudent(studentId: string): Promise<StudentEnrollmentEntity[]> {
-    const enrollments = await this.enrollmentModel.find({ studentId }).populate('courseId').exec();
-    return enrollments.map(e => this.toStudentEnrollmentEntity(e));
+  async findEnrollmentsByStudent(
+    studentId: string,
+  ): Promise<StudentEnrollmentEntity[]> {
+    const enrollments = await this.enrollmentModel
+      .find({ studentId })
+      .populate('courseId')
+      .exec();
+    return enrollments.map((e) => this.toStudentEnrollmentEntity(e));
   }
 
-  async updateEnrollment(input: UpdateEnrollmentInput): Promise<StudentEnrollmentEntity> {
+  async updateEnrollment(
+    input: UpdateEnrollmentInput,
+  ): Promise<StudentEnrollmentEntity> {
     const { id, ...updateData } = input;
-    const updated = await this.enrollmentModel.findByIdAndUpdate(id, updateData, { new: true }).exec();
+    const updated = await this.enrollmentModel
+      .findByIdAndUpdate(id, updateData, { new: true })
+      .exec();
     if (!updated) throw new NotFoundException(`Enrollment ${id} not found`);
     return this.toStudentEnrollmentEntity(updated);
   }
 
-  async calculateFinalGrade(enrollmentId: string, cycleRequiredClasses: number): Promise<number> {
-    const attendanceCount = await this.attendanceModel.countDocuments({
-      studentEnrollmentId: enrollmentId,
-      attended: true,
-    }).exec();
-    
+  async calculateFinalGrade(
+    enrollmentId: string,
+    cycleRequiredClasses: number,
+  ): Promise<number> {
+    const attendanceCount = await this.attendanceModel
+      .countDocuments({
+        studentEnrollmentId: enrollmentId,
+        attended: true,
+      })
+      .exec();
+
     const grade = (attendanceCount / cycleRequiredClasses) * 100;
-    
-    await this.enrollmentModel.findByIdAndUpdate(enrollmentId, { finalGrade: grade });
-    
+
+    await this.enrollmentModel.findByIdAndUpdate(enrollmentId, {
+      finalGrade: grade,
+    });
+
     return grade;
   }
 
-  async promoteToNextLevel(enrollmentId: string, nextLevelId: string, userId: string): Promise<StudentEnrollmentEntity> {
-    const currentEnrollment = await this.enrollmentModel.findById(enrollmentId).exec();
+  async promoteToNextLevel(
+    enrollmentId: string,
+    nextLevelId: string,
+    userId: string,
+  ): Promise<StudentEnrollmentEntity> {
+    const currentEnrollment = await this.enrollmentModel
+      .findById(enrollmentId)
+      .exec();
     if (!currentEnrollment) {
       throw new NotFoundException('Enrollment not found');
     }
-    
+
     if ((currentEnrollment.finalGrade ?? 0) < 75) {
-      throw new BadRequestException('El estudiante no ha completado el curso con la nota mínima requerida');
+      throw new BadRequestException(
+        'El estudiante no ha completado el curso con la nota mínima requerida',
+      );
     }
-    
+
     await this.enrollmentModel.findByIdAndUpdate(enrollmentId, {
       status: 'completed',
     });
-    
+
     const newEnrollment = new this.enrollmentModel({
       studentId: currentEnrollment.studentId,
       courseId: '',
@@ -459,12 +602,14 @@ export class FormationSchoolService {
       createdUser: userId,
       createdDate: new Date(),
     });
-    
+
     const saved = await newEnrollment.save();
     return this.toStudentEnrollmentEntity(saved);
   }
 
-  async createAttendance(input: CreateAttendanceInput): Promise<AttendanceEntity> {
+  async createAttendance(
+    input: CreateAttendanceInput,
+  ): Promise<AttendanceEntity> {
     const attendance = new this.attendanceModel({
       ...input,
       createdDate: new Date(),
@@ -474,18 +619,25 @@ export class FormationSchoolService {
   }
 
   async findAttendanceByCourse(courseId: string): Promise<AttendanceEntity[]> {
-    const attendances = await this.attendanceModel.find({ courseId: courseId })
+    const attendances = await this.attendanceModel
+      .find({ courseId: courseId })
       .populate('studentEnrollmentId')
       .exec();
-    return attendances.map(a => this.toAttendanceEntity(a));
+    return attendances.map((a) => this.toAttendanceEntity(a));
   }
 
-  async findAttendanceByEnrollment(enrollmentId: string): Promise<AttendanceEntity[]> {
-    const attendances = await this.attendanceModel.find({ studentEnrollmentId: enrollmentId }).exec();
-    return attendances.map(a => this.toAttendanceEntity(a));
+  async findAttendanceByEnrollment(
+    enrollmentId: string,
+  ): Promise<AttendanceEntity[]> {
+    const attendances = await this.attendanceModel
+      .find({ studentEnrollmentId: enrollmentId })
+      .exec();
+    return attendances.map((a) => this.toAttendanceEntity(a));
   }
 
-  async createCourseHistory(input: CreateStudentCourseHistoryInput): Promise<StudentCourseHistoryEntity> {
+  async createCourseHistory(
+    input: CreateStudentCourseHistoryInput,
+  ): Promise<StudentCourseHistoryEntity> {
     const history = new this.courseHistoryModel({
       ...input,
       enrollmentDate: input.enrollmentDate || new Date(),
@@ -495,14 +647,23 @@ export class FormationSchoolService {
     return this.toStudentCourseHistoryEntity(saved);
   }
 
-  async findCourseHistoriesByStudent(studentId: string): Promise<StudentCourseHistoryEntity[]> {
-    const histories = await this.courseHistoryModel.find({ studentId }).populate('courseId').exec();
-    return histories.map(h => this.toStudentCourseHistoryEntity(h));
+  async findCourseHistoriesByStudent(
+    studentId: string,
+  ): Promise<StudentCourseHistoryEntity[]> {
+    const histories = await this.courseHistoryModel
+      .find({ studentId })
+      .populate('courseId')
+      .exec();
+    return histories.map((h) => this.toStudentCourseHistoryEntity(h));
   }
 
-  async updateCourseHistory(input: UpdateStudentCourseHistoryInput): Promise<StudentCourseHistoryEntity> {
+  async updateCourseHistory(
+    input: UpdateStudentCourseHistoryInput,
+  ): Promise<StudentCourseHistoryEntity> {
     const { id, ...updateData } = input;
-    const updated = await this.courseHistoryModel.findByIdAndUpdate(id, updateData, { new: true }).exec();
+    const updated = await this.courseHistoryModel
+      .findByIdAndUpdate(id, updateData, { new: true })
+      .exec();
     if (!updated) throw new NotFoundException(`Course history ${id} not found`);
     return this.toStudentCourseHistoryEntity(updated);
   }
