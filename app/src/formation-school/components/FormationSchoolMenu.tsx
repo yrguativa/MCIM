@@ -11,6 +11,7 @@ import {
   QrCode,
   TrendingUp,
   ChevronRight,
+  Badge,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -168,13 +169,16 @@ const FormationSchoolMenu: React.FC = () => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger asChild title="Proximamente">
         <Button
           variant="ghost"
           className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:text-primary hover:bg-muted transition-all w-full justify-start"
         >
           <GraduationCap className="h-4 w-4" />
           <span className="flex-1 text-left">{t('formation-school.title')}</span>
+          <Badge className="ml-auto flex  shrink-0 items-center justify-center rounded-full">
+            Proximamente
+          </Badge>
           <ChevronRight className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>

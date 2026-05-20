@@ -1,10 +1,9 @@
 import React from "react";
-import { Bell, CalendarDays, Home, LineChart, Package, Package2, ShoppingCart, Users } from "lucide-react";
+import { Bell, CalendarDays, Home, LineChart, Package, Package2, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import FormationSchoolMenu from "@/src/formation-school/components/FormationSchoolMenu";
 
 const MenuMovil: React.FC = () => {
   const { t } = useTranslation();
@@ -31,23 +30,22 @@ const MenuMovil: React.FC = () => {
               {t('menu.dashboard')}
             </NavLink>
             <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
-              <ShoppingCart className="h-4 w-4" />
+              <LineChart className="h-4 w-4" />
               Reuniones Asistencia
               <Badge className="ml-auto flex  shrink-0 items-center justify-center rounded-full">
-                Comming soon
+                Proximamente
               </Badge>
             </a>
-            <a
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-            >
+
+            <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
               <LineChart className="h-4 w-4" />
-              EF MCIM
+              {t('formation-school.title')}
               <Badge className="ml-auto flex  shrink-0 items-center justify-center rounded-full">
-                Comming soon
+                Proximamente
               </Badge>
             </a>
-            <FormationSchoolMenu />
+
+            {/* <FormationSchoolMenu /> */}
             <NavLink to="/cells" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-primary transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}>
               <Package className="h-4 w-4" />
               {t('menu.cells')}
@@ -55,6 +53,9 @@ const MenuMovil: React.FC = () => {
             <NavLink to="/events" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}>
               <CalendarDays className="h-4 w-4" />
               {t('menu.events')}
+              <Badge className="ml-auto flex  shrink-0 items-center justify-center rounded-full">
+                Proximamente
+              </Badge>
             </NavLink>
             <NavLink to="/disciples" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}>
               <Users className="h-4 w-4" />
