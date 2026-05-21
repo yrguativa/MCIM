@@ -2,6 +2,7 @@ import React, { Suspense, useEffect } from 'react';
 import { ProgressIndeterminate } from "@/components/ui/progress-indeterminate"
 import MenuMain from '@/src/dashboard/components/MenuMain';
 import MenuMovil from '@/src/dashboard/components/MenuMovil';
+import MobileNavBar from '@/src/dashboard/components/MobileNavBar';
 
 import { useMinistryStore } from '@/src/ministries/store/ministries.store';
 import { useDiscipleStore } from '@/src/disciples/store/disciple.store';
@@ -25,12 +26,13 @@ const DashboardPage: React.FC = () => {
       <MenuMovil />
       <div className="flex flex-col">
         <MenuMain />
-        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
+        <main className="flex flex-1 flex-col gap-4 p-4 pb-20 lg:gap-6 lg:p-6 lg:pb-6">
           <Suspense fallback={<ProgressIndeterminate />}>
             <DashboardRoutes />
           </Suspense>
         </main>
       </div>
+      <MobileNavBar />
     </div>
 
   )

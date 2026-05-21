@@ -1,12 +1,12 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import * as Avatar from "@radix-ui/react-avatar";
-import { Home, LineChart, Menu, Package, Package2, Search, ShoppingCart, Users } from "lucide-react";
+import { NavLink } from "react-router-dom";
+import { CalendarDays, Home, Languages, LineChart, Menu, Package, Package2, Search, Users } from "lucide-react";
 import { useAuthStore } from "@/src/app/stores";
 import { useTranslation } from "react-i18next";
 
@@ -34,8 +34,13 @@ const getColorFromName = (name: string | null | undefined): string => {
 };
 
 const MenuMain: React.FC = () => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const { user :userState, logout} = useAuthStore();
+
+    const toggleLanguage = () => {
+        const newLang = i18n.language === 'en' ? 'es' : 'en';
+        i18n.changeLanguage(newLang);
+    };
     return (
         <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
             <Sheet>
@@ -49,70 +54,58 @@ const MenuMain: React.FC = () => {
                         <span className="sr-only">Toggle navigation menu</span>
                     </Button>
                 </SheetTrigger>
-                <SheetContent side="left" className="flex flex-col">
-                    <nav className="grid gap-2 text-lg font-medium">
-                        <a
-                            href="#"
-                            className="flex items-center gap-2 text-lg font-semibold"
-                        >
+                <SheetContent side="left" className="flex flex-col gap-2 p-4">
+                    <div className="flex h-14 items-center -mx-2 px-2 lg:h-[60px]">
+                        <a href="/" className="flex items-center gap-2 font-semibold">
                             <Package2 className="h-6 w-6" />
-                            <span className="sr-only">Acme Inc</span>
+                            <span>App Administración</span>
                         </a>
-                        <a
-                            href="#"
-                            className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-                        >
-                            <Home className="h-5 w-5" />
-                            {t('menu.dashboard')}
-                        </a>
-                        <a
-                            href="#"
-                            className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
-                        >
-                            <ShoppingCart className="h-5 w-5" />
-                            Orders
-                            <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                                6
-                            </Badge>
-                        </a>
-                        <a
-                            href="#"
-                            className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-                        >
-                            <Package className="h-5 w-5" />
-                            Products
-                        </a>
-                        <a
-                            href="#"
-                            className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-                        >
-                            <Users className="h-5 w-5" />
-                            Customers
-                        </a>
-                        <a
-                            href="#"
-                            className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-                        >
-                            <LineChart className="h-5 w-5" />
-                            Analytics
-                        </a>
-                    </nav>
-                    <div className="mt-auto">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Upgrade to Pro</CardTitle>
-                                <CardDescription>
-                                    Unlock all features and get unlimited access to our
-                                    support team.
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <Button size="sm" className="w-full">
-                                    Upgrade
-                                </Button>
-                            </CardContent>
-                        </Card>
                     </div>
+                    <nav className="grid items-start text-sm font-medium">
+                        <NavLink
+                            to="/"
+                            className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${isActive ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'}`}
+                        >
+                            <Home className="h-4 w-4" />
+                            {t('menu.dashboard')}
+                        </NavLink>
+                        <NavLink
+                            to="/cells"
+                            className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${isActive ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'}`}
+                        >
+                            <Package className="h-4 w-4" />
+                            {t('menu.cells')}
+                        </NavLink>
+                        <NavLink
+                            to="/cells/reports"
+                            className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${isActive ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'}`}
+                        >
+                            <LineChart className="h-4 w-4" />
+                            {t('menu.cellReports')}
+                        </NavLink>
+                        <NavLink
+                            to="/events"
+                            className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${isActive ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'}`}
+                        >
+                            <CalendarDays className="h-4 w-4" />
+                            {t('menu.events')}
+                            <Badge className="ml-auto flex shrink-0 items-center justify-center rounded-full">Proximamente</Badge>
+                        </NavLink>
+                        <NavLink
+                            to="/disciples"
+                            className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${isActive ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'}`}
+                        >
+                            <Users className="h-4 w-4" />
+                            {t('menu.disciples')}
+                        </NavLink>
+                        <NavLink
+                            to="/ministries"
+                            className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${isActive ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'}`}
+                        >
+                            <Package2 className="h-4 w-4" />
+                            {t('menu.ministries')}
+                        </NavLink>
+                    </nav>
                 </SheetContent>
             </Sheet>
             <div className="w-full flex-1">
@@ -162,6 +155,11 @@ const MenuMain: React.FC = () => {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>Configuraciones</DropdownMenuItem>
                     <DropdownMenuItem>Support</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={toggleLanguage} className="flex items-center gap-2">
+                        <Languages className="h-4 w-4" />
+                        {i18n.language === 'en' ? '🇪🇸 Español' : '🇬🇧 English'}
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={logout}>{t('menu.logout')}</DropdownMenuItem>
                 </DropdownMenuContent>
