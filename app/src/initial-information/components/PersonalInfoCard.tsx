@@ -341,7 +341,6 @@ const PersonalInfoCard: React.FC = () => {
                     }
                     className="rounded-lg border"
                     captionLayout="dropdown"
-                    initialFocus
                   />
                 </PopoverContent>
               </Popover>
