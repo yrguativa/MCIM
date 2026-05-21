@@ -339,6 +339,8 @@ const PersonalInfoCard: React.FC = () => {
                     disabled={(date) =>
                       date > new Date() || date < new Date("1900-01-01")
                     }
+                    className="rounded-lg border"
+                    captionLayout="dropdown"
                     initialFocus
                   />
                 </PopoverContent>
