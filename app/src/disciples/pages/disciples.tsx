@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import { Plus } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
-import { DisciplesColumnsTable } from '../components/disciplesColumnsTable';
+import { getDisciplesColumns } from '../components/disciplesColumnsTable';
 
 import TableComponent from '@/src/app/components/TableComponent';
 import { useDiscipleStore } from '../store/disciple.store';
@@ -14,6 +15,7 @@ import { useMinistryStore } from '@/src/ministries/store/ministries.store';
 import { useEffect, useState } from 'react';
 
 const Disciples: React.FC = () => {
+    const { t } = useTranslation();
     const discipleState = useDiscipleStore(state => state.Disciples);
     const getDisciples = useDiscipleStore(state => state.getDisciples);
     const { ministries, getMinistries } = useMinistryStore(state => state);
@@ -38,29 +40,29 @@ const Disciples: React.FC = () => {
     return (
         <>
             <div className="flex items-center justify-between mb-4">
-                <h1 className="text-lg font-semibold md:text-2xl">Discipulos</h1>
+                <h1 className="text-lg font-semibold md:text-2xl">{t("disciples.title")}</h1>
                 <Link to="/disciples/create" className={buttonVariants({ variant: "outline" }) + " mr-14"}>
-                    <Plus className="mr-2" />Nuevo Discipulo
+                    <Plus className="mr-2" />{t("disciples.list.new")}
                 </Link>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <Input
-                    placeholder="Filtrar por nombre..."
+                    placeholder={t("disciples.list.filterName")}
                     value={filterName}
                     onChange={(e) => setFilterName(e.target.value)}
                 />
                 <Input
-                    placeholder="Filtrar por identificación..."
+                    placeholder={t("disciples.list.filterIdentification")}
                     value={filterIdentification}
                     onChange={(e) => setFilterIdentification(e.target.value)}
                 />
                 <Select value={filterMinistry} onValueChange={setFilterMinistry}>
                     <SelectTrigger>
-                        <SelectValue placeholder="Filtrar por ministerio" />
+                        <SelectValue placeholder={t("disciples.list.filterMinistry")} />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="all">Todos los ministerios</SelectItem>
+                        <SelectItem value="all">{t("disciples.list.allMinistries")}</SelectItem>
                         {ministries.map(ministry => (
                             <SelectItem key={ministry.id} value={ministry.id}>
                                 {ministry.name}
@@ -73,7 +75,7 @@ const Disciples: React.FC = () => {
             <div className="flex items-center items-center justify-center text-start rounded-lg border border-dashed p-4 shadow-sm">
                 <TableComponent
                     data={filteredDisciples}
-                    columns={DisciplesColumnsTable}
+                    columns={getDisciplesColumns(t)}
                     defaultPageSize={20}
                 />
             </div>

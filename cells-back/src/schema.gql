@@ -11,6 +11,9 @@ type RecordCell {
   topic: String!
   date: DateTime!
   createdUser: String!
+  mode: String!
+  location: String
+  leader: String!
   assistants: [AssistantRecordCell!]
 }
 
@@ -457,6 +460,8 @@ input UpdateCellInput {
 input CreateRecordCellInput {
   topic: String!
   date: DateTime!
+  mode: String!
+  location: String
   createdUser: String!
   assistants: [CreateAssistantRecordCellInput!]
 }

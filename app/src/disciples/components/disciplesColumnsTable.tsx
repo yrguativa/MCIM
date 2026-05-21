@@ -5,21 +5,21 @@ import { Pen } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Disciple } from "../models/disciple";
 
-export const DisciplesColumnsTable: ColumnDef<Disciple>[] = [
+export const getDisciplesColumns = (t: (key: string) => string): ColumnDef<Disciple>[] => [
     {
-        header: "Nombres",
+        header: t("disciples.names"),
         accessorKey: "name",
     },
     {
-        header: "Apellidos",
+        header: t("disciples.lastName"),
         accessorKey: "lastName",
     },
     {
-        header: "Identificación",
+        header: t("disciples.identification"),
         accessorKey: "identification",
     },
     {
-        header: "Ministerio",
+        header: t("disciples.columns.ministry"),
         accessorKey: "ministryId",
         cell: (info) => {
             const ministryId = info.getValue() as string;
@@ -30,12 +30,12 @@ export const DisciplesColumnsTable: ColumnDef<Disciple>[] = [
     },
     {
         id: "Edit",
-        header: "Editar",
+        header: t("disciples.columns.edit"),
         accessorKey: "id",
         cell: (info) => {
             return (
                 <Link to={'/disciples/' + info.getValue()} className={buttonVariants({ variant: "secondary" }) + " mr-14"}>
-                    <Pen className="mr-2" />Editar
+                    <Pen className="mr-2" />{t("disciples.columns.edit")}
                 </Link>
             )
         }

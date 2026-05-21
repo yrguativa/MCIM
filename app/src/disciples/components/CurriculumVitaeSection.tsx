@@ -67,7 +67,7 @@ import {
 import { useDiscipleStore } from "../store/disciple.store";
 
 const CurriculumVitaeSection: React.FC = () => {
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
     const { control, setValue } = useFormContext();
     const { leaders } = useDiscipleStore();
     const hasChildren = useWatch({ control, name: "hasChildren" });
@@ -81,7 +81,7 @@ const CurriculumVitaeSection: React.FC = () => {
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <User className="h-5 w-5 text-primary" />
-                        Información Personal
+                        {t("disciples.cv.personalInfo")}
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -92,18 +92,18 @@ const CurriculumVitaeSection: React.FC = () => {
                             <FormItem>
                                 <FormLabel className="flex items-center gap-1.5">
                                     <Globe className="h-3.5 w-3.5 text-muted-foreground" />
-                                    Nacionalidad
+                                    {t("disciples.cv.nationality")}
                                 </FormLabel>
                                 <Select onValueChange={field.onChange} value={field.value || ""}>
                                     <FormControl>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Seleccione su nacionalidad" />
+                                            <SelectValue placeholder={t("disciples.cv.placeholders.nationality")} />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="COLOMBIAN">Colombiana</SelectItem>
-                                        <SelectItem value="VENEZUELAN">Venezolana</SelectItem>
-                                        <SelectItem value="FOREIGN">Extranjera</SelectItem>
+                                        <SelectItem value="COLOMBIAN">{t("initialInformation.nationality.COLOMBIAN")}</SelectItem>
+                                        <SelectItem value="VENEZUELAN">{t("initialInformation.nationality.VENEZUELAN")}</SelectItem>
+                                        <SelectItem value="FOREIGN">{t("initialInformation.nationality.FOREIGN")}</SelectItem>
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -118,17 +118,17 @@ const CurriculumVitaeSection: React.FC = () => {
                             <FormItem>
                                 <FormLabel className="flex items-center gap-1.5">
                                     <Heart className="h-3.5 w-3.5 text-muted-foreground" />
-                                    Género
+                                    {t("disciples.cv.gender")}
                                 </FormLabel>
                                 <Select onValueChange={field.onChange} value={field.value || ""}>
                                     <FormControl>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Seleccione su género" />
+                                            <SelectValue placeholder={t("disciples.cv.placeholders.gender")} />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="FEMALE">Femenino</SelectItem>
-                                        <SelectItem value="MALE">Masculino</SelectItem>
+                                        <SelectItem value="FEMALE">{t("initialInformation.gender.FEMALE")}</SelectItem>
+                                        <SelectItem value="MALE">{t("initialInformation.gender.MALE")}</SelectItem>
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -143,20 +143,20 @@ const CurriculumVitaeSection: React.FC = () => {
                             <FormItem>
                                 <FormLabel className="flex items-center gap-1.5">
                                     <Heart className="h-3.5 w-3.5 text-muted-foreground" />
-                                    Estado Civil
+                                    {t("disciples.cv.maritalStatus")}
                                 </FormLabel>
                                 <Select onValueChange={field.onChange} value={field.value || ""}>
                                     <FormControl>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Seleccione su estado civil" />
+                                            <SelectValue placeholder={t("disciples.cv.placeholders.maritalStatus")} />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="SINGLE">Soltero(a)</SelectItem>
-                                        <SelectItem value="MARRIED">Casado(a)</SelectItem>
-                                        <SelectItem value="WIDOWED">Viudo(a)</SelectItem>
-                                        <SelectItem value="FREE_UNION">Unión Libre</SelectItem>
-                                        <SelectItem value="DIVORCED">Divorciado(a)</SelectItem>
+                                        <SelectItem value="SINGLE">{t("initialInformation.maritalStatus.SINGLE")}</SelectItem>
+                                        <SelectItem value="MARRIED">{t("initialInformation.maritalStatus.MARRIED")}</SelectItem>
+                                        <SelectItem value="WIDOWED">{t("initialInformation.maritalStatus.WIDOWED")}</SelectItem>
+                                        <SelectItem value="FREE_UNION">{t("initialInformation.maritalStatus.FREE_UNION")}</SelectItem>
+                                        <SelectItem value="DIVORCED">{t("initialInformation.maritalStatus.DIVORCED")}</SelectItem>
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -171,7 +171,7 @@ const CurriculumVitaeSection: React.FC = () => {
                             <FormItem>
                                 <FormLabel className="flex items-center gap-1.5">
                                     <Baby className="h-3.5 w-3.5 text-muted-foreground" />
-                                    ¿Tiene hijos?
+                                    {t("disciples.cv.hasChildren")}
                                 </FormLabel>
                                 <FormControl>
                                     <RadioGroup
@@ -181,11 +181,11 @@ const CurriculumVitaeSection: React.FC = () => {
                                     >
                                         <div className="flex items-center space-x-2">
                                             <RadioGroupItem value="YES" id="cv-hasChildren-yes" />
-                                            <Label htmlFor="cv-hasChildren-yes">Sí</Label>
+                                            <Label htmlFor="cv-hasChildren-yes">{t("disciples.cv.yes")}</Label>
                                         </div>
                                         <div className="flex items-center space-x-2">
                                             <RadioGroupItem value="NO" id="cv-hasChildren-no" />
-                                            <Label htmlFor="cv-hasChildren-no">No</Label>
+                                            <Label htmlFor="cv-hasChildren-no">{t("disciples.cv.no")}</Label>
                                         </div>
                                     </RadioGroup>
                                 </FormControl>
@@ -202,7 +202,7 @@ const CurriculumVitaeSection: React.FC = () => {
                                 <FormItem>
                                     <FormLabel className="flex items-center gap-1.5">
                                         <Users className="h-3.5 w-3.5 text-muted-foreground" />
-                                        ¿Sus hijos asisten a la iglesia?
+                                        {t("disciples.cv.childrenAttendChurch")}
                                     </FormLabel>
                                     <FormControl>
                                         <RadioGroup
@@ -212,11 +212,11 @@ const CurriculumVitaeSection: React.FC = () => {
                                         >
                                             <div className="flex items-center space-x-2">
                                                 <RadioGroupItem value="YES" id="cv-childrenChurch-yes" />
-                                                <Label htmlFor="cv-childrenChurch-yes">Sí</Label>
+                                                <Label htmlFor="cv-childrenChurch-yes">{t("disciples.cv.yes")}</Label>
                                             </div>
                                             <div className="flex items-center space-x-2">
                                                 <RadioGroupItem value="NO" id="cv-childrenChurch-no" />
-                                                <Label htmlFor="cv-childrenChurch-no">No</Label>
+                                                <Label htmlFor="cv-childrenChurch-no">{t("disciples.cv.no")}</Label>
                                             </div>
                                         </RadioGroup>
                                     </FormControl>
@@ -233,12 +233,12 @@ const CurriculumVitaeSection: React.FC = () => {
                             <FormItem className="md:col-span-2">
                                 <FormLabel className="flex items-center gap-1.5">
                                     <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
-                                    Dirección
+                                    {t("disciples.address")}
                                 </FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Cra 1 # 2-3, Torre 4, Apto 501" {...field} value={field.value || ""} />
+                                    <Input placeholder={t("disciples.cv.placeholders.address")} {...field} value={field.value || ""} />
                                 </FormControl>
-                                <FormDescription>Incluir Torre, apto, interior, No. Casa</FormDescription>
+                                <FormDescription>{t("disciples.cv.descriptions.address")}</FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -251,10 +251,10 @@ const CurriculumVitaeSection: React.FC = () => {
                             <FormItem>
                                 <FormLabel className="flex items-center gap-1.5">
                                     <Home className="h-3.5 w-3.5 text-muted-foreground" />
-                                    Conjunto / Urbanización
+                                    {t("disciples.cv.housingComplex")}
                                 </FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Nombre del conjunto" {...field} value={field.value || ""} />
+                                    <Input placeholder={t("disciples.cv.placeholders.housingComplex")} {...field} value={field.value || ""} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -268,10 +268,10 @@ const CurriculumVitaeSection: React.FC = () => {
                             <FormItem>
                                 <FormLabel className="flex items-center gap-1.5">
                                     <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
-                                    Barrio
+                                    {t("disciples.cv.neighborhood")}
                                 </FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Nombre del barrio" {...field} value={field.value || ""} />
+                                    <Input placeholder={t("disciples.cv.placeholders.neighborhood")} {...field} value={field.value || ""} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -285,12 +285,12 @@ const CurriculumVitaeSection: React.FC = () => {
                             <FormItem>
                                 <FormLabel className="flex items-center gap-1.5">
                                     <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
-                                    Municipio
+                                    {t("disciples.cv.municipality")}
                                 </FormLabel>
                                 <Select onValueChange={field.onChange} value={field.value || ""}>
                                     <FormControl>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Seleccione su municipio" />
+                                            <SelectValue placeholder={t("disciples.cv.placeholders.municipality")} />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
@@ -315,20 +315,20 @@ const CurriculumVitaeSection: React.FC = () => {
                             <FormItem>
                                 <FormLabel className="flex items-center gap-1.5">
                                     <Network className="h-3.5 w-3.5 text-muted-foreground" />
-                                    Red
+                                    {t("disciples.cv.network")}
                                 </FormLabel>
                                 <Select onValueChange={field.onChange} value={field.value || ""}>
                                     <FormControl>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Seleccione una red" />
+                                            <SelectValue placeholder={t("disciples.cv.placeholders.network")} />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="YOUTH">Jóvenes</SelectItem>
-                                        <SelectItem value="PRE">Pre</SelectItem>
-                                        <SelectItem value="ROCAS">Rocas</SelectItem>
-                                        <SelectItem value="MEN">Hombres</SelectItem>
-                                        <SelectItem value="WOMEN">Mujeres</SelectItem>
+                                        <SelectItem value="YOUTH">{t("initialInformation.network.YOUTH")}</SelectItem>
+                                        <SelectItem value="PRE">{t("initialInformation.network.PRE")}</SelectItem>
+                                        <SelectItem value="ROCAS">{t("initialInformation.network.ROCAS")}</SelectItem>
+                                        <SelectItem value="MEN">{t("initialInformation.network.MEN")}</SelectItem>
+                                        <SelectItem value="WOMEN">{t("initialInformation.network.WOMEN")}</SelectItem>
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -343,7 +343,7 @@ const CurriculumVitaeSection: React.FC = () => {
                             <FormItem className="flex flex-col">
                                 <FormLabel className="flex items-center gap-1.5">
                                     <CalendarDays className="h-3.5 w-3.5 text-muted-foreground" />
-                                    Fecha de Nacimiento
+                                    {t("disciples.birthDate")}
                                 </FormLabel>
                                 <Popover>
                                     <PopoverTrigger asChild>
@@ -358,7 +358,7 @@ const CurriculumVitaeSection: React.FC = () => {
                                                 {field.value ? (
                                                     format(field.value, "PPP", { locale: dateLocale })
                                                 ) : (
-                                                    <span>dd/mm/aaaa</span>
+                                                    <span>{t("disciples.cv.placeholders.birthDate")}</span>
                                                 )}
                                                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                             </Button>
@@ -386,7 +386,7 @@ const CurriculumVitaeSection: React.FC = () => {
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <Building2 className="h-5 w-5 text-primary" />
-                        Ministerio
+                        {t("disciples.cv.ministry")}
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -397,7 +397,7 @@ const CurriculumVitaeSection: React.FC = () => {
                             <FormItem className="flex flex-col">
                                 <FormLabel className="flex items-center gap-1.5">
                                     <Users className="h-3.5 w-3.5 text-muted-foreground" />
-                                    Líder Directo
+                                    {t("disciples.cv.directLeader")}
                                 </FormLabel>
                                 <Popover>
                                     <PopoverTrigger asChild>
@@ -413,17 +413,17 @@ const CurriculumVitaeSection: React.FC = () => {
                                                 {field.value
                                                     ? leaders.find((l) => l.id === field.value)
                                                         ? `${leaders.find((l) => l.id === field.value)?.names} ${leaders.find((l) => l.id === field.value)?.lastNames}`
-                                                        : "Busque y seleccione su líder de célula"
-                                                    : "Busque y seleccione su líder de célula"}
+                                                        : t("disciples.cv.placeholders.directLeader")
+                                                    : t("disciples.cv.placeholders.directLeader")}
                                                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                             </Button>
                                         </FormControl>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-[400px] p-0">
                                         <Command>
-                                            <CommandInput placeholder="Escriba para buscar líderes..." />
+                                            <CommandInput placeholder={t("disciples.cv.placeholders.directLeaderSearch")} />
                                             <CommandList>
-                                                <CommandEmpty>No se encontraron líderes</CommandEmpty>
+                                                <CommandEmpty>{t("disciples.cv.placeholders.directLeaderEmpty")}</CommandEmpty>
                                                 <CommandGroup>
                                                     {leaders.map((leader) => (
                                                         <CommandItem
@@ -448,7 +448,7 @@ const CurriculumVitaeSection: React.FC = () => {
                                     </PopoverContent>
                                 </Popover>
                                 <FormDescription>
-                                    Por favor registrar el nombre completo de tu líder de célula
+                                    {t("disciples.cv.descriptions.directLeader")}
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
@@ -462,12 +462,12 @@ const CurriculumVitaeSection: React.FC = () => {
                             <FormItem>
                                 <FormLabel className="flex items-center gap-1.5">
                                     <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
-                                    Año que llegaste a la iglesia
+                                    {t("disciples.cv.yearArrivedAtChurch")}
                                 </FormLabel>
                                 <FormControl>
-                                    <Input placeholder="2020" {...field} value={field.value || ""} />
+                                    <Input placeholder={t("disciples.cv.placeholders.yearArrivedAtChurch")} {...field} value={field.value || ""} />
                                 </FormControl>
-                                <FormDescription>Ej: 2020</FormDescription>
+                                <FormDescription>{t("disciples.cv.descriptions.yearArrivedAtChurch")}</FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -480,7 +480,7 @@ const CurriculumVitaeSection: React.FC = () => {
                             <FormItem>
                                 <FormLabel className="flex items-center gap-1.5">
                                     <Award className="h-3.5 w-3.5 text-muted-foreground" />
-                                    ¿Ha asistido a Encuentro?
+                                    {t("disciples.cv.hasAttendedEncounter")}
                                 </FormLabel>
                                 <FormControl>
                                     <RadioGroup
@@ -490,11 +490,11 @@ const CurriculumVitaeSection: React.FC = () => {
                                     >
                                         <div className="flex items-center space-x-2">
                                             <RadioGroupItem value="YES" id="cv-encounter-yes" />
-                                            <Label htmlFor="cv-encounter-yes">Sí</Label>
+                                            <Label htmlFor="cv-encounter-yes">{t("disciples.cv.yes")}</Label>
                                         </div>
                                         <div className="flex items-center space-x-2">
                                             <RadioGroupItem value="NO" id="cv-encounter-no" />
-                                            <Label htmlFor="cv-encounter-no">No</Label>
+                                            <Label htmlFor="cv-encounter-no">{t("disciples.cv.no")}</Label>
                                         </div>
                                     </RadioGroup>
                                 </FormControl>
@@ -512,12 +512,12 @@ const CurriculumVitaeSection: React.FC = () => {
                                     <FormItem>
                                         <FormLabel className="flex items-center gap-1.5">
                                             <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
-                                            ¿Qué año asistió a Encuentro?
+                                            {t("disciples.cv.yearAttendedEncounter")}
                                         </FormLabel>
                                         <FormControl>
-                                            <Input placeholder="2023" {...field} value={field.value || ""} />
+                                            <Input placeholder={t("disciples.cv.placeholders.yearAttendedEncounter")} {...field} value={field.value || ""} />
                                         </FormControl>
-                                        <FormDescription>Ej: 2023</FormDescription>
+                                        <FormDescription>{t("disciples.cv.descriptions.yearAttendedEncounter")}</FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -530,7 +530,7 @@ const CurriculumVitaeSection: React.FC = () => {
                                     <FormItem>
                                         <FormLabel className="flex items-center gap-1.5">
                                             <Award className="h-3.5 w-3.5 text-muted-foreground" />
-                                            ¿Ha repetido Encuentro?
+                                            {t("disciples.cv.hasRepeatedEncounter")}
                                         </FormLabel>
                                         <FormControl>
                                             <RadioGroup
@@ -540,11 +540,11 @@ const CurriculumVitaeSection: React.FC = () => {
                                             >
                                                 <div className="flex items-center space-x-2">
                                                     <RadioGroupItem value="YES" id="cv-repeatEncounter-yes" />
-                                                    <Label htmlFor="cv-repeatEncounter-yes">Sí</Label>
+                                                    <Label htmlFor="cv-repeatEncounter-yes">{t("disciples.cv.yes")}</Label>
                                                 </div>
                                                 <div className="flex items-center space-x-2">
                                                     <RadioGroupItem value="NO" id="cv-repeatEncounter-no" />
-                                                    <Label htmlFor="cv-repeatEncounter-no">No</Label>
+                                                    <Label htmlFor="cv-repeatEncounter-no">{t("disciples.cv.no")}</Label>
                                                 </div>
                                             </RadioGroup>
                                         </FormControl>
@@ -562,7 +562,7 @@ const CurriculumVitaeSection: React.FC = () => {
                             <FormItem>
                                 <FormLabel className="flex items-center gap-1.5">
                                     <Award className="h-3.5 w-3.5 text-muted-foreground" />
-                                    ¿Ha asistido a Reencuentro?
+                                    {t("disciples.cv.hasAttendedReencounter")}
                                 </FormLabel>
                                 <FormControl>
                                     <RadioGroup
@@ -572,11 +572,11 @@ const CurriculumVitaeSection: React.FC = () => {
                                     >
                                         <div className="flex items-center space-x-2">
                                             <RadioGroupItem value="YES" id="cv-reencounter-yes" />
-                                            <Label htmlFor="cv-reencounter-yes">Sí</Label>
+                                            <Label htmlFor="cv-reencounter-yes">{t("disciples.cv.yes")}</Label>
                                         </div>
                                         <div className="flex items-center space-x-2">
                                             <RadioGroupItem value="NO" id="cv-reencounter-no" />
-                                            <Label htmlFor="cv-reencounter-no">No</Label>
+                                            <Label htmlFor="cv-reencounter-no">{t("disciples.cv.no")}</Label>
                                         </div>
                                     </RadioGroup>
                                 </FormControl>
@@ -593,12 +593,12 @@ const CurriculumVitaeSection: React.FC = () => {
                                 <FormItem>
                                     <FormLabel className="flex items-center gap-1.5">
                                         <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
-                                        ¿Qué año asistió a Reencuentro?
+                                        {t("disciples.cv.yearAttendedReencounter")}
                                     </FormLabel>
                                     <FormControl>
-                                        <Input placeholder="2024" {...field} value={field.value || ""} />
+                                        <Input placeholder={t("disciples.cv.placeholders.yearAttendedReencounter")} {...field} value={field.value || ""} />
                                     </FormControl>
-                                    <FormDescription>Ej: 2024</FormDescription>
+                                    <FormDescription>{t("disciples.cv.descriptions.yearAttendedReencounter")}</FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -612,7 +612,7 @@ const CurriculumVitaeSection: React.FC = () => {
                             <FormItem>
                                 <FormLabel className="flex items-center gap-1.5">
                                     <Church className="h-3.5 w-3.5 text-muted-foreground" />
-                                    ¿Te bautizaste en la MCI?
+                                    {t("disciples.cv.baptizedAtMCI")}
                                 </FormLabel>
                                 <FormControl>
                                     <RadioGroup
@@ -622,11 +622,11 @@ const CurriculumVitaeSection: React.FC = () => {
                                     >
                                         <div className="flex items-center space-x-2">
                                             <RadioGroupItem value="YES" id="cv-baptized-yes" />
-                                            <Label htmlFor="cv-baptized-yes">Sí</Label>
+                                            <Label htmlFor="cv-baptized-yes">{t("disciples.cv.yes")}</Label>
                                         </div>
                                         <div className="flex items-center space-x-2">
                                             <RadioGroupItem value="NO" id="cv-baptized-no" />
-                                            <Label htmlFor="cv-baptized-no">No</Label>
+                                            <Label htmlFor="cv-baptized-no">{t("disciples.cv.no")}</Label>
                                         </div>
                                     </RadioGroup>
                                 </FormControl>
@@ -642,7 +642,7 @@ const CurriculumVitaeSection: React.FC = () => {
                             <FormItem>
                                 <FormLabel className="flex items-center gap-1.5">
                                     <UserCheck className="h-3.5 w-3.5 text-muted-foreground" />
-                                    ¿Eres líder?
+                                    {t("disciples.cv.isLeader")}
                                 </FormLabel>
                                 <FormControl>
                                     <RadioGroup
@@ -652,11 +652,11 @@ const CurriculumVitaeSection: React.FC = () => {
                                     >
                                         <div className="flex items-center space-x-2">
                                             <RadioGroupItem value="YES" id="cv-leader-yes" />
-                                            <Label htmlFor="cv-leader-yes">Sí</Label>
+                                            <Label htmlFor="cv-leader-yes">{t("disciples.cv.yes")}</Label>
                                         </div>
                                         <div className="flex items-center space-x-2">
                                             <RadioGroupItem value="NO" id="cv-leader-no" />
-                                            <Label htmlFor="cv-leader-no">No</Label>
+                                            <Label htmlFor="cv-leader-no">{t("disciples.cv.no")}</Label>
                                         </div>
                                     </RadioGroup>
                                 </FormControl>
@@ -672,12 +672,12 @@ const CurriculumVitaeSection: React.FC = () => {
                             <FormItem>
                                 <FormLabel className="flex items-center gap-1.5">
                                     <GraduationCap className="h-3.5 w-3.5 text-muted-foreground" />
-                                    Generación
+                                    {t("disciples.cv.generation")}
                                 </FormLabel>
                                 <Select onValueChange={field.onChange} value={field.value || ""}>
                                     <FormControl>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Seleccione su generación" />
+                                            <SelectValue placeholder={t("disciples.cv.placeholders.generation")} />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
@@ -701,26 +701,26 @@ const CurriculumVitaeSection: React.FC = () => {
                             <FormItem className="md:col-span-2">
                                 <FormLabel className="flex items-center gap-1.5">
                                     <BookOpen className="h-3.5 w-3.5 text-muted-foreground" />
-                                    Nivel Escuela de Formación
+                                    {t("disciples.cv.formationSchoolLevel")}
                                 </FormLabel>
                                 <Select onValueChange={field.onChange} value={field.value || ""}>
                                     <FormControl>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Seleccione su nivel" />
+                                            <SelectValue placeholder={t("disciples.cv.placeholders.formationSchoolLevel")} />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="BASIC_1">Básico 1</SelectItem>
-                                        <SelectItem value="BASIC_2">Básico 2</SelectItem>
-                                        <SelectItem value="BASIC_3">Básico 3</SelectItem>
-                                        <SelectItem value="ADVANCED_1">Avanzado 1</SelectItem>
-                                        <SelectItem value="ADVANCED_2">Avanzado 2</SelectItem>
-                                        <SelectItem value="ADVANCED_3">Avanzado 3</SelectItem>
-                                        <SelectItem value="GRADUATE">Graduado</SelectItem>
-                                        <SelectItem value="NOT_STARTED">No he empezado</SelectItem>
+                                        <SelectItem value="BASIC_1">{t("initialInformation.formationSchoolLevel.BASIC_1")}</SelectItem>
+                                        <SelectItem value="BASIC_2">{t("initialInformation.formationSchoolLevel.BASIC_2")}</SelectItem>
+                                        <SelectItem value="BASIC_3">{t("initialInformation.formationSchoolLevel.BASIC_3")}</SelectItem>
+                                        <SelectItem value="ADVANCED_1">{t("initialInformation.formationSchoolLevel.ADVANCED_1")}</SelectItem>
+                                        <SelectItem value="ADVANCED_2">{t("initialInformation.formationSchoolLevel.ADVANCED_2")}</SelectItem>
+                                        <SelectItem value="ADVANCED_3">{t("initialInformation.formationSchoolLevel.ADVANCED_3")}</SelectItem>
+                                        <SelectItem value="GRADUATE">{t("initialInformation.formationSchoolLevel.GRADUATE")}</SelectItem>
+                                        <SelectItem value="NOT_STARTED">{t("initialInformation.formationSchoolLevel.NOT_STARTED")}</SelectItem>
                                     </SelectContent>
                                 </Select>
-                                <FormDescription>1er ciclo 2026 o último nivel cursado</FormDescription>
+                                <FormDescription>{t("disciples.cv.descriptions.formationSchoolLevel")}</FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}

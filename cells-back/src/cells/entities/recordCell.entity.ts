@@ -12,6 +12,15 @@ export class RecordCellEntity {
   @Field(() => String)
   createdUser: string;
 
+  @Field(() => String)
+  mode: string;
+
+  @Field(() => String, { nullable: true })
+  location?: string;
+
+  @Field(() => String)
+  leader: string;
+
   @Field(() => [AssistantRecordCellEntity], { nullable: true })
   assistants: AssistantRecordCellEntity[];
 }

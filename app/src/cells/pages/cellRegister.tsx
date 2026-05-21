@@ -4,11 +4,12 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from 'date-fns';
 
 import { cn } from '@/lib/utils';
-import { BookUp, CalendarIcon, CheckCircle, OctagonX, Trash2, UserPlus } from "lucide-react"
+import { BookUp, CalendarIcon, CheckCircle, Crosshair, Globe, MapPin, OctagonX, Trash2, UserPlus, Video } from "lucide-react"
 import { Button } from '@/components/ui/button';
 import { Input } from "@/components/ui/input"
 import { Calendar } from "@/components/ui/calendar"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -19,6 +20,7 @@ import { useCellStore } from '../store/cell.store';
 import { useDiscipleStore } from '@/src/disciples/store/disciple.store';
 import { CellsService } from '../services/cells.services';
 import { AddAttendeeModal } from '../components/AddAttendeeModal';
+import LocationMap from '../components/LocationMap';
 
 import { CellRecordInput, CellRecordSchema } from '../schemas/cellRecordsSchema';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -34,6 +36,7 @@ const CellRegister: React.FC = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [cellLeaderId, setCellLeaderId] = useState<string>('');
+  const [locating, setLocating] = useState(false);
   const hasLoaded = useRef(false);
 
   const form = useForm<CellRecordInput>({
@@ -41,10 +44,14 @@ const CellRegister: React.FC = () => {
     defaultValues: {
       topic: "",
       date: new Date(),
+      mode: "presencial",
+      location: "",
       createdUser: userState?.id || "",
       assistants: [],
     },
   });
+
+  const selectedMode = form.watch("mode");
 
   const { fields: assistantsFields, append: appendAssistant, remove: removeAssistant } = useFieldArray({ name: 'assistants', control: form.control });
 
@@ -61,10 +68,11 @@ const CellRegister: React.FC = () => {
           await getDisciples();
         }
 
+        const freshDisciples = useDiscipleStore.getState().Disciples;
         const activeAssistants = (cell.assistants || []).filter(a => a.status === 'active');
         if (activeAssistants.length > 0) {
           activeAssistants.forEach(a => {
-            const disciple = disciplesState.find(d => d.id === a.disciple) ||
+            const disciple = freshDisciples.find(d => d.id === a.disciple) ||
               { id: a.disciple, name: '', lastName: '' };
             appendAssistant({
               id: a.disciple,
@@ -82,8 +90,31 @@ const CellRegister: React.FC = () => {
       }
     };
 
-    loadCellData();
+      loadCellData();
   }, [id]);
+
+  const autoLocationFired = useRef(false);
+  useEffect(() => {
+    if (selectedMode !== "presencial") {
+      autoLocationFired.current = false;
+      return;
+    }
+    if (!navigator.geolocation) return;
+    if (autoLocationFired.current) return;
+    const currentLocation = form.getValues("location");
+    if (currentLocation && currentLocation.trim().length > 0) return;
+    autoLocationFired.current = true;
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const coords = `${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`;
+        form.setValue("location", coords);
+        setLocating(false);
+      },
+      () => setLocating(false),
+      { enableHighAccuracy: true, timeout: 15000 },
+    );
+  }, [selectedMode]);
 
   const handleAddAttendee = async (disciple: { id: string; name: string; lastName: string }) => {
     appendAssistant({
@@ -122,9 +153,9 @@ const CellRegister: React.FC = () => {
     <div className="flex items-center">
       <h1 className="text-lg font-semibold md:text-2xl">Registro Asistencia de <mark>Celula</mark></h1>
     </div>
-    <div className="flex items-center items-center justify-center text-start rounded-lg border border-dashed p-4 shadow-sm">
+    <div className="flex items-center items-center justify-center text-start rounded-lg border border-dashed p-3 md:p-4 shadow-sm">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-2 grid-flow-row gap-2 w-full">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
           <FormField
             control={form.control}
             name="topic"
@@ -185,8 +216,75 @@ const CellRegister: React.FC = () => {
             )}
           />
 
-          <div className="col-span-2 gap-3 pb-3">
-            <span className="col-span-2 text-xl font-semibold">Asistentes</span>
+          <FormField
+            control={form.control}
+            name="mode"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="flex items-center gap-1.5">
+                  <Globe className="h-3.5 w-3.5 text-muted-foreground" />
+                  Modalidad
+                </FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecciona la modalidad" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="presencial">
+                      <span className="flex items-center gap-2">
+                        <MapPin className="h-4 w-4" /> Presencial
+                      </span>
+                    </SelectItem>
+                    <SelectItem value="virtual">
+                      <span className="flex items-center gap-2">
+                        <Video className="h-4 w-4" /> Virtual
+                      </span>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormDescription>
+                  Selecciona si la célula fue presencial o virtual.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {selectedMode === "presencial" && (
+            <FormField
+              control={form.control}
+              name="location"
+              render={({ field }) => (
+              <FormItem>
+                <FormLabel className="flex items-center gap-1.5">
+                  <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
+                  Ubicación <span className="text-destructive">*</span>
+                </FormLabel>
+                  <FormControl>
+                    <div className="space-y-2">
+                      {locating && (
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Crosshair className="h-4 w-4 animate-spin" />
+                          Obteniendo ubicación...
+                        </div>
+                      )}
+                      <LocationMap value={field.value || ""} onChange={field.onChange} />
+                    </div>
+                  </FormControl>
+                  <FormDescription>
+                    Haz clic en el mapa para ajustar la ubicación.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+
+          <div className="md:col-span-2 gap-3 pb-3">
+            <span className="text-xl font-semibold">Asistentes</span>
+            <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -275,9 +373,10 @@ const CellRegister: React.FC = () => {
                 </TableRow>
               </TableFooter>
             </Table>
+            </div>
           </div>
 
-          <Button type="submit" className="col-span-2">
+          <Button type="submit" className="md:col-span-2 w-full">
             <BookUp className='mr-2' /> Agregar Registro Celula
           </Button>
         </form>

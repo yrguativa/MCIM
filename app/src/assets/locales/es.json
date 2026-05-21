@@ -18,6 +18,7 @@
     "menu": {
         "dashboard": "Panel principal",
         "cells": "Células",
+        "cellReports": "Reporte Células",
         "disciples": "Discípulos",
         "events": "Eventos",
         "ministries": "Ministerios",
@@ -86,13 +87,44 @@
         "create": "Crear célula",
         "edit": "Editar célula",
         "delete": "Eliminar célula",
-        "new": "Nueva célula"
+        "new": "Nueva célula",
+        "stats": {
+            "totalCells": "Total Células",
+            "charts": "Gráficos",
+            "reports": "Reportes"
+        },
+        "columns": {
+            "leader": "Líder",
+            "ministry": "Ministerio",
+            "day": "Día",
+            "time": "Hora",
+            "assistants": "Total Asistentes"
+        },
+        "actions": {
+            "actions": "Acciones",
+            "edit": "Editar Célula",
+            "register": "Agregar Registro Célula"
+        },
+        "report": {
+            "title": "Reporte de Células",
+            "totalRecords": "Total Registros",
+            "totalAttendees": "Total Asistentes",
+            "presencial": "Presenciales",
+            "virtual": "Virtuales",
+            "leader": "Líder",
+            "ministry": "Ministerio",
+            "modality": "Modalidad",
+            "location": "Ubicación",
+            "topic": "Tema",
+            "date": "Fecha",
+            "assistants": "Asistentes"
+        }
     },
     "disciples": {
         "title": "Discípulos",
         "create": "Crear discípulo",
         "edit": "Editar discípulo",
-        "delete": "Eliminar dúvulo",
+        "delete": "Eliminar discípulo",
         "basicInfo": "Información Básica",
         "curriculumVitae": "Hoja de Vida",
         "names": "Nombres",
@@ -102,7 +134,108 @@
         "email": "Correo electrónico",
         "phone": "Teléfono",
         "address": "Dirección",
-        "birthDate": "Fecha de nacimiento"
+        "birthDate": "Fecha de nacimiento",
+        "form": {
+            "title": "Registro de Discípulo",
+            "save": "Guardar cambios",
+            "saving": "Guardando..."
+        },
+        "fields": {
+            "identificationType": "Tipo de Identificación",
+            "ministry": "Ministerio",
+            "status": "Estado"
+        },
+        "statusOptions": {
+            "lider": "Líder",
+            "prelider": "Prelíder",
+            "universidad_vida": "Universidad de la Vida",
+            "solo_celula": "Solo Célula",
+            "deserto": "Desierto"
+        },
+        "list": {
+            "new": "Nuevo Discípulo",
+            "filterName": "Filtrar por nombre...",
+            "filterIdentification": "Filtrar por identificación...",
+            "filterMinistry": "Filtrar por ministerio",
+            "allMinistries": "Todos los ministerios"
+        },
+        "columns": {
+            "ministry": "Ministerio",
+            "edit": "Editar"
+        },
+        "messages": {
+            "createSuccess": "Discípulo registrado correctamente",
+            "createError": "Error al registrar el discípulo"
+        },
+        "validation": {
+            "idRequired": "El id es obligatorio.",
+            "identificationInvalid": "La identificación no es un número válido.",
+            "identificationRequired": "La identificación es obligatoria.",
+            "identificationTypeRequired": "El tipo de identificación es obligatorio.",
+            "nameRequired": "Los nombres del discípulo es obligatorio.",
+            "lastNameRequired": "Los apellidos del discípulo son obligatorios.",
+            "phoneRequired": "El teléfono es requerido.",
+            "emailMinLength": "El correo debe tener mínimo 5 caracteres.",
+            "emailInvalid": "El correo no es válido",
+            "nationalityRequired": "La nacionalidad es obligatoria.",
+            "genderRequired": "El género es obligatorio.",
+            "ministryRequired": "El ministerio es obligatorio.",
+            "createdUserRequired": "El usuario de creación es obligatorio.",
+            "createdDateRequired": "La fecha de creación es obligatoria."
+        },
+        "cv": {
+            "personalInfo": "Información Personal",
+            "ministry": "Ministerio",
+            "nationality": "Nacionalidad",
+            "gender": "Género",
+            "maritalStatus": "Estado Civil",
+            "hasChildren": "¿Tiene hijos?",
+            "childrenAttendChurch": "¿Sus hijos asisten a la iglesia?",
+            "housingComplex": "Conjunto / Urbanización",
+            "neighborhood": "Barrio",
+            "municipality": "Municipio",
+            "network": "Red",
+            "directLeader": "Líder Directo",
+            "yearArrivedAtChurch": "Año que llegaste a la iglesia",
+            "hasAttendedEncounter": "¿Ha asistido a Encuentro?",
+            "yearAttendedEncounter": "¿Qué año asistió a Encuentro?",
+            "hasRepeatedEncounter": "¿Ha repetido Encuentro?",
+            "hasAttendedReencounter": "¿Ha asistido a Reencuentro?",
+            "yearAttendedReencounter": "¿Qué año asistió a Reencuentro?",
+            "baptizedAtMCI": "¿Te bautizaste en la MCI?",
+            "isLeader": "¿Eres líder?",
+            "generation": "Generación",
+            "formationSchoolLevel": "Nivel Escuela de Formación",
+            "yes": "Sí",
+            "no": "No",
+            "placeholders": {
+                "nationality": "Seleccione su nacionalidad",
+                "gender": "Seleccione su género",
+                "maritalStatus": "Seleccione su estado civil",
+                "address": "Cra 1 # 2-3, Torre 4, Apto 501",
+                "housingComplex": "Nombre del conjunto",
+                "neighborhood": "Nombre del barrio",
+                "municipality": "Seleccione su municipio",
+                "network": "Seleccione una red",
+                "birthDate": "dd/mm/aaaa",
+                "directLeader": "Busque y seleccione su líder de célula",
+                "directLeaderSearch": "Escriba para buscar líderes...",
+                "directLeaderEmpty": "No se encontraron líderes",
+                "yearArrivedAtChurch": "2020",
+                "yearAttendedEncounter": "2023",
+                "yearAttendedReencounter": "2024",
+                "generation": "Seleccione su generación",
+                "formationSchoolLevel": "Seleccione su nivel"
+            },
+            "descriptions": {
+                "address": "Incluir Torre, apto, interior, No. Casa",
+                "yearArrivedAtChurch": "Ej: 2020",
+                "yearAttendedEncounter": "Ej: 2023",
+                "yearAttendedReencounter": "Ej: 2024",
+                "directLeader": "Por favor registrar el nombre completo de tu líder de célula",
+                "formationSchoolLevel": "1er ciclo 2026 o último nivel cursado"
+            }
+        }
     },
     "events": {
         "title": "Eventos",

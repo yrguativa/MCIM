@@ -36,6 +36,9 @@ const CELL_FIELDS = `
     topic
     date
     createdUser
+    mode
+    location
+    leader
     assistants {
       name
       disciple
@@ -187,6 +190,8 @@ export class CellsService {
             "createRecordCellInput": {
               topic: record.topic,
               date: record.date,
+              mode: record.mode,
+              location: record.location || null,
               createdUser: record.createdUser,
               assistants: record.assistants
                 .filter(a => a.attended)

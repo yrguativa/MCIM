@@ -81,13 +81,30 @@
     "selectMinistry": "Select a ministry",
     "signUp": "Sign up"
   },
-  "cells": {
-    "title": "Cells",
-    "create": "Create cell",
-    "edit": "Edit cell",
-    "delete": "Delete cell",
-    "new": "New cell"
-  },
+    "cells": {
+      "title": "Cells",
+      "create": "Create cell",
+      "edit": "Edit cell",
+      "delete": "Delete cell",
+      "new": "New cell",
+      "stats": {
+        "totalCells": "Total Cells",
+        "charts": "Charts",
+        "reports": "Reports"
+      },
+      "columns": {
+        "leader": "Leader",
+        "ministry": "Ministry",
+        "day": "Day",
+        "time": "Time",
+        "assistants": "Total Assistants"
+      },
+      "actions": {
+        "actions": "Actions",
+        "edit": "Edit Cell",
+        "register": "Add Cell Record"
+      }
+    },
     "disciples": {
         "title": "Disciples",
         "create": "Create disciple",
@@ -95,15 +112,116 @@
         "delete": "Delete disciple",
         "basicInfo": "Basic Information",
         "curriculumVitae": "Curriculum Vitae",
-    "name": "Name",
-    "names": "Names",
-    "lastName": "Last names",
-    "identification": "Identification",
-    "email": "Email",
-    "phone": "Phone",
-    "address": "Address",
-    "birthDate": "Birth date"
-  },
+        "name": "Name",
+        "names": "Names",
+        "lastName": "Last names",
+        "identification": "Identification",
+        "email": "Email",
+        "phone": "Phone",
+        "address": "Address",
+        "birthDate": "Birth date",
+        "form": {
+            "title": "Disciple Registration",
+            "save": "Save changes",
+            "saving": "Saving..."
+        },
+        "fields": {
+            "identificationType": "Identification Type",
+            "ministry": "Ministry",
+            "status": "Status"
+        },
+        "statusOptions": {
+            "lider": "Leader",
+            "prelider": "Pre-leader",
+            "universidad_vida": "University of Life",
+            "solo_celula": "Cell Only",
+            "deserto": "Desert"
+        },
+        "list": {
+            "new": "New Disciple",
+            "filterName": "Filter by name...",
+            "filterIdentification": "Filter by identification...",
+            "filterMinistry": "Filter by ministry",
+            "allMinistries": "All ministries"
+        },
+        "columns": {
+            "ministry": "Ministry",
+            "edit": "Edit"
+        },
+        "messages": {
+            "createSuccess": "Disciple registered successfully",
+            "createError": "Error registering disciple"
+        },
+        "validation": {
+            "idRequired": "ID is required.",
+            "identificationInvalid": "Identification is not a valid number.",
+            "identificationRequired": "Identification is required.",
+            "identificationTypeRequired": "Identification type is required.",
+            "nameRequired": "Disciple names are required.",
+            "lastNameRequired": "Disciple last names are required.",
+            "phoneRequired": "Phone is required.",
+            "emailMinLength": "Email must have at least 5 characters.",
+            "emailInvalid": "Invalid email",
+            "nationalityRequired": "Nationality is required.",
+            "genderRequired": "Gender is required.",
+            "ministryRequired": "Ministry is required.",
+            "createdUserRequired": "Creation user is required.",
+            "createdDateRequired": "Creation date is required."
+        },
+        "cv": {
+            "personalInfo": "Personal Information",
+            "ministry": "Ministry",
+            "nationality": "Nationality",
+            "gender": "Gender",
+            "maritalStatus": "Marital Status",
+            "hasChildren": "Do you have children?",
+            "childrenAttendChurch": "Do your children attend church?",
+            "housingComplex": "Housing Complex",
+            "neighborhood": "Neighborhood",
+            "municipality": "Municipality",
+            "network": "Network",
+            "directLeader": "Direct Leader",
+            "yearArrivedAtChurch": "Year you arrived at church",
+            "hasAttendedEncounter": "Have you attended Encounter?",
+            "yearAttendedEncounter": "Which year did you attend Encounter?",
+            "hasRepeatedEncounter": "Have you repeated Encounter?",
+            "hasAttendedReencounter": "Have you attended Reencounter?",
+            "yearAttendedReencounter": "Which year did you attend Reencounter?",
+            "baptizedAtMCI": "Were you baptized at MCI?",
+            "isLeader": "Are you a leader?",
+            "generation": "Generation",
+            "formationSchoolLevel": "Formation School Level",
+            "yes": "Yes",
+            "no": "No",
+            "placeholders": {
+                "nationality": "Select your nationality",
+                "gender": "Select your gender",
+                "maritalStatus": "Select your marital status",
+                "address": "123 Main St, Tower 4, Apt 501",
+                "housingComplex": "Complex name",
+                "neighborhood": "Neighborhood name",
+                "municipality": "Select your municipality",
+                "network": "Select a network",
+                "birthDate": "dd/mm/yyyy",
+                "directLeader": "Search and select your cell leader",
+                "directLeaderSearch": "Type to search leaders...",
+                "directLeaderEmpty": "No leaders found",
+                "yearArrivedAtChurch": "2020",
+                "yearAttendedEncounter": "2023",
+                "yearAttendedReencounter": "2024",
+                "generation": "Select your generation",
+                "formationSchoolLevel": "Select your level"
+            },
+            "descriptions": {
+                "address": "Include Tower, Apt, Interior, House No.",
+                "yearArrivedAtChurch": "e.g. 2020",
+                "yearAttendedEncounter": "e.g. 2023",
+                "yearAttendedReencounter": "e.g. 2024",
+                "directLeader": "Please enter the full name of your cell leader",
+                "formationSchoolLevel": "1st cycle 2026 or last level completed"
+            }
+        }
+    },
   "events": {
     "title": "Events",
     "event": "Event",

@@ -1,46 +1,46 @@
 import { z } from "zod"
 
-export const DiscipleSchema = z.object({
+export const createDiscipleSchema = (t: (key: string) => string) => z.object({
     id: z.string()
         .min(1, {
-            message: "El id es obligatorio.",
+            message: t("disciples.validation.idRequired"),
         })
         .default(crypto.randomUUID()),
     identification: z.coerce
         .number({
-            error: "La identificación no es un número valido.",
+            error: t("disciples.validation.identificationInvalid"),
         })
         .optional()
         .refine((val) => val !== undefined, {
-            message: "La identificación es obligatoria.",
+            message: t("disciples.validation.identificationRequired"),
         }),
     identificationType: z.enum(["CC", "TI", "CE", "PPT", "PASSPORT", "OTHER"], {
-        error: "El tipo de identificación es obligatorio.",
+        error: t("disciples.validation.identificationTypeRequired"),
     }),
     name: z.string()
         .min(2, {
-            message: "Los nombres del discipulo es obligatorio.",
+            message: t("disciples.validation.nameRequired"),
         }),
     lastName: z.string()
         .min(2, {
-            message: "Los apellidos del discipulo son obligatorios.",
+            message: t("disciples.validation.lastNameRequired"),
         }),
     number: z.coerce.number({
-        error: "A telefono is required.",
+        error: t("disciples.validation.phoneRequired"),
     }).optional(),
 
     email: z.string()
         .min(5, {
-            message: "El correo debe tener minimo 5 caracteres.",
+            message: t("disciples.validation.emailMinLength"),
         })
-        .email("El correo no es valido").optional(),
+        .email(t("disciples.validation.emailInvalid")).optional(),
 
     // Personal info
     nationality: z.enum(["COLOMBIAN", "VENEZUELAN", "FOREIGN"], {
-        error: "La nacionalidad es obligatoria.",
+        error: t("disciples.validation.nationalityRequired"),
     }).optional(),
     gender: z.enum(["FEMALE", "MALE"], {
-        error: "El genero es obligatorio.",
+        error: t("disciples.validation.genderRequired"),
     }).optional(),
     maritalStatus: z.enum(["SINGLE", "MARRIED", "WIDOWED", "FREE_UNION", "DIVORCED"]).optional(),
     hasChildren: z.enum(["YES", "NO"]).optional(),
@@ -55,7 +55,7 @@ export const DiscipleSchema = z.object({
     // Church info
     ministryId: z.string()
         .min(2, {
-            message: "El ministerio es obligatorio.",
+            message: t("disciples.validation.ministryRequired"),
         }),
     directLeaderId: z.string().optional(),
     yearArrivedAtChurch: z.string().optional(),
@@ -73,11 +73,11 @@ export const DiscipleSchema = z.object({
         .optional(),
     createdUser: z.string()
         .min(2, {
-            message: "El usuario de creación es obligatorio.",
+            message: t("disciples.validation.createdUserRequired"),
         }),
     createdDate: z.date({
-        error: "La fecha de creación es obligatoria.",
+        error: t("disciples.validation.createdDateRequired"),
     }),
 })
 
-export type DiscipleInput = z.infer<typeof DiscipleSchema>;
+export type DiscipleInput = z.infer<ReturnType<typeof createDiscipleSchema>>;

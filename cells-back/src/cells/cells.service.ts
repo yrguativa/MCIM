@@ -66,6 +66,9 @@ export class CellsService {
       topic: createRecordCellInput.topic,
       date: createRecordCellInput.date,
       createdUser: createRecordCellInput.createdUser,
+      mode: createRecordCellInput.mode,
+      location: createRecordCellInput.location || '',
+      leader: cell.leader,
       assistants: createRecordCellInput.assistants || [],
     };
     cell.records.push(record as any);
@@ -160,6 +163,9 @@ export class CellsService {
         topic: record.topic,
         date: record.date,
         createdUser: record.createdUser,
+        mode: record.mode,
+        location: record.location,
+        leader: record.leader,
         assistants: (record.assistants || []).map((assistant: any) => ({
           name: assistant.name,
           disciple: assistant.disciple,

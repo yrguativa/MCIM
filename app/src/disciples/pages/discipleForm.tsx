@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Resolver, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useTranslation } from "react-i18next";
 import { cn } from '@/lib/utils';
 import { CaretSortIcon } from '@radix-ui/react-icons';
-import { Check as CheckIcon, CheckCircle, OctagonX, Save, Loader2 } from "lucide-react";
+import { Check as CheckIcon, CheckCircle, OctagonX, Save, Loader2, Info, ScrollText, IdCard, Fingerprint, User, Phone, Mail, Building2, Flag } from "lucide-react";
 import {
   Command,
   CommandEmpty,
@@ -20,7 +21,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "sonner"
 
-import { DiscipleInput, DiscipleSchema } from '../schemas/discipleSchema';
+import { createDiscipleSchema, type DiscipleInput } from '../schemas/discipleSchema';
 import { DisciplesService } from '../services/disciples.services';
 
 import { useMinistryStore } from '@/src/ministries/store/ministries.store';
@@ -29,6 +30,7 @@ import { useDiscipleStore, type Disciple } from '../store/disciple.store';
 import CurriculumVitaeSection from '../components/CurriculumVitaeSection';
 
 const DiscipleForm: React.FC = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { id } = useParams();
   const userState = useAuthStore(state => state.user);
@@ -38,7 +40,7 @@ const DiscipleForm: React.FC = () => {
   const [personalInfoId, setPersonalInfoId] = useState<string | undefined>(undefined);
 
   const form = useForm<DiscipleInput>({
-    resolver: zodResolver(DiscipleSchema) as Resolver<DiscipleInput>,
+    resolver: zodResolver(createDiscipleSchema(t)) as Resolver<DiscipleInput>,
     defaultValues: {
       id: id || crypto.randomUUID(),
       createdUser: userState?.id || undefined,
@@ -176,13 +178,13 @@ const DiscipleForm: React.FC = () => {
         : await addDisciple(discipleData as Disciple);
 
     if (isProcessSuccess) {
-      toast("Discipulo registrado correctamente", {
+      toast(t("disciples.messages.createSuccess"), {
         icon: <CheckCircle className="h-4 w-4 text-green-500" />,
       });
 
       navigate('/disciples');
     } else {
-      toast("Error al registrar el discipulo", {
+      toast(t("disciples.messages.createError"), {
         icon: <OctagonX className="h-4 w-4 text-red-500" />,
       });
     }
@@ -190,15 +192,15 @@ const DiscipleForm: React.FC = () => {
 
   return <>
     <div className="flex items-center mb-4">
-      <h1 className="text-lg font-semibold md:text-2xl">Registro de Discipulo</h1>
+      <h1 className="text-lg font-semibold md:text-2xl">{t("disciples.form.title")}</h1>
     </div>
     <div className="flex items-center items-center justify-center text-start rounded-lg border border-dashed p-4 shadow-sm">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
           <Tabs defaultValue="basic" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="basic">Información Básica</TabsTrigger>
-              <TabsTrigger value="cv">Hoja de Vida</TabsTrigger>
+              <TabsTrigger value="basic" className="flex items-center gap-2"><Info className="h-4 w-4" /> {t("disciples.basicInfo")}</TabsTrigger>
+              <TabsTrigger value="cv" className="flex items-center gap-2"><ScrollText className="h-4 w-4" /> {t("disciples.curriculumVitae")}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="basic">
@@ -208,7 +210,7 @@ const DiscipleForm: React.FC = () => {
                   name="identificationType"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Tipo de Identificación</FormLabel>
+                      <FormLabel className="flex items-center gap-1.5"><IdCard className="h-3.5 w-3.5 text-muted-foreground" /> {t("disciples.fields.identificationType")}</FormLabel>
                       <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                           <SelectTrigger>
@@ -233,7 +235,7 @@ const DiscipleForm: React.FC = () => {
                   name="identification"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Identificación</FormLabel>
+                      <FormLabel className="flex items-center gap-1.5"><Fingerprint className="h-3.5 w-3.5 text-muted-foreground" /> {t("disciples.identification")}</FormLabel>
                       <FormControl>
                         <Input placeholder="1078934334" type='number' {...field} />
                       </FormControl>
@@ -247,7 +249,7 @@ const DiscipleForm: React.FC = () => {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Nombres</FormLabel>
+                      <FormLabel className="flex items-center gap-1.5"><User className="h-3.5 w-3.5 text-muted-foreground" /> {t("disciples.names")}</FormLabel>
                       <FormControl>
                         <Input placeholder="Andres Camilo" {...field} />
                       </FormControl>
@@ -261,7 +263,7 @@ const DiscipleForm: React.FC = () => {
                   name="lastName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Apellidos</FormLabel>
+                      <FormLabel className="flex items-center gap-1.5"><User className="h-3.5 w-3.5 text-muted-foreground" /> {t("disciples.lastName")}</FormLabel>
                       <FormControl>
                         <Input placeholder="Rodriguez Romero" {...field} />
                       </FormControl>
@@ -275,7 +277,7 @@ const DiscipleForm: React.FC = () => {
                   name="number"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Telefono</FormLabel>
+                      <FormLabel className="flex items-center gap-1.5"><Phone className="h-3.5 w-3.5 text-muted-foreground" /> {t("disciples.phone")}</FormLabel>
                       <FormControl>
                         <Input placeholder="3002354034" {...field} />
                       </FormControl>
@@ -289,7 +291,7 @@ const DiscipleForm: React.FC = () => {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Correo Electrónico</FormLabel>
+                      <FormLabel className="flex items-center gap-1.5"><Mail className="h-3.5 w-3.5 text-muted-foreground" /> {t("disciples.email")}</FormLabel>
                       <FormControl>
                         <Input placeholder="ejemplo@correo.com" {...field} />
                       </FormControl>
@@ -303,7 +305,7 @@ const DiscipleForm: React.FC = () => {
                   name="ministryId"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
-                      <FormLabel className="mt-1 mb-1">Ministerio</FormLabel>
+                      <FormLabel className="mt-1 mb-1 flex items-center gap-1.5"><Building2 className="h-3.5 w-3.5 text-muted-foreground" /> {t("disciples.fields.ministry")}</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
                           <FormControl>
@@ -315,7 +317,7 @@ const DiscipleForm: React.FC = () => {
                                 !field.value && "text-muted-foreground"
                               )}
                             >
-                              {field.value ? ministries.find((m) => m.id === field.value)?.name : "Selecciona un ministerio"}
+                              {field.value ? ministries.find((m) => m.id === field.value)?.name : t("disciples.fields.ministry")}
                               <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                             </Button>
                           </FormControl>
@@ -356,19 +358,19 @@ const DiscipleForm: React.FC = () => {
                   name="status"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Estado</FormLabel>
+                      <FormLabel className="flex items-center gap-1.5"><Flag className="h-3.5 w-3.5 text-muted-foreground" /> {t("disciples.fields.status")}</FormLabel>
                       <Select onValueChange={field.onChange} value={field.value || ""}>
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Selecciona un estado" />
+                            <SelectValue placeholder={t("disciples.fields.status")} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="lider">Líder</SelectItem>
-                          <SelectItem value="prelider">Prelíder</SelectItem>
-                          <SelectItem value="universidad_vida">Universidad de la Vida</SelectItem>
-                          <SelectItem value="solo_celula">Solo Célula</SelectItem>
-                          <SelectItem value="deserto">Deserto</SelectItem>
+                          <SelectItem value="lider">{t("disciples.statusOptions.lider")}</SelectItem>
+                          <SelectItem value="prelider">{t("disciples.statusOptions.prelider")}</SelectItem>
+                          <SelectItem value="universidad_vida">{t("disciples.statusOptions.universidad_vida")}</SelectItem>
+                          <SelectItem value="solo_celula">{t("disciples.statusOptions.solo_celula")}</SelectItem>
+                          <SelectItem value="deserto">{t("disciples.statusOptions.deserto")}</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -386,9 +388,9 @@ const DiscipleForm: React.FC = () => {
           <div className="flex justify-end mt-6">
             <Button type="submit" disabled={isSaving}>
               {isSaving ? (
-                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Guardando...</>
+                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t("disciples.form.saving")}</>
               ) : (
-                <><Save className='mr-2' /> Guardar cambios</>
+                <><Save className='mr-2' /> {t("disciples.form.save")}</>
               )}
             </Button>
           </div>

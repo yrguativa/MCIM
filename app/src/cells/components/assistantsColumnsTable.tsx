@@ -2,25 +2,15 @@ import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { BookUp, MoreHorizontal, Pen } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
-import HumanizeNaturalDay from "@/lib/utilsDate";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useDiscipleStore } from "@/src/disciples/store/disciple.store";
+import { useMinistryStore } from "@/src/ministries/store/ministries.store";
 import { CellFull } from "../models/cellFull";
 
-export const ColumnsAssistants: ColumnDef<CellFull>[] = [
+export const getColumnsAssistants = (t: (key: string) => string): ColumnDef<CellFull>[] => [
   {
-    header: "Fecha creación",
-    accessorKey: "createdDate",
-    cell: (info) => {
-      const value = info.getValue();
-      const date = value ? new Date(value as string | number | Date) : new Date();
-      if (isNaN(date.getTime())) return <>{HumanizeNaturalDay.HumanizeNaturalDay(new Date())}</>;
-      return <>{HumanizeNaturalDay.HumanizeNaturalDay(date)}</>
-    }
-  },
-  {
-    header: "Lider",
+    header: t("cells.columns.leader"),
     accessorKey: "leader",
     cell: (info) => {
       const disciplesState = useDiscipleStore(state => state.Disciples);
@@ -28,10 +18,42 @@ export const ColumnsAssistants: ColumnDef<CellFull>[] = [
     },
   },
   {
-    header: "Asistentes",
-    accessorKey: "records",
-    cell: () => {
-      return (<>0</>);
+    header: t("cells.columns.ministry"),
+    accessorKey: "leader",
+    cell: (info) => {
+      const disciplesState = useDiscipleStore(state => state.Disciples);
+      const ministries = useMinistryStore(state => state.ministries);
+      const leaderId = info.getValue() as string;
+      const disciple = leaderId ? disciplesState.find((x) => x.id === leaderId) : undefined;
+      const ministry = disciple?.ministryId ? ministries.find((m) => m.id === disciple.ministryId) : undefined;
+      return <>{ministry?.name || ""}</>;
+    },
+  },
+  {
+    header: t("cells.columns.day"),
+    accessorKey: "day",
+    cell: (info) => <>{info.getValue() as string || ""}</>,
+  },
+  {
+    header: t("cells.columns.time"),
+    accessorKey: "time",
+    cell: (info) => {
+      const time = info.getValue() as string;
+      if (!time) return <></>;
+      const [hours, minutes] = time.split(":");
+      if (!hours || !minutes) return <>{time}</>;
+      const h = parseInt(hours, 10);
+      const ampm = h >= 12 ? "PM" : "AM";
+      const h12 = h % 12 || 12;
+      return <>{`${h12}:${minutes} ${ampm}`}</>;
+    },
+  },
+  {
+    header: t("cells.columns.assistants"),
+    accessorKey: "assistants",
+    cell: (info) => {
+      const assistants = info.getValue() as unknown[];
+      return <>{assistants?.length || 0}</>;
     },
   },
   {
@@ -45,18 +67,18 @@ export const ColumnsAssistants: ColumnDef<CellFull>[] = [
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
+              <span className="sr-only">{t("cells.actions.actions")}</span>
               <MoreHorizontal />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuLabel>{t("cells.actions.actions")}</DropdownMenuLabel>
             <DropdownMenuItem onClick={() => navigate('/cells/' + info.getValue())}>
-              <Pen className="mr-2" />Editar Celula
+              <Pen className="mr-2" />{t("cells.actions.edit")}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => navigate(`/cells/${info.getValue()}/register`)}>
-              <BookUp className='mr-2' /> Agregar Registro Celula
+              <BookUp className='mr-2' /> {t("cells.actions.register")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

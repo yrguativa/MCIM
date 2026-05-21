@@ -23,6 +23,16 @@ export class CreateRecordCellInput {
   @Field(() => String)
   @IsString()
   @IsNotEmpty()
+  mode: string;
+
+  @Field(() => String, { nullable: true })
+  @IsString()
+  @IsOptional()
+  location?: string;
+
+  @Field(() => String)
+  @IsString()
+  @IsNotEmpty()
   createdUser: string;
 
   @Field(() => [CreateAssistantRecordCellInput], { nullable: true })

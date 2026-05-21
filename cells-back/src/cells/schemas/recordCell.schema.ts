@@ -13,6 +13,15 @@ export class RecordCell extends Document {
   @Prop()
   date: Date;
 
+  @Prop({ required: true })
+  mode: string;
+
+  @Prop()
+  location?: string;
+
+  @Prop({ required: true })
+  leader: string;
+
   //   @Prop({ required: true, ref: 'Disciple' })
   @Prop({ required: true })
   createdUser: string;
