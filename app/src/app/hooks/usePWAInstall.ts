@@ -18,7 +18,7 @@ export function usePWAInstall() {
     const ua = navigator.userAgent;
     const isIOS = /iPad|iPhone|iPod/.test(ua);
     const isAndroid = /Android/.test(ua);
-    const isStandalone = window.matchMedia("(display-mode: standalone)").matches || ("standalone" in navigator && (navigator as unknown as { standalone?: boolean }).standalone);
+    const isStandalone = window.matchMedia("(display-mode: standalone)").matches || ("standalone" in navigator && Boolean((navigator as unknown as { standalone?: boolean }).standalone));
     return {
       canInstall: false,
       isInstalled: isStandalone,

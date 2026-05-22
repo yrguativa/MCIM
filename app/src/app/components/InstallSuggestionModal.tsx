@@ -18,7 +18,7 @@ export const InstallSuggestionModal: React.FC = () => {
 
     function onBeforeInstallPrompt(e: Event) {
       e.preventDefault()
-      setDeferredPrompt(e)
+      setDeferredPrompt(e as BeforeInstallPromptEvent)
       // Only show the modal if user hasn't dismissed before
       if (!localStorage.getItem('install-suggested')) setOpen(true)
     }
