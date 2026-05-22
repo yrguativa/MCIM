@@ -45,7 +45,7 @@ const CellForm: React.FC = () => {
     const [showAddModal, setShowAddModal] = useState(false);
 
     const form = useForm<CellInput>({
-        resolver: zodResolver(CellSchema) as Resolver<CellInput>,
+        resolver: zodResolver(CellSchema as any) as Resolver<CellInput>,
         mode: "onChange",
         defaultValues: {
             id: crypto.randomUUID(),

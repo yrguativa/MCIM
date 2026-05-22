@@ -72,7 +72,7 @@ export const StudentEnrollmentForm: React.FC<StudentEnrollmentFormProps> = ({ on
   }, [selectedLevelId, selectedScheduleId, courses]);
 
   const form = useForm<StudentEnrollmentInput>({
-    resolver: zodResolver(StudentEnrollmentSchema) as never,
+    resolver: zodResolver(StudentEnrollmentSchema as any) as never,
     defaultValues: {
       id: crypto.randomUUID(),
       studentId: '',

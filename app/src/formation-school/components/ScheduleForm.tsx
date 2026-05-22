@@ -38,7 +38,7 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({ schedule, onSuccess,
   }, []);
   
   const form = useForm<ScheduleInput>({
-    resolver: zodResolver(ScheduleSchema) as never,
+    resolver: zodResolver(ScheduleSchema as any) as never,
     defaultValues: {
       id: crypto.randomUUID(),
       dayOfWeek: 1,

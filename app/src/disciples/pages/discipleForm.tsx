@@ -40,7 +40,7 @@ const DiscipleForm: React.FC = () => {
   const [personalInfoId, setPersonalInfoId] = useState<string | undefined>(undefined);
 
   const form = useForm<DiscipleInput>({
-    resolver: zodResolver(createDiscipleSchema(t)) as Resolver<DiscipleInput>,
+    resolver: zodResolver(createDiscipleSchema(t) as any) as Resolver<DiscipleInput>,
     defaultValues: {
       id: id || crypto.randomUUID(),
       createdUser: userState?.id || undefined,

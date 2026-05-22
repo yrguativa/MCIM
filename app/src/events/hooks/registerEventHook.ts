@@ -40,7 +40,7 @@ export const useRegisterEventHook = () => {
 
 
     const form = useForm<SearchDiscipleInput>({
-        resolver: zodResolver(SearchDiscipleSchema),
+        resolver: zodResolver(SearchDiscipleSchema as any),
         defaultValues: {
             identification: '',
         },

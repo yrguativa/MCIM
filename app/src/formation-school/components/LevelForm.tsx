@@ -25,7 +25,7 @@ export const LevelForm: React.FC<LevelFormProps> = ({ level, onSuccess, onCancel
   const isEditing = !!level;
   
   const form = useForm<LevelInput>({
-    resolver: zodResolver(LevelSchema) as never,
+    resolver: zodResolver(LevelSchema as any) as never,
     defaultValues: {
       id: crypto.randomUUID(),
       name: '',

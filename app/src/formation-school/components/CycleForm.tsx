@@ -28,7 +28,7 @@ export const CycleForm: React.FC<CycleFormProps> = ({ cycle, onSuccess, onCancel
   const isEditing = !!cycle;
   
   const form = useForm<CycleFormData>({
-    resolver: zodResolver(CycleSchema) as never,
+    resolver: zodResolver(CycleSchema as any) as never,
     defaultValues: {
       id: crypto.randomUUID(),
       name: '',

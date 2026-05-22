@@ -72,7 +72,7 @@ export const StudentEnrollmentPage: React.FC = () => {
   const [enrollmentError, setEnrollmentError] = useState<string | null>(null);
 
   const form = useForm<EnrollmentFormData>({
-    resolver: zodResolver(enrollmentSchema),
+    resolver: zodResolver(enrollmentSchema as any),
     defaultValues: {
       studentId: '',
       levelId: '',

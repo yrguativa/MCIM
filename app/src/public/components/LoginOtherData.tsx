@@ -40,7 +40,7 @@ const LoginOtherData: React.FC<LoginOtherDataProps> = ({ isOpenSheet, setIsOpenS
     const { user: userState, updateUser } = useAuthStore()
     
     const form = useForm<LoginOtherDataInput>({
-        resolver: zodResolver(LoginOtherDataSchema),
+        resolver: zodResolver(LoginOtherDataSchema as any),
         defaultValues: {
             identification: userState?.identification || "",
             ministryId: userState?.ministryId || "",

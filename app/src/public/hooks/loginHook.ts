@@ -24,7 +24,7 @@ export const useLoginHook = () => {
     const [isOpenSheet, setIsOpenSheet] = useState(false)
 
     const form = useForm<LoginInput>({
-        resolver: zodResolver(LoginSchema),
+        resolver: zodResolver(LoginSchema as any),
         defaultValues: {
             email: "",
             password: "",

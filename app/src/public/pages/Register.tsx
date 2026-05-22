@@ -28,7 +28,7 @@ const RegisterPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false)
 
     const form = useForm<RegisterInput>({
-        resolver: zodResolver(RegisterSchema) as Resolver<RegisterInput>,
+        resolver: zodResolver(RegisterSchema as any) as Resolver<RegisterInput>,
         defaultValues: {
             email: "",
             password: "",

@@ -29,7 +29,7 @@ const CreateEvent: React.FC = () => {
     const [hasEndDate, setHasEndDate] = useState(false);
 
     const form = useForm<Event>({
-        resolver: zodResolver(EventSchema) as Resolver<Event>,
+        resolver: zodResolver(EventSchema as any) as Resolver<Event>,
         defaultValues: {
             id: crypto.randomUUID(),
             createdBy: userState?.id || '',

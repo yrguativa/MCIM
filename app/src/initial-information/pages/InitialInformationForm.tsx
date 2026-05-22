@@ -35,7 +35,7 @@ const InitialInformationForm: React.FC = () => {
   const schema = useMemo(() => createInitialInformationSchema(t), [t]);
 
   const form = useForm<InitialInformationInput>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema as any),
     mode: "onChange",
     defaultValues: {
       name: "",

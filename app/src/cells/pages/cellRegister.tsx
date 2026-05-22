@@ -40,7 +40,7 @@ const CellRegister: React.FC = () => {
   const hasLoaded = useRef(false);
 
   const form = useForm<CellRecordInput>({
-    resolver: zodResolver(CellRecordSchema) as Resolver<CellRecordInput>,
+    resolver: zodResolver(CellRecordSchema as any) as Resolver<CellRecordInput>,
     defaultValues: {
       topic: "",
       date: new Date(),

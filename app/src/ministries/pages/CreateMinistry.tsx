@@ -29,7 +29,7 @@ const CreateMinistry: React.FC = () => {
     const { ministries, addMinistry, updateMinistry } = useMinistryStore();
 
     const form = useForm<Ministry>({
-        resolver: zodResolver(MinistrySchema) as Resolver<Ministry>,
+        resolver: zodResolver(MinistrySchema as any) as Resolver<Ministry>,
         defaultValues: {
             id: id || crypto.randomUUID(),
             name: "",

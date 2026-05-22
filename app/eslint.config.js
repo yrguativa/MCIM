@@ -25,6 +25,7 @@ export default [
       'react/prop-types': 'off', // Using TypeScript for type checking
       'react/no-unknown-property': ['error', { ignore: ['cmdk-input-wrapper'] }], // Allow cmdk properties
       '@typescript-eslint/no-empty-object-type': 'off', // Allow empty interfaces
+      '@typescript-eslint/no-explicit-any': 'warn', // Warn instead of error (needed for Zod 4 compatibility)
     },
   },
 ];

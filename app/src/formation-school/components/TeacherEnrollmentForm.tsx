@@ -30,7 +30,7 @@ export const TeacherEnrollmentForm: React.FC<TeacherEnrollmentFormProps> = ({ on
   const [isLoading, setIsLoading] = useState(false);
   
   const form = useForm<TeacherAssignmentInput>({
-    resolver: zodResolver(TeacherAssignmentSchema) as never,
+    resolver: zodResolver(TeacherAssignmentSchema as any) as never,
     defaultValues: {
       id: crypto.randomUUID(),
       teacherId: '',
