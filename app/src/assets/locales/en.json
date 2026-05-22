@@ -18,13 +18,15 @@
   "menu": {
     "dashboard": "Dashboard",
     "cells": "Cells",
+    "cellReports": "Cell Reports",
     "disciples": "Disciples",
     "events": "Events",
     "ministries": "Ministries",
     "reports": "Reports",
     "settings": "Settings",
     "profile": "Profile",
-    "logout": "Logout"
+    "logout": "Logout",
+    "more": "More"
   },
   "validation": {
     "masculinePronoun": "The",

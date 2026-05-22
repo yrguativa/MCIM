@@ -25,7 +25,8 @@
         "reports": "Reportes",
         "settings": "Configuración",
         "profile": "Perfil",
-        "logout": "Cerrar sesión"
+        "logout": "Cerrar sesión",
+        "more": "Más"
     },
     "validation": {
         "masculinePronoun": "El",

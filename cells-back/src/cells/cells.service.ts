@@ -163,7 +163,7 @@ export class CellsService {
         topic: record.topic,
         date: record.date,
         createdUser: record.createdUser,
-        mode: record.mode,
+        mode: record.mode || 'presencial',
         location: record.location,
         leader: record.leader,
         assistants: (record.assistants || []).map((assistant: any) => ({

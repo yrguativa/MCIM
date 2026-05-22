@@ -5,9 +5,9 @@ import { Home, Package, Users, Package2, LineChart } from "lucide-react";
 
 const links = [
   { to: "/", icon: Home, labelKey: "menu.dashboard" },
+  { to: "/disciples", icon: Users, labelKey: "menu.disciples" },
   { to: "/cells", icon: Package, labelKey: "menu.cells" },
   { to: "/cells/reports", icon: LineChart, labelKey: "menu.cellReports" },
-  { to: "/disciples", icon: Users, labelKey: "menu.disciples" },
   { to: "/ministries", icon: Package2, labelKey: "menu.ministries" },
 ];
 

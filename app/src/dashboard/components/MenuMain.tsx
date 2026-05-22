@@ -70,12 +70,24 @@ const MenuMain: React.FC = () => {
                             {t('menu.dashboard')}
                         </NavLink>
                         <NavLink
+                            to="/disciples"
+                            className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${isActive ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'}`}
+                        >
+                            <Users className="h-4 w-4" />
+                            {t('menu.disciples')}
+                        </NavLink>
+                        <NavLink
                             to="/cells"
                             className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${isActive ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'}`}
                         >
                             <Package className="h-4 w-4" />
                             {t('menu.cells')}
                         </NavLink>
+
+                        <div className="mt-2 mb-1 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
+                            {t('menu.more')}
+                        </div>
+
                         <NavLink
                             to="/cells/reports"
                             className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${isActive ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'}`}
@@ -90,13 +102,6 @@ const MenuMain: React.FC = () => {
                             <CalendarDays className="h-4 w-4" />
                             {t('menu.events')}
                             <Badge className="ml-auto flex shrink-0 items-center justify-center rounded-full">Proximamente</Badge>
-                        </NavLink>
-                        <NavLink
-                            to="/disciples"
-                            className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${isActive ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'}`}
-                        >
-                            <Users className="h-4 w-4" />
-                            {t('menu.disciples')}
                         </NavLink>
                         <NavLink
                             to="/ministries"
