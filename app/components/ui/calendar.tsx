@@ -121,7 +121,7 @@ function Calendar({
         ),
         hidden: cn("invisible", defaultClassNames.hidden),
         ...classNames,
-      }}
+      } as unknown as Record<string, string | undefined>}
       components={{
         Root: ({ className, rootRef, ...props }) => {
           return (
