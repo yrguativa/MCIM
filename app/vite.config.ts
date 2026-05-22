@@ -27,16 +27,18 @@ export default defineConfig(() => {
           background_color: '#f8fafc',
           display: 'standalone',
           orientation: 'portrait',
-          scope: '/',
-          start_url: '/',
+          lang: 'es',
+          scope: base,
+          start_url: base,
           icons: [
-            { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
-            { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
-            { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+            { src: `${base}icons/icon-192.png`, sizes: '192x192', type: 'image/png' },
+            { src: `${base}icons/icon-512.png`, sizes: '512x512', type: 'image/png' },
+            { src: `${base}icons/icon-512.png`, sizes: '512x512', type: 'image/png', purpose: 'maskable' },
           ],
         },
         workbox: {
           globPatterns: ['**/*.{js,css,html,svg,png,ico,json,woff2}'],
+          navigateFallback: `${base}index.html`,
           runtimeCaching: [
             {
               urlPattern: /^https?:\/\/.*\/graphql.*/i,

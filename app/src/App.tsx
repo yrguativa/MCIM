@@ -6,7 +6,6 @@ import i18n from './i18n';
 import { Toaster } from "@/components/ui/sonner";
 import { ProgressIndeterminate } from '@/components/ui/progress-indeterminate';
 import { LanguageSuggestionModal } from './app/components/LanguageSuggestionModal';
-import { InstallSuggestionModal } from './app/components/InstallSuggestionModal';
 import { InstallPWAModal } from './app/components/InstallPWAModal';
 import { usePWAInstall } from './app/hooks/usePWAInstall';
 
@@ -72,7 +71,6 @@ const App: React.FC = () => {
           onDismiss={dismiss}
           onNeverShow={handleNeverShowPWA}
         />
-        <InstallSuggestionModal />
       </HashRouter>
       <Toaster />
     </GoogleOAuthProvider>

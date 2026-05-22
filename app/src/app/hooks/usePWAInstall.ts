@@ -28,6 +28,16 @@ export function usePWAInstall() {
   });
 
   useEffect(() => {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+      const timer = setTimeout(() => {
+        setState((prev) => ({ ...prev, showPrompt: true }));
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  useEffect(() => {
     const handler = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);

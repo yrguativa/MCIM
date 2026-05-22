@@ -24,24 +24,19 @@ const MenuMovil: React.FC = () => {
           <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
             <NavLink
               to="/"
-              className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-primary transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}
+              className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${isActive ? 'bg-muted text-primary' : 'text-muted-foreground'}`}
             >
               <Home className="h-4 w-4" />
               {t('menu.dashboard')}
             </NavLink>
-            <NavLink to="/disciples" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}>
+            <NavLink to="/disciples" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${isActive ? 'bg-muted text-primary' : 'text-muted-foreground'}`}>
               <Users className="h-4 w-4" />
               {t('menu.disciples')}
             </NavLink>
-            <NavLink to="/cells" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-primary transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}>
+            <NavLink to="/cells" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${isActive ? 'bg-muted text-primary' : 'text-muted-foreground'}`}>
               <Package className="h-4 w-4" />
               {t('menu.cells')}
             </NavLink>
-
-            <div className="mt-3 mb-1 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
-              {t('menu.more')}
-            </div>
-
             <NavLink to="/cells/reports" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${isActive ? 'bg-muted ' : ''}`}>
               <LineChart className="h-4 w-4" />
               {t('menu.cellReports')}

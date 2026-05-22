@@ -6,10 +6,9 @@
     <script>
       const path = window.location.pathname;
       const repo = '/MCIM/'; // Replace with your repository name
-      if (path.startsWith(repo)) {
-        const newPath = path.substring(repo.length);
-        window.location.href = `/?/${newPath}${window.location.search}${window.location.hash}`;
-      }
+      const base = path.startsWith(repo) ? repo : '/';
+      const newPath = path.startsWith(repo) ? path.substring(repo.length) : path.substring(1);
+      window.location.href = `${base}?/${newPath}${window.location.search}${window.location.hash}`;
     </script>
   </head>
   <body>
