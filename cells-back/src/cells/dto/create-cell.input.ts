@@ -13,18 +13,17 @@ export class CreateCellInput {
   @IsPositive()
   network: number;
 
-  @Field(() => String, {
-    description:
-      'Enter the name of the host who will receive the cell in their home.',
-  })
-  @IsNotEmpty()
-  @IsMongoId()
-  host: string;
-
   @Field(() => String)
   @IsNotEmpty()
-  @IsMongoId()
-  timoteo: string;
+  cellType: string;
+
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  host?: string;
+
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  timoteo?: string;
 
   @Field(() => String)
   @IsNotEmpty()

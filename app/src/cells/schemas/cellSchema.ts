@@ -16,6 +16,7 @@ export const CellSchema = z.object({
     .min(2, {
       message: "El lider de la celula es obligatorio.",
     }),
+  cellType: z.string().optional().default('celula'),
   host: z.string()
     .min(2, {
       message: "El anfitrion de la celula es obligatorio.",

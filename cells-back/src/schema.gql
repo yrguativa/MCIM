@@ -35,9 +35,8 @@ type Cell {
   id: ID!
   leader: String!
   network: Int!
-
-  """Enter the name of the host who will receive the cell in their home."""
-  host: String!
+  cellType: String!
+  host: String
   timoteo: String
   address: String!
   neighborhood: Int!
@@ -458,10 +457,9 @@ input ChangePasswordInput {
 input CreateCellInput {
   leader: String!
   network: Int!
-
-  """Enter the name of the host who will receive the cell in their home."""
-  host: String!
-  timoteo: String!
+  cellType: String!
+  host: String
+  timoteo: String
   address: String!
   neighborhood: Int!
   day: String
@@ -472,6 +470,7 @@ input CreateCellInput {
 input UpdateCellInput {
   leader: String!
   network: Int!
+  cellType: String
 
   """Enter the name of the host who will receive the cell in their home."""
   host: String!

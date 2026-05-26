@@ -787,7 +787,11 @@
       "actions": "Actions",
       "remove": "Remove",
       "hostFromAssistants": "Select from assistants",
-      "timoteoFromAssistants": "Select from assistants"
+      "timoteoFromAssistants": "Select from assistants",
+      "addCell": "Add cell",
+      "cellType_discipulado": "Discipleship",
+      "cellType_celula": "Cell",
+      "cellType_celula_anexa": "Annex Cell"
     },
     "yes": "Yes",
     "no": "No",

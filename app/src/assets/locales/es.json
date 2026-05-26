@@ -818,7 +818,11 @@
             "actions": "Acciones",
             "remove": "Eliminar",
             "hostFromAssistants": "Seleccionar de asistentes",
-            "timoteoFromAssistants": "Seleccionar de asistentes"
+            "timoteoFromAssistants": "Seleccionar de asistentes",
+            "addCell": "Agregar célula",
+            "cellType_discipulado": "Discipulado",
+            "cellType_celula": "Célula",
+            "cellType_celula_anexa": "Célula Anexa"
         },
         "validation": {
             "namesRequired": "Los nombres son obligatorios",

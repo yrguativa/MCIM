@@ -67,6 +67,9 @@ export const createDiscipleSchema = (t: (key: string) => string) => z.object({
     baptizedAtMCI: z.enum(["YES", "NO"]).optional(),
     isLeader: z.enum(["YES", "NO"]).optional(),
     generation: z.enum(["YES", "NO"]).optional(),
+    rh: z.enum(["O_POSITIVE", "O_NEGATIVE", "A_POSITIVE", "A_NEGATIVE", "B_POSITIVE", "B_NEGATIVE", "AB_POSITIVE", "AB_NEGATIVE"]).optional(),
+    contactName: z.string().optional(),
+    contactPhone: z.string().optional(),
     formationSchoolLevel: z.enum(["BASIC_1", "BASIC_2", "BASIC_3", "ADVANCED_1", "ADVANCED_2", "ADVANCED_3", "GRADUATE", "NOT_STARTED"]).optional(),
 
     status: z.string()

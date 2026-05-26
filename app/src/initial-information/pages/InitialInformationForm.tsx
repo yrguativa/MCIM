@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Save, ArrowLeft, GalleryVerticalEnd, CheckCircle2 } from "lucide-react";
+import { Loader2, Save, ArrowLeft, GalleryVerticalEnd, CheckCircle2, Plus } from "lucide-react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import {
@@ -16,9 +16,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useMinistryStore } from "@/src/ministries/store/ministries.store";
-import { useDiscipleStore } from "@/src/disciples/store/disciple.store";
 import { CellsService } from "@/src/cells/services/cells.services";
-import { NETWORK_MAP } from "../components/CellInfoCard";
+import CellInfoCard, { type CellData, NETWORK_MAP } from "../components/CellInfoCard";
 import {
   createInitialInformationSchema,
   type InitialInformationInput,
@@ -29,17 +28,21 @@ import AssistantSearch from "../components/AssistantSearch";
 import BasicInfoCard from "../components/BasicInfoCard";
 import PersonalInfoCard from "../components/PersonalInfoCard";
 import ChurchInfoCard from "../components/ChurchInfoCard";
-import CellInfoCard from "../components/CellInfoCard";
 import WizardHeader from "../components/WizardHeader";
 
 const InitialInformationForm: React.FC = () => {
   const { t } = useTranslation();
   const store = useInitialInformationStore();
   const { getMinistries } = useMinistryStore();
-  const getDisciples = useDiscipleStore(state => state.getDisciples);
 
-  const [cellAssistants, setCellAssistants] = useState<{ id: string; name: string; lastName: string }[]>([]);
   const [step, setStep] = useState<1 | 2>(1);
+  const [cells, setCells] = useState<CellData[]>([
+    { type: 'celula', address: '', neighborhood: undefined, day: '', time: '', host: '', timoteo: '', assistants: [] },
+  ]);
+
+  const defaultCell = (): CellData => ({
+    type: 'celula', address: '', neighborhood: undefined, day: '', time: '', host: '', timoteo: '', assistants: [],
+  });
 
   const schema = useMemo(() => createInitialInformationSchema(t), [t]);
 
@@ -82,12 +85,6 @@ const InitialInformationForm: React.FC = () => {
       spouseAttendsChurch: undefined,
       spouseId: "",
       spouseName: "",
-      cellAddress: "",
-      cellNeighborhood: undefined,
-      cellDay: "",
-      cellTime: "",
-      cellHost: "",
-      cellTimoteo: "",
     },
   });
 
@@ -139,12 +136,6 @@ const InitialInformationForm: React.FC = () => {
         spouseAttendsChurch: undefined,
         spouseId: "",
         spouseName: "",
-        cellAddress: "",
-        cellNeighborhood: undefined,
-        cellDay: "",
-        cellTime: "",
-        cellHost: "",
-        cellTimoteo: "",
       };
 
       form.reset(values);
@@ -245,15 +236,9 @@ const InitialInformationForm: React.FC = () => {
         spouseAttendsChurch: undefined,
         spouseId: "",
         spouseName: "",
-        cellAddress: "",
-        cellNeighborhood: undefined,
-        cellDay: "",
-        cellTime: "",
-        cellHost: "",
-        cellTimoteo: "",
       });
       setStep(1);
-      setCellAssistants([]);
+      setCells([defaultCell()]);
       setMaritalData(null);
       sessionStorage.removeItem("discipleId");
       sessionStorage.removeItem("personalInfoData");
@@ -277,15 +262,13 @@ const InitialInformationForm: React.FC = () => {
       if (!isValid) return;
 
       if (data.isLeader === "YES") {
-        if (store.mode === "update") {
-          setStep(2);
-          return;
-        }
         setStep(2);
+        return;
       }
+      await onSubmit(data);
+    } else {
+      await onSubmit(data);
     }
-
-    await onSubmit(data);
   };
 
   const saveMaritalRelation = async (discipleId: string, data: InitialInformationInput) => {
@@ -399,23 +382,26 @@ const InitialInformationForm: React.FC = () => {
 
       try {
         const cellNetworkValue = NETWORK_MAP[data.network];
-        if (cellNetworkValue) {
+        if (!cellNetworkValue) return;
+
+        for (const cell of cells) {
           const cellId = await CellsService.createCell({
             id: crypto.randomUUID(),
             leader: storedDiscipleId,
             network: cellNetworkValue,
-            host: data.cellHost || "",
-            timoteo: data.cellTimoteo || "",
-            address: data.cellAddress || "",
-            neighborhood: data.cellNeighborhood || 0,
-            day: data.cellDay || undefined,
-            time: data.cellTime || undefined,
+            cellType: cell.type || 'celula',
+            host: (cell.type === 'celula' || cell.type === 'celula_anexa') ? cell.host || "" : "",
+            timoteo: (cell.type === 'celula' || cell.type === 'celula_anexa') ? cell.timoteo || "" : "",
+            address: cell.address || "",
+            neighborhood: cell.neighborhood || 0,
+            day: cell.day || undefined,
+            time: cell.time || undefined,
             createdDate: new Date(),
             createdUser: storedDiscipleId,
             assistants: [],
           });
 
-          for (const assistant of cellAssistants) {
+          for (const assistant of cell.assistants) {
             try {
               await CellsService.addCellAssistant(cellId, assistant.id, storedDiscipleId);
             } catch {
@@ -510,15 +496,30 @@ const InitialInformationForm: React.FC = () => {
                     <ChurchInfoCard />
                   </div>
                 ) : (
-                  <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
-                    <CellInfoCard
-                      assistants={cellAssistants}
-                      onAddAssistant={(a) => {
-                        setCellAssistants(prev => [...prev, a]);
-                        getDisciples();
-                      }}
-                      onRemoveAssistant={(id) => setCellAssistants(prev => prev.filter(a => a.id !== id))}
-                    />
+                  <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
+                    {cells.map((cell, i) => (
+                      <CellInfoCard
+                        key={i}
+                        cell={cell}
+                        index={i}
+                        onChange={(idx, field, value) => {
+                          setCells(prev => prev.map((c, j) => j === idx ? { ...c, [field]: value } : c));
+                        }}
+                        onRemove={(idx) => {
+                          setCells(prev => prev.filter((_, j) => j !== idx));
+                        }}
+                        disabledRemove={cells.length <= 1}
+                      />
+                    ))}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full border-dashed"
+                      onClick={() => setCells(prev => [...prev, defaultCell()])}
+                    >
+                      <Plus className="mr-2 h-4 w-4" />
+                      {t("initialInformation.cellInfo.addCell")}
+                    </Button>
                   </div>
                 )}
 
@@ -576,7 +577,7 @@ const InitialInformationForm: React.FC = () => {
           setShowSuccessModal(false);
           store.resetForm();
           form.reset();
-          setCellAssistants([]);
+          setCells([defaultCell()]);
           setStep(1);
         }
       }}>
@@ -598,7 +599,7 @@ const InitialInformationForm: React.FC = () => {
                 setShowSuccessModal(false);
                 store.resetForm();
                 form.reset();
-                setCellAssistants([]);
+                setCells([defaultCell()]);
                 setStep(1);
               }}
               className="min-w-[120px]"

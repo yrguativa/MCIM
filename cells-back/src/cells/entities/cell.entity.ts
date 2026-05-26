@@ -13,11 +13,11 @@ export class CellEntity {
   @Field(() => Int)
   network: number;
 
-  @Field(() => String, {
-    description:
-      'Enter the name of the host who will receive the cell in their home.',
-  })
-  host: string;
+  @Field(() => String)
+  cellType: string;
+
+  @Field(() => String, { nullable: true })
+  host?: string;
 
   @Field(() => String, { nullable: true })
   timoteo?: string;

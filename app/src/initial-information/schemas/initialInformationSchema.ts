@@ -171,13 +171,6 @@ export const createInitialInformationSchema = (t: (key: string, options?: Record
       spouseAttendsChurch: z.enum(["YES", "NO"]).optional(),
       spouseId: z.string().optional(),
       spouseName: z.string().optional(),
-
-      cellAddress: z.string().optional(),
-      cellNeighborhood: z.number().optional(),
-      cellDay: z.string().optional(),
-      cellTime: z.string().optional(),
-      cellHost: z.string().optional(),
-      cellTimoteo: z.string().optional(),
     })
     .superRefine((data, ctx) => {
       if (

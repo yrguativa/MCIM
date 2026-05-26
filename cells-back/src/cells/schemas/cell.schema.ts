@@ -33,6 +33,9 @@ export class Cell extends Document {
   @Prop()
   network: number;
 
+  @Prop({ enum: ['discipulado', 'celula', 'celula_anexa'], default: 'celula' })
+  cellType: string;
+
   @Prop()
   host: string;
 

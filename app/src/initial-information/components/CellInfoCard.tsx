@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { MapPin, Clock, Calendar, Users, User, Home, Network, X, Plus, Check, Pencil } from 'lucide-react';
+import { MapPin, Clock, Calendar, Users, User, Home, Network, X, Plus, Check, Pencil, Trash2 } from 'lucide-react';
 import { CaretSortIcon } from '@radix-ui/react-icons';
-import {
-  FormField, FormItem, FormLabel, FormControl, FormMessage,
-} from '@/components/ui/form';
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
@@ -19,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
+import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { Neighborhood } from '@/src/cells/schemas/neighborhood.enum';
 import { AddAttendeeModal } from '@/src/cells/components/AddAttendeeModal';
@@ -44,15 +42,30 @@ const DAYS_OF_WEEK = [
   { value: 'Domingo', label: 'Domingo' },
 ];
 
-interface CellInfoCardProps {
+export interface CellData {
+  type: string;
+  address: string;
+  neighborhood: number | undefined;
+  day: string;
+  time: string;
+  host: string;
+  timoteo: string;
   assistants: { id: string; name: string; lastName: string }[];
-  onAddAssistant: (a: { id: string; name: string; lastName: string }) => void;
-  onRemoveAssistant: (id: string) => void;
 }
 
-const CellInfoCard: React.FC<CellInfoCardProps> = ({ assistants, onAddAssistant, onRemoveAssistant }) => {
+interface CellInfoCardProps {
+  cell: CellData;
+  index: number;
+  onChange: (index: number, field: string, value: unknown) => void;
+  onRemove: (index: number) => void;
+  disabledRemove: boolean;
+}
+
+const CELL_TYPES = ['discipulado', 'celula', 'celula_anexa'] as const;
+
+const CellInfoCard: React.FC<CellInfoCardProps> = ({ cell, index, onChange, onRemove, disabledRemove }) => {
   const { t } = useTranslation();
-  const { control, setValue } = useFormContext();
+  const { control } = useFormContext();
 
   const network = useWatch({ control, name: 'network' }) as string | undefined;
   const ministryId = useWatch({ control, name: 'ministryId' }) as string | undefined;
@@ -79,58 +92,73 @@ const CellInfoCard: React.FC<CellInfoCardProps> = ({ assistants, onAddAssistant,
     return d ? `${d.name} ${d.lastName}` : id;
   };
 
+  const f = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(index, field, e.target.value);
+  };
+
+  const needsHostTimoteo = cell.type === 'celula' || cell.type === 'celula_anexa';
+
   return (
     <>
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Home className="h-5 w-5 text-primary" />
-            {t("initialInformation.cellInfo.title")}
+        <CardHeader className="flex flex-row items-center justify-between gap-4 pb-3">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Home className="h-5 w-5 text-primary shrink-0" />
+            {t("initialInformation.cellInfo.title")} {index + 1}
           </CardTitle>
+          <div className="flex items-center gap-2">
+            <div className="w-40">
+              <Select
+                value={cell.type}
+                onValueChange={(v) => onChange(index, 'type', v)}
+              >
+                <SelectTrigger className="h-8 text-xs">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {CELL_TYPES.map((ct) => (
+                    <SelectItem key={ct} value={ct} className="text-sm">
+                      {t(`initialInformation.cellInfo.cellType_${ct}`)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            {!disabledRemove && (
+              <Button type="button" variant="ghost" size="icon" className="h-8 w-8 shrink-0 text-destructive" onClick={() => onRemove(index)}>
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            control={control}
-            name="cellDay"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex items-center gap-1.5">
-                  <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
-                  {t("initialInformation.cellInfo.day")}
-                </FormLabel>
-                <Select onValueChange={field.onChange} value={field.value || ''}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder={t("initialInformation.cellInfo.dayPlaceholder")} />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {DAYS_OF_WEEK.map(d => (
-                      <SelectItem key={d.value} value={d.value}>{d.label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="space-y-1.5">
+            <Label className="text-sm font-medium flex items-center gap-1.5">
+              <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
+              {t("initialInformation.cellInfo.day")}
+            </Label>
+            <Select
+              value={cell.day}
+              onValueChange={(v) => onChange(index, 'day', v)}
+            >
+              <SelectTrigger className="h-10">
+                <SelectValue placeholder={t("initialInformation.cellInfo.dayPlaceholder")} />
+              </SelectTrigger>
+              <SelectContent>
+                {DAYS_OF_WEEK.map(d => (
+                  <SelectItem key={d.value} value={d.value}>{d.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-          <FormField
-            control={control}
-            name="cellTime"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex items-center gap-1.5">
-                  <Clock className="h-3.5 w-3.5 text-muted-foreground" />
-                  {t("initialInformation.cellInfo.time")}
-                </FormLabel>
-                <FormControl>
-                  <Input type="time" {...field} value={field.value || ''} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="space-y-1.5">
+            <Label className="text-sm font-medium flex items-center gap-1.5">
+              <Clock className="h-3.5 w-3.5 text-muted-foreground" />
+              {t("initialInformation.cellInfo.time")}
+            </Label>
+            <Input type="time" value={cell.time || ''} onChange={f('time')} className="h-10" />
+          </div>
 
           <div className="flex flex-col gap-1.5">
             <span className="text-sm font-medium flex items-center gap-1.5">
@@ -142,98 +170,62 @@ const CellInfoCard: React.FC<CellInfoCardProps> = ({ assistants, onAddAssistant,
             </div>
           </div>
 
-          <FormField
-            control={control}
-            name="cellAddress"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex items-center gap-1.5">
-                  <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
-                  {t("initialInformation.cellInfo.address")}
-                </FormLabel>
-                <div className="flex gap-2">
-                  <FormControl>
-                    <Input {...field} value={field.value || ''} className="flex-1" />
-                  </FormControl>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    onClick={() => setShowCellAddressModal(true)}
-                    className="shrink-0"
-                    title={t("initialInformation.personalInfo.addressStandardizer.title")}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="space-y-1.5">
+            <Label className="text-sm font-medium flex items-center gap-1.5">
+              <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
+              {t("initialInformation.cellInfo.address")}
+            </Label>
+            <div className="flex gap-2">
+              <Input value={cell.address || ''} onChange={f('address')} className="flex-1 h-10" />
+              <Button type="button" variant="outline" size="icon" className="shrink-0 h-10 w-10"
+                onClick={() => setShowCellAddressModal(true)}
+                title={t("initialInformation.personalInfo.addressStandardizer.title")}
+              >
+                <Pencil className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
 
           <AddressStandardizer
             open={showCellAddressModal}
             onOpenChange={setShowCellAddressModal}
-            onSave={(address) => setValue("cellAddress", address, { shouldDirty: true })}
+            onSave={(address) => onChange(index, 'address', address)}
           />
 
-          <FormField
-            control={control}
-            name="cellNeighborhood"
-            render={({ field }) => {
-              const selectedLabel = field.value
-                ? Neighborhood.find(n => n.value === field.value)?.label
-                : undefined;
-              return (
-                <FormItem className="flex flex-col">
-                  <FormLabel className="flex items-center gap-1.5">
-                    <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
-                    {t("initialInformation.cellInfo.neighborhood")}
-                  </FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className={cn(
-                            "w-full justify-between font-normal",
-                            !field.value && "text-muted-foreground",
-                          )}
+          <div className="space-y-1.5">
+            <Label className="text-sm font-medium flex items-center gap-1.5">
+              <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
+              {t("initialInformation.cellInfo.neighborhood")}
+            </Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" role="combobox"
+                  className={cn("w-full justify-between font-normal h-10", !cell.neighborhood && "text-muted-foreground")}
+                >
+                  {cell.neighborhood
+                    ? Neighborhood.find(n => n.value === cell.neighborhood)?.label
+                    : t("initialInformation.cellInfo.neighborhoodPlaceholder")}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[400px] p-0">
+                <Command>
+                  <CommandInput placeholder={t("initialInformation.cellInfo.neighborhoodSearch")} />
+                  <CommandList>
+                    <CommandEmpty>{t("initialInformation.cellInfo.neighborhoodEmpty")}</CommandEmpty>
+                    <CommandGroup className="max-h-64 overflow-auto">
+                      {Neighborhood.map(n => (
+                        <CommandItem key={n.value} value={n.label}
+                          onSelect={() => onChange(index, 'neighborhood', n.value)}
                         >
-                          {selectedLabel || t("initialInformation.cellInfo.neighborhoodPlaceholder")}
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[400px] p-0">
-                      <Command>
-                        <CommandInput placeholder={t("initialInformation.cellInfo.neighborhoodSearch")} />
-                        <CommandList>
-                          <CommandEmpty>
-                            {t("initialInformation.cellInfo.neighborhoodEmpty")}
-                          </CommandEmpty>
-                          <CommandGroup className="max-h-64 overflow-auto">
-                            {Neighborhood.map(n => (
-                              <CommandItem
-                                key={n.value}
-                                value={n.label}
-                                onSelect={() => {
-                                  setValue('cellNeighborhood', n.value, { shouldValidate: true });
-                                }}
-                              >
-                                {n.label}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              );
-            }}
-          />
+                          {n.label}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+          </div>
 
           <div className="md:col-span-2">
             <div className="flex items-center justify-between mb-2">
@@ -246,8 +238,7 @@ const CellInfoCard: React.FC<CellInfoCardProps> = ({ assistants, onAddAssistant,
                 {t("initialInformation.cellInfo.addAssistant")}
               </Button>
             </div>
-
-            {assistants.length === 0 ? (
+            {cell.assistants.length === 0 ? (
               <p className="text-sm text-muted-foreground py-3 text-center border rounded-md">
                 {t("initialInformation.cellInfo.noAssistants")}
               </p>
@@ -260,11 +251,16 @@ const CellInfoCard: React.FC<CellInfoCardProps> = ({ assistants, onAddAssistant,
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {assistants.map(a => (
+                  {cell.assistants.map(a => (
                     <TableRow key={a.id}>
                       <TableCell className="font-medium">{a.name} {a.lastName}</TableCell>
                       <TableCell>
-                        <Button type="button" variant="ghost" size="sm" onClick={() => onRemoveAssistant(a.id)}>
+                        <Button type="button" variant="ghost" size="sm"
+                          onClick={() => {
+                            const updated = cell.assistants.filter(x => x.id !== a.id);
+                            onChange(index, 'assistants', updated);
+                          }}
+                        >
                           <X className="h-4 w-4 text-destructive" />
                         </Button>
                       </TableCell>
@@ -275,60 +271,36 @@ const CellInfoCard: React.FC<CellInfoCardProps> = ({ assistants, onAddAssistant,
             )}
           </div>
 
-          <FormField
-            control={control}
-            name="cellHost"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel className="flex items-center gap-1.5">
+          {needsHostTimoteo && (
+            <>
+              <div className="space-y-1.5">
+                <Label className="text-sm font-medium flex items-center gap-1.5">
                   <User className="h-3.5 w-3.5 text-muted-foreground" />
                   {t("initialInformation.cellInfo.host")}
-                </FormLabel>
+                </Label>
                 <Popover>
                   <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        className={cn(
-                          "w-full justify-between font-normal",
-                          !field.value && "text-muted-foreground",
-                        )}
-                      >
-                        {field.value
-                          ? discipleName(field.value)
-                          : t("initialInformation.cellInfo.hostPlaceholder")}
-                        <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </FormControl>
+                    <Button variant="outline" role="combobox"
+                      className={cn("w-full justify-between font-normal h-10", !cell.host && "text-muted-foreground")}
+                    >
+                      {cell.host ? discipleName(cell.host) : t("initialInformation.cellInfo.hostPlaceholder")}
+                      <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-[400px] p-0">
                     <Command>
                       <CommandInput placeholder={t("initialInformation.cellInfo.hostSearch") || "Buscar discípulo..."} />
                       <CommandList>
-                        <CommandEmpty>
-                          {t("initialInformation.cellInfo.hostEmpty") || "No se encontraron discípulos"}
-                        </CommandEmpty>
+                        <CommandEmpty>{t("initialInformation.cellInfo.hostEmpty") || "No se encontraron discípulos"}</CommandEmpty>
                         <CommandGroup className="max-h-64 overflow-auto">
                           {disciples.map(d => (
-                            <CommandItem
-                              key={d.id}
-                              value={`${d.name} ${d.lastName} ${d.identification}`}
-                              onSelect={() => {
-                                setValue('cellHost', d.id, { shouldValidate: true });
-                              }}
+                            <CommandItem key={d.id} value={`${d.name} ${d.lastName} ${d.identification}`}
+                              onSelect={() => onChange(index, 'host', d.id)}
                             >
-                              <Check
-                                className={cn(
-                                  "mr-2 h-4 w-4",
-                                  d.id === field.value ? "opacity-100" : "opacity-0",
-                                )}
-                              />
+                              <Check className={cn("mr-2 h-4 w-4", d.id === cell.host ? "opacity-100" : "opacity-0")} />
                               <div className="flex flex-col">
                                 <span className="font-medium">{d.name} {d.lastName}</span>
-                                <span className="text-xs text-muted-foreground">
-                                  {d.identificationType} {d.identification}
-                                </span>
+                                <span className="text-xs text-muted-foreground">{d.identificationType} {d.identification}</span>
                               </div>
                             </CommandItem>
                           ))}
@@ -337,65 +309,36 @@ const CellInfoCard: React.FC<CellInfoCardProps> = ({ assistants, onAddAssistant,
                     </Command>
                   </PopoverContent>
                 </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              </div>
 
-          <FormField
-            control={control}
-            name="cellTimoteo"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel className="flex items-center gap-1.5">
+              <div className="space-y-1.5">
+                <Label className="text-sm font-medium flex items-center gap-1.5">
                   <User className="h-3.5 w-3.5 text-muted-foreground" />
                   {t("initialInformation.cellInfo.timoteo")}
-                </FormLabel>
+                </Label>
                 <Popover>
                   <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        className={cn(
-                          "w-full justify-between font-normal",
-                          !field.value && "text-muted-foreground",
-                        )}
-                      >
-                        {field.value
-                          ? discipleName(field.value)
-                          : t("initialInformation.cellInfo.timoteoPlaceholder")}
-                        <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </FormControl>
+                    <Button variant="outline" role="combobox"
+                      className={cn("w-full justify-between font-normal h-10", !cell.timoteo && "text-muted-foreground")}
+                    >
+                      {cell.timoteo ? discipleName(cell.timoteo) : t("initialInformation.cellInfo.timoteoPlaceholder")}
+                      <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-[400px] p-0">
                     <Command>
                       <CommandInput placeholder={t("initialInformation.cellInfo.timoteoSearch") || "Buscar discípulo..."} />
                       <CommandList>
-                        <CommandEmpty>
-                          {t("initialInformation.cellInfo.timoteoEmpty") || "No se encontraron discípulos"}
-                        </CommandEmpty>
+                        <CommandEmpty>{t("initialInformation.cellInfo.timoteoEmpty") || "No se encontraron discípulos"}</CommandEmpty>
                         <CommandGroup className="max-h-64 overflow-auto">
                           {disciples.map(d => (
-                            <CommandItem
-                              key={d.id}
-                              value={`${d.name} ${d.lastName} ${d.identification}`}
-                              onSelect={() => {
-                                setValue('cellTimoteo', d.id, { shouldValidate: true });
-                              }}
+                            <CommandItem key={d.id} value={`${d.name} ${d.lastName} ${d.identification}`}
+                              onSelect={() => onChange(index, 'timoteo', d.id)}
                             >
-                              <Check
-                                className={cn(
-                                  "mr-2 h-4 w-4",
-                                  d.id === field.value ? "opacity-100" : "opacity-0",
-                                )}
-                              />
+                              <Check className={cn("mr-2 h-4 w-4", d.id === cell.timoteo ? "opacity-100" : "opacity-0")} />
                               <div className="flex flex-col">
                                 <span className="font-medium">{d.name} {d.lastName}</span>
-                                <span className="text-xs text-muted-foreground">
-                                  {d.identificationType} {d.identification}
-                                </span>
+                                <span className="text-xs text-muted-foreground">{d.identificationType} {d.identification}</span>
                               </div>
                             </CommandItem>
                           ))}
@@ -404,17 +347,19 @@ const CellInfoCard: React.FC<CellInfoCardProps> = ({ assistants, onAddAssistant,
                     </Command>
                   </PopoverContent>
                 </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              </div>
+            </>
+          )}
         </CardContent>
       </Card>
 
       <AddAttendeeModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        onSelect={onAddAssistant}
+        onSelect={(a) => {
+          const updated = [...cell.assistants, a];
+          onChange(index, 'assistants', updated);
+        }}
         cellLeaderId={currentDiscipleId}
         defaultMinistryId={ministryId || ''}
         defaultCreatedUser={currentDiscipleId}

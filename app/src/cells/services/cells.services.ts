@@ -16,6 +16,7 @@ const CELL_FIELDS = `
   id
   leader
   network
+  cellType
   host
   timoteo
   address
@@ -114,6 +115,7 @@ export class CellsService {
             "createCellInput": {
               leader: cell.leader,
               network: cell.network,
+              cellType: cell.cellType || 'celula',
               host: cell.host,
               timoteo: cell.timoteo,
               address: cell.address,
@@ -152,6 +154,7 @@ export class CellsService {
               id: cell.id,
               leader: cell.leader,
               network: cell.network,
+              cellType: cell.cellType || 'celula',
               host: cell.host,
               timoteo: cell.timoteo,
               address: cell.address,

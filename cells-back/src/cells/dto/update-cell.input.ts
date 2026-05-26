@@ -18,6 +18,10 @@ export class UpdateCellInput extends PartialType(CreateCellInput) {
   @IsPositive()
   network: number;
 
+  @Field(() => String)
+  @IsNotEmpty()
+  cellType: string;
+
   @Field(() => String, {
     description:
       'Enter the name of the host who will receive the cell in their home.',
