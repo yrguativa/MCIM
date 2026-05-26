@@ -10,37 +10,46 @@ echo "🔍 Running pre-commit checks..."
 # Ensure common paths are available
 export PATH="/usr/local/bin:/opt/homebrew/bin:/usr/local/sbin:/usr/bin:/bin:$PATH"
 
+# Find pnpm in common locations
+find_pnpm() {
+  if command -v pnpm >/dev/null 2>&1; then
+    echo "pnpm"
+  elif [ -x "/opt/homebrew/bin/pnpm" ]; then
+    echo "/opt/homebrew/bin/pnpm"
+  elif [ -x "/usr/local/bin/pnpm" ]; then
+    echo "/usr/local/bin/pnpm"
+  else
+    return 1
+  fi
+}
+
+PNPM_CMD=$(find_pnpm)
+if [ $? -ne 0 ]; then
+  echo "⚠️ pnpm not found. Skipping pre-commit checks."
+  exit 0
+fi
+
 # Check if backend files changed
 if git diff --cached --name-only | grep -q "^cells-back/"; then
   echo "🔨 Building backend..."
-  cd cells-back && npm run build 2>/dev/null
+  (cd cells-back && $PNPM_CMD run build)
   BUILD_RESULT=$?
-  cd ..
   
-  if [ $BUILD_RESULT -ne 0 ] && [ $BUILD_RESULT -ne 127 ]; then
+  if [ $BUILD_RESULT -ne 0 ]; then
     echo "❌ Backend build failed"
     exit 1
-  fi
-  
-  if [ $BUILD_RESULT -eq 127 ]; then
-    echo "⚠️ npm not available in Git hook environment. Skipping backend build."
   fi
 fi
 
 # Check if frontend files changed
 if git diff --cached --name-only | grep -q "^app/"; then
   echo "🧹 Linting frontend..."
-  cd app && npm run lint 2>/dev/null
+  (cd app && $PNPM_CMD run lint)
   LINT_RESULT=$?
-  cd ..
   
-  if [ $LINT_RESULT -ne 0 ] && [ $LINT_RESULT -ne 127 ]; then
+  if [ $LINT_RESULT -ne 0 ]; then
     echo "❌ Frontend lint failed"
     exit 1
-  fi
-  
-  if [ $LINT_RESULT -eq 127 ]; then
-    echo "⚠️ npm not available in Git hook environment. Skipping frontend lint."
   fi
 fi
 
