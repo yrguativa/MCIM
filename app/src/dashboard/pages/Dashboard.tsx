@@ -26,7 +26,7 @@ const DashboardPage: React.FC = () => {
       <MenuMovil />
       <div className="flex flex-col">
         <MenuMain />
-        <main className="flex flex-1 flex-col gap-4 p-4 pb-20 lg:gap-6 lg:p-6 lg:pb-6">
+        <main className="flex flex-1 flex-col gap-4 p-4 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] lg:gap-6 lg:p-6 lg:pb-6">
           <Suspense fallback={<ProgressIndeterminate />}>
             <DashboardRoutes />
           </Suspense>

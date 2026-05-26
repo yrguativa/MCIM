@@ -153,3 +153,16 @@
     @apply font-sans;
   }
 }
+
+@utility safe-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+@utility safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@utility min-safe-top {
+  min-height: env(safe-area-inset-top, 0px);
+}
+@utility min-safe-bottom {
+  min-height: env(safe-area-inset-bottom, 0px);
+}
