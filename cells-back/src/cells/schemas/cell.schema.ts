@@ -55,6 +55,9 @@ export class Cell extends Document {
   time: string;
 
   @Prop()
+  yearOpened: number;
+
+  @Prop()
   createdDate: Date;
 
   @Prop({ required: true })

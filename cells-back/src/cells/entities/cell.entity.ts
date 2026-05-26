@@ -34,6 +34,9 @@ export class CellEntity {
   @Field(() => String, { nullable: true })
   time: string;
 
+  @Field(() => Int, { nullable: true })
+  yearOpened: number;
+
   @Field(() => Date)
   createdDate: Date;
 

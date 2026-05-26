@@ -149,6 +149,7 @@ export class CellsService {
       neighborhood: cell.neighborhood,
       day: cell.day,
       time: cell.time,
+      yearOpened: cell.yearOpened,
       createdDate: cell.createdDate,
       createdUser: cell.createdUser,
       assistants: (cell.assistants || []).map((a: any) => ({

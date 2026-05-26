@@ -37,6 +37,11 @@ export const CellSchema = z.object({
     }),
   day: z.string().optional(),
   time: z.string().optional(),
+  yearOpened: z.coerce.number()
+    .int()
+    .min(2000, { message: "El año debe ser mayor o igual a 2000" })
+    .max(2026, { message: "El año debe ser menor o igual a 2026" })
+    .optional(),
   createdDate: z.date({
     error: "A date of birth is required.",
   }),

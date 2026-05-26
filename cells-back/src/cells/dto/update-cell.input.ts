@@ -52,6 +52,10 @@ export class UpdateCellInput extends PartialType(CreateCellInput) {
   @IsOptional()
   time?: string;
 
+  @Field(() => Int, { nullable: true })
+  @IsOptional()
+  yearOpened?: number;
+
   @Field(() => String)
   @IsNotEmpty()
   createdUser: string;

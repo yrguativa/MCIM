@@ -23,6 +23,7 @@ const CELL_FIELDS = `
   neighborhood
   day
   time
+  yearOpened
   createdDate
   createdUser
   assistants {
@@ -122,6 +123,7 @@ export class CellsService {
               neighborhood: cell.neighborhood,
               day: cell.day || null,
               time: cell.time || null,
+              yearOpened: cell.yearOpened || null,
               createdUser: cell.createdUser,
             }
           }
@@ -161,6 +163,7 @@ export class CellsService {
               neighborhood: cell.neighborhood,
               day: cell.day || null,
               time: cell.time || null,
+              yearOpened: cell.yearOpened || null,
               createdUser: cell.createdUser,
             }
           }

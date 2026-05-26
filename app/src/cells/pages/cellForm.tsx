@@ -59,6 +59,7 @@ const CellForm: React.FC = () => {
             neighborhood: Neighborhood[0].value,
             day: "",
             time: "",
+            yearOpened: undefined,
             assistants: [],
         },
     });
@@ -95,6 +96,7 @@ const CellForm: React.FC = () => {
                         timoteo: cell.timoteo || "",
                         day: cell.day || "",
                         time: cell.time || "",
+                        yearOpened: cell.yearOpened || undefined,
                         assistants: (cell.assistants || []).map(a => ({
                             disciple: a.disciple,
                             status: (a.status === 'active' || a.status === 'inactive') ? a.status : 'active',
@@ -314,6 +316,35 @@ const CellForm: React.FC = () => {
                                 <FormControl>
                                     <Input type="time" {...field} value={field.value || ''} />
                                 </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="yearOpened"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="flex items-center gap-1.5">
+                                    <CalendarDays className="h-3.5 w-3.5 text-muted-foreground" />
+                                    Año de apertura
+                                </FormLabel>
+                                <Select
+                                  onValueChange={(val) => field.onChange(val ? Number(val) : undefined)}
+                                  value={field.value?.toString() || ''}
+                                >
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Selecciona el año de apertura" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {Array.from({ length: 27 }, (_, i) => 2000 + i).map(year => (
+                                            <SelectItem key={year} value={year.toString()}>{year}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                                 <FormMessage />
                             </FormItem>
                         )}
