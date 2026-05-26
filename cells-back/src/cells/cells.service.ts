@@ -143,6 +143,7 @@ export class CellsService {
       id: cell._id.toString(),
       leader: cell.leader,
       network: cell.network,
+      cellType: cell.cellType,
       host: cell.host,
       timoteo: cell.timoteo,
       address: cell.address,
