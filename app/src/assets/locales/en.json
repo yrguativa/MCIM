@@ -672,7 +672,21 @@
       "spouseSearchPlaceholder": "Type 2 letters to search...",
       "spouseSearchEmpty": "No disciples found",
       "spouseName": "Spouse full name",
-      "spouseNamePlaceholder": "Enter full name"
+      "spouseNamePlaceholder": "Enter full name",
+      "addressStandardizer": {
+        "title": "Standardize address",
+        "viaType": "Street type",
+        "viaTypePlaceholder": "Select...",
+        "mainNumber": "Main number",
+        "mainLetter": "Letter",
+        "secondaryNumber": "Secondary number",
+        "secondaryLetter": "Letter",
+        "complement": "Complement",
+        "complementPlaceholder": "Tower, apt, interior, etc.",
+        "preview": "Preview",
+        "apply": "Apply",
+        "cancel": "Cancel"
+      }
     },
     "nationality": {
       "COLOMBIAN": "Colombian",

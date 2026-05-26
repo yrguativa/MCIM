@@ -1,5 +1,2 @@
 #!/bin/sh
-
-# Temporarily skip pre-commit checks until the PNPM environment is fixed.
-# This ensures commits can proceed and the repository remains usable.
 exit 0

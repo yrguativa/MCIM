@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { MapPin, Clock, Calendar, Users, User, Home, Network, X, Plus, Check } from 'lucide-react';
+import { MapPin, Clock, Calendar, Users, User, Home, Network, X, Plus, Check, Pencil } from 'lucide-react';
 import { CaretSortIcon } from '@radix-ui/react-icons';
 import {
   FormField, FormItem, FormLabel, FormControl, FormMessage,
@@ -24,6 +24,7 @@ import { Neighborhood } from '@/src/cells/schemas/neighborhood.enum';
 import { AddAttendeeModal } from '@/src/cells/components/AddAttendeeModal';
 import { useDiscipleStore } from '@/src/disciples/store/disciple.store';
 import { useInitialInformationStore } from '../store/initialInformation.store';
+import { AddressStandardizer } from '@/src/components/AddressStandardizer';
 
 export const NETWORK_MAP: Record<string, number> = {
   WOMEN: 1,
@@ -61,6 +62,7 @@ const CellInfoCard: React.FC<CellInfoCardProps> = ({ assistants, onAddAssistant,
   const currentDiscipleId = foundAssistant?.disciple?.id || '';
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [showCellAddressModal, setShowCellAddressModal] = useState(false);
 
   useEffect(() => {
     if (disciples.length === 0) {
@@ -149,12 +151,30 @@ const CellInfoCard: React.FC<CellInfoCardProps> = ({ assistants, onAddAssistant,
                   <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
                   {t("initialInformation.cellInfo.address")}
                 </FormLabel>
-                <FormControl>
-                  <Input {...field} value={field.value || ''} />
-                </FormControl>
+                <div className="flex gap-2">
+                  <FormControl>
+                    <Input {...field} value={field.value || ''} className="flex-1" />
+                  </FormControl>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setShowCellAddressModal(true)}
+                    className="shrink-0"
+                    title={t("initialInformation.personalInfo.addressStandardizer.title")}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
+          />
+
+          <AddressStandardizer
+            open={showCellAddressModal}
+            onOpenChange={setShowCellAddressModal}
+            onSave={(address) => setValue("cellAddress", address, { shouldDirty: true })}
           />
 
           <FormField

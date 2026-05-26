@@ -686,7 +686,21 @@
             "spouseSearchPlaceholder": "Escriba 2 letras para buscar...",
             "spouseSearchEmpty": "No se encontraron discípulos",
             "spouseName": "Nombre completo del cónyuge",
-            "spouseNamePlaceholder": "Ingrese el nombre completo"
+            "spouseNamePlaceholder": "Ingrese el nombre completo",
+            "addressStandardizer": {
+                "title": "Estandarizar dirección",
+                "viaType": "Tipo de vía",
+                "viaTypePlaceholder": "Seleccione...",
+                "mainNumber": "Número principal",
+                "mainLetter": "Letra",
+                "secondaryNumber": "Número secundario",
+                "secondaryLetter": "Letra",
+                "complement": "Complemento",
+                "complementPlaceholder": "Torre, apto, interior, etc.",
+                "preview": "Vista previa",
+                "apply": "Aplicar",
+                "cancel": "Cancelar"
+            }
         },
         "nationality": {
             "COLOMBIAN": "Colombiana",

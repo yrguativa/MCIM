@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useFormContext, useWatch } from "react-hook-form";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { CalendarIcon, User, Heart, Globe, MapPin, Network, Users, CalendarDays, Baby, Home, Check, ChevronsUpDown, Search, Droplets, Phone } from "lucide-react";
+import { CalendarIcon, User, Heart, Globe, MapPin, Network, Users, CalendarDays, Baby, Home, Check, ChevronsUpDown, Search, Droplets, Phone, Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   FormField,
@@ -28,6 +28,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { AddressStandardizer } from "@/src/components/AddressStandardizer";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import {
@@ -55,6 +56,7 @@ const PersonalInfoCard: React.FC = () => {
   const dateLocale = i18n.language === "es" ? es : undefined;
   const [spouseSearchOpen, setSpouseSearchOpen] = useState(false);
   const [spouseSearchQuery, setSpouseSearchQuery] = useState("");
+  const [showAddressModal, setShowAddressModal] = useState(false);
   const disciplesState = useDiscipleStore(state => state.Disciples);
   const searchByName = useDiscipleStore(state => state.searchByName);
   const getDisciples = useDiscipleStore(state => state.getDisciples);
@@ -391,13 +393,31 @@ const PersonalInfoCard: React.FC = () => {
                 <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
                 {t("initialInformation.personalInfo.address")} *
               </FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
+              <div className="flex gap-2">
+                <FormControl>
+                  <Input {...field} className="flex-1" />
+                </FormControl>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setShowAddressModal(true)}
+                  className="shrink-0"
+                  title={t("initialInformation.personalInfo.addressStandardizer.title")}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
+              </div>
               <FormDescription>{t("initialInformation.personalInfo.addressHint")}</FormDescription>
               <FormMessage />
             </FormItem>
           )}
+        />
+
+        <AddressStandardizer
+          open={showAddressModal}
+          onOpenChange={setShowAddressModal}
+          onSave={(address) => setValue("address", address, { shouldDirty: true })}
         />
 
         <FormField
