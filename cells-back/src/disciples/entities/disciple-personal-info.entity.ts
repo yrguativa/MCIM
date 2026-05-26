@@ -23,6 +23,15 @@ export class DisciplePersonalInfoEntity {
   @Field(() => String, { nullable: true })
   childrenAttendChurch: string;
 
+  @Field(() => String, { nullable: true })
+  rh: string;
+
+  @Field(() => String, { nullable: true })
+  contactName: string;
+
+  @Field(() => String, { nullable: true })
+  contactPhone: string;
+
   @Field()
   address: string;
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -6,9 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import * as Avatar from "@radix-ui/react-avatar";
 import { NavLink } from "react-router-dom";
-import { CalendarDays, Home, Languages, LineChart, Menu, Package, Package2, Search, Users } from "lucide-react";
+import { CalendarDays, Home, Languages, LineChart, Menu, Package, Package2, Search, Settings, Users } from "lucide-react";
 import { useAuthStore } from "@/src/app/stores";
 import { useTranslation } from "react-i18next";
+import SettingsModal from "@/src/app/components/SettingsModal";
 
 const getInitials = (name: string | null | undefined): string => {
     if (!name) return "U";
@@ -36,6 +37,7 @@ const getColorFromName = (name: string | null | undefined): string => {
 const MenuMain: React.FC = () => {
     const { t, i18n } = useTranslation();
     const { user :userState, logout} = useAuthStore();
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
     const toggleLanguage = () => {
         const newLang = i18n.language === 'en' ? 'es' : 'en';
@@ -153,7 +155,10 @@ const MenuMain: React.FC = () => {
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Mi cuenta {userState?.displayName}</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Configuraciones</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setIsSettingsOpen(true)} className="flex items-center gap-2">
+                        <Settings className="h-4 w-4" />
+                        {t('menu.settings')}
+                    </DropdownMenuItem>
                     <DropdownMenuItem>Support</DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={toggleLanguage} className="flex items-center gap-2">
@@ -164,6 +169,7 @@ const MenuMain: React.FC = () => {
                     <DropdownMenuItem onClick={logout}>{t('menu.logout')}</DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
+            <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
         </header>
     );
 }

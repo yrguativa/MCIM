@@ -60,6 +60,9 @@ const BasicInfoCard: React.FC<BasicInfoCardProps> = ({ isUpdateMode }) => {
               <FormControl>
                 <Input {...field} />
               </FormControl>
+              <FormDescription>
+                {t("initialInformation.basicInfo.namesHint")}
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -92,7 +95,7 @@ const BasicInfoCard: React.FC<BasicInfoCardProps> = ({ isUpdateMode }) => {
                 {t("initialInformation.basicInfo.email")}
               </FormLabel>
               <FormControl>
-                <Input type="email" {...field} />
+                <Input {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -109,7 +112,7 @@ const BasicInfoCard: React.FC<BasicInfoCardProps> = ({ isUpdateMode }) => {
                 {t("initialInformation.basicInfo.phone")} *
               </FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input type="number" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -158,6 +161,7 @@ const BasicInfoCard: React.FC<BasicInfoCardProps> = ({ isUpdateMode }) => {
               </FormLabel>
               <FormControl>
                 <Input
+                  type="number"
                   {...field}
                   readOnly={isUpdateMode}
                   disabled={isUpdateMode}

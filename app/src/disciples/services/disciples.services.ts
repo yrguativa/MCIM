@@ -216,6 +216,9 @@ export class DisciplesService {
                     baptizedAtMCI
                     isLeader
                     generation
+                    rh
+                    contactName
+                    contactPhone
                     formationSchoolLevel
                 }
             }

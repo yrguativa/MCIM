@@ -77,6 +77,9 @@ type DisciplePersonalInfo {
   maritalStatus: String
   hasChildren: String!
   childrenAttendChurch: String
+  rh: String
+  contactName: String
+  contactPhone: String
   address: String!
   housingComplex: String
   neighborhood: String!
@@ -282,6 +285,18 @@ type StudentCourseHistoryEntity {
   createdDate: DateTime!
 }
 
+type MaritalRelationship {
+  id: ID!
+  discipleId: ID!
+  attendsChurch: String!
+  spouseId: ID
+  spouseName: String
+  createdUser: String
+  createdAt: DateTime!
+  updatedUser: String
+  updatedAt: DateTime!
+}
+
 type Query {
   me: Users!
 
@@ -293,6 +308,7 @@ type Query {
   discipleByIdentification(identification: String!): DiscipleFull
   discipleLeaders: [Leader!]!
   disciplePersonalInfo(discipleId: String!): DisciplePersonalInfo
+  discipleByEmail(email: String!): DiscipleFull
   discipleByName(name: String!): [Disciple!]!
   events: [EventEntity!]!
   event(eventId: ID!): EventEntity!
@@ -321,6 +337,7 @@ type Query {
   attendanceByCourse(courseId: ID!): [AttendanceEntity!]!
   attendanceByEnrollment(enrollmentId: ID!): [AttendanceEntity!]!
   courseHistoriesByStudent(studentId: ID!): [StudentCourseHistoryEntity!]!
+  maritalRelationshipByDisciple(discipleId: String!): MaritalRelationship
 }
 
 type Mutation {
@@ -333,6 +350,7 @@ type Mutation {
   requestPasswordReset(requestPasswordResetInput: RequestPasswordResetInput!): Boolean!
   verifyResetCode(verifyResetCodeInput: VerifyResetCodeInput!): Boolean!
   resetPassword(resetPasswordInput: ResetPasswordInput!): Boolean!
+  changePassword(changePasswordInput: ChangePasswordInput!): Boolean!
   createCell(createCellInput: CreateCellInput!): Cell!
   updateCell(updateCellInput: UpdateCellInput!): Cell!
   createRecordCell(cellId: String!, createRecordCellInput: CreateRecordCellInput!): Cell!
@@ -369,6 +387,9 @@ type Mutation {
   createAttendance(input: CreateAttendanceInput!): AttendanceEntity!
   createCourseHistory(input: CreateStudentCourseHistoryInput!): StudentCourseHistoryEntity!
   updateCourseHistory(input: UpdateStudentCourseHistoryInput!): StudentCourseHistoryEntity!
+  createMaritalRelationship(input: CreateMaritalRelationshipInput!): MaritalRelationship!
+  updateMaritalRelationship(input: UpdateMaritalRelationshipInput!): MaritalRelationship!
+  deleteMaritalRelationship(id: String!): MaritalRelationship!
 }
 
 input LoginInput {
@@ -426,6 +447,12 @@ input ResetPasswordInput {
   email: String!
   newPassword: String!
   code: String!
+}
+
+input ChangePasswordInput {
+  userId: String!
+  currentPassword: String!
+  newPassword: String!
 }
 
 input CreateCellInput {
@@ -507,6 +534,9 @@ input CreateDisciplePersonalInfoInput {
   maritalStatus: String
   hasChildren: String!
   childrenAttendChurch: String
+  rh: String
+  contactName: String
+  contactPhone: String
   address: String!
   housingComplex: String
   neighborhood: String!
@@ -555,6 +585,9 @@ input UpdateDisciplePersonalInfoInput {
   maritalStatus: String
   hasChildren: String
   childrenAttendChurch: String
+  rh: String
+  contactName: String
+  contactPhone: String
   address: String
   housingComplex: String
   neighborhood: String
@@ -742,4 +775,20 @@ input UpdateStudentCourseHistoryInput {
   finalGrade: Float
   status: String
   promotedToNextLevel: Boolean
+}
+
+input CreateMaritalRelationshipInput {
+  discipleId: ID!
+  attendsChurch: String!
+  spouseId: ID
+  spouseName: String
+  createdUser: String
+}
+
+input UpdateMaritalRelationshipInput {
+  id: ID!
+  attendsChurch: String
+  spouseId: ID
+  spouseName: String
+  updatedUser: String
 }

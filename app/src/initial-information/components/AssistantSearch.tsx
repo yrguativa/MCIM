@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Search, Loader2, UserCheck, UserPlus, IdCard, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { useInitialInformationStore } from "../store/initialInformation.store";
 
 const AssistantSearch: React.FC = () => {
   const { t } = useTranslation();
+  const [acceptHabeasData, setAcceptHabeasData] = useState(false);
   const {
     searchIdentification,
     setSearchIdentification,
@@ -38,6 +41,25 @@ const AssistantSearch: React.FC = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
+        <div className="flex items-start gap-2 text-xs text-muted-foreground/70 w-full">
+          <Shield className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+          <p className="text-balance leading-relaxed">
+            {t("initialInformation.privacy.description")}
+          </p>
+        </div>
+
+        <div className="flex items-start gap-2 rounded-lg border p-3">
+          <Checkbox
+            id="habeas-data"
+            checked={acceptHabeasData}
+            onCheckedChange={(checked) => setAcceptHabeasData(checked === true)}
+            className="mt-0.5"
+          />
+          <Label htmlFor="habeas-data" className="text-xs leading-relaxed text-muted-foreground cursor-pointer">
+            {t("initialInformation.search.habeasDataConsent")}
+          </Label>
+        </div>
+
         <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -50,7 +72,7 @@ const AssistantSearch: React.FC = () => {
               autoFocus
             />
           </div>
-          <Button type="submit" disabled={isSearching} size="lg" className="w-full sm:w-auto sm:min-w-[120px] transition-all active:scale-95">
+          <Button type="submit" disabled={isSearching || !acceptHabeasData} size="lg" className="w-full sm:w-auto sm:min-w-[120px] transition-all active:scale-95">
             {isSearching ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -100,14 +122,6 @@ const AssistantSearch: React.FC = () => {
           </Alert>
         )}
       </CardContent>
-      <CardFooter className="pt-4">
-        <div className="flex items-start gap-2 text-xs text-muted-foreground/70 w-full">
-          <Shield className="h-3.5 w-3.5 mt-0.5 shrink-0" />
-          <p className="text-balance leading-relaxed">
-            {t("initialInformation.privacy.description")}
-          </p>
-        </div>
-      </CardFooter>
     </Card>
   );
 };

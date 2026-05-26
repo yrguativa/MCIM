@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useFormContext, useWatch } from "react-hook-form";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { CalendarIcon, User, Heart, Globe, MapPin, Network, Users, CalendarDays, Baby, Home } from "lucide-react";
+import { CalendarIcon, User, Heart, Globe, MapPin, Network, Users, CalendarDays, Baby, Home, Check, ChevronsUpDown, Search, Droplets, Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   FormField,
@@ -35,13 +35,46 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { Calendar } from "@/components/ui/calendar";
+import { useDiscipleStore } from "@/src/disciples/store/disciple.store";
 
 const PersonalInfoCard: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const { control } = useFormContext();
+  const { control, setValue } = useFormContext();
   const hasChildren = useWatch({ control, name: "hasChildren" });
+  const maritalStatus = useWatch({ control, name: "maritalStatus" });
+  const spouseAttendsChurch = useWatch({ control, name: "spouseAttendsChurch" });
   const dateLocale = i18n.language === "es" ? es : undefined;
+  const [spouseSearchOpen, setSpouseSearchOpen] = useState(false);
+  const [spouseSearchQuery, setSpouseSearchQuery] = useState("");
+  const disciplesState = useDiscipleStore(state => state.Disciples);
+  const searchByName = useDiscipleStore(state => state.searchByName);
+  const getDisciples = useDiscipleStore(state => state.getDisciples);
+
+  useEffect(() => {
+    if (disciplesState.length === 0) {
+      getDisciples();
+    }
+  }, []);
+
+  const handleSpouseSearch = (value: string) => {
+    setSpouseSearchQuery(value);
+    if (value.length >= 2) {
+      searchByName(value);
+    }
+  };
+
+  const filteredDisciples = spouseSearchQuery.length < 2
+    ? disciplesState
+    : useDiscipleStore.getState().searchResults;
 
   return (
     <Card>
@@ -96,6 +129,37 @@ const PersonalInfoCard: React.FC = () => {
                 <SelectContent>
                   <SelectItem value="FEMALE">{t("initialInformation.gender.FEMALE")}</SelectItem>
                   <SelectItem value="MALE">{t("initialInformation.gender.MALE")}</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={control}
+          name="rh"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex items-center gap-1.5">
+                <Droplets className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.personalInfo.rh")}
+              </FormLabel>
+              <Select onValueChange={field.onChange} value={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder={t("initialInformation.personalInfo.rhPlaceholder")} />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="O_POSITIVE">O+</SelectItem>
+                  <SelectItem value="O_NEGATIVE">O-</SelectItem>
+                  <SelectItem value="A_POSITIVE">A+</SelectItem>
+                  <SelectItem value="A_NEGATIVE">A-</SelectItem>
+                  <SelectItem value="B_POSITIVE">B+</SelectItem>
+                  <SelectItem value="B_NEGATIVE">B-</SelectItem>
+                  <SelectItem value="AB_POSITIVE">AB+</SelectItem>
+                  <SelectItem value="AB_NEGATIVE">AB-</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -191,6 +255,131 @@ const PersonalInfoCard: React.FC = () => {
               </FormItem>
             )}
           />
+        )}
+
+        {(maritalStatus === "MARRIED" || maritalStatus === "FREE_UNION") && (
+          <div className="md:col-span-2 space-y-4 rounded-lg border p-4 bg-muted/20">
+            <h4 className="text-sm font-medium flex items-center gap-1.5 text-muted-foreground">
+              <Heart className="h-4 w-4 text-primary" />
+              {t("initialInformation.personalInfo.spouseSection")}
+            </h4>
+
+            <FormField
+              control={control}
+              name="spouseAttendsChurch"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-1.5">
+                    <Users className="h-3.5 w-3.5 text-muted-foreground" />
+                    {t("initialInformation.personalInfo.spouseAttendsChurch")} *
+                  </FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      className="flex gap-4 pt-2"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="YES" id="spouse-church-yes" />
+                        <Label htmlFor="spouse-church-yes">{t("initialInformation.yes")}</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="NO" id="spouse-church-no" />
+                        <Label htmlFor="spouse-church-no">{t("initialInformation.no")}</Label>
+                      </div>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {spouseAttendsChurch === "YES" && (
+              <FormField
+                control={control}
+                name="spouseId"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="flex items-center gap-1.5">
+                      <Search className="h-3.5 w-3.5 text-muted-foreground" />
+                      {t("initialInformation.personalInfo.spouseSelect")} *
+                    </FormLabel>
+                    <Popover open={spouseSearchOpen} onOpenChange={setSpouseSearchOpen}>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className={cn("w-full justify-between font-normal", !field.value && "text-muted-foreground")}
+                          >
+                            {field.value
+                              ? disciplesState.find((d) => d.id === field.value)
+                                ? `${disciplesState.find((d) => d.id === field.value)?.name} ${disciplesState.find((d) => d.id === field.value)?.lastName}`
+                                : t("initialInformation.personalInfo.spouseSelectPlaceholder")
+                              : t("initialInformation.personalInfo.spouseSelectPlaceholder")}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[400px] p-0">
+                        <Command shouldFilter={false}>
+                          <CommandInput
+                            placeholder={t("initialInformation.personalInfo.spouseSearchPlaceholder")}
+                            value={spouseSearchQuery}
+                            onValueChange={handleSpouseSearch}
+                          />
+                          <CommandList>
+                            <CommandEmpty>{t("initialInformation.personalInfo.spouseSearchEmpty")}</CommandEmpty>
+                            <CommandGroup>
+                              {filteredDisciples.map((disciple) => (
+                                <CommandItem
+                                  key={disciple.id}
+                                  value={`${disciple.name} ${disciple.lastName}`}
+                                  onSelect={() => {
+                                    setValue("spouseId", disciple.id);
+                                    setSpouseSearchOpen(false);
+                                    setSpouseSearchQuery("");
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      disciple.id === field.value ? "opacity-100" : "opacity-0",
+                                    )}
+                                  />
+                                  {disciple.name} {disciple.lastName}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
+            {spouseAttendsChurch === "NO" && (
+              <FormField
+                control={control}
+                name="spouseName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-1.5">
+                      <User className="h-3.5 w-3.5 text-muted-foreground" />
+                      {t("initialInformation.personalInfo.spouseName")} *
+                    </FormLabel>
+                    <FormControl>
+                      <Input placeholder={t("initialInformation.personalInfo.spouseNamePlaceholder")} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+          </div>
         )}
 
         <FormField
@@ -344,6 +533,40 @@ const PersonalInfoCard: React.FC = () => {
                   />
                 </PopoverContent>
               </Popover>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={control}
+          name="contactName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex items-center gap-1.5">
+                <User className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.personalInfo.contactName")}
+              </FormLabel>
+              <FormControl>
+                <Input placeholder={t("initialInformation.personalInfo.contactNamePlaceholder")} {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={control}
+          name="contactPhone"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex items-center gap-1.5">
+                <Phone className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.personalInfo.contactPhone")}
+              </FormLabel>
+              <FormControl>
+                <Input type="tel" placeholder={t("initialInformation.personalInfo.contactPhonePlaceholder")} {...field} />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}

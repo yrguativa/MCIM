@@ -42,6 +42,9 @@ export interface DisciplePersonalInfo {
   baptizedAtMCI: string;
   isLeader?: string;
   generation: string;
+  rh?: string;
+  contactName?: string;
+  contactPhone?: string;
   formationSchoolLevel: string;
   createdAt: string;
   updatedAt: string;

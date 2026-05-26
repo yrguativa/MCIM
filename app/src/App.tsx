@@ -7,7 +7,9 @@ import { Toaster } from "@/components/ui/sonner";
 import { ProgressIndeterminate } from '@/components/ui/progress-indeterminate';
 import { LanguageSuggestionModal } from './app/components/LanguageSuggestionModal';
 import { InstallPWAModal } from './app/components/InstallPWAModal';
+import { PWALoadingScreen } from './app/components/PWALoadingScreen';
 import { usePWAInstall } from './app/hooks/usePWAInstall';
+import { usePWALifecycle } from './app/hooks/usePWALifecycle';
 
 import { GeneralRoutes } from './routes';
 
@@ -17,6 +19,7 @@ const App: React.FC = () => {
   const [showLangSuggestion, setShowLangSuggestion] = useState(false);
   const [detectedLang, setDetectedLang] = useState('');
   const { shouldSuggest, platform, install, dismiss, isInstalled } = usePWAInstall();
+  const pwaLifecycle = usePWALifecycle();
   const [isPublicRoute, setIsPublicRoute] = useState(() => {
     const hash = window.location.hash;
     return hash.startsWith("#/login") || hash.startsWith("#/register") || hash.startsWith("#/forgot-password") || hash.startsWith("#/public");
@@ -71,6 +74,12 @@ const App: React.FC = () => {
           onDismiss={dismiss}
           onNeverShow={handleNeverShowPWA}
         />
+        {pwaLifecycle.status === 'updating' && (
+          <PWALoadingScreen status="updating" onUpdate={pwaLifecycle.update} />
+        )}
+        {pwaLifecycle.status === 'offline-ready' && (
+          <PWALoadingScreen status="offline-ready" />
+        )}
       </HashRouter>
       <Toaster />
     </GoogleOAuthProvider>

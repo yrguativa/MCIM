@@ -13,7 +13,8 @@
     "search": "Search",
     "required": "This field is required",
     "invalid": "This field is invalid",
-    "accept": "Accept"
+    "accept": "Accept",
+    "noData": "No data available"
   },
   "menu": {
     "dashboard": "Dashboard",
@@ -27,6 +28,30 @@
     "profile": "Profile",
     "logout": "Logout",
     "more": "More"
+  },
+  "settings": {
+    "title": "Settings",
+    "general": "General",
+    "profile": "Profile",
+    "security": "Security",
+    "language": "Language",
+    "spanish": "Spanish",
+    "english": "English",
+    "installApp": "Install App",
+    "installDescription": "Install this app on your device for faster access",
+    "installButton": "Install",
+    "installed": "Installed",
+    "accountInfo": "Account Info",
+    "linkedWith": "Account linked with {{provider}}",
+    "changePassword": "Change Password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "passwordUpdated": "Password updated successfully",
+    "passwordError": "Error updating password",
+    "noPasswordAccount": "Your account uses {{provider}} authentication. You cannot change the password here.",
+    "profileUpdated": "Profile updated successfully",
+    "profileError": "Error updating profile"
   },
   "validation": {
     "masculinePronoun": "The",
@@ -191,7 +216,7 @@
             "yearAttendedReencounter": "Which year did you attend Reencounter?",
             "baptizedAtMCI": "Were you baptized at MCI?",
             "isLeader": "Are you a leader?",
-            "generation": "Generation",
+            "generation": "Are you part of the 144?",
             "formationSchoolLevel": "Formation School Level",
             "yes": "Yes",
             "no": "No",
@@ -591,11 +616,13 @@
       "updatingRecord": "Updating existing record",
       "identificationReadOnly": "ID number cannot be changed after creation",
       "searching": "Searching...",
-      "helpText": "Enter your ID number to check if you are already registered"
+      "helpText": "Enter your ID number to check if you are already registered",
+      "habeasDataConsent": "I have read and accept the personal data protection policy and authorize the processing of my data in accordance with Law 1581 of 2012."
     },
     "basicInfo": {
       "title": "Basic Information",
       "names": "Names",
+      "namesHint": "Full names as they appear on your identification document",
       "lastNames": "Last Names",
       "email": "Email",
       "phone": "Phone",
@@ -618,6 +645,8 @@
       "nationalityPlaceholder": "Select your nationality",
       "gender": "Gender",
       "genderPlaceholder": "Select your gender",
+      "rh": "Blood Type",
+      "rhPlaceholder": "Select your blood type",
       "maritalStatus": "Marital Status",
       "maritalStatusPlaceholder": "Select your marital status",
       "hasChildren": "Do you have children?",
@@ -631,7 +660,19 @@
       "network": "Network",
       "networkPlaceholder": "Select a network",
       "birthDate": "Birth Date",
-      "birthDateHint": "dd/mm/yyyy"
+      "birthDateHint": "dd/mm/yyyy",
+      "contactName": "Contact name",
+      "contactNamePlaceholder": "e.g. Maria Perez",
+      "contactPhone": "Contact phone",
+      "contactPhonePlaceholder": "3001234567",
+      "spouseSection": "Spouse Information",
+      "spouseAttendsChurch": "Does your spouse attend church?",
+      "spouseSelect": "Select spouse",
+      "spouseSelectPlaceholder": "Search and select spouse...",
+      "spouseSearchPlaceholder": "Type 2 letters to search...",
+      "spouseSearchEmpty": "No disciples found",
+      "spouseName": "Spouse full name",
+      "spouseNamePlaceholder": "Enter full name"
     },
     "nationality": {
       "COLOMBIAN": "Colombian",
@@ -685,20 +726,12 @@
       "yearAttendedReencounterHint": "e.g. 2024",
       "baptizedAtMCI": "Were you baptized at MCI?",
       "isLeader": "Are you a leader?",
-      "generation": "Which generation do you belong to?",
-      "generationPlaceholder": "Select your generation",
+      "generation": "Are you part of the 144?",
       "formationSchoolLevel": "Formation School Level",
       "formationSchoolLevelPlaceholder": "Select your level",
       "formationSchoolLevelHint": "1st cycle 2026 or last level completed"
     },
-    "generation": {
-      "12": "12",
-      "144": "144",
-      "1728": "1,728",
-      "20736": "20,736",
-      "248832": "248,832",
-      "2985984": "2,985,984"
-    },
+    "generation": {},
     "formationSchoolLevel": {
       "BASIC_1": "Basic 1",
       "BASIC_2": "Basic 2",
@@ -745,11 +778,14 @@
       "saving": "Saving...",
       "cancel": "Cancel",
       "newSearch": "New search",
-      "saveAndContinue": "Save and continue"
+      "saveAndContinue": "Save and continue",
+      "continue": "Continue"
     },
     "messages": {
       "createSuccess": "Registration created successfully",
       "updateSuccess": "Information updated successfully",
+      "saveSuccessTitle": "Information saved!",
+      "saveSuccessDescription": "The information has been saved successfully in the system.",
       "error": "Error saving information",
       "searchError": "Error searching for assistant",
       "leadersLoadError": "Error loading leaders list",
@@ -795,7 +831,15 @@
       "emailMaxLength": "Email must not exceed 254 characters",
       "addressMaxLength": "Address must not exceed 300 characters",
       "housingComplexMaxLength": "Housing complex must not exceed 200 characters",
-      "yearRange": "Year must be between 1900 and {{currentYear}}"
+      "yearRange": "Year must be between 1900 and {{currentYear}}",
+      "rhRequired": "Blood type is required",
+      "contactNameMaxLength": "Contact name must not exceed 200 characters",
+      "contactPhoneMin": "Contact phone must have at least 7 digits",
+      "contactPhoneMax": "Contact phone must not exceed 20 digits",
+      "contactPhoneNumeric": "Contact phone must contain only numbers",
+      "spouseAttendsChurchRequired": "Please indicate if your spouse attends church",
+      "spouseRequired": "Please select your spouse",
+      "spouseNameRequired": "Please enter your spouse's name"
     },
     "privacy": {
       "title": "Privacy Notice",

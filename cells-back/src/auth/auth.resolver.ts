@@ -13,6 +13,7 @@ import { CompleteSocialRegistrationInput } from './dto/complete-social-registrat
 import { RequestPasswordResetInput } from './dto/request-password-reset.input';
 import { VerifyResetCodeInput } from './dto/verify-reset-code.input';
 import { ResetPasswordInput } from './dto/reset-password.input';
+import { ChangePasswordInput } from './dto/change-password.input';
 
 @Resolver()
 export class AuthResolver {
@@ -108,6 +109,17 @@ export class AuthResolver {
     return this.authService.resetPassword(
       input.email,
       input.code,
+      input.newPassword,
+    );
+  }
+
+  @Mutation(() => Boolean)
+  async changePassword(
+    @Args('changePasswordInput') input: ChangePasswordInput,
+  ) {
+    return this.authService.changePassword(
+      input.userId,
+      input.currentPassword,
       input.newPassword,
     );
   }

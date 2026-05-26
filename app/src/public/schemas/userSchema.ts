@@ -31,4 +31,5 @@ export type User = z.infer<typeof UserSchema>;
 
 export type UserState = User & {
     id: string;
+    discipleId?: string;
 }

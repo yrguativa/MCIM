@@ -31,6 +31,18 @@ export class DisciplePersonalInfo extends Document {
   @Prop({ required: false, enum: ['YES', 'NO'] })
   childrenAttendChurch: string;
 
+  @Prop({
+    required: false,
+    enum: ['O_POSITIVE', 'O_NEGATIVE', 'A_POSITIVE', 'A_NEGATIVE', 'B_POSITIVE', 'B_NEGATIVE', 'AB_POSITIVE', 'AB_NEGATIVE'],
+  })
+  rh: string;
+
+  @Prop({ required: false })
+  contactName: string;
+
+  @Prop({ required: false })
+  contactPhone: string;
+
   @Prop({ required: true })
   address: string;
 
@@ -87,10 +99,7 @@ export class DisciplePersonalInfo extends Document {
   @Prop({ required: false, enum: ['YES', 'NO'] })
   isLeader: string;
 
-  @Prop({
-    required: true,
-    enum: ['12', '144', '1728', '20736', '248832', '2985984'],
-  })
+  @Prop({ required: true, enum: ['YES', 'NO'] })
   generation: string;
 
   @Prop({

@@ -66,7 +66,7 @@ export const createDiscipleSchema = (t: (key: string) => string) => z.object({
     yearAttendedReencounter: z.string().optional(),
     baptizedAtMCI: z.enum(["YES", "NO"]).optional(),
     isLeader: z.enum(["YES", "NO"]).optional(),
-    generation: z.enum(["12", "144", "1728", "20736", "248832", "2985984"]).optional(),
+    generation: z.enum(["YES", "NO"]).optional(),
     formationSchoolLevel: z.enum(["BASIC_1", "BASIC_2", "BASIC_3", "ADVANCED_1", "ADVANCED_2", "ADVANCED_3", "GRADUATE", "NOT_STARTED"]).optional(),
 
     status: z.string()

@@ -2,9 +2,17 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Save, ArrowLeft, GalleryVerticalEnd, CheckCircle } from "lucide-react";
+import { Loader2, Save, ArrowLeft, GalleryVerticalEnd, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useMinistryStore } from "@/src/ministries/store/ministries.store";
@@ -16,6 +24,7 @@ import {
   type InitialInformationInput,
 } from "../schemas/initialInformationSchema";
 import { useInitialInformationStore } from "../store/initialInformation.store";
+import { InitialInformationService } from "../services/initialInformation.services";
 import AssistantSearch from "../components/AssistantSearch";
 import BasicInfoCard from "../components/BasicInfoCard";
 import PersonalInfoCard from "../components/PersonalInfoCard";
@@ -67,6 +76,12 @@ const InitialInformationForm: React.FC = () => {
       isLeader: undefined,
       generation: undefined,
       formationSchoolLevel: undefined,
+      rh: undefined,
+      contactName: "",
+      contactPhone: "",
+      spouseAttendsChurch: undefined,
+      spouseId: "",
+      spouseName: "",
       cellAddress: "",
       cellNeighborhood: undefined,
       cellDay: "",
@@ -76,10 +91,17 @@ const InitialInformationForm: React.FC = () => {
     },
   });
 
+  const [maritalData, setMaritalData] = useState<{ id: string; discipleId: string; attendsChurch: string; spouseId?: string; spouseName?: string } | null>(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
   useEffect(() => {
     if (store.mode === "update" && store.foundAssistant?.disciple) {
       const d = store.foundAssistant.disciple;
       const p = store.foundAssistant.personalInfo;
+
+      InitialInformationService.findMaritalRelationship(d.id).then((rel) => {
+        setMaritalData(rel);
+      });
 
       const values = {
         name: d.name || "",
@@ -109,8 +131,14 @@ const InitialInformationForm: React.FC = () => {
         yearAttendedReencounter: p?.yearAttendedReencounter || "",
         baptizedAtMCI: p?.baptizedAtMCI as "YES" | "NO",
         isLeader: p?.isLeader as "YES" | "NO" | undefined,
-        generation: p?.generation as "12" | "144" | "1728" | "20736" | "248832" | "2985984",
+        generation: p?.generation as "YES" | "NO",
         formationSchoolLevel: p?.formationSchoolLevel as "BASIC_1" | "BASIC_2" | "BASIC_3" | "ADVANCED_1" | "ADVANCED_2" | "ADVANCED_3" | "GRADUATE" | "NOT_STARTED",
+        rh: p?.rh as "O_POSITIVE" | "O_NEGATIVE" | "A_POSITIVE" | "A_NEGATIVE" | "B_POSITIVE" | "B_NEGATIVE" | "AB_POSITIVE" | "AB_NEGATIVE" | undefined,
+        contactName: p?.contactName || "",
+        contactPhone: p?.contactPhone || "",
+        spouseAttendsChurch: undefined,
+        spouseId: "",
+        spouseName: "",
         cellAddress: "",
         cellNeighborhood: undefined,
         cellDay: "",
@@ -146,7 +174,12 @@ const InitialInformationForm: React.FC = () => {
         if (p?.isLeader) {
           form.setValue("isLeader", p?.isLeader as "YES" | "NO");
         }
-        form.setValue("generation", p?.generation as "12" | "144" | "1728" | "20736" | "248832" | "2985984");
+        if (p?.generation) {
+          form.setValue("generation", p?.generation as "YES" | "NO");
+        }
+        if (p?.rh) {
+          form.setValue("rh", p?.rh as "O_POSITIVE" | "O_NEGATIVE" | "A_POSITIVE" | "A_NEGATIVE" | "B_POSITIVE" | "B_NEGATIVE" | "AB_POSITIVE" | "AB_NEGATIVE");
+        }
         form.setValue("formationSchoolLevel", p?.formationSchoolLevel as "BASIC_1" | "BASIC_2" | "BASIC_3" | "ADVANCED_1" | "ADVANCED_2" | "ADVANCED_3" | "GRADUATE" | "NOT_STARTED");
         if (p?.ministryId) {
           form.setValue("ministryId", p?.ministryId);
@@ -156,6 +189,18 @@ const InitialInformationForm: React.FC = () => {
       }, 0);
     }
   }, [store.mode, store.foundAssistant, form]);
+
+  useEffect(() => {
+    if (maritalData) {
+      form.setValue("spouseAttendsChurch", maritalData.attendsChurch as "YES" | "NO");
+      if (maritalData.spouseId) {
+        form.setValue("spouseId", maritalData.spouseId);
+      }
+      if (maritalData.spouseName) {
+        form.setValue("spouseName", maritalData.spouseName);
+      }
+    }
+  }, [maritalData, form]);
 
   useEffect(() => {
     getMinistries();
@@ -194,6 +239,12 @@ const InitialInformationForm: React.FC = () => {
         isLeader: undefined,
         generation: undefined,
         formationSchoolLevel: undefined,
+        rh: undefined,
+        contactName: "",
+        contactPhone: "",
+        spouseAttendsChurch: undefined,
+        spouseId: "",
+        spouseName: "",
         cellAddress: "",
         cellNeighborhood: undefined,
         cellDay: "",
@@ -203,6 +254,7 @@ const InitialInformationForm: React.FC = () => {
       });
       setStep(1);
       setCellAssistants([]);
+      setMaritalData(null);
       sessionStorage.removeItem("discipleId");
       sessionStorage.removeItem("personalInfoData");
     }
@@ -214,7 +266,9 @@ const InitialInformationForm: React.FC = () => {
     "address", "housingComplex", "neighborhood", "municipality", "network", "birthDate",
     "ministryId", "directLeaderId", "yearArrivedAtChurch", "hasAttendedEncounter",
     "yearAttendedEncounter", "hasRepeatedEncounter", "hasAttendedReencounter",
-    "yearAttendedReencounter", "baptizedAtMCI", "isLeader", "generation", "formationSchoolLevel"
+    "yearAttendedReencounter", "baptizedAtMCI", "isLeader", "generation", "formationSchoolLevel",
+    "rh", "contactName", "contactPhone",
+    "spouseAttendsChurch", "spouseId", "spouseName"
   ];
 
   const handleSubmit = async (data: InitialInformationInput) => {
@@ -232,6 +286,19 @@ const InitialInformationForm: React.FC = () => {
     }
 
     await onSubmit(data);
+  };
+
+  const saveMaritalRelation = async (discipleId: string, data: InitialInformationInput) => {
+    if (data.maritalStatus !== "MARRIED" && data.maritalStatus !== "FREE_UNION") return;
+    if (!data.spouseAttendsChurch) return;
+
+    await InitialInformationService.saveMaritalRelationship({
+      discipleId,
+      attendsChurch: data.spouseAttendsChurch,
+      spouseId: data.spouseAttendsChurch === "YES" ? data.spouseId || undefined : undefined,
+      spouseName: data.spouseAttendsChurch === "NO" ? data.spouseName || undefined : undefined,
+      createdUser: "initial-info-form",
+    });
   };
 
   const onSubmit = async (data: InitialInformationInput) => {
@@ -258,6 +325,9 @@ const InitialInformationForm: React.FC = () => {
       isLeader: data.isLeader || undefined,
       generation: data.generation,
       formationSchoolLevel: data.formationSchoolLevel,
+      rh: data.rh,
+      contactName: data.contactName || undefined,
+      contactPhone: data.contactPhone || undefined,
     };
 
     if (step === 1) {
@@ -278,13 +348,11 @@ const InitialInformationForm: React.FC = () => {
         });
 
         if (createdDiscipleId) {
+          await saveMaritalRelation(createdDiscipleId, data);
+
           if (data.isLeader !== "YES") {
             confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-            toast.success(t("initialInformation.messages.createSuccess"), {
-              icon: <CheckCircle className="h-4 w-4 text-green-500" />,
-            });
-            store.resetForm();
-            form.reset();
+            setShowSuccessModal(true);
           } else {
             sessionStorage.setItem("discipleId", createdDiscipleId);
             sessionStorage.setItem("personalInfoData", JSON.stringify(personalInfoData));
@@ -314,12 +382,10 @@ const InitialInformationForm: React.FC = () => {
         });
 
         if (success) {
+          await saveMaritalRelation(discipleId, data);
+
           confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-          toast.success(t("initialInformation.messages.updateSuccess"), {
-            icon: <CheckCircle className="h-4 w-4 text-green-500" />,
-          });
-          store.resetForm();
-          form.reset();
+          setShowSuccessModal(true);
         }
       }
     } else {
@@ -359,18 +425,9 @@ const InitialInformationForm: React.FC = () => {
         }
 
         confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-        const successMsg = store.mode === "update"
-          ? t("initialInformation.messages.updateSuccess")
-          : t("initialInformation.messages.createSuccess");
-        toast.success(successMsg, {
-          icon: <CheckCircle className="h-4 w-4 text-green-500" />,
-        });
-        store.resetForm();
-        form.reset();
-        setCellAssistants([]);
-        setStep(1);
         sessionStorage.removeItem("discipleId");
         sessionStorage.removeItem("personalInfoData");
+        setShowSuccessModal(true);
       } catch (error) {
         console.error("Error creating cell for new leader:", error);
         toast.error("Error al crear la célula. Contacta al administrador.");
@@ -492,7 +549,7 @@ const InitialInformationForm: React.FC = () => {
                       {t("initialInformation.actions.cancel")}
                     </Button>
                     
-                    <Button type="submit" disabled={store.isSaving} size="lg" className="w-full sm:w-auto transition-all active:scale-95">
+                    <Button type="submit" disabled={store.isSaving} size="lg" className="w-full sm:w-auto sm:min-w-[140px] transition-all active:scale-95">
                       {store.isSaving ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -514,6 +571,43 @@ const InitialInformationForm: React.FC = () => {
           </div>
         )}
       </main>
+      <Dialog open={showSuccessModal} onOpenChange={(open) => {
+        if (!open) {
+          setShowSuccessModal(false);
+          store.resetForm();
+          form.reset();
+          setCellAssistants([]);
+          setStep(1);
+        }
+      }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-green-100">
+              <CheckCircle2 className="h-6 w-6 text-green-600" />
+            </div>
+            <DialogTitle className="text-center text-lg">
+              {t("initialInformation.messages.saveSuccessTitle")}
+            </DialogTitle>
+            <DialogDescription className="text-center">
+              {t("initialInformation.messages.saveSuccessDescription")}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-center">
+            <Button
+              onClick={() => {
+                setShowSuccessModal(false);
+                store.resetForm();
+                form.reset();
+                setCellAssistants([]);
+                setStep(1);
+              }}
+              className="min-w-[120px]"
+            >
+              {t("initialInformation.actions.continue")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

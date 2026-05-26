@@ -72,10 +72,15 @@ export function usePWAInstall() {
     setState((prev) => ({ ...prev, showPrompt: false }));
   }, []);
 
+  const resetDismiss = useCallback(() => {
+    localStorage.removeItem("pwa-install-dismissed");
+    setState((prev) => ({ ...prev, showPrompt: true }));
+  }, []);
+
   const ua = navigator.userAgent;
   const isMobile = /iPad|iPhone|iPod|Android|Mobi|mobile|BlackBerry|Opera Mini|IEMobile|WPDesktop/.test(ua);
   const shouldSuggest =
     isMobile && state.showPrompt && !state.isInstalled && (state.platform === "android" || state.platform === "ios");
 
-  return { ...state, shouldSuggest, install, dismiss };
+  return { ...state, shouldSuggest, install, dismiss, resetDismiss };
 }

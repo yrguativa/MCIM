@@ -201,6 +201,24 @@ export class DisciplesService {
     return this.toModel(deletedDisciple);
   }
 
+  async findByEmail(email: string): Promise<DiscipleFullEntity | null> {
+    const disciple = await this.discipleModel.findOne({ email }).exec();
+    if (!disciple) {
+      return null;
+    }
+
+    const personalInfo = await this.personalInfoModel
+      .findOne({ discipleId: disciple._id.toString() })
+      .exec();
+
+    return {
+      disciple: this.toModel(disciple),
+      personalInfo: personalInfo
+        ? this.toPersonalInfoModel(personalInfo)
+        : null,
+    };
+  }
+
   async searchByName(name: string): Promise<DiscipleEntity[]> {
     const disciples = await this.discipleModel
       .find({
@@ -264,6 +282,9 @@ export class DisciplesService {
       baptizedAtMCI: info.baptizedAtMCI,
       isLeader: info.isLeader,
       generation: info.generation,
+      rh: info.rh,
+      contactName: info.contactName,
+      contactPhone: info.contactPhone,
       formationSchoolLevel: info.formationSchoolLevel,
       createdAt: info.createdAt,
       updatedAt: info.updatedAt,

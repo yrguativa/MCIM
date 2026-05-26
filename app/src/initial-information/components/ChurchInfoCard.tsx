@@ -173,7 +173,7 @@ const ChurchInfoCard: React.FC = () => {
                 {t("initialInformation.churchInfo.yearArrivedAtChurch")} *
               </FormLabel>
               <FormControl>
-                <Input placeholder="2020" {...field} />
+                <Input type="number" placeholder="2020" {...field} />
               </FormControl>
               <FormDescription>
                 {t("initialInformation.churchInfo.yearArrivedAtChurchHint")}
@@ -225,7 +225,7 @@ const ChurchInfoCard: React.FC = () => {
                     {t("initialInformation.churchInfo.yearAttendedEncounter")} *
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="2023" {...field} />
+                    <Input type="number" placeholder="2023" {...field} />
                   </FormControl>
                   <FormDescription>
                     {t("initialInformation.churchInfo.yearAttendedEncounterHint")}
@@ -308,7 +308,7 @@ const ChurchInfoCard: React.FC = () => {
                   {t("initialInformation.churchInfo.yearAttendedReencounter")} *
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="2024" {...field} />
+                  <Input type="number" placeholder="2024" {...field} />
                 </FormControl>
                 <FormDescription>
                   {t("initialInformation.churchInfo.yearAttendedReencounterHint")}
@@ -388,23 +388,22 @@ const ChurchInfoCard: React.FC = () => {
                 <GraduationCap className="h-3.5 w-3.5 text-muted-foreground" />
                 {t("initialInformation.churchInfo.generation")} *
               </FormLabel>
-              <Select onValueChange={field.onChange} value={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue
-                      placeholder={t("initialInformation.churchInfo.generationPlaceholder")}
-                    />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="12">{t("initialInformation.generation.12")}</SelectItem>
-                  <SelectItem value="144">{t("initialInformation.generation.144")}</SelectItem>
-                  <SelectItem value="1728">{t("initialInformation.generation.1728")}</SelectItem>
-                  <SelectItem value="20736">{t("initialInformation.generation.20736")}</SelectItem>
-                  <SelectItem value="248832">{t("initialInformation.generation.248832")}</SelectItem>
-                  <SelectItem value="2985984">{t("initialInformation.generation.2985984")}</SelectItem>
-                </SelectContent>
-              </Select>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  className="flex gap-4 pt-2"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="YES" id="generation-yes" />
+                    <Label htmlFor="generation-yes">{t("initialInformation.yes")}</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="NO" id="generation-no" />
+                    <Label htmlFor="generation-no">{t("initialInformation.no")}</Label>
+                  </div>
+                </RadioGroup>
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}

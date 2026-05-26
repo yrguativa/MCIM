@@ -30,6 +30,7 @@ export class AuthService {
                         lastLogin
                         active
                         accessToken
+                        discipleId
                     }
                 }
             `;
@@ -64,6 +65,7 @@ export class AuthService {
                     photoURL
                     accessToken
                     id
+                    discipleId
                 }
             }
             `;
@@ -111,6 +113,7 @@ export class AuthService {
                         accessToken
                         id
                         email
+                        discipleId
                     }
                 }
             `;
@@ -165,6 +168,7 @@ export class AuthService {
                             createdAt
                             lastLogin
                             active
+                            discipleId
                         }
                     }
                 }
@@ -211,9 +215,39 @@ export class AuthService {
         }
     }
 
-    async getCurrentUser() {
+        async changePassword(userId: string, currentPassword: string, newPassword: string): Promise<boolean> {
         try {
             const query = `
+                mutation ChangePassword($changePasswordInput: ChangePasswordInput!) {
+                    changePassword(changePasswordInput: $changePasswordInput)
+                }
+            `;
+
+            const { data } = await api.post('', {
+                query,
+                variables: {
+                    changePasswordInput: {
+                        userId,
+                        currentPassword,
+                        newPassword,
+                    },
+                },
+            });
+
+            if (data.errors) {
+                throw new Error(data.errors[0].message);
+            }
+
+            return data.data.changePassword;
+        } catch (error) {
+            console.error('Change password error:', error);
+            throw error;
+        }
+    }
+
+    async getCurrentUser() {
+            try {
+                const query = `
                 query Me {
                     me {
                         id
@@ -227,9 +261,10 @@ export class AuthService {
                         createdAt
                         lastLogin
                         active
+                        discipleId
                     }
                 }
-            `;
+                `;
 
             const data = await api.post('', { query });
             return data.data.me;

@@ -164,6 +164,9 @@ const DiscipleForm: React.FC = () => {
       baptizedAtMCI: data.baptizedAtMCI || undefined,
       isLeader: data.isLeader || undefined,
       generation: data.generation || undefined,
+      rh: data.rh || undefined,
+      contactName: data.contactName || undefined,
+      contactPhone: data.contactPhone || undefined,
       formationSchoolLevel: data.formationSchoolLevel || undefined,
     };
 

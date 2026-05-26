@@ -13,7 +13,8 @@
         "search": "Buscar",
         "required": "Este campo es requerido",
         "invalid": "Este campo es inválido",
-        "accept": "Aceptar"
+        "accept": "Aceptar",
+        "noData": "No hay datos disponibles"
     },
     "menu": {
         "dashboard": "Panel principal",
@@ -27,6 +28,30 @@
         "profile": "Perfil",
         "logout": "Cerrar sesión",
         "more": "Más"
+    },
+    "settings": {
+        "title": "Configuración",
+        "general": "General",
+        "profile": "Perfil",
+        "security": "Seguridad",
+        "language": "Idioma",
+        "spanish": "Español",
+        "english": "Inglés",
+        "installApp": "Instalar App",
+        "installDescription": "Instala esta aplicación en tu dispositivo para acceder más rápido",
+        "installButton": "Instalar",
+        "installed": "Instalada",
+        "accountInfo": "Información de la Cuenta",
+        "linkedWith": "Cuenta vinculada con {{provider}}",
+        "changePassword": "Cambiar Contraseña",
+        "currentPassword": "Contraseña actual",
+        "newPassword": "Nueva contraseña",
+        "confirmPassword": "Confirmar contraseña",
+        "passwordUpdated": "Contraseña actualizada correctamente",
+        "passwordError": "Error al actualizar la contraseña",
+        "noPasswordAccount": "Tu cuenta usa autenticación con {{provider}}. No puedes cambiar la contraseña desde aquí.",
+        "profileUpdated": "Perfil actualizado correctamente",
+        "profileError": "Error al actualizar el perfil"
     },
     "validation": {
         "masculinePronoun": "El",
@@ -205,7 +230,7 @@
             "yearAttendedReencounter": "¿Qué año asistió a Reencuentro?",
             "baptizedAtMCI": "¿Te bautizaste en la MCI?",
             "isLeader": "¿Eres líder?",
-            "generation": "Generación",
+            "generation": "¿Haces parte de los 144?",
             "formationSchoolLevel": "Nivel Escuela de Formación",
             "yes": "Sí",
             "no": "No",
@@ -605,11 +630,13 @@
             "updatingRecord": "Actualizando registro existente",
             "identificationReadOnly": "El número de documento no se puede modificar después de creado",
             "searching": "Buscando...",
-            "helpText": "Ingrese su número de identificación para verificar si ya está registrado"
+            "helpText": "Ingrese su número de identificación para verificar si ya está registrado",
+            "habeasDataConsent": "He leído y acepto la política de protección de datos personales y autorizo el tratamiento de mis datos conforme a la Ley 1581 de 2012."
         },
         "basicInfo": {
             "title": "Información Básica",
             "names": "Nombres",
+            "namesHint": "Nombres completos como aparecen en su documento de identificación",
             "lastNames": "Apellidos",
             "email": "Correo Electrónico",
             "phone": "Celular",
@@ -632,6 +659,8 @@
             "nationalityPlaceholder": "Seleccione su nacionalidad",
             "gender": "Género",
             "genderPlaceholder": "Seleccione su género",
+            "rh": "RH",
+            "rhPlaceholder": "Seleccione su RH",
             "maritalStatus": "Estado civil",
             "maritalStatusPlaceholder": "Seleccione su estado civil",
             "hasChildren": "¿Tiene hijos?",
@@ -645,7 +674,19 @@
             "network": "Red",
             "networkPlaceholder": "Seleccione una red",
             "birthDate": "Fecha de nacimiento",
-            "birthDateHint": "dd/mm/aaaa"
+            "birthDateHint": "dd/mm/aaaa",
+            "contactName": "Nombre de contacto",
+            "contactNamePlaceholder": "Ej: María Pérez",
+            "contactPhone": "Teléfono de contacto",
+            "contactPhonePlaceholder": "3001234567",
+            "spouseSection": "Información del Cónyuge",
+            "spouseAttendsChurch": "¿Su cónyuge asiste a la iglesia?",
+            "spouseSelect": "Seleccionar cónyuge",
+            "spouseSelectPlaceholder": "Buscar y seleccionar cónyuge...",
+            "spouseSearchPlaceholder": "Escriba 2 letras para buscar...",
+            "spouseSearchEmpty": "No se encontraron discípulos",
+            "spouseName": "Nombre completo del cónyuge",
+            "spouseNamePlaceholder": "Ingrese el nombre completo"
         },
         "nationality": {
             "COLOMBIAN": "Colombiana",
@@ -699,20 +740,12 @@
             "yearAttendedReencounterHint": "Ej: 2024",
             "baptizedAtMCI": "¿Te bautizaste en la MCI?",
             "isLeader": "¿Eres líder?",
-            "generation": "¿A qué generación perteneces?",
-            "generationPlaceholder": "Seleccione su generación",
+            "generation": "¿Haces parte de los 144?",
             "formationSchoolLevel": "Nivel de escuela de formación",
             "formationSchoolLevelPlaceholder": "Seleccione su nivel",
             "formationSchoolLevelHint": "1er ciclo 2026 o último nivel cursado"
         },
-        "generation": {
-            "12": "12",
-            "144": "144",
-            "1728": "1.728",
-            "20736": "20.736",
-            "248832": "248.832",
-            "2985984": "2.985.984"
-        },
+        "generation": {},
         "formationSchoolLevel": {
             "BASIC_1": "Básico 1",
             "BASIC_2": "Básico 2",
@@ -730,11 +763,14 @@
             "saving": "Guardando...",
             "cancel": "Cancelar",
             "newSearch": "Nueva búsqueda",
-            "saveAndContinue": "Guardar y continuar"
+            "saveAndContinue": "Guardar y continuar",
+            "continue": "Continuar"
         },
         "messages": {
             "createSuccess": "Registro creado exitosamente",
             "updateSuccess": "Información actualizada exitosamente",
+            "saveSuccessTitle": "¡Información guardada!",
+            "saveSuccessDescription": "La información se ha guardado correctamente en el sistema.",
             "error": "Error al guardar la información",
             "searchError": "Error al buscar el asistente",
             "leadersLoadError": "Error al cargar la lista de líderes",
@@ -805,7 +841,15 @@
             "emailMaxLength": "El correo electrónico no debe exceder 254 caracteres",
             "addressMaxLength": "La dirección no debe exceder 300 caracteres",
             "housingComplexMaxLength": "El conjunto residencial no debe exceder 200 caracteres",
-            "yearRange": "El año debe estar entre 1900 y {{currentYear}}"
+            "yearRange": "El año debe estar entre 1900 y {{currentYear}}",
+            "rhRequired": "El RH es obligatorio",
+            "contactNameMaxLength": "El nombre de contacto no debe exceder 200 caracteres",
+            "contactPhoneMin": "El teléfono de contacto debe tener al menos 7 dígitos",
+            "contactPhoneMax": "El teléfono de contacto no debe exceder 20 dígitos",
+            "contactPhoneNumeric": "El teléfono de contacto solo debe contener números",
+            "spouseAttendsChurchRequired": "Debe indicar si su cónyuge asiste a la iglesia",
+            "spouseRequired": "Debe seleccionar el cónyuge",
+            "spouseNameRequired": "Debe ingresar el nombre del cónyuge"
         },
         "privacy": {
             "title": "Aviso de Privacidad",

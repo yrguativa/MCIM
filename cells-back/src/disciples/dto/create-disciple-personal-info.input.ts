@@ -34,6 +34,18 @@ export class CreateDisciplePersonalInfoInput {
   @IsOptional()
   childrenAttendChurch: string;
 
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  rh: string;
+
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  contactName: string;
+
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  contactPhone: string;
+
   @Field()
   @IsNotEmpty({ message: 'Address is required' })
   address: string;

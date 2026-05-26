@@ -1,0 +1,100 @@
+import React from 'react'
+import { RefreshCw, WifiOff } from 'lucide-react'
+
+interface PWALoadingScreenProps {
+  status: 'updating' | 'offline-ready'
+  onUpdate?: () => void
+}
+
+export const PWALoadingScreen: React.FC<PWALoadingScreenProps> = ({ status, onUpdate }) => {
+  React.useEffect(() => {
+    if (status === 'updating' && onUpdate) {
+      const timer = setTimeout(() => onUpdate(), 500)
+      return () => clearTimeout(timer)
+    }
+  }, [status, onUpdate])
+
+  return (
+    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background">
+      <div className="flex flex-col items-center gap-6 text-center px-6">
+        <div className="relative">
+          <svg
+            width="80"
+            height="80"
+            viewBox="0 0 2673 2674"
+            className="text-foreground"
+            fill="currentColor"
+          >
+            <rect width="2673" height="2674" rx="400" />
+            <g transform="translate(0,2674) scale(0.1,-0.1)" fill="currentColor">
+              <path d="M12955 26713 c-2514 -84 -4885 -837 -6950 -2208 -2868 -1902 -4890
+-4822 -5649 -8155 -523 -2299 -432 -4682 266 -6939 l24 -75 45 65 c25 35 1482
+2158 3238 4717 l3193 4652 614 0 614 0 2 -4539 3 -4538 3115 4538 3115 4539
+613 0 612 0 0 -330 0 -331 43 29 c83 57 322 195 471 272 1262 656 2722 786
+4112 365 410 -125 824 -310 1154 -518 102 -64 304 -213 332 -243 16 -18 -3
+-28 -505 -270 l-521 -251 -50 30 c-111 65 -371 189 -526 250 -394 156 -777
+244 -1204 278 -214 17 -647 7 -853 -20 -609 -79 -1188 -262 -1646 -522 -907
+-514 -1588 -1351 -1935 -2380 -384 -1134 -319 -2349 182 -3384 328 -680 827
+-1245 1481 -1680 1318 -876 3028 -1019 4368 -365 547 266 1029 652 1412 1130
+419 524 710 1127 907 1881 l53 204 3 2928 2 2927 535 0 535 0 0 -5345 0 -5345
+-540 0 -540 0 0 1211 0 1211 -72 -94 c-292 -380 -683 -765 -1063 -1049 -427
+-318 -862 -552 -1360 -732 -1261 -456 -2649 -430 -3900 73 -249 100 -638 301
+-857 443 l-58 38 0 -551 0 -550 -540 0 -540 0 0 1023 0 1022 -56 65 c-275 322
+-556 765 -751 1184 -533 1149 -655 2384 -351 3581 41 165 118 410 163 525 14
+35 19 58 12 50 -8 -8 -1170 -1690 -2582 -3737 l-2568 -3723 -482 0 c-265 0
+-564 3 -663 7 l-182 6 -2 4430 -3 4430 -3059 -4428 -3058 -4428 62 -141 c104
+-234 349 -727 479 -966 1470 -2684 3806 -4784 6621 -5950 2124 -880 4463
+-1193 6765 -905 2597 326 5033 1407 7025 3120 496 426 1023 955 1459 1464 796
+929 1490 2020 2001 3146 1098 2422 1446 5123 1000 7760 -569 3367 -2413 6381
+-5165 8446 -1847 1386 -4026 2266 -6320 2554 -669 83 -1438 120 -2080 98z" />
+            </g>
+          </svg>
+          {status === 'updating' && (
+            <RefreshCw className="absolute -bottom-1 -right-1 h-5 w-5 text-primary animate-spin" />
+          )}
+          {status === 'offline-ready' && (
+            <WifiOff className="absolute -bottom-1 -right-1 h-5 w-5 text-primary" />
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <h2 className="text-xl font-semibold tracking-tight">
+            MCIM
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            {status === 'updating' ? (
+              <>
+                Actualizando aplicación
+                <span className="inline-flex gap-0.5 ml-1">
+                  <span className="animate-bounce [animation-delay:0ms]">.</span>
+                  <span className="animate-bounce [animation-delay:150ms]">.</span>
+                  <span className="animate-bounce [animation-delay:300ms]">.</span>
+                </span>
+              </>
+            ) : (
+              <>
+                <WifiOff className="inline h-3.5 w-3.5 mr-1 -mt-0.5" />
+                Aplicación disponible sin conexión
+              </>
+            )}
+          </p>
+        </div>
+
+        {status === 'updating' && (
+          <div className="flex items-center gap-2">
+            <div className="h-1.5 w-32 rounded-full bg-muted overflow-hidden">
+              <div className="h-full w-full rounded-full bg-primary animate-[pulse_1.5s_ease-in-out_infinite]" />
+            </div>
+          </div>
+        )}
+
+        {status === 'offline-ready' && (
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+            Listo
+          </span>
+        )}
+      </div>
+    </div>
+  )
+}

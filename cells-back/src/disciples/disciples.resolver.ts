@@ -100,6 +100,14 @@ export class DisciplesResolver {
     return this.disciplesService.remove(id);
   }
 
+  @Query(() => DiscipleFullEntity, {
+    nullable: true,
+    name: 'discipleByEmail',
+  })
+  async findByEmail(@Args('email', { type: () => String }) email: string) {
+    return this.disciplesService.findByEmail(email);
+  }
+
   @Query(() => [DiscipleEntity], { name: 'discipleByName' })
   searchDisciplesByName(
     @Args('name', { type: () => String }) name: string,

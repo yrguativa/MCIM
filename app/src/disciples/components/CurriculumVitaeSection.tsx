@@ -674,21 +674,22 @@ const CurriculumVitaeSection: React.FC = () => {
                                     <GraduationCap className="h-3.5 w-3.5 text-muted-foreground" />
                                     {t("disciples.cv.generation")}
                                 </FormLabel>
-                                <Select onValueChange={field.onChange} value={field.value || ""}>
-                                    <FormControl>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder={t("disciples.cv.placeholders.generation")} />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        <SelectItem value="12">12</SelectItem>
-                                        <SelectItem value="144">144</SelectItem>
-                                        <SelectItem value="1728">1.728</SelectItem>
-                                        <SelectItem value="20736">20.736</SelectItem>
-                                        <SelectItem value="248832">248.832</SelectItem>
-                                        <SelectItem value="2985984">2.985.984</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                <FormControl>
+                                    <RadioGroup
+                                        onValueChange={field.onChange}
+                                        value={field.value}
+                                        className="flex gap-4 pt-2"
+                                    >
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="YES" id="disciple-generation-yes" />
+                                            <Label htmlFor="disciple-generation-yes">{t("disciples.cv.yes")}</Label>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="NO" id="disciple-generation-no" />
+                                            <Label htmlFor="disciple-generation-no">{t("disciples.cv.no")}</Label>
+                                        </div>
+                                    </RadioGroup>
+                                </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}

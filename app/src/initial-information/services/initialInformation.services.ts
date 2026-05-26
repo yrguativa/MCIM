@@ -57,6 +57,9 @@ export class InitialInformationService {
               baptizedAtMCI
               isLeader
               generation
+              rh
+              contactName
+              contactPhone
               formationSchoolLevel
               createdAt
               updatedAt
@@ -198,6 +201,131 @@ export class InitialInformationService {
       }
 
       return !!response.data.data.updateDiscipleFull;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error(error.response?.data);
+      }
+      console.error(error);
+      return false;
+    }
+  }
+
+  static async saveMaritalRelationship(data: {
+    discipleId: string;
+    attendsChurch: string;
+    spouseId?: string;
+    spouseName?: string;
+    createdUser?: string;
+  }): Promise<string | null> {
+    try {
+      const mutation = `
+        mutation CreateMaritalRelationship($input: CreateMaritalRelationshipInput!) {
+          createMaritalRelationship(input: $input) {
+            id
+            discipleId
+            attendsChurch
+            spouseId
+            spouseName
+          }
+        }
+      `;
+      const response = await api.post(
+        "",
+        JSON.stringify({
+          query: mutation,
+          variables: { input: data },
+        }),
+      );
+
+      if (response.data.errors) {
+        console.error("GraphQL errors:", response.data.errors);
+        return null;
+      }
+
+      return response.data.data.createMaritalRelationship?.id || null;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error(error.response?.data);
+      }
+      console.error(error);
+      return null;
+    }
+  }
+
+  static async findMaritalRelationship(discipleId: string): Promise<{
+    id: string;
+    discipleId: string;
+    attendsChurch: string;
+    spouseId?: string;
+    spouseName?: string;
+  } | null> {
+    try {
+      const query = `
+        query MaritalRelationshipByDisciple($discipleId: String!) {
+          maritalRelationshipByDisciple(discipleId: $discipleId) {
+            id
+            discipleId
+            attendsChurch
+            spouseId
+            spouseName
+          }
+        }
+      `;
+      const { data } = await api.post(
+        "",
+        JSON.stringify({
+          query,
+          variables: { discipleId },
+        }),
+      );
+
+      if (data.errors) {
+        console.error("GraphQL errors:", data.errors);
+        return null;
+      }
+
+      return data.data.maritalRelationshipByDisciple || null;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error(error.response?.data);
+      }
+      console.error(error);
+      return null;
+    }
+  }
+
+  static async updateMaritalRelationship(data: {
+    id: string;
+    attendsChurch?: string;
+    spouseId?: string;
+    spouseName?: string;
+    updatedUser?: string;
+  }): Promise<boolean> {
+    try {
+      const mutation = `
+        mutation UpdateMaritalRelationship($input: UpdateMaritalRelationshipInput!) {
+          updateMaritalRelationship(input: $input) {
+            id
+            attendsChurch
+            spouseId
+            spouseName
+          }
+        }
+      `;
+      const response = await api.post(
+        "",
+        JSON.stringify({
+          query: mutation,
+          variables: { input: data },
+        }),
+      );
+
+      if (response.data.errors) {
+        console.error("GraphQL errors:", response.data.errors);
+        return false;
+      }
+
+      return !!response.data.data.updateMaritalRelationship;
     } catch (error) {
       if (error instanceof AxiosError) {
         console.error(error.response?.data);

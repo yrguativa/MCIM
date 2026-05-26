@@ -17,6 +17,9 @@ export default defineConfig(() => {
       react(),
       tailwindcss(),
       VitePWA({
+        strategies: 'injectManifest',
+        srcDir: 'src',
+        filename: 'sw.ts',
         registerType: 'autoUpdate',
         includeAssets: ['icons/*.{svg,png}', 'favicon.svg'],
         manifest: {
@@ -34,20 +37,6 @@ export default defineConfig(() => {
             { src: `${base}icons/icon-192.png`, sizes: '192x192', type: 'image/png' },
             { src: `${base}icons/icon-512.png`, sizes: '512x512', type: 'image/png' },
             { src: `${base}icons/icon-512.png`, sizes: '512x512', type: 'image/png', purpose: 'maskable' },
-          ],
-        },
-        workbox: {
-          globPatterns: ['**/*.{js,css,html,svg,png,ico,json,woff2}'],
-          navigateFallback: `${base}index.html`,
-          runtimeCaching: [
-            {
-              urlPattern: /^https?:\/\/.*\/graphql.*/i,
-              handler: 'NetworkFirst',
-              options: {
-                cacheName: 'api-cache',
-                expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 },
-              },
-            },
           ],
         },
       }),

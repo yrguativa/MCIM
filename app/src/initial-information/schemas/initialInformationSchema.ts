@@ -51,6 +51,19 @@ export const createInitialInformationSchema = (t: (key: string, options?: Record
         error: t("initialInformation.validation.hasChildrenRequired"),
       }),
       childrenAttendChurch: z.enum(["YES", "NO"]).optional(),
+      rh: z.enum(["O_POSITIVE", "O_NEGATIVE", "A_POSITIVE", "A_NEGATIVE", "B_POSITIVE", "B_NEGATIVE", "AB_POSITIVE", "AB_NEGATIVE"]).optional(),
+      contactName: z
+        .string()
+        .max(200, t("initialInformation.validation.contactNameMaxLength"))
+        .optional()
+        .or(z.literal("")),
+      contactPhone: z
+        .string()
+        .min(7, t("initialInformation.validation.contactPhoneMin"))
+        .max(20, t("initialInformation.validation.contactPhoneMax"))
+        .regex(/^[0-9]+$/, t("initialInformation.validation.contactPhoneNumeric"))
+        .optional()
+        .or(z.literal("")),
       address: z
         .string()
         .min(5, t("initialInformation.validation.addressMin"))
@@ -134,7 +147,7 @@ export const createInitialInformationSchema = (t: (key: string, options?: Record
         error: t("initialInformation.validation.baptizedRequired"),
       }),
       isLeader: z.enum(["YES", "NO"]).optional(),
-      generation: z.enum(["12", "144", "1728", "20736", "248832", "2985984"], {
+      generation: z.enum(["YES", "NO"], {
         error: t("initialInformation.validation.generationRequired"),
       }),
       formationSchoolLevel: z.enum(
@@ -154,6 +167,10 @@ export const createInitialInformationSchema = (t: (key: string, options?: Record
           ),
         },
       ),
+
+      spouseAttendsChurch: z.enum(["YES", "NO"]).optional(),
+      spouseId: z.string().optional(),
+      spouseName: z.string().optional(),
 
       cellAddress: z.string().optional(),
       cellNeighborhood: z.number().optional(),
@@ -209,6 +226,28 @@ export const createInitialInformationSchema = (t: (key: string, options?: Record
             "initialInformation.validation.yearAttendedReencounterRequired",
           ),
         });
+      }
+
+      if (data.maritalStatus === "MARRIED" || data.maritalStatus === "FREE_UNION") {
+        if (!data.spouseAttendsChurch) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["spouseAttendsChurch"],
+            message: t("initialInformation.validation.spouseAttendsChurchRequired"),
+          });
+        } else if (data.spouseAttendsChurch === "YES" && !data.spouseId) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["spouseId"],
+            message: t("initialInformation.validation.spouseRequired"),
+          });
+        } else if (data.spouseAttendsChurch === "NO" && (!data.spouseName || data.spouseName.length < 3)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["spouseName"],
+            message: t("initialInformation.validation.spouseNameRequired"),
+          });
+        }
       }
     });
 };
