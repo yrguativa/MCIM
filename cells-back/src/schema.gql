@@ -300,6 +300,19 @@ type MaritalRelationship {
   updatedAt: DateTime!
 }
 
+type Child {
+  id: ID!
+  parentId: ID!
+  name: String
+  age: Int
+  childDiscipleId: ID
+  attendsChurch: String!
+  createdUser: String
+  createdAt: DateTime!
+  updatedUser: String
+  updatedAt: DateTime!
+}
+
 type Query {
   me: Users!
 
@@ -342,6 +355,7 @@ type Query {
   courseHistoriesByStudent(studentId: ID!): [StudentCourseHistoryEntity!]!
   maritalRelationshipByDisciple(discipleId: String!): MaritalRelationship
   maritalRelationshipBySpouse(spouseId: String!): MaritalRelationship
+  childrenByParent(parentId: String!): [Child!]!
 }
 
 type Mutation {
@@ -394,6 +408,10 @@ type Mutation {
   createMaritalRelationship(input: CreateMaritalRelationshipInput!): MaritalRelationship!
   updateMaritalRelationship(input: UpdateMaritalRelationshipInput!): MaritalRelationship!
   deleteMaritalRelationship(id: String!): MaritalRelationship!
+  createChild(input: CreateChildInput!): Child!
+  createChildrenBatch(inputs: [CreateChildInput!]!): [Child!]!
+  updateChild(input: UpdateChildInput!): Child!
+  deleteChild(id: String!): Child!
 }
 
 input LoginInput {
@@ -802,5 +820,23 @@ input UpdateMaritalRelationshipInput {
   attendsChurch: String
   spouseId: ID
   spouseName: String
+  updatedUser: String
+}
+
+input CreateChildInput {
+  parentId: ID!
+  name: String
+  age: Int
+  childDiscipleId: ID
+  attendsChurch: String!
+  createdUser: String
+}
+
+input UpdateChildInput {
+  id: ID!
+  name: String
+  age: Int
+  childDiscipleId: ID
+  attendsChurch: String
   updatedUser: String
 }

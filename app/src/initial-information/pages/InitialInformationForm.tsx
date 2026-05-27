@@ -24,9 +24,11 @@ import {
 } from "../schemas/initialInformationSchema";
 import { useInitialInformationStore } from "../store/initialInformation.store";
 import { InitialInformationService } from "../services/initialInformation.services";
+import { ChildrenService } from "@/src/disciples/services/children.services";
 import AssistantSearch from "../components/AssistantSearch";
 import BasicInfoCard from "../components/BasicInfoCard";
 import PersonalInfoCard from "../components/PersonalInfoCard";
+import type { ChildItem } from "../components/ChildrenSection";
 import ChurchInfoCard from "../components/ChurchInfoCard";
 import WizardHeader from "../components/WizardHeader";
 
@@ -93,6 +95,7 @@ const InitialInformationForm: React.FC = () => {
 
   const [maritalData, setMaritalData] = useState<{ id: string; discipleId: string; attendsChurch: string; spouseId?: string; spouseName?: string } | null>(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [childrenList, setChildrenList] = useState<ChildItem[]>([]);
 
   useEffect(() => {
     if (store.mode === "update" && store.foundAssistant?.disciple) {
@@ -101,6 +104,35 @@ const InitialInformationForm: React.FC = () => {
 
       InitialInformationService.findMaritalRelationship(d.id).then((rel) => {
         setMaritalData(rel);
+
+        if (rel?.spouseId) {
+          ChildrenService.getByParent(rel.spouseId).then(spouseChildren => {
+            setChildrenList([
+              ...spouseChildren.map(c => ({
+                tempId: c.id,
+                attendsChurch: c.attendsChurch,
+                childDiscipleId: c.childDiscipleId,
+                name: c.name,
+                age: c.age,
+              })),
+            ]);
+          });
+        }
+      });
+
+      ChildrenService.getByParent(d.id).then(existingChildren => {
+        if (existingChildren.length > 0) {
+          setChildrenList(prev => [
+            ...existingChildren.map(c => ({
+              tempId: c.id,
+              attendsChurch: c.attendsChurch,
+              childDiscipleId: c.childDiscipleId,
+              name: c.name,
+              age: c.age,
+            })),
+            ...prev.filter(p => p.tempId.startsWith("new-")),
+          ]);
+        }
       });
 
       const values = {
@@ -354,6 +386,30 @@ const InitialInformationForm: React.FC = () => {
         if (createdDiscipleId) {
           await saveMaritalRelation(createdDiscipleId, data);
 
+          if (data.hasChildren === "YES" && childrenList.length > 0) {
+            const batchInputs = childrenList.map(c => ({
+              parentId: createdDiscipleId,
+              attendsChurch: c.attendsChurch,
+              name: c.name,
+              age: c.age,
+              childDiscipleId: c.childDiscipleId,
+              createdUser: "initial-info-form",
+            }));
+            await ChildrenService.createBatch(batchInputs);
+
+            if (data.spouseAttendsChurch === "YES" && data.spouseId) {
+              const spouseBatch = childrenList.map(c => ({
+                parentId: data.spouseId!,
+                attendsChurch: c.attendsChurch,
+                name: c.name,
+                age: c.age,
+                childDiscipleId: c.childDiscipleId,
+                createdUser: "initial-info-form",
+              }));
+              await ChildrenService.createBatch(spouseBatch);
+            }
+          }
+
           if (data.isLeader !== "YES") {
             confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
             setShowSuccessModal(true);
@@ -388,6 +444,46 @@ const InitialInformationForm: React.FC = () => {
 
         if (success) {
           await saveMaritalRelation(discipleId, data);
+
+          const deleteOldChildren = async () => {
+            const existing = await ChildrenService.getByParent(discipleId);
+            for (const c of existing) {
+              await ChildrenService.delete(c.id);
+            }
+            if (data.spouseAttendsChurch === "YES" && data.spouseId) {
+              const spouseExisting = await ChildrenService.getByParent(data.spouseId);
+              for (const c of spouseExisting) {
+                await ChildrenService.delete(c.id);
+              }
+            }
+          };
+          await deleteOldChildren();
+
+          if (data.hasChildren === "YES" && childrenList.length > 0) {
+            await ChildrenService.createBatch(
+              childrenList.map(c => ({
+                parentId: discipleId,
+                attendsChurch: c.attendsChurch,
+                name: c.name,
+                age: c.age,
+                childDiscipleId: c.childDiscipleId,
+                createdUser: "initial-info-form",
+              }))
+            );
+
+            if (data.spouseAttendsChurch === "YES" && data.spouseId) {
+              await ChildrenService.createBatch(
+                childrenList.map(c => ({
+                  parentId: data.spouseId!,
+                  attendsChurch: c.attendsChurch,
+                  name: c.name,
+                  age: c.age,
+                  childDiscipleId: c.childDiscipleId,
+                  createdUser: "initial-info-form",
+                }))
+              );
+            }
+          }
 
           confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
           setShowSuccessModal(true);
@@ -515,7 +611,7 @@ const InitialInformationForm: React.FC = () => {
                 {step === 1 ? (
                   <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
                     <BasicInfoCard isUpdateMode={store.mode === "update"} />
-                    <PersonalInfoCard />
+                    <PersonalInfoCard childrenList={childrenList} onChildrenChange={setChildrenList} />
                     <ChurchInfoCard />
                   </div>
                 ) : (

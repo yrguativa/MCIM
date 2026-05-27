@@ -28,8 +28,10 @@ import { DisciplesService } from '../services/disciples.services';
 import { useMinistryStore } from '@/src/ministries/store/ministries.store';
 import { useAuthStore } from '@/src/app/stores';
 import { useDiscipleStore, type Disciple } from '../store/disciple.store';
+import { ChildrenService } from '../services/children.services';
 import CurriculumVitaeSection from '../components/CurriculumVitaeSection';
 import SpouseSelectorModal from '../components/SpouseSelectorModal';
+import type { ChildItem } from '@/src/initial-information/components/ChildrenSection';
 
 const DiscipleForm: React.FC = () => {
   const { t } = useTranslation();
@@ -42,6 +44,7 @@ const DiscipleForm: React.FC = () => {
   const [personalInfoId, setPersonalInfoId] = useState<string | undefined>(undefined);
   const [maritalRel, setMaritalRel] = useState<{ id: string; discipleId: string; spouseId?: string; spouseName?: string; attendsChurch: string } | null>(null);
   const [spouseModalOpen, setSpouseModalOpen] = useState(false);
+  const [childrenList, setChildrenList] = useState<ChildItem[]>([]);
 
   const form = useForm<DiscipleInput>({
     resolver: zodResolver(createDiscipleSchema(t) as any) as Resolver<DiscipleInput>,
@@ -125,6 +128,23 @@ const DiscipleForm: React.FC = () => {
         } catch {
           // marital relationship not found
         }
+
+        try {
+          const existingChildren = await ChildrenService.getByParent(id);
+          if (existingChildren.length > 0) {
+            setChildrenList(
+              existingChildren.map(c => ({
+                tempId: c.id,
+                attendsChurch: c.attendsChurch,
+                childDiscipleId: c.childDiscipleId,
+                name: c.name,
+                age: c.age,
+              }))
+            );
+          }
+        } catch {
+          // children not found
+        }
       }
     };
 
@@ -205,6 +225,28 @@ const DiscipleForm: React.FC = () => {
         : await addDisciple(discipleData as Disciple);
 
     if (isProcessSuccess) {
+      if (id && data.hasChildren === "YES" && childrenList.length > 0) {
+        try {
+          const existing = await ChildrenService.getByParent(id);
+          for (const c of existing) {
+            await ChildrenService.delete(c.id);
+          }
+        } catch {
+          // children deletion error, skip
+        }
+
+        await ChildrenService.createBatch(
+          childrenList.map(c => ({
+            parentId: id,
+            attendsChurch: c.attendsChurch,
+            name: c.name,
+            age: c.age,
+            childDiscipleId: c.childDiscipleId,
+            createdUser: userState?.id || "disciple-form",
+          }))
+        );
+      }
+
       toast(t("disciples.messages.createSuccess"), {
         icon: <CheckCircle className="h-4 w-4 text-green-500" />,
       });
@@ -408,7 +450,7 @@ const DiscipleForm: React.FC = () => {
             </TabsContent>
 
             <TabsContent value="cv">
-              <CurriculumVitaeSection />
+              <CurriculumVitaeSection childrenList={childrenList} onChildrenChange={setChildrenList} />
             </TabsContent>
           </Tabs>
 

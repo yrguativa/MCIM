@@ -910,5 +910,20 @@
             "title": "Aviso de Privacidad",
             "description": "De acuerdo con la Ley 1581 de 2012 y sus decretos reglamentarios, la información suministrada será tratada conforme a las políticas de protección de datos de la Iglesia Cristiana MCI. Sus datos personales serán utilizados únicamente para fines administrativos, de seguimiento y estadísticos dentro de la iglesia."
         }
+    },
+    "children": {
+        "title": "Hijos",
+        "addChild": "Agregar hijo",
+        "name": "Nombre",
+        "namePlaceholder": "Nombre del hijo",
+        "age": "Edad",
+        "agePlaceholder": "Edad",
+        "attendsChurch": "¿Asiste a la iglesia?",
+        "attendsChurchLabel": "Asiste",
+        "selectChild": "Seleccionar hijo discípulo",
+        "selectChildPlaceholder": "Buscar y seleccionar discípulo...",
+        "searchDisciple": "Buscar discípulo...",
+        "noResults": "No se encontraron discípulos",
+        "empty": "No hay hijos registrados"
     }
 }

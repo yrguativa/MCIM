@@ -898,5 +898,20 @@
       "title": "Privacy Notice",
       "description": "In accordance with Law 1581 of 2012 and its regulatory decrees, the information provided will be processed in accordance with the data protection policies of MCI Christian Church. Your personal data will be used only for administrative, follow-up and statistical purposes within the church."
     }
+  },
+  "children": {
+    "title": "Children",
+    "addChild": "Add child",
+    "name": "Name",
+    "namePlaceholder": "Child's name",
+    "age": "Age",
+    "agePlaceholder": "Age",
+    "attendsChurch": "Attends church?",
+    "attendsChurchLabel": "Attends",
+    "selectChild": "Select child disciple",
+    "selectChildPlaceholder": "Search and select disciple...",
+    "searchDisciple": "Search disciple...",
+    "noResults": "No disciples found",
+    "empty": "No children registered"
   }
 }

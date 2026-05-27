@@ -46,8 +46,14 @@ import {
 } from "@/components/ui/command";
 import { Calendar } from "@/components/ui/calendar";
 import { useDiscipleStore } from "@/src/disciples/store/disciple.store";
+import ChildrenSection, { type ChildItem } from "./ChildrenSection";
 
-const PersonalInfoCard: React.FC = () => {
+interface PersonalInfoCardProps {
+  childrenList: ChildItem[];
+  onChildrenChange: (children: ChildItem[]) => void;
+}
+
+const PersonalInfoCard: React.FC<PersonalInfoCardProps> = ({ childrenList, onChildrenChange }) => {
   const { t, i18n } = useTranslation();
   const { control, setValue } = useFormContext();
   const hasChildren = useWatch({ control, name: "hasChildren" });
@@ -228,35 +234,40 @@ const PersonalInfoCard: React.FC = () => {
         />
 
         {hasChildren === "YES" && (
-          <FormField
-            control={control}
-            name="childrenAttendChurch"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex items-center gap-1.5">
-                  <Users className="h-3.5 w-3.5 text-muted-foreground" />
-                  {t("initialInformation.personalInfo.childrenAttendChurch")} *
-                </FormLabel>
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    className="flex gap-4 pt-2"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="YES" id="childrenChurch-yes" />
-                      <Label htmlFor="childrenChurch-yes">{t("initialInformation.yes")}</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="NO" id="childrenChurch-no" />
-                      <Label htmlFor="childrenChurch-no">{t("initialInformation.no")}</Label>
-                    </div>
-                  </RadioGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <>
+            <FormField
+              control={control}
+              name="childrenAttendChurch"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-1.5">
+                    <Users className="h-3.5 w-3.5 text-muted-foreground" />
+                    {t("initialInformation.personalInfo.childrenAttendChurch")} *
+                  </FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      className="flex gap-4 pt-2"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="YES" id="childrenChurch-yes" />
+                        <Label htmlFor="childrenChurch-yes">{t("initialInformation.yes")}</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="NO" id="childrenChurch-no" />
+                        <Label htmlFor="childrenChurch-no">{t("initialInformation.no")}</Label>
+                      </div>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="md:col-span-2 mt-2">
+              <ChildrenSection items={childrenList} onChange={onChildrenChange} />
+            </div>
+          </>
         )}
 
         {(maritalStatus === "MARRIED" || maritalStatus === "FREE_UNION") && (

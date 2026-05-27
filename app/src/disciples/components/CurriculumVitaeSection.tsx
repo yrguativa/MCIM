@@ -68,8 +68,14 @@ import {
     CommandList,
 } from "@/components/ui/command";
 import { useDiscipleStore } from "../store/disciple.store";
+import ChildrenSection, { type ChildItem } from "@/src/initial-information/components/ChildrenSection";
 
-const CurriculumVitaeSection: React.FC = () => {
+interface CurriculumVitaeSectionProps {
+  childrenList: ChildItem[];
+  onChildrenChange: (children: ChildItem[]) => void;
+}
+
+const CurriculumVitaeSection: React.FC<CurriculumVitaeSectionProps> = ({ childrenList, onChildrenChange }) => {
     const { t, i18n } = useTranslation();
     const { control, setValue } = useFormContext();
     const { leaders } = useDiscipleStore();
@@ -199,35 +205,40 @@ const CurriculumVitaeSection: React.FC = () => {
                     />
 
                     {hasChildren === "YES" && (
-                        <FormField
-                            control={control}
-                            name="childrenAttendChurch"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="flex items-center gap-1.5">
-                                        <Users className="h-3.5 w-3.5 text-muted-foreground" />
-                                        {t("disciples.cv.childrenAttendChurch")}
-                                    </FormLabel>
-                                    <FormControl>
-                                        <RadioGroup
-                                            onValueChange={field.onChange}
-                                            value={field.value || ""}
-                                            className="flex gap-4 pt-2"
-                                        >
-                                            <div className="flex items-center space-x-2">
-                                                <RadioGroupItem value="YES" id="cv-childrenChurch-yes" />
-                                                <Label htmlFor="cv-childrenChurch-yes">{t("disciples.cv.yes")}</Label>
-                                            </div>
-                                            <div className="flex items-center space-x-2">
-                                                <RadioGroupItem value="NO" id="cv-childrenChurch-no" />
-                                                <Label htmlFor="cv-childrenChurch-no">{t("disciples.cv.no")}</Label>
-                                            </div>
-                                        </RadioGroup>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                        <>
+                            <FormField
+                                control={control}
+                                name="childrenAttendChurch"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="flex items-center gap-1.5">
+                                            <Users className="h-3.5 w-3.5 text-muted-foreground" />
+                                            {t("disciples.cv.childrenAttendChurch")}
+                                        </FormLabel>
+                                        <FormControl>
+                                            <RadioGroup
+                                                onValueChange={field.onChange}
+                                                value={field.value || ""}
+                                                className="flex gap-4 pt-2"
+                                            >
+                                                <div className="flex items-center space-x-2">
+                                                    <RadioGroupItem value="YES" id="cv-childrenChurch-yes" />
+                                                    <Label htmlFor="cv-childrenChurch-yes">{t("disciples.cv.yes")}</Label>
+                                                </div>
+                                                <div className="flex items-center space-x-2">
+                                                    <RadioGroupItem value="NO" id="cv-childrenChurch-no" />
+                                                    <Label htmlFor="cv-childrenChurch-no">{t("disciples.cv.no")}</Label>
+                                                </div>
+                                            </RadioGroup>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <div className="md:col-span-2 mt-2">
+                                <ChildrenSection items={childrenList} onChange={onChildrenChange} />
+                            </div>
+                        </>
                     )}
 
                     <FormField
