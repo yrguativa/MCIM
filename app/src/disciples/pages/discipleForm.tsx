@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Resolver, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslation } from "react-i18next";
 import { cn } from '@/lib/utils';
 import { CaretSortIcon } from '@radix-ui/react-icons';
-import { Check as CheckIcon, CheckCircle, OctagonX, Save, Loader2, Info, ScrollText, IdCard, Fingerprint, User, Phone, Mail, Building2, Flag } from "lucide-react";
+import { Check as CheckIcon, CheckCircle, OctagonX, Save, Loader2, Info, ScrollText, IdCard, Fingerprint, User, Phone, Mail, Building2, Flag, Heart, ExternalLink, Pencil } from "lucide-react";
 import {
   Command,
   CommandEmpty,
@@ -14,6 +14,7 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
@@ -28,16 +29,19 @@ import { useMinistryStore } from '@/src/ministries/store/ministries.store';
 import { useAuthStore } from '@/src/app/stores';
 import { useDiscipleStore, type Disciple } from '../store/disciple.store';
 import CurriculumVitaeSection from '../components/CurriculumVitaeSection';
+import SpouseSelectorModal from '../components/SpouseSelectorModal';
 
 const DiscipleForm: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { id } = useParams();
   const userState = useAuthStore(state => state.user);
-  const { addDiscipleFull, updateDiscipleFull, addDisciple, updateDisciple, isSaving, getLeaders } = useDiscipleStore(state => state);
+  const { addDiscipleFull, updateDiscipleFull, addDisciple, updateDisciple, isSaving, getLeaders, Disciples: disciplesState, getDisciples } = useDiscipleStore(state => state);
   const ministries = useMinistryStore(state => state.ministries);
   const getMinistries = useMinistryStore(state => state.getMinistries);
   const [personalInfoId, setPersonalInfoId] = useState<string | undefined>(undefined);
+  const [maritalRel, setMaritalRel] = useState<{ id: string; discipleId: string; spouseId?: string; spouseName?: string; attendsChurch: string } | null>(null);
+  const [spouseModalOpen, setSpouseModalOpen] = useState(false);
 
   const form = useForm<DiscipleInput>({
     resolver: zodResolver(createDiscipleSchema(t) as any) as Resolver<DiscipleInput>,
@@ -50,6 +54,7 @@ const DiscipleForm: React.FC = () => {
 
   useEffect(() => {
     getLeaders();
+    getDisciples();
     if (ministries.length === 0) {
       getMinistries();
     }
@@ -99,10 +104,23 @@ const DiscipleForm: React.FC = () => {
           isLeader: p?.isLeader as DiscipleInput["isLeader"] || undefined,
           generation: p?.generation as DiscipleInput["generation"] || undefined,
           formationSchoolLevel: p?.formationSchoolLevel as DiscipleInput["formationSchoolLevel"] || undefined,
+          rh: p?.rh as DiscipleInput["rh"] || undefined,
+          contactName: p?.contactName || undefined,
+          contactPhone: p?.contactPhone || undefined,
         });
 
         if (p?.id) {
           setPersonalInfoId(p.id);
+        }
+
+        try {
+          let rel = await DisciplesService.getMaritalRelationship(id);
+          if (!rel) {
+            rel = await DisciplesService.getMaritalRelationshipBySpouse(id);
+          }
+          setMaritalRel(rel);
+        } catch {
+          // marital relationship not found
         }
       }
     };
@@ -397,7 +415,89 @@ const DiscipleForm: React.FC = () => {
               )}
             </Button>
           </div>
+
+          {(form.watch('maritalStatus') === 'MARRIED' || form.watch('maritalStatus') === 'FREE_UNION' || maritalRel) && (
+            <Card className="mt-4">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Heart className="h-5 w-5 text-primary" />
+                  {t("disciples.cv.spouseSection")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {maritalRel ? (() => {
+                  const isOwner = maritalRel.discipleId === id;
+                  const spouseId = isOwner ? maritalRel.spouseId : maritalRel.discipleId;
+                  const spouseDisciple = spouseId ? disciplesState.find(d => d.id === spouseId) : null;
+                  const spouseName = spouseDisciple
+                    ? `${spouseDisciple.name} ${spouseDisciple.lastName}`
+                    : (isOwner ? maritalRel.spouseName : '');
+                  return (
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <User className="h-4 w-4 text-muted-foreground" />
+                      <span className="font-medium">{spouseName}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {spouseId && (
+                        <Button variant="outline" size="sm" asChild>
+                          <Link to={`/disciples/${spouseId}`}>
+                            <ExternalLink className="h-4 w-4 mr-1" />
+                            {t("disciples.cv.viewSpouse")}
+                          </Link>
+                        </Button>
+                      )}
+                      <Button type="button" variant="outline" size="sm" onClick={() => setSpouseModalOpen(true)}>
+                        <Pencil className="h-4 w-4 mr-1" />
+                        {t("disciples.cv.changeSpouse")}
+                      </Button>
+                    </div>
+                  </div>
+                  );
+                })() : (
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">{t("disciples.cv.noSpouseAssigned")}</span>
+                    {id ? (
+                      <Button type="button" variant="outline" size="sm" onClick={() => setSpouseModalOpen(true)}>
+                        <User className="h-4 w-4 mr-1" />
+                        {t("disciples.cv.addSpouse")}
+                      </Button>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">{t("disciples.cv.saveFirst")}</span>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
         </form>
+
+        <SpouseSelectorModal
+          open={spouseModalOpen}
+          onClose={() => setSpouseModalOpen(false)}
+          onSelect={async (spouseId) => {
+            if (maritalRel?.discipleId && maritalRel.discipleId === id) {
+              await DisciplesService.updateMaritalRelationship({ id: maritalRel.id, spouseId, updatedUser: userState?.id || '' });
+            } else {
+              const input = {
+                discipleId: id!,
+                attendsChurch: 'YES',
+                spouseId,
+                createdUser: userState?.id || '',
+              };
+              await DisciplesService.saveMaritalRelationship(input);
+            }
+            const rel = await DisciplesService.getMaritalRelationship(id!);
+            if (!rel) {
+              const relBySpouse = await DisciplesService.getMaritalRelationshipBySpouse(id!);
+              setMaritalRel(relBySpouse);
+            } else {
+              setMaritalRel(rel);
+            }
+            setSpouseModalOpen(false);
+          }}
+        />
       </Form>
     </div>
   </>;

@@ -23,7 +23,10 @@ import {
     BookOpen,
     Check,
     ChevronsUpDown,
+    Droplets,
+    Phone,
 } from "lucide-react";
+import { MCI_LOCATIONS } from "@/src/initial-information/constants/mciLocations";
 import { cn } from "@/lib/utils";
 import {
     FormField,
@@ -73,6 +76,7 @@ const CurriculumVitaeSection: React.FC = () => {
     const hasChildren = useWatch({ control, name: "hasChildren" });
     const hasAttendedEncounter = useWatch({ control, name: "hasAttendedEncounter" });
     const hasAttendedReencounter = useWatch({ control, name: "hasAttendedReencounter" });
+    const attendedAnotherChurch = useWatch({ control, name: "attendedAnotherChurch" });
     const dateLocale = i18n.language === "es" ? es : undefined;
 
     return (
@@ -379,6 +383,71 @@ const CurriculumVitaeSection: React.FC = () => {
                             </FormItem>
                         )}
                     />
+
+                    <FormField
+                        control={control}
+                        name="rh"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="flex items-center gap-1.5">
+                                    <Droplets className="h-3.5 w-3.5 text-muted-foreground" />
+                                    {t("disciples.cv.rh")}
+                                </FormLabel>
+                                <Select onValueChange={field.onChange} value={field.value || ""}>
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder={t("disciples.cv.placeholders.rh")} />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        <SelectItem value="O_POSITIVE">O+</SelectItem>
+                                        <SelectItem value="O_NEGATIVE">O-</SelectItem>
+                                        <SelectItem value="A_POSITIVE">A+</SelectItem>
+                                        <SelectItem value="A_NEGATIVE">A-</SelectItem>
+                                        <SelectItem value="B_POSITIVE">B+</SelectItem>
+                                        <SelectItem value="B_NEGATIVE">B-</SelectItem>
+                                        <SelectItem value="AB_POSITIVE">AB+</SelectItem>
+                                        <SelectItem value="AB_NEGATIVE">AB-</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={control}
+                        name="contactName"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="flex items-center gap-1.5">
+                                    <User className="h-3.5 w-3.5 text-muted-foreground" />
+                                    {t("disciples.cv.contactName")}
+                                </FormLabel>
+                                <FormControl>
+                                    <Input placeholder={t("disciples.cv.placeholders.contactName")} {...field} value={field.value || ""} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={control}
+                        name="contactPhone"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="flex items-center gap-1.5">
+                                    <Phone className="h-3.5 w-3.5 text-muted-foreground" />
+                                    {t("disciples.cv.contactPhone")}
+                                </FormLabel>
+                                <FormControl>
+                                    <Input type="tel" placeholder={t("disciples.cv.placeholders.contactPhone")} {...field} value={field.value || ""} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                 </CardContent>
             </Card>
 
@@ -472,6 +541,86 @@ const CurriculumVitaeSection: React.FC = () => {
                             </FormItem>
                         )}
                     />
+
+                    <FormField
+                        control={control}
+                        name="attendedAnotherChurch"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="flex items-center gap-1.5">
+                                    <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
+                                    {t("disciples.cv.attendedAnotherChurch")}
+                                </FormLabel>
+                                <FormControl>
+                                    <RadioGroup
+                                        onValueChange={field.onChange}
+                                        value={field.value || ""}
+                                        className="flex gap-4 pt-2"
+                                    >
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="YES" id="cv-another-church-yes" />
+                                            <Label htmlFor="cv-another-church-yes">{t("disciples.cv.yes")}</Label>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="NO" id="cv-another-church-no" />
+                                            <Label htmlFor="cv-another-church-no">{t("disciples.cv.no")}</Label>
+                                        </div>
+                                    </RadioGroup>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {attendedAnotherChurch === "YES" && (
+                        <>
+                            <FormField
+                                control={control}
+                                name="yearArrivedAtOtherChurch"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="flex items-center gap-1.5">
+                                            <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
+                                            {t("disciples.cv.yearArrivedAtOtherChurch")}
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input placeholder={t("disciples.cv.placeholders.yearArrivedAtOtherChurch")} {...field} value={field.value || ""} />
+                                        </FormControl>
+                                        <FormDescription>{t("disciples.cv.descriptions.yearArrivedAtOtherChurch")}</FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={control}
+                                name="otherChurchName"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="flex items-center gap-1.5">
+                                            <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
+                                            {t("disciples.cv.otherChurchName")}
+                                        </FormLabel>
+                                        <Select onValueChange={field.onChange} value={field.value || ""}>
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder={t("disciples.cv.placeholders.otherChurchName")} />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {MCI_LOCATIONS.map((loc) => (
+                                                    <SelectItem key={loc} value={loc}>
+                                                        {loc}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </>
+                    )}
 
                     <FormField
                         control={control}

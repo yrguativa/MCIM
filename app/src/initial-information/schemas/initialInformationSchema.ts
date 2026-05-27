@@ -112,6 +112,19 @@ export const createInitialInformationSchema = (t: (key: string, options?: Record
             }),
           },
         ),
+      attendedAnotherChurch: z.enum(["YES", "NO"]).optional(),
+      yearArrivedAtOtherChurch: z
+        .string()
+        .optional()
+        .refine(
+          (val) => !val || (parseInt(val) >= 1900 && parseInt(val) <= currentYear),
+          {
+            message: t("initialInformation.validation.yearRange", {
+              currentYear,
+            }),
+          },
+        ),
+      otherChurchName: z.string().optional(),
       hasAttendedEncounter: z.enum(["YES", "NO"], {
         error: t("initialInformation.validation.hasAttendedEncounterRequired"),
       }),
@@ -185,6 +198,23 @@ export const createInitialInformationSchema = (t: (key: string, options?: Record
             "initialInformation.validation.childrenAttendChurchRequired",
           ),
         });
+      }
+
+      if (data.attendedAnotherChurch === "YES") {
+        if (!data.yearArrivedAtOtherChurch) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["yearArrivedAtOtherChurch"],
+            message: t("initialInformation.validation.yearArrivedOtherChurchRequired"),
+          });
+        }
+        if (!data.otherChurchName) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["otherChurchName"],
+            message: t("initialInformation.validation.otherChurchNameRequired"),
+          });
+        }
       }
 
       if (data.hasAttendedEncounter === "YES") {

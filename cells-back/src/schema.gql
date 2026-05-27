@@ -88,6 +88,9 @@ type DisciplePersonalInfo {
   birthDate: DateTime!
   ministryId: String!
   yearArrivedAtChurch: String!
+  attendedAnotherChurch: String
+  yearArrivedAtOtherChurch: String
+  otherChurchName: String
   hasAttendedEncounter: String!
   yearAttendedEncounter: String
   hasRepeatedEncounter: String
@@ -338,6 +341,7 @@ type Query {
   attendanceByEnrollment(enrollmentId: ID!): [AttendanceEntity!]!
   courseHistoriesByStudent(studentId: ID!): [StudentCourseHistoryEntity!]!
   maritalRelationshipByDisciple(discipleId: String!): MaritalRelationship
+  maritalRelationshipBySpouse(spouseId: String!): MaritalRelationship
 }
 
 type Mutation {
@@ -547,6 +551,9 @@ input CreateDisciplePersonalInfoInput {
   birthDate: DateTime!
   ministryId: String!
   yearArrivedAtChurch: String!
+  attendedAnotherChurch: String
+  yearArrivedAtOtherChurch: String
+  otherChurchName: String
   hasAttendedEncounter: String!
   yearAttendedEncounter: String
   hasRepeatedEncounter: String
@@ -598,6 +605,9 @@ input UpdateDisciplePersonalInfoInput {
   birthDate: DateTime
   ministryId: String
   yearArrivedAtChurch: String
+  attendedAnotherChurch: String
+  yearArrivedAtOtherChurch: String
+  otherChurchName: String
   hasAttendedEncounter: String
   yearAttendedEncounter: String
   hasRepeatedEncounter: String

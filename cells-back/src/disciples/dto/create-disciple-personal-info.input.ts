@@ -81,6 +81,18 @@ export class CreateDisciplePersonalInfoInput {
   @IsNotEmpty({ message: 'Year arrived at church is required' })
   yearArrivedAtChurch: string;
 
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  attendedAnotherChurch: string;
+
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  yearArrivedAtOtherChurch: string;
+
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  otherChurchName: string;
+
   @Field()
   @IsNotEmpty({ message: 'hasAttendedEncounter is required' })
   hasAttendedEncounter: string;

@@ -1,7 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useFormContext, useWatch } from "react-hook-form";
-import { Check, ChevronsUpDown, Building2, Users, Calendar, Award, Church, UserCheck, GraduationCap, BookOpen } from "lucide-react";
+import { Check, ChevronsUpDown, Building2, Users, Calendar, Award, Church, UserCheck, GraduationCap, BookOpen, MapPin } from "lucide-react";
+import { MCI_LOCATIONS } from "../constants/mciLocations";
 import { cn } from "@/lib/utils";
 import {
   FormField,
@@ -52,6 +53,7 @@ const ChurchInfoCard: React.FC = () => {
 
   const hasAttendedEncounter = useWatch({ control, name: "hasAttendedEncounter" });
   const hasAttendedReencounter = useWatch({ control, name: "hasAttendedReencounter" });
+  const attendedAnotherChurch = useWatch({ control, name: "attendedAnotherChurch" });
 
   return (
     <Card>
@@ -182,6 +184,88 @@ const ChurchInfoCard: React.FC = () => {
             </FormItem>
           )}
         />
+
+        <FormField
+          control={control}
+          name="attendedAnotherChurch"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex items-center gap-1.5">
+                <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.churchInfo.attendedAnotherChurch")}
+              </FormLabel>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  className="flex gap-4 pt-2"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="YES" id="another-church-yes" />
+                    <Label htmlFor="another-church-yes">{t("initialInformation.yes")}</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="NO" id="another-church-no" />
+                    <Label htmlFor="another-church-no">{t("initialInformation.no")}</Label>
+                  </div>
+                </RadioGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {attendedAnotherChurch === "YES" && (
+          <>
+            <FormField
+              control={control}
+              name="yearArrivedAtOtherChurch"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-1.5">
+                    <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
+                    {t("initialInformation.churchInfo.yearArrivedAtOtherChurch")} *
+                  </FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="2020" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    {t("initialInformation.churchInfo.yearArrivedAtOtherChurchHint")}
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={control}
+              name="otherChurchName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-1.5">
+                    <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
+                    {t("initialInformation.churchInfo.otherChurchName")} *
+                  </FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder={t("initialInformation.churchInfo.otherChurchPlaceholder")} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {MCI_LOCATIONS.map((loc) => (
+                        <SelectItem key={loc} value={loc}>
+                          {loc}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </>
+        )}
 
         <FormField
           control={control}

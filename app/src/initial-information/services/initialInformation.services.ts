@@ -49,6 +49,9 @@ export class InitialInformationService {
               birthDate
               ministryId
               yearArrivedAtChurch
+              attendedAnotherChurch
+              yearArrivedAtOtherChurch
+              otherChurchName
               hasAttendedEncounter
               yearAttendedEncounter
               hasRepeatedEncounter

@@ -56,6 +56,15 @@ export class DisciplePersonalInfoEntity {
   @Field()
   yearArrivedAtChurch: string;
 
+  @Field(() => String, { nullable: true })
+  attendedAnotherChurch: string;
+
+  @Field(() => String, { nullable: true })
+  yearArrivedAtOtherChurch: string;
+
+  @Field(() => String, { nullable: true })
+  otherChurchName: string;
+
   @Field()
   hasAttendedEncounter: string;
 

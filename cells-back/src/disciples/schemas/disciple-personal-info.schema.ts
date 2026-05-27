@@ -78,6 +78,15 @@ export class DisciplePersonalInfo extends Document {
   @Prop({ required: true })
   yearArrivedAtChurch: string;
 
+  @Prop({ required: false, enum: ['YES', 'NO'] })
+  attendedAnotherChurch: string;
+
+  @Prop({ required: false })
+  yearArrivedAtOtherChurch: string;
+
+  @Prop({ required: false })
+  otherChurchName: string;
+
   @Prop({ required: true, enum: ['YES', 'NO'] })
   hasAttendedEncounter: string;
 

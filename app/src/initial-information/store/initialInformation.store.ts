@@ -34,6 +34,9 @@ export interface DisciplePersonalInfo {
   birthDate: string;
   ministryId: string;
   yearArrivedAtChurch: string;
+  attendedAnotherChurch?: string;
+  yearArrivedAtOtherChurch?: string;
+  otherChurchName?: string;
   hasAttendedEncounter: string;
   yearAttendedEncounter?: string;
   hasRepeatedEncounter?: string;

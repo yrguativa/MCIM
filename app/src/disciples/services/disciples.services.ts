@@ -208,6 +208,9 @@ export class DisciplesService {
                     birthDate
                     ministryId
                     yearArrivedAtChurch
+                    attendedAnotherChurch
+                    yearArrivedAtOtherChurch
+                    otherChurchName
                     hasAttendedEncounter
                     yearAttendedEncounter
                     hasRepeatedEncounter
@@ -420,6 +423,86 @@ export class DisciplesService {
                 console.error((error as AxiosError).response?.data);
             }
             console.error(error);
+            return false;
+        }
+    }
+
+    static async getMaritalRelationship(discipleId: string): Promise<{
+        id: string; discipleId: string; attendsChurch: string; spouseId?: string; spouseName?: string;
+    } | null> {
+        try {
+            const query = `
+            query MaritalRelationshipByDisciple($discipleId: String!) {
+                maritalRelationshipByDisciple(discipleId: $discipleId) {
+                    id
+                    discipleId
+                    attendsChurch
+                    spouseId
+                    spouseName
+                }
+            }`;
+            const { data } = await api.post('', JSON.stringify({
+                query,
+                variables: { discipleId }
+            }));
+            if (data.errors) return null;
+            return data.data.maritalRelationshipByDisciple || null;
+        } catch {
+            return null;
+        }
+    }
+
+    static async getMaritalRelationshipBySpouse(spouseId: string): Promise<{
+        id: string; discipleId: string; attendsChurch: string; spouseId?: string; spouseName?: string;
+    } | null> {
+        try {
+            const query = `
+            query MaritalRelationshipBySpouse($spouseId: String!) {
+                maritalRelationshipBySpouse(spouseId: $spouseId) {
+                    id
+                    discipleId
+                    attendsChurch
+                    spouseId
+                    spouseName
+                }
+            }`;
+            const { data } = await api.post('', JSON.stringify({
+                query,
+                variables: { spouseId }
+            }));
+            if (data.errors) return null;
+            return data.data.maritalRelationshipBySpouse || null;
+        } catch {
+            return null;
+        }
+    }
+
+    static async saveMaritalRelationship(input: {
+        discipleId: string; attendsChurch: string; spouseId?: string; spouseName?: string; createdUser?: string;
+    }): Promise<string | null> {
+        try {
+            const query = `mutation CreateMaritalRelationship($input: CreateMaritalRelationshipInput!) {
+                createMaritalRelationship(input: $input) { id }
+            }`;
+            const { data } = await api.post('', JSON.stringify({ query, variables: { input } }));
+            if (data.errors) return null;
+            return data.data.createMaritalRelationship.id;
+        } catch {
+            return null;
+        }
+    }
+
+    static async updateMaritalRelationship(input: {
+        id: string; spouseId?: string; spouseName?: string; attendsChurch?: string; updatedUser?: string;
+    }): Promise<boolean> {
+        try {
+            const query = `mutation UpdateMaritalRelationship($input: UpdateMaritalRelationshipInput!) {
+                updateMaritalRelationship(input: $input) { id }
+            }`;
+            const { data } = await api.post('', JSON.stringify({ query, variables: { input } }));
+            if (data.errors) return false;
+            return true;
+        } catch {
             return false;
         }
     }
