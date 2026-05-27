@@ -37,11 +37,11 @@ const InitialInformationForm: React.FC = () => {
 
   const [step, setStep] = useState<1 | 2>(1);
   const [cells, setCells] = useState<CellData[]>([
-    { type: 'celula', address: '', neighborhood: undefined, day: '', time: '', host: '', timoteo: '', assistants: [] },
+    { type: 'celula', address: '', neighborhood: undefined, day: '', time: '', host: '', timoteo: '', yearOpened: undefined, assistants: [] },
   ]);
 
   const defaultCell = (): CellData => ({
-    type: 'celula', address: '', neighborhood: undefined, day: '', time: '', host: '', timoteo: '', assistants: [],
+    type: 'celula', address: '', neighborhood: undefined, day: '', time: '', host: '', timoteo: '', yearOpened: undefined, assistants: [],
   });
 
   const schema = useMemo(() => createInitialInformationSchema(t), [t]);
@@ -295,6 +295,13 @@ const InitialInformationForm: React.FC = () => {
   };
 
   const onSubmit = async (data: InitialInformationInput) => {
+    let computedStatus: string | undefined;
+    if (data.hasAttendedReencounter === "YES") {
+      computedStatus = "prelider";
+    } else if (data.isLeader === "NO") {
+      computedStatus = "solo_celula";
+    }
+
     const personalInfoData = {
       nationality: data.nationality,
       gender: data.gender,
@@ -339,6 +346,7 @@ const InitialInformationForm: React.FC = () => {
             leaderId: data.directLeaderId || undefined,
             ministryId: data.ministryId,
             createdUser: "initial-info-form",
+            status: computedStatus,
           },
           createPersonalInfoInput: personalInfoData,
         });
@@ -371,6 +379,7 @@ const InitialInformationForm: React.FC = () => {
             createdUser: store.foundAssistant.disciple.createdUser,
             createdDate: store.foundAssistant.disciple.createdDate,
             identification: data.identification,
+            status: computedStatus,
           },
           updatePersonalInfoInput: personalInfoId
             ? { id: personalInfoId, ...personalInfoData }
@@ -409,6 +418,7 @@ const InitialInformationForm: React.FC = () => {
             neighborhood: cell.neighborhood || 0,
             day: cell.day || undefined,
             time: cell.time || undefined,
+            yearOpened: cell.yearOpened || undefined,
             createdDate: new Date(),
             createdUser: storedDiscipleId,
             assistants: [],

@@ -330,21 +330,14 @@ const CellForm: React.FC = () => {
                                     <CalendarDays className="h-3.5 w-3.5 text-muted-foreground" />
                                     Año de apertura
                                 </FormLabel>
-                                <Select
-                                  onValueChange={(val) => field.onChange(val ? Number(val) : undefined)}
-                                  value={field.value?.toString() || ''}
-                                >
-                                    <FormControl>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Selecciona el año de apertura" />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        {Array.from({ length: 27 }, (_, i) => 2000 + i).map(year => (
-                                            <SelectItem key={year} value={year.toString()}>{year}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
+                                <FormControl>
+                                    <Input
+                                        {...field}
+                                        value={field.value?.toString() || ''}
+                                        disabled
+                                        className="bg-muted text-muted-foreground"
+                                    />
+                                </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}

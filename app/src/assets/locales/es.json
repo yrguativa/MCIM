@@ -851,7 +851,9 @@
             "addCell": "Agregar célula",
             "cellType_discipulado": "Discipulado",
             "cellType_celula": "Célula",
-            "cellType_celula_anexa": "Célula Anexa"
+            "cellType_celula_anexa": "Célula Anexa",
+            "yearOpened": "Año de apertura",
+            "yearOpenedPlaceholder": "Seleccione el año de apertura"
         },
         "validation": {
             "namesRequired": "Los nombres son obligatorios",

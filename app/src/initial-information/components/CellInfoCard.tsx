@@ -50,6 +50,7 @@ export interface CellData {
   time: string;
   host: string;
   timoteo: string;
+  yearOpened?: number;
   assistants: { id: string; name: string; lastName: string }[];
 }
 
@@ -225,6 +226,26 @@ const CellInfoCard: React.FC<CellInfoCardProps> = ({ cell, index, onChange, onRe
                 </Command>
               </PopoverContent>
             </Popover>
+          </div>
+
+          <div className="space-y-1.5">
+            <Label className="text-sm font-medium flex items-center gap-1.5">
+              <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
+              {t("initialInformation.cellInfo.yearOpened")}
+            </Label>
+            <Select
+              value={cell.yearOpened?.toString() || ''}
+              onValueChange={(v) => onChange(index, 'yearOpened', v ? Number(v) : undefined)}
+            >
+              <SelectTrigger className="h-10">
+                <SelectValue placeholder={t("initialInformation.cellInfo.yearOpenedPlaceholder")} />
+              </SelectTrigger>
+              <SelectContent>
+                {Array.from({ length: 27 }, (_, i) => 2000 + i).map(year => (
+                  <SelectItem key={year} value={year.toString()}>{year}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="md:col-span-2">
