@@ -95,6 +95,9 @@ const DiscipleForm: React.FC = () => {
           birthDate: p?.birthDate ? new Date(p.birthDate) : undefined,
           directLeaderId: d.leaderId || undefined,
           yearArrivedAtChurch: p?.yearArrivedAtChurch || undefined,
+          attendedAnotherChurch: p?.attendedAnotherChurch as DiscipleInput["attendedAnotherChurch"] || undefined,
+          yearArrivedAtOtherChurch: p?.yearArrivedAtOtherChurch || undefined,
+          otherChurchName: p?.otherChurchName || undefined,
           hasAttendedEncounter: p?.hasAttendedEncounter as DiscipleInput["hasAttendedEncounter"] || undefined,
           yearAttendedEncounter: p?.yearAttendedEncounter || undefined,
           hasRepeatedEncounter: p?.hasRepeatedEncounter as DiscipleInput["hasRepeatedEncounter"] || undefined,
@@ -131,7 +134,7 @@ const DiscipleForm: React.FC = () => {
   function hasPersonalInfoData(data: DiscipleInput): boolean {
     return !!(data.nationality || data.gender || data.address || data.neighborhood ||
       data.municipality || data.birthDate || data.hasChildren || data.network ||
-      data.yearArrivedAtChurch || data.hasAttendedEncounter || data.hasAttendedReencounter ||
+      data.yearArrivedAtChurch || data.attendedAnotherChurch || data.hasAttendedEncounter || data.hasAttendedReencounter ||
       data.baptizedAtMCI || data.generation || data.formationSchoolLevel);
   }
 
@@ -174,6 +177,9 @@ const DiscipleForm: React.FC = () => {
       birthDate: data.birthDate?.toISOString() || undefined,
       ministryId: data.ministryId,
       yearArrivedAtChurch: data.yearArrivedAtChurch || undefined,
+      attendedAnotherChurch: data.attendedAnotherChurch || undefined,
+      yearArrivedAtOtherChurch: data.yearArrivedAtOtherChurch || undefined,
+      otherChurchName: data.otherChurchName || undefined,
       hasAttendedEncounter: data.hasAttendedEncounter || undefined,
       yearAttendedEncounter: data.yearAttendedEncounter || undefined,
       hasRepeatedEncounter: data.hasRepeatedEncounter || undefined,
