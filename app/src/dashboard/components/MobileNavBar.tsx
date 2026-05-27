@@ -16,7 +16,7 @@ const MobileNavBar: React.FC = () => {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-40 md:hidden border-t border-white/20 bg-white/70 dark:bg-zinc-900/70 backdrop-blur-2xl safe-bottom"
+      className="fixed bottom-0 left-0 right-0 z-40 md:hidden border-t border-white/20 bg-white/70 dark:bg-zinc-900/70 backdrop-blur-2xl pb-safe"
       style={{ boxShadow: '0 -4px 20px rgba(0,0,0,0.08)' }}
     >
       <div className="flex items-center justify-around h-16 px-2">

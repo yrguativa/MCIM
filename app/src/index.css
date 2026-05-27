@@ -31,6 +31,8 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
   --radius: 0.875rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0.008 326);
@@ -154,15 +156,9 @@
   }
 }
 
-@utility safe-top {
-  padding-top: env(safe-area-inset-top, 0px);
+@utility pt-safe {
+  padding-top: var(--safe-area-top);
 }
-@utility safe-bottom {
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-}
-@utility min-safe-top {
-  min-height: env(safe-area-inset-top, 0px);
-}
-@utility min-safe-bottom {
-  min-height: env(safe-area-inset-bottom, 0px);
+@utility pb-safe {
+  padding-bottom: var(--safe-area-bottom);
 }

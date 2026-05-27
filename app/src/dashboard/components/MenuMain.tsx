@@ -44,7 +44,8 @@ const MenuMain: React.FC = () => {
         i18n.changeLanguage(newLang);
     };
     return (
-        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 safe-top lg:h-[60px] lg:px-6">
+        <header className="border-b bg-muted/40">
+            <div className="flex h-14 items-center gap-4 px-4 pt-safe lg:h-[60px] lg:px-6">
             <Sheet>
                 <SheetTrigger asChild>
                     <Button
@@ -170,6 +171,7 @@ const MenuMain: React.FC = () => {
                 </DropdownMenuContent>
             </DropdownMenu>
             <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
+            </div>
         </header>
     );
 }

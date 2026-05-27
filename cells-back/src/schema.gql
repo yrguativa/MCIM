@@ -42,6 +42,7 @@ type Cell {
   neighborhood: Int!
   day: String
   time: String
+  yearOpened: Int
   createdDate: DateTime!
   createdUser: String!
   assistants: [CellAssistant!]
@@ -464,13 +465,14 @@ input CreateCellInput {
   neighborhood: Int!
   day: String
   time: String
+  yearOpened: Int
   createdUser: String!
 }
 
 input UpdateCellInput {
   leader: String!
   network: Int!
-  cellType: String
+  cellType: String!
 
   """Enter the name of the host who will receive the cell in their home."""
   host: String!
@@ -479,6 +481,7 @@ input UpdateCellInput {
   neighborhood: Int!
   day: String
   time: String
+  yearOpened: Int
   createdUser: String!
   id: String!
 }
