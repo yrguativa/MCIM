@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Plus, X, Users, Check } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Plus, X, Users, Check, ExternalLink } from "lucide-react";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -104,7 +105,7 @@ const ChildrenSection: React.FC<ChildrenSectionProps> = ({ items: children, onCh
               <TableHead>{t("children.name")}</TableHead>
               <TableHead>{t("children.age")}</TableHead>
               <TableHead>{t("children.attendsChurchLabel")}</TableHead>
-              {!readOnly && <TableHead className="w-20">{t("initialInformation.cellInfo.actions")}</TableHead>}
+              <TableHead className="w-24">{t("initialInformation.cellInfo.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -113,13 +114,22 @@ const ChildrenSection: React.FC<ChildrenSectionProps> = ({ items: children, onCh
                 <TableCell className="font-medium">{c.name || discipleName(c.childDiscipleId || "")}</TableCell>
                 <TableCell>{c.age != null ? c.age : "—"}</TableCell>
                 <TableCell>{c.attendsChurch === "YES" ? t("initialInformation.yes") : t("initialInformation.no")}</TableCell>
-                {!readOnly && (
-                  <TableCell>
-                    <Button type="button" variant="ghost" size="sm" onClick={() => handleRemove(c.tempId)}>
-                      <X className="h-4 w-4 text-destructive" />
-                    </Button>
-                  </TableCell>
-                )}
+                <TableCell>
+                  <div className="flex items-center gap-1">
+                    {c.childDiscipleId && (
+                      <Button variant="outline" size="sm" asChild>
+                        <Link to={`/disciples/${c.childDiscipleId}`}>
+                          <ExternalLink className="h-3.5 w-3.5" />
+                        </Link>
+                      </Button>
+                    )}
+                    {!readOnly && (
+                      <Button type="button" variant="ghost" size="sm" onClick={() => handleRemove(c.tempId)}>
+                        <X className="h-4 w-4 text-destructive" />
+                      </Button>
+                    )}
+                  </div>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
