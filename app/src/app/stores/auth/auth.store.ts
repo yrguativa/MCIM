@@ -137,7 +137,7 @@ export const storeAuth: StateCreator<AuthState> = (set, get) => ({
         try {
             const response = await authService.register(userData)
             set({
-                user: response.user,
+                user: response,
                 isAuthenticated: true,
                 isLoading: false
             })

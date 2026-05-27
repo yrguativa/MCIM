@@ -156,20 +156,18 @@ export class AuthService {
                 mutation Register($registerInput: RegisterInput!) {
                     register(registerInput: $registerInput) {
                         accessToken
-                        user {
-                            id
-                            email
-                            displayName
-                            photoURL
-                            identification
-                            ministryId
-                            phoneNumber
-                            authProvider
-                            createdAt
-                            lastLogin
-                            active
-                            discipleId
-                        }
+                        id
+                        email
+                        displayName
+                        photoURL
+                        identification
+                        ministryId
+                        phoneNumber
+                        authProvider
+                        createdAt
+                        lastLogin
+                        active
+                        discipleId
                     }
                 }
             `;
