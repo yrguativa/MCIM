@@ -26,6 +26,10 @@ export class MaritalRelationshipService {
     return this.model.findOne({ discipleId }).exec();
   }
 
+  async findBySpouse(spouseId: string): Promise<MaritalRelationship> {
+    return this.model.findOne({ spouseId }).exec();
+  }
+
   async delete(id: string): Promise<MaritalRelationship> {
     return this.model.findByIdAndDelete(id).exec();
   }

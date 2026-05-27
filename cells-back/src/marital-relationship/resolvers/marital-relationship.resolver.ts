@@ -31,6 +31,13 @@ export class MaritalRelationshipResolver {
     return this.service.findByDisciple(discipleId);
   }
 
+  @Query(() => MaritalRelationshipEntity, { nullable: true })
+  maritalRelationshipBySpouse(
+    @Args('spouseId', { type: () => String }) spouseId: string,
+  ) {
+    return this.service.findBySpouse(spouseId);
+  }
+
   @Mutation(() => MaritalRelationshipEntity)
   deleteMaritalRelationship(
     @Args('id', { type: () => String }) id: string,
