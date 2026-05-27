@@ -264,3 +264,17 @@ const data = {
 - All forms include audit fields except public routes
 - Backend validation with `class-validator` decorators in DTOs
 - Sidebar and Header use sticky positioning with backdrop blur
+
+## Credenciales de Prueba
+- **Email**: `test@test.com`
+- **Contraseña**: `Test1234!`
+- **Ministerio**: Ps. Arvey & Jeimy
+
+### Comandos para depuración
+```bash
+# Frontend
+pnpm --filter app dev          # Servidor (puerto 5173)
+
+# Backend
+pnpm --filter cells-back start:dev   # NestJS (puerto 3000)
+```
