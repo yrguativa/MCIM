@@ -36,3 +36,10 @@ package-lock.json
 */.env.development
 */.env.production
 */.env.test
+
+# Playwright
+*/playwright-report/
+*/test-results/
+
+# Project configuration
+.opencode/
