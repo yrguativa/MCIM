@@ -303,10 +303,6 @@ const InitialInformationForm: React.FC = () => {
       const isValid = await form.trigger(step1Fields);
       if (!isValid) return;
 
-      if (data.isLeader === "YES") {
-        setStep(2);
-        return;
-      }
       await onSubmit(data);
     } else {
       await onSubmit(data);
