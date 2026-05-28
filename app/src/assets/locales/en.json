@@ -892,7 +892,11 @@
       "contactPhoneNumeric": "Contact phone must contain only numbers",
       "spouseAttendsChurchRequired": "Please indicate if your spouse attends church",
       "spouseRequired": "Please select your spouse",
-      "spouseNameRequired": "Please enter your spouse's name"
+      "spouseNameRequired": "Please enter your spouse's name",
+      "formErrors": "Form errors",
+      "checkFields": "Check the highlighted fields in red",
+      "saveError": "Error saving information. Please try again.",
+      "saveDiscipleFirst": "You must save the disciple information first"
     },
     "privacy": {
       "title": "Privacy Notice",

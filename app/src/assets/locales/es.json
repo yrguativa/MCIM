@@ -904,7 +904,11 @@
             "spouseRequired": "Debe seleccionar el cónyuge",
             "spouseNameRequired": "Debe ingresar el nombre del cónyuge",
             "yearArrivedOtherChurchRequired": "Debe indicar el año que llegó a la otra sede",
-            "otherChurchNameRequired": "Debe seleccionar la sede a la que asistió"
+            "otherChurchNameRequired": "Debe seleccionar la sede a la que asistió",
+            "formErrors": "Errores en el formulario",
+            "checkFields": "Revise los campos resaltados en rojo",
+            "saveError": "Error al guardar la información. Intente de nuevo.",
+            "saveDiscipleFirst": "Debe guardar primero la información del discípulo"
         },
         "privacy": {
             "title": "Aviso de Privacidad",

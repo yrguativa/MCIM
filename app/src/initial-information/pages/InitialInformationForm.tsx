@@ -301,7 +301,12 @@ const InitialInformationForm: React.FC = () => {
   const handleSubmit = async (data: InitialInformationInput) => {
     if (step === 1) {
       const isValid = await form.trigger(step1Fields);
-      if (!isValid) return;
+      if (!isValid) {
+        toast.error(t("initialInformation.validation.formErrors"), {
+          description: t("initialInformation.validation.checkFields"),
+        });
+        return;
+      }
 
       await onSubmit(data);
     } else {
@@ -414,6 +419,10 @@ const InitialInformationForm: React.FC = () => {
             sessionStorage.setItem("personalInfoData", JSON.stringify(personalInfoData));
             setStep(2);
           }
+        } else {
+          toast.error(t("initialInformation.validation.formErrors"), {
+            description: store.saveError || t("initialInformation.validation.saveError"),
+          });
         }
       } else if (store.mode === "update" && store.foundAssistant?.disciple.id) {
         const discipleId = store.foundAssistant.disciple.id;
@@ -492,7 +501,12 @@ const InitialInformationForm: React.FC = () => {
         storedDiscipleId = store.foundAssistant.disciple.id;
       }
 
-      if (!storedDiscipleId) return;
+      if (!storedDiscipleId) {
+        toast.error(t("initialInformation.validation.formErrors"), {
+          description: t("initialInformation.validation.saveDiscipleFirst"),
+        });
+        return;
+      }
 
       try {
         const cellNetworkValue = NETWORK_MAP[data.network];
