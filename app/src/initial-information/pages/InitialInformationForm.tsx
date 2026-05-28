@@ -490,8 +490,14 @@ const InitialInformationForm: React.FC = () => {
             }
           }
 
-          confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-          setShowSuccessModal(true);
+          if (data.isLeader !== "YES") {
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            setShowSuccessModal(true);
+          } else {
+            sessionStorage.setItem("discipleId", discipleId);
+            sessionStorage.setItem("personalInfoData", JSON.stringify(personalInfoData));
+            setStep(2);
+          }
         }
       }
     } else {
