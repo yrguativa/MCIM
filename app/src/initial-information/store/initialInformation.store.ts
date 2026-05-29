@@ -25,7 +25,6 @@ export interface DisciplePersonalInfo {
   gender: string;
   maritalStatus?: string;
   hasChildren: string;
-  childrenAttendChurch?: string;
   address: string;
   housingComplex?: string;
   neighborhood: string;

@@ -71,16 +71,59 @@ test.describe('Conditional Logic - Secciones dinámicas', () => {
     await expect(formPage.page.getByLabel(/año en que llegaste/i)).not.toBeVisible();
   });
 
-  test('attendedEncounter=Sí muestra año y repite, No los oculta', async ({ formPage }) => {
+  test('attendedEncounter=Sí muestra año, repite, reencuentro, bautizo, líder, 144 y escuela', async ({ formPage }) => {
     await formPage.setRadio(/¿Ha asistido a Encuentro\?/i, 'Sí');
     await expect(formPage.page.getByLabel(/¿Qué año asistió\?/i).first()).toBeVisible();
     await expect(formPage.page.getByText(/repetido encuentro/i)).toBeVisible();
+    await expect(formPage.page.getByText(/Reencuentro/i)).toBeVisible();
+    await expect(formPage.page.getByText(/bautizado/i)).toBeVisible();
+    await expect(formPage.page.getByText(/¿Es líder\?/i)).toBeVisible();
+    await expect(formPage.page.getByText(/144 mil/i)).toBeVisible();
+    await expect(formPage.page.getByText(/Nivel de escuela/i)).toBeVisible();
 
     await formPage.setRadio(/¿Ha asistido a Encuentro\?/i, 'No');
     await expect(formPage.page.getByLabel(/¿Qué año asistió\?/i).first()).not.toBeVisible();
+    await expect(formPage.page.getByText(/repetido encuentro/i)).not.toBeVisible();
+    await expect(formPage.page.getByText(/Reencuentro/i)).not.toBeVisible();
+    await expect(formPage.page.getByText(/bautizado/i)).not.toBeVisible();
+    await expect(formPage.page.getByText(/¿Es líder\?/i)).not.toBeVisible();
+    await expect(formPage.page.getByText(/144 mil/i)).not.toBeVisible();
+    await expect(formPage.page.getByText(/Nivel de escuela/i)).not.toBeVisible();
   });
 
-  test('attendedReencounter=Sí muestra año, No lo oculta', async ({ formPage }) => {
+  test('attendedEncounter=No asigna valores por defecto al enviar', async ({ searchPage, formPage }) => {
+    await searchPage.goto();
+    await searchPage.search(DOCUMENTS.NEW_CC);
+    await formPage.step1Indicator.waitFor({ state: 'visible' });
+
+    await formPage.namesInput.fill('Test');
+    await formPage.lastNamesInput.fill('User');
+    await formPage.phoneInput.fill('3001234567');
+    await formPage.identificationInput.fill(DOCUMENTS.NEW_CC);
+
+    await formPage.nationalitySelect.click();
+    await formPage.page.getByRole('option', { name: 'Colombiana' }).click();
+    await formPage.genderSelect.click();
+    await formPage.page.getByRole('option', { name: 'Masculino' }).click();
+    await formPage.addressInput.fill('Cra 8 # 15-30');
+    await formPage.neighborhoodInput.fill('Centro');
+    await formPage.municipalitySelect.click();
+    await formPage.page.getByRole('option', { name: 'Mosquera' }).click();
+    await formPage.networkSelect.click();
+    await formPage.page.getByRole('option', { name: 'Jóvenes' }).click();
+    await formPage.selectBirthDate('15', '4', '1995');
+    await formPage.setRadio(/¿Ha asistido a Encuentro\?/i, 'No');
+
+    await formPage.ministrySelect.click();
+    await formPage.page.getByRole('option', { name: 'Ps. Arvey & Jeimy' }).click();
+    await formPage.yearArrivedInput.fill('2022');
+
+    await formPage.submitStep1();
+    await expect(formPage.page.getByText(/guardada/i)).toBeVisible({ timeout: 10000 });
+  });
+
+  test('attendedEncounter=YES → reencuentro=Sí muestra año, No lo oculta', async ({ formPage }) => {
+    await formPage.setRadio(/¿Ha asistido a Encuentro\?/i, 'Sí');
     await formPage.setRadio(/¿Ha asistido a Reencuentro\?/i, 'Sí');
     await expect(formPage.page.getByLabel(/¿Qué año asistió\?/i).last()).toBeVisible();
 

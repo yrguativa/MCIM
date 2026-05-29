@@ -27,6 +27,7 @@ test.describe('Form Navigation - Flujo de wizard y leader', () => {
       contactName: formData.contactName,
       contactPhone: formData.contactPhone,
     });
+    await formPage.setRadio(/¿Ha asistido a Encuentro\?/i, 'Sí');
     await formPage.fillChurchInfo({
       ministry: formData.ministry,
       yearArrivedAtChurch: formData.yearArrivedAtChurch,
@@ -69,6 +70,7 @@ test.describe('Form Navigation - Flujo de wizard y leader', () => {
       contactName: formData.contactName,
       contactPhone: formData.contactPhone,
     });
+    await formPage.setRadio(/¿Ha asistido a Encuentro\?/i, 'Sí');
     await formPage.fillChurchInfo({
       ministry: formData.ministry,
       yearArrivedAtChurch: formData.yearArrivedAtChurch,

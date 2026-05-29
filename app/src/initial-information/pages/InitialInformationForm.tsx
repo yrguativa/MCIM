@@ -62,7 +62,6 @@ const InitialInformationForm: React.FC = () => {
       gender: undefined,
       maritalStatus: undefined,
       hasChildren: undefined,
-      childrenAttendChurch: undefined,
       address: "",
       housingComplex: "",
       neighborhood: "",
@@ -146,7 +145,6 @@ const InitialInformationForm: React.FC = () => {
         gender: p?.gender as "FEMALE" | "MALE",
         maritalStatus: p?.maritalStatus as "SINGLE" | "MARRIED" | "WIDOWED" | "FREE_UNION" | "DIVORCED" | undefined,
         hasChildren: p?.hasChildren as "YES" | "NO",
-        childrenAttendChurch: p?.childrenAttendChurch as "YES" | "NO" | undefined,
         address: p?.address || "",
         housingComplex: p?.housingComplex || "",
         neighborhood: p?.neighborhood || "",
@@ -186,9 +184,6 @@ const InitialInformationForm: React.FC = () => {
           form.setValue("maritalStatus", p?.maritalStatus as "SINGLE" | "MARRIED" | "WIDOWED" | "FREE_UNION" | "DIVORCED");
         }
         form.setValue("hasChildren", p?.hasChildren as "YES" | "NO");
-        if (p?.childrenAttendChurch) {
-          form.setValue("childrenAttendChurch", p?.childrenAttendChurch as "YES" | "NO");
-        }
         form.setValue("municipality", p?.municipality as "MOSQUERA" | "FUNZA" | "MADRID" | "BOJACA" | "FACATATIVA" | "FONTIBON" | "BOGOTA");
         form.setValue("network", p?.network as "YOUTH" | "PRE" | "ROCAS" | "MEN" | "WOMEN");
         if (p?.birthDate) {
@@ -249,7 +244,6 @@ const InitialInformationForm: React.FC = () => {
         gender: undefined,
         maritalStatus: undefined,
         hasChildren: undefined,
-        childrenAttendChurch: undefined,
         address: "",
         housingComplex: "",
         neighborhood: "",
@@ -288,7 +282,7 @@ const InitialInformationForm: React.FC = () => {
 
   const step1Fields: (keyof InitialInformationInput)[] = [
     "name", "lastName", "email", "phone", "identificationType", "identification",
-    "nationality", "gender", "maritalStatus", "hasChildren", "childrenAttendChurch",
+    "nationality", "gender", "maritalStatus", "hasChildren",
     "address", "housingComplex", "neighborhood", "municipality", "network", "birthDate",
     "ministryId", "directLeaderId", "yearArrivedAtChurch", "attendedAnotherChurch",
     "yearArrivedAtOtherChurch", "otherChurchName", "hasAttendedEncounter",
@@ -340,7 +334,6 @@ const InitialInformationForm: React.FC = () => {
       gender: data.gender,
       maritalStatus: data.maritalStatus || undefined,
       hasChildren: data.hasChildren,
-      childrenAttendChurch: data.childrenAttendChurch || undefined,
       address: data.address,
       housingComplex: data.housingComplex || undefined,
       neighborhood: data.neighborhood,
@@ -355,12 +348,12 @@ const InitialInformationForm: React.FC = () => {
       hasAttendedEncounter: data.hasAttendedEncounter,
       yearAttendedEncounter: data.yearAttendedEncounter || undefined,
       hasRepeatedEncounter: data.hasRepeatedEncounter || undefined,
-      hasAttendedReencounter: data.hasAttendedReencounter,
-      yearAttendedReencounter: data.yearAttendedReencounter || undefined,
-      baptizedAtMCI: data.baptizedAtMCI,
-      isLeader: data.isLeader || undefined,
-      generation: data.generation,
-      formationSchoolLevel: data.formationSchoolLevel,
+      hasAttendedReencounter: data.hasAttendedReencounter || "NO",
+      yearAttendedReencounter: data.hasAttendedReencounter === "YES" ? (data.yearAttendedReencounter || undefined) : undefined,
+      baptizedAtMCI: data.baptizedAtMCI || "NO",
+      isLeader: data.isLeader || "NO",
+      generation: data.generation || "NO",
+      formationSchoolLevel: data.formationSchoolLevel || "NOT_STARTED",
       rh: data.rh,
       contactName: data.contactName || undefined,
       contactPhone: data.contactPhone || undefined,

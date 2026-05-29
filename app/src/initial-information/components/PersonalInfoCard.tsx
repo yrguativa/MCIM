@@ -146,28 +146,25 @@ const PersonalInfoCard: React.FC<PersonalInfoCardProps> = ({ childrenList, onChi
 
         <FormField
           control={control}
-          name="rh"
+          name="network"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="flex items-center gap-1.5">
-                <Droplets className="h-3.5 w-3.5 text-muted-foreground" />
-                {t("initialInformation.personalInfo.rh")}
+                <Network className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.personalInfo.network")} *
               </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder={t("initialInformation.personalInfo.rhPlaceholder")} />
+                    <SelectValue placeholder={t("initialInformation.personalInfo.networkPlaceholder")} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="O_POSITIVE">O+</SelectItem>
-                  <SelectItem value="O_NEGATIVE">O-</SelectItem>
-                  <SelectItem value="A_POSITIVE">A+</SelectItem>
-                  <SelectItem value="A_NEGATIVE">A-</SelectItem>
-                  <SelectItem value="B_POSITIVE">B+</SelectItem>
-                  <SelectItem value="B_NEGATIVE">B-</SelectItem>
-                  <SelectItem value="AB_POSITIVE">AB+</SelectItem>
-                  <SelectItem value="AB_NEGATIVE">AB-</SelectItem>
+                  <SelectItem value="YOUTH">{t("initialInformation.network.YOUTH")}</SelectItem>
+                  <SelectItem value="PRE">{t("initialInformation.network.PRE")}</SelectItem>
+                  <SelectItem value="ROCAS">{t("initialInformation.network.ROCAS")}</SelectItem>
+                  <SelectItem value="MEN">{t("initialInformation.network.MEN")}</SelectItem>
+                  <SelectItem value="WOMEN">{t("initialInformation.network.WOMEN")}</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -202,73 +199,6 @@ const PersonalInfoCard: React.FC<PersonalInfoCardProps> = ({ childrenList, onChi
             </FormItem>
           )}
         />
-
-        <FormField
-          control={control}
-          name="hasChildren"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="flex items-center gap-1.5">
-                <Baby className="h-3.5 w-3.5 text-muted-foreground" />
-                {t("initialInformation.personalInfo.hasChildren")} *
-              </FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  className="flex gap-4 pt-2"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="YES" id="hasChildren-yes" />
-                    <Label htmlFor="hasChildren-yes">{t("initialInformation.yes")}</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="NO" id="hasChildren-no" />
-                    <Label htmlFor="hasChildren-no">{t("initialInformation.no")}</Label>
-                  </div>
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {hasChildren === "YES" && (
-          <>
-            <FormField
-              control={control}
-              name="childrenAttendChurch"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex items-center gap-1.5">
-                    <Users className="h-3.5 w-3.5 text-muted-foreground" />
-                    {t("initialInformation.personalInfo.childrenAttendChurch")} *
-                  </FormLabel>
-                  <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      value={field.value}
-                      className="flex gap-4 pt-2"
-                    >
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="YES" id="childrenChurch-yes" />
-                        <Label htmlFor="childrenChurch-yes">{t("initialInformation.yes")}</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="NO" id="childrenChurch-no" />
-                        <Label htmlFor="childrenChurch-no">{t("initialInformation.no")}</Label>
-                      </div>
-                    </RadioGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="md:col-span-2 mt-2">
-              <ChildrenSection items={childrenList} onChange={onChildrenChange} />
-            </div>
-          </>
-        )}
 
         {(maritalStatus === "MARRIED" || maritalStatus === "FREE_UNION") && (
           <div className="md:col-span-2 space-y-4 rounded-lg border p-4 bg-muted/20">
@@ -397,6 +327,42 @@ const PersonalInfoCard: React.FC<PersonalInfoCardProps> = ({ childrenList, onChi
 
         <FormField
           control={control}
+          name="hasChildren"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex items-center gap-1.5">
+                <Baby className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.personalInfo.hasChildren")} *
+              </FormLabel>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  className="flex gap-4 pt-2"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="YES" id="hasChildren-yes" />
+                    <Label htmlFor="hasChildren-yes">{t("initialInformation.yes")}</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="NO" id="hasChildren-no" />
+                    <Label htmlFor="hasChildren-no">{t("initialInformation.no")}</Label>
+                  </div>
+                </RadioGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {hasChildren === "YES" && (
+          <div className="md:col-span-2 mt-2">
+            <ChildrenSection items={childrenList} onChange={onChildrenChange} />
+          </div>
+        )}
+
+        <FormField
+          control={control}
           name="address"
           render={({ field }) => (
             <FormItem className="md:col-span-2">
@@ -497,34 +463,6 @@ const PersonalInfoCard: React.FC<PersonalInfoCardProps> = ({ childrenList, onChi
 
         <FormField
           control={control}
-          name="network"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="flex items-center gap-1.5">
-                <Network className="h-3.5 w-3.5 text-muted-foreground" />
-                {t("initialInformation.personalInfo.network")} *
-              </FormLabel>
-              <Select onValueChange={field.onChange} value={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder={t("initialInformation.personalInfo.networkPlaceholder")} />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="YOUTH">{t("initialInformation.network.YOUTH")}</SelectItem>
-                  <SelectItem value="PRE">{t("initialInformation.network.PRE")}</SelectItem>
-                  <SelectItem value="ROCAS">{t("initialInformation.network.ROCAS")}</SelectItem>
-                  <SelectItem value="MEN">{t("initialInformation.network.MEN")}</SelectItem>
-                  <SelectItem value="WOMEN">{t("initialInformation.network.WOMEN")}</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={control}
           name="birthDate"
           render={({ field }) => (
             <FormItem className="flex flex-col">
@@ -564,6 +502,37 @@ const PersonalInfoCard: React.FC<PersonalInfoCardProps> = ({ childrenList, onChi
                   />
                 </PopoverContent>
               </Popover>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={control}
+          name="rh"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex items-center gap-1.5">
+                <Droplets className="h-3.5 w-3.5 text-muted-foreground" />
+                {t("initialInformation.personalInfo.rh")}
+              </FormLabel>
+              <Select onValueChange={field.onChange} value={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder={t("initialInformation.personalInfo.rhPlaceholder")} />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="O_POSITIVE">O+</SelectItem>
+                  <SelectItem value="O_NEGATIVE">O-</SelectItem>
+                  <SelectItem value="A_POSITIVE">A+</SelectItem>
+                  <SelectItem value="A_NEGATIVE">A-</SelectItem>
+                  <SelectItem value="B_POSITIVE">B+</SelectItem>
+                  <SelectItem value="B_NEGATIVE">B-</SelectItem>
+                  <SelectItem value="AB_POSITIVE">AB+</SelectItem>
+                  <SelectItem value="AB_NEGATIVE">AB-</SelectItem>
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}

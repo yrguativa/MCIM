@@ -40,7 +40,6 @@ export class InitialInformationService {
               gender
               maritalStatus
               hasChildren
-              childrenAttendChurch
               address
               housingComplex
               neighborhood

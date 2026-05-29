@@ -50,7 +50,6 @@ export const createInitialInformationSchema = (t: (key: string, options?: Record
       hasChildren: z.enum(["YES", "NO"], {
         error: t("initialInformation.validation.hasChildrenRequired"),
       }),
-      childrenAttendChurch: z.enum(["YES", "NO"]).optional(),
       rh: z.enum(["O_POSITIVE", "O_NEGATIVE", "A_POSITIVE", "A_NEGATIVE", "B_POSITIVE", "B_NEGATIVE", "AB_POSITIVE", "AB_NEGATIVE"]).optional(),
       contactName: z
         .string()
@@ -140,11 +139,7 @@ export const createInitialInformationSchema = (t: (key: string, options?: Record
           },
         ),
       hasRepeatedEncounter: z.enum(["YES", "NO"]).optional(),
-      hasAttendedReencounter: z.enum(["YES", "NO"], {
-        error: t(
-          "initialInformation.validation.hasAttendedReencounterRequired",
-        ),
-      }),
+      hasAttendedReencounter: z.enum(["YES", "NO"]).optional(),
       yearAttendedReencounter: z
         .string()
         .optional()
@@ -156,13 +151,9 @@ export const createInitialInformationSchema = (t: (key: string, options?: Record
             }),
           },
         ),
-      baptizedAtMCI: z.enum(["YES", "NO"], {
-        error: t("initialInformation.validation.baptizedRequired"),
-      }),
+      baptizedAtMCI: z.enum(["YES", "NO"]).optional(),
       isLeader: z.enum(["YES", "NO"]).optional(),
-      generation: z.enum(["YES", "NO"], {
-        error: t("initialInformation.validation.generationRequired"),
-      }),
+      generation: z.enum(["YES", "NO"]).optional(),
       formationSchoolLevel: z.enum(
         [
           "BASIC_1",
@@ -174,32 +165,13 @@ export const createInitialInformationSchema = (t: (key: string, options?: Record
           "GRADUATE",
           "NOT_STARTED",
         ],
-        {
-          error: t(
-            "initialInformation.validation.formationSchoolLevelRequired",
-          ),
-        },
-      ),
+      ).optional(),
 
       spouseAttendsChurch: z.enum(["YES", "NO"]).optional(),
       spouseId: z.string().optional(),
       spouseName: z.string().optional(),
     })
     .superRefine((data, ctx) => {
-      if (
-        data.hasChildren === "YES" &&
-        (!data.childrenAttendChurch ||
-          data.childrenAttendChurch === undefined)
-      ) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ["childrenAttendChurch"],
-          message: t(
-            "initialInformation.validation.childrenAttendChurchRequired",
-          ),
-        });
-      }
-
       if (data.attendedAnotherChurch === "YES") {
         if (!data.yearArrivedAtOtherChurch) {
           ctx.addIssue({
@@ -236,19 +208,51 @@ export const createInitialInformationSchema = (t: (key: string, options?: Record
             ),
           });
         }
-      }
+        if (!data.hasAttendedReencounter) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["hasAttendedReencounter"],
+            message: t(
+              "initialInformation.validation.hasAttendedReencounterRequired",
+            ),
+          });
+        }
+        if (!data.baptizedAtMCI) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["baptizedAtMCI"],
+            message: t("initialInformation.validation.baptizedRequired"),
+          });
+        }
+        if (!data.generation) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["generation"],
+            message: t("initialInformation.validation.generationRequired"),
+          });
+        }
+        if (!data.formationSchoolLevel) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["formationSchoolLevel"],
+            message: t(
+              "initialInformation.validation.formationSchoolLevelRequired",
+            ),
+          });
+        }
 
-      if (
-        data.hasAttendedReencounter === "YES" &&
-        !data.yearAttendedReencounter
-      ) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ["yearAttendedReencounter"],
-          message: t(
-            "initialInformation.validation.yearAttendedReencounterRequired",
-          ),
-        });
+        if (
+          data.hasAttendedReencounter === "YES" &&
+          !data.yearAttendedReencounter
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["yearAttendedReencounter"],
+            message: t(
+              "initialInformation.validation.yearAttendedReencounterRequired",
+            ),
+          });
+        }
       }
 
       if (data.maritalStatus === "MARRIED" || data.maritalStatus === "FREE_UNION") {

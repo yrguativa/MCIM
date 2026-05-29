@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useFormContext, useWatch } from "react-hook-form";
 import { Check, ChevronsUpDown, Building2, Users, Calendar, Award, Church, UserCheck, GraduationCap, BookOpen, MapPin } from "lucide-react";
@@ -54,6 +54,16 @@ const ChurchInfoCard: React.FC = () => {
   const hasAttendedEncounter = useWatch({ control, name: "hasAttendedEncounter" });
   const hasAttendedReencounter = useWatch({ control, name: "hasAttendedReencounter" });
   const attendedAnotherChurch = useWatch({ control, name: "attendedAnotherChurch" });
+
+  useEffect(() => {
+    if (hasAttendedEncounter === "NO") {
+      setValue("hasAttendedReencounter", "NO");
+      setValue("baptizedAtMCI", "NO");
+      setValue("isLeader", "NO");
+      setValue("generation", "NO");
+      setValue("formationSchoolLevel", "NOT_STARTED");
+    }
+  }, [hasAttendedEncounter, setValue]);
 
   return (
     <Card>
@@ -351,199 +361,203 @@ const ChurchInfoCard: React.FC = () => {
           </>
         )}
 
-        <FormField
-          control={control}
-          name="hasAttendedReencounter"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="flex items-center gap-1.5">
-                <Award className="h-3.5 w-3.5 text-muted-foreground" />
-                {t("initialInformation.churchInfo.hasAttendedReencounter")} *
-              </FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  className="flex gap-4 pt-2"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="YES" id="reencounter-yes" />
-                    <Label htmlFor="reencounter-yes">{t("initialInformation.yes")}</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="NO" id="reencounter-no" />
-                    <Label htmlFor="reencounter-no">{t("initialInformation.no")}</Label>
-                  </div>
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {hasAttendedEncounter === "YES" && (
+          <>
+            <FormField
+              control={control}
+              name="hasAttendedReencounter"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-1.5">
+                    <Award className="h-3.5 w-3.5 text-muted-foreground" />
+                    {t("initialInformation.churchInfo.hasAttendedReencounter")} *
+                  </FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      className="flex gap-4 pt-2"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="YES" id="reencounter-yes" />
+                        <Label htmlFor="reencounter-yes">{t("initialInformation.yes")}</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="NO" id="reencounter-no" />
+                        <Label htmlFor="reencounter-no">{t("initialInformation.no")}</Label>
+                      </div>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        {hasAttendedReencounter === "YES" && (
-          <FormField
-            control={control}
-            name="yearAttendedReencounter"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex items-center gap-1.5">
-                  <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
-                  {t("initialInformation.churchInfo.yearAttendedReencounter")} *
-                </FormLabel>
-                <FormControl>
-                  <Input type="number" placeholder="2024" {...field} />
-                </FormControl>
-                <FormDescription>
-                  {t("initialInformation.churchInfo.yearAttendedReencounterHint")}
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
+            {hasAttendedReencounter === "YES" && (
+              <FormField
+                control={control}
+                name="yearAttendedReencounter"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-1.5">
+                      <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
+                      {t("initialInformation.churchInfo.yearAttendedReencounter")} *
+                    </FormLabel>
+                    <FormControl>
+                      <Input type="number" placeholder="2024" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      {t("initialInformation.churchInfo.yearAttendedReencounterHint")}
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             )}
-          />
+
+            <FormField
+              control={control}
+              name="baptizedAtMCI"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-1.5">
+                    <Church className="h-3.5 w-3.5 text-muted-foreground" />
+                    {t("initialInformation.churchInfo.baptizedAtMCI")} *
+                  </FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      className="flex gap-4 pt-2"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="YES" id="baptized-yes" />
+                        <Label htmlFor="baptized-yes">{t("initialInformation.yes")}</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="NO" id="baptized-no" />
+                        <Label htmlFor="baptized-no">{t("initialInformation.no")}</Label>
+                      </div>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={control}
+              name="isLeader"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-1.5">
+                    <UserCheck className="h-3.5 w-3.5 text-muted-foreground" />
+                    {t("initialInformation.churchInfo.isLeader")}
+                  </FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      className="flex gap-4 pt-2"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="YES" id="leader-yes" />
+                        <Label htmlFor="leader-yes">{t("initialInformation.yes")}</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="NO" id="leader-no" />
+                        <Label htmlFor="leader-no">{t("initialInformation.no")}</Label>
+                      </div>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={control}
+              name="generation"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-1.5">
+                    <GraduationCap className="h-3.5 w-3.5 text-muted-foreground" />
+                    {t("initialInformation.churchInfo.generation")} *
+                  </FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      className="flex gap-4 pt-2"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="YES" id="generation-yes" />
+                        <Label htmlFor="generation-yes">{t("initialInformation.yes")}</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="NO" id="generation-no" />
+                        <Label htmlFor="generation-no">{t("initialInformation.no")}</Label>
+                      </div>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={control}
+              name="formationSchoolLevel"
+              render={({ field }) => (
+                <FormItem className="md:col-span-2">
+                  <FormLabel className="flex items-center gap-1.5">
+                    <BookOpen className="h-3.5 w-3.5 text-muted-foreground" />
+                    {t("initialInformation.churchInfo.formationSchoolLevel")} *
+                  </FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue
+                          placeholder={t("initialInformation.churchInfo.formationSchoolLevelPlaceholder")}
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="BASIC_1">
+                        {t("initialInformation.formationSchoolLevel.BASIC_1")}
+                      </SelectItem>
+                      <SelectItem value="BASIC_2">
+                        {t("initialInformation.formationSchoolLevel.BASIC_2")}
+                      </SelectItem>
+                      <SelectItem value="BASIC_3">
+                        {t("initialInformation.formationSchoolLevel.BASIC_3")}
+                      </SelectItem>
+                      <SelectItem value="ADVANCED_1">
+                        {t("initialInformation.formationSchoolLevel.ADVANCED_1")}
+                      </SelectItem>
+                      <SelectItem value="ADVANCED_2">
+                        {t("initialInformation.formationSchoolLevel.ADVANCED_2")}
+                      </SelectItem>
+                      <SelectItem value="ADVANCED_3">
+                        {t("initialInformation.formationSchoolLevel.ADVANCED_3")}
+                      </SelectItem>
+                      <SelectItem value="GRADUATE">
+                        {t("initialInformation.formationSchoolLevel.GRADUATE")}
+                      </SelectItem>
+                      <SelectItem value="NOT_STARTED">
+                        {t("initialInformation.formationSchoolLevel.NOT_STARTED")}
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    {t("initialInformation.churchInfo.formationSchoolLevelHint")}
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </>
         )}
-
-        <FormField
-          control={control}
-          name="baptizedAtMCI"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="flex items-center gap-1.5">
-                <Church className="h-3.5 w-3.5 text-muted-foreground" />
-                {t("initialInformation.churchInfo.baptizedAtMCI")} *
-              </FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  className="flex gap-4 pt-2"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="YES" id="baptized-yes" />
-                    <Label htmlFor="baptized-yes">{t("initialInformation.yes")}</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="NO" id="baptized-no" />
-                    <Label htmlFor="baptized-no">{t("initialInformation.no")}</Label>
-                  </div>
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={control}
-          name="isLeader"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="flex items-center gap-1.5">
-                <UserCheck className="h-3.5 w-3.5 text-muted-foreground" />
-                {t("initialInformation.churchInfo.isLeader")}
-              </FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  className="flex gap-4 pt-2"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="YES" id="leader-yes" />
-                    <Label htmlFor="leader-yes">{t("initialInformation.yes")}</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="NO" id="leader-no" />
-                    <Label htmlFor="leader-no">{t("initialInformation.no")}</Label>
-                  </div>
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={control}
-          name="generation"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="flex items-center gap-1.5">
-                <GraduationCap className="h-3.5 w-3.5 text-muted-foreground" />
-                {t("initialInformation.churchInfo.generation")} *
-              </FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  className="flex gap-4 pt-2"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="YES" id="generation-yes" />
-                    <Label htmlFor="generation-yes">{t("initialInformation.yes")}</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="NO" id="generation-no" />
-                    <Label htmlFor="generation-no">{t("initialInformation.no")}</Label>
-                  </div>
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={control}
-          name="formationSchoolLevel"
-          render={({ field }) => (
-            <FormItem className="md:col-span-2">
-              <FormLabel className="flex items-center gap-1.5">
-                <BookOpen className="h-3.5 w-3.5 text-muted-foreground" />
-                {t("initialInformation.churchInfo.formationSchoolLevel")} *
-              </FormLabel>
-              <Select onValueChange={field.onChange} value={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue
-                      placeholder={t("initialInformation.churchInfo.formationSchoolLevelPlaceholder")}
-                    />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="BASIC_1">
-                    {t("initialInformation.formationSchoolLevel.BASIC_1")}
-                  </SelectItem>
-                  <SelectItem value="BASIC_2">
-                    {t("initialInformation.formationSchoolLevel.BASIC_2")}
-                  </SelectItem>
-                  <SelectItem value="BASIC_3">
-                    {t("initialInformation.formationSchoolLevel.BASIC_3")}
-                  </SelectItem>
-                  <SelectItem value="ADVANCED_1">
-                    {t("initialInformation.formationSchoolLevel.ADVANCED_1")}
-                  </SelectItem>
-                  <SelectItem value="ADVANCED_2">
-                    {t("initialInformation.formationSchoolLevel.ADVANCED_2")}
-                  </SelectItem>
-                  <SelectItem value="ADVANCED_3">
-                    {t("initialInformation.formationSchoolLevel.ADVANCED_3")}
-                  </SelectItem>
-                  <SelectItem value="GRADUATE">
-                    {t("initialInformation.formationSchoolLevel.GRADUATE")}
-                  </SelectItem>
-                  <SelectItem value="NOT_STARTED">
-                    {t("initialInformation.formationSchoolLevel.NOT_STARTED")}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-              <FormDescription>
-                {t("initialInformation.churchInfo.formationSchoolLevelHint")}
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
       </CardContent>
     </Card>
   );
