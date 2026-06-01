@@ -520,7 +520,7 @@ const InitialInformationForm: React.FC = () => {
             host: (cell.type === 'celula' || cell.type === 'celula_anexa') ? cell.host || "" : "",
             timoteo: (cell.type === 'celula' || cell.type === 'celula_anexa') ? cell.timoteo || "" : "",
             address: cell.address || "",
-            neighborhood: cell.neighborhood || 0,
+            neighborhood: cell.neighborhood || "",
             day: cell.day || undefined,
             time: cell.time || undefined,
             yearOpened: cell.yearOpened || undefined,

@@ -45,8 +45,8 @@ export class Cell extends Document {
   @Prop()
   address: string;
 
-  @Prop()
-  neighborhood: number;
+  @Prop({ required: true })
+  neighborhood: string;
 
   @Prop()
   day: string;

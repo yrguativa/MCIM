@@ -25,8 +25,8 @@ export const CellSchema = z.object({
     .min(2, {
       message: "El timoteo de la celula es obligatorio.",
     }),
-  neighborhood: z.number({
-    error: "A neighborhood is required.",
+  neighborhood: z.string().min(1, {
+    message: "El barrio es obligatorio",
   }),
   network: z.coerce.number({
     error: "A neighborhood is required.",

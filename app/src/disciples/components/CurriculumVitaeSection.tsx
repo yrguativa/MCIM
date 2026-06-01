@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
@@ -25,6 +25,7 @@ import {
     ChevronsUpDown,
     Droplets,
     Phone,
+    Pencil,
 } from "lucide-react";
 import { MCI_LOCATIONS } from "@/src/initial-information/constants/mciLocations";
 import { cn } from "@/lib/utils";
@@ -67,6 +68,8 @@ import {
     CommandItem,
     CommandList,
 } from "@/components/ui/command";
+import { AddressStandardizer } from "@/src/components/AddressStandardizer";
+import { useNeighborhoodStore } from "@/src/neighborhood/store/neighborhood.store";
 import { useDiscipleStore } from "../store/disciple.store";
 import ChildrenSection, { type ChildItem } from "@/src/initial-information/components/ChildrenSection";
 
@@ -79,11 +82,22 @@ const CurriculumVitaeSection: React.FC<CurriculumVitaeSectionProps> = ({ childre
     const { t, i18n } = useTranslation();
     const { control, setValue } = useFormContext();
     const { leaders } = useDiscipleStore();
+    const [showAddressModal, setShowAddressModal] = useState(false);
+    const [neighborhoodSearch, setNeighborhoodSearch] = useState('');
+    const neighborhoods = useNeighborhoodStore(state => state.neighborhoods);
+    const fetchNeighborhoods = useNeighborhoodStore(state => state.fetchNeighborhoods);
+    const createNeighborhood = useNeighborhoodStore(state => state.createNeighborhood);
     const hasChildren = useWatch({ control, name: "hasChildren" });
     const hasAttendedEncounter = useWatch({ control, name: "hasAttendedEncounter" });
     const hasAttendedReencounter = useWatch({ control, name: "hasAttendedReencounter" });
     const attendedAnotherChurch = useWatch({ control, name: "attendedAnotherChurch" });
     const dateLocale = i18n.language === "es" ? es : undefined;
+
+    useEffect(() => {
+        if (neighborhoods.length === 0) {
+            fetchNeighborhoods();
+        }
+    }, []);
 
     return (
         <div className="space-y-6">
@@ -250,13 +264,30 @@ const CurriculumVitaeSection: React.FC<CurriculumVitaeSectionProps> = ({ childre
                                     <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
                                     {t("disciples.address")}
                                 </FormLabel>
-                                <FormControl>
-                                    <Input placeholder={t("disciples.cv.placeholders.address")} {...field} value={field.value || ""} />
-                                </FormControl>
+                                <div className="flex gap-2">
+                                    <FormControl>
+                                        <Input placeholder={t("disciples.cv.placeholders.address")} {...field} value={field.value || ""} className="bg-muted text-muted-foreground cursor-not-allowed" readOnly />
+                                    </FormControl>
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="icon"
+                                        onClick={() => setShowAddressModal(true)}
+                                        className="shrink-0"
+                                        title={t("initialInformation.personalInfo.addressStandardizer.title")}
+                                    >
+                                        <Pencil className="h-4 w-4" />
+                                    </Button>
+                                </div>
                                 <FormDescription>{t("disciples.cv.descriptions.address")}</FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}
+                    />
+                    <AddressStandardizer
+                        open={showAddressModal}
+                        onOpenChange={setShowAddressModal}
+                        onSave={(address) => setValue("address", address, { shouldDirty: true })}
                     />
 
                     <FormField
@@ -285,9 +316,75 @@ const CurriculumVitaeSection: React.FC<CurriculumVitaeSectionProps> = ({ childre
                                     <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
                                     {t("disciples.cv.neighborhood")}
                                 </FormLabel>
-                                <FormControl>
-                                    <Input placeholder={t("disciples.cv.placeholders.neighborhood")} {...field} value={field.value || ""} />
-                                </FormControl>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant="outline"
+                                                role="combobox"
+                                                className={cn("w-full justify-between font-normal", !field.value && "text-muted-foreground")}
+                                            >
+                                                {field.value
+                                                    ? neighborhoods.find((n) => n.name === field.value)?.name || field.value
+                                                    : t("disciples.cv.placeholders.neighborhood")}
+                                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-[400px] p-0">
+                                        <Command>
+                                            <CommandInput
+                                                placeholder={t("disciples.cv.placeholders.neighborhood")}
+                                                onValueChange={setNeighborhoodSearch}
+                                            />
+                                            <CommandList>
+                                                <CommandEmpty>
+                                                    {neighborhoodSearch.length >= 2 ? (
+                                                        <div className="p-2">
+                                                            <p className="text-sm mb-2 text-muted-foreground">
+                                                                No se encontró "{neighborhoodSearch}"
+                                                            </p>
+                                                            <Button
+                                                                type="button"
+                                                                size="sm"
+                                                                className="w-full"
+                                                                onClick={async () => {
+                                                                    const created = await createNeighborhood(neighborhoodSearch);
+                                                                    if (created) {
+                                                                        setValue("neighborhood", created.name, { shouldDirty: true });
+                                                                        setNeighborhoodSearch('');
+                                                                    }
+                                                                }}
+                                                            >
+                                                                Agregar "{neighborhoodSearch}"
+                                                            </Button>
+                                                        </div>
+                                                    ) : (
+                                                        <p className="text-sm text-muted-foreground p-2">
+                                                            Escribe al menos 2 caracteres
+                                                        </p>
+                                                    )}
+                                                </CommandEmpty>
+                                                <CommandGroup>
+                                                    {neighborhoods.map((n) => (
+                                                        <CommandItem
+                                                            key={n.id}
+                                                            value={n.name}
+                                                            onSelect={() => {
+                                                                setValue("neighborhood", n.name, { shouldDirty: true });
+                                                            }}
+                                                        >
+                                                            {n.name}
+                                                            <Check
+                                                                className={cn("ml-auto h-4 w-4", n.name === field.value ? "opacity-100" : "opacity-0")}
+                                                            />
+                                                        </CommandItem>
+                                                    ))}
+                                                </CommandGroup>
+                                            </CommandList>
+                                        </Command>
+                                    </PopoverContent>
+                                </Popover>
                                 <FormMessage />
                             </FormItem>
                         )}

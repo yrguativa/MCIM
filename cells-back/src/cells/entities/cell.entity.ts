@@ -25,8 +25,8 @@ export class CellEntity {
   @Field(() => String)
   address: string;
 
-  @Field(() => Int)
-  neighborhood: number;
+  @Field(() => String)
+  neighborhood: string;
 
   @Field(() => String, { nullable: true })
   day: string;

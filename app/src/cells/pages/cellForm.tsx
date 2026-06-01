@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm, Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { CheckCircle, Crown, DoorOpen, Home, MapPin, OctagonX, Save, UserPlus, Users, CalendarDays, Clock, XCircle } from 'lucide-react';
+import { CheckCircle, Crown, DoorOpen, Home, MapPin, OctagonX, Pencil, Save, UserPlus, Users, CalendarDays, Clock, XCircle } from 'lucide-react';
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
 import { cn } from '@/lib/utils';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -17,8 +17,9 @@ import { toast } from 'sonner';
 
 import { RecordCellComponent } from '../components/recordCellComponent';
 import { AddAttendeeModal } from '../components/AddAttendeeModal';
+import { AddressStandardizer } from '@/src/components/AddressStandardizer';
 import { CellInput, CellSchema } from '../schemas/cellSchema';
-import { Neighborhood } from "@/src/cells/schemas/neighborhood.enum";
+import { useNeighborhoodStore } from '@/src/neighborhood/store/neighborhood.store';
 import { CellsService } from '../services/cells.services';
 
 import { useDiscipleStore } from '@/src/disciples/store/disciple.store';
@@ -43,6 +44,12 @@ const CellForm: React.FC = () => {
     const disciplesState = useDiscipleStore(state => state.Disciples);
     const getDisciples = useDiscipleStore(state => state.getDisciples);
     const [showAddModal, setShowAddModal] = useState(false);
+    const [showAddressModal, setShowAddressModal] = useState(false);
+    const [neighborhoodSearch, setNeighborhoodSearch] = useState('');
+
+    const neighborhoods = useNeighborhoodStore(state => state.neighborhoods);
+    const fetchNeighborhoods = useNeighborhoodStore(state => state.fetchNeighborhoods);
+    const createNeighborhood = useNeighborhoodStore(state => state.createNeighborhood);
 
     const form = useForm<CellInput>({
         resolver: zodResolver(CellSchema as any) as Resolver<CellInput>,
@@ -56,7 +63,7 @@ const CellForm: React.FC = () => {
             host: "",
             timoteo: "",
             network: 0,
-            neighborhood: Neighborhood[0].value,
+            neighborhood: "",
             day: "",
             time: "",
             yearOpened: undefined,
@@ -74,6 +81,12 @@ const CellForm: React.FC = () => {
     useEffect(() => {
       if (disciplesState.length === 0) {
         getDisciples();
+      }
+    }, []);
+
+    useEffect(() => {
+      if (neighborhoods.length === 0) {
+        fetchNeighborhoods();
       }
     }, []);
 
@@ -214,35 +227,59 @@ const CellForm: React.FC = () => {
                                                     !field.value && "text-muted-foreground"
                                                 )}
                                             >
-                                                {field.value ? Neighborhood.find((x) => x.value === field.value)?.label : "Alejandria, Alicante, Porvenir, Trebol, etc."}
+                                                {field.value ? neighborhoods.find((x) => x.id === field.value)?.name : "Alejandria, Alicante, Porvenir, Trebol, etc."}
                                                 <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                             </Button>
                                         </FormControl>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-[400px] p-0">
                                         <Command>
-                                            <CommandInput placeholder="Escribe 2 letras para comentar la busqueda..." className="h-9" />
+                                            <CommandInput
+                                                placeholder="Escribe 2 letras para comentar la busqueda..."
+                                                className="h-9"
+                                                onValueChange={setNeighborhoodSearch}
+                                            />
                                             <CommandList>
                                                 <CommandEmpty>
-                                                    <p className="text-lg mb-2">
-                                                        No se encontró el barrio. <br></br>
-                                                        ! Próximamente agregaremos funcionalidad para agregar un nuevo barrio
-                                                    </p>
-                                                    <Button type="button" disabled>Agregar un nuevo barrio</Button>
+                                                    {neighborhoodSearch.length >= 2 ? (
+                                                        <div className="p-2">
+                                                            <p className="text-sm mb-2 text-muted-foreground">
+                                                                No se encontró "{neighborhoodSearch}"
+                                                            </p>
+                                                            <Button
+                                                                type="button"
+                                                                size="sm"
+                                                                className="w-full"
+                                                                onClick={async () => {
+                                                                    const created = await createNeighborhood(neighborhoodSearch);
+                                                                    if (created) {
+                                                                        form.setValue("neighborhood", created.id);
+                                                                        setNeighborhoodSearch('');
+                                                                    }
+                                                                }}
+                                                            >
+                                                                Agregar "{neighborhoodSearch}"
+                                                            </Button>
+                                                        </div>
+                                                    ) : (
+                                                        <p className="text-sm text-muted-foreground p-2">
+                                                            Escribe al menos 2 caracteres
+                                                        </p>
+                                                    )}
                                                 </CommandEmpty>
                                                 <CommandGroup>
                                                     {
-                                                        Neighborhood.map((x) => (
+                                                        neighborhoods.map((x) => (
                                                             <CommandItem
-                                                                value={x.label}
-                                                                key={x.value}
+                                                                value={x.name}
+                                                                key={x.id}
                                                                 onSelect={() => {
-                                                                    form.setValue("neighborhood", x.value);
+                                                                    form.setValue("neighborhood", x.id);
                                                                 }}
                                                             >
-                                                                {x.label}
+                                                                {x.name}
                                                                 <CheckIcon className={cn("ml-auto h-4 w-4",
-                                                                    x.value === field.value
+                                                                    x.id === field.value
                                                                         ? "opacity-100"
                                                                         : "opacity-0")}
                                                                 />
@@ -267,15 +304,32 @@ const CellForm: React.FC = () => {
                                     <Home className="h-3.5 w-3.5 text-muted-foreground" />
                                     Dirección
                                 </FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Calle 12 A N 2 - 4 Torre 2 Apartamento 301" {...field} />
-                                </FormControl>
+                                <div className="flex gap-2">
+                                    <FormControl>
+                                        <Input placeholder="Calle 12 A N 2 - 4 Torre 2 Apartamento 301" {...field} className="bg-muted text-muted-foreground cursor-not-allowed" readOnly />
+                                    </FormControl>
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="icon"
+                                        onClick={() => setShowAddressModal(true)}
+                                        className="shrink-0"
+                                        title="Estandarizar dirección"
+                                    >
+                                        <Pencil className="h-4 w-4" />
+                                    </Button>
+                                </div>
                                 <FormDescription>
                                     Ingresa la dirección completa con el complemento, torre, piso, interior, etc.
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}
+                    />
+                    <AddressStandardizer
+                        open={showAddressModal}
+                        onOpenChange={setShowAddressModal}
+                        onSave={(address) => form.setValue("address", address, { shouldDirty: true })}
                     />
 
                     <FormField

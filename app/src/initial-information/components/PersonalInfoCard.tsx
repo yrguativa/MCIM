@@ -46,6 +46,7 @@ import {
 } from "@/components/ui/command";
 import { Calendar } from "@/components/ui/calendar";
 import { useDiscipleStore } from "@/src/disciples/store/disciple.store";
+import { useNeighborhoodStore } from "@/src/neighborhood/store/neighborhood.store";
 import ChildrenSection, { type ChildItem } from "./ChildrenSection";
 
 interface PersonalInfoCardProps {
@@ -66,10 +67,20 @@ const PersonalInfoCard: React.FC<PersonalInfoCardProps> = ({ childrenList, onChi
   const disciplesState = useDiscipleStore(state => state.Disciples);
   const searchByName = useDiscipleStore(state => state.searchByName);
   const getDisciples = useDiscipleStore(state => state.getDisciples);
+  const [neighborhoodSearch, setNeighborhoodSearch] = useState('');
+  const neighborhoods = useNeighborhoodStore(state => state.neighborhoods);
+  const fetchNeighborhoods = useNeighborhoodStore(state => state.fetchNeighborhoods);
+  const createNeighborhood = useNeighborhoodStore(state => state.createNeighborhood);
 
   useEffect(() => {
     if (disciplesState.length === 0) {
       getDisciples();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (neighborhoods.length === 0) {
+      fetchNeighborhoods();
     }
   }, []);
 
@@ -372,7 +383,7 @@ const PersonalInfoCard: React.FC<PersonalInfoCardProps> = ({ childrenList, onChi
               </FormLabel>
               <div className="flex gap-2">
                 <FormControl>
-                  <Input {...field} className="flex-1" />
+                  <Input {...field} className="flex-1 bg-muted text-muted-foreground cursor-not-allowed" readOnly />
                 </FormControl>
                 <Button
                   type="button"
@@ -423,9 +434,75 @@ const PersonalInfoCard: React.FC<PersonalInfoCardProps> = ({ childrenList, onChi
                 <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
                 {t("initialInformation.personalInfo.neighborhood")} *
               </FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn("w-full justify-between font-normal", !field.value && "text-muted-foreground")}
+                    >
+                      {field.value
+                        ? neighborhoods.find((n) => n.name === field.value)?.name || field.value
+                        : t("initialInformation.cellInfo.neighborhoodPlaceholder")}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-[400px] p-0">
+                  <Command>
+                    <CommandInput
+                      placeholder={t("initialInformation.cellInfo.neighborhoodSearch")}
+                      onValueChange={setNeighborhoodSearch}
+                    />
+                    <CommandList>
+                      <CommandEmpty>
+                        {neighborhoodSearch.length >= 2 ? (
+                          <div className="p-2">
+                            <p className="text-sm mb-2 text-muted-foreground">
+                              No se encontró "{neighborhoodSearch}"
+                            </p>
+                            <Button
+                              type="button"
+                              size="sm"
+                              className="w-full"
+                              onClick={async () => {
+                                const created = await createNeighborhood(neighborhoodSearch);
+                                if (created) {
+                                  setValue("neighborhood", created.name, { shouldDirty: true });
+                                  setNeighborhoodSearch('');
+                                }
+                              }}
+                            >
+                              Agregar "{neighborhoodSearch}"
+                            </Button>
+                          </div>
+                        ) : (
+                          <p className="text-sm text-muted-foreground p-2">
+                            Escribe al menos 2 caracteres
+                          </p>
+                        )}
+                      </CommandEmpty>
+                      <CommandGroup>
+                        {neighborhoods.map((n) => (
+                          <CommandItem
+                            key={n.id}
+                            value={n.name}
+                            onSelect={() => {
+                              setValue("neighborhood", n.name, { shouldDirty: true });
+                            }}
+                          >
+                            {n.name}
+                            <Check
+                              className={cn("ml-auto h-4 w-4", n.name === field.value ? "opacity-100" : "opacity-0")}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
               <FormMessage />
             </FormItem>
           )}

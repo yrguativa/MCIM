@@ -39,7 +39,7 @@ type Cell {
   host: String
   timoteo: String
   address: String!
-  neighborhood: Int!
+  neighborhood: String!
   day: String
   time: String
   yearOpened: Int
@@ -313,6 +313,11 @@ type Child {
   updatedAt: DateTime!
 }
 
+type Neighborhood {
+  id: ID!
+  name: String!
+}
+
 type Query {
   me: Users!
 
@@ -356,6 +361,8 @@ type Query {
   maritalRelationshipByDisciple(discipleId: String!): MaritalRelationship
   maritalRelationshipBySpouse(spouseId: String!): MaritalRelationship
   childrenByParent(parentId: String!): [Child!]!
+  neighborhoods: [Neighborhood!]!
+  neighborhood(id: String!): Neighborhood!
 }
 
 type Mutation {
@@ -412,6 +419,7 @@ type Mutation {
   createChildrenBatch(inputs: [CreateChildInput!]!): [Child!]!
   updateChild(input: UpdateChildInput!): Child!
   deleteChild(id: String!): Child!
+  createNeighborhood(name: String!): Neighborhood!
 }
 
 input LoginInput {
@@ -484,7 +492,7 @@ input CreateCellInput {
   host: String
   timoteo: String
   address: String!
-  neighborhood: Int!
+  neighborhood: String!
   day: String
   time: String
   yearOpened: Int
@@ -500,7 +508,7 @@ input UpdateCellInput {
   host: String!
   timoteo: String!
   address: String!
-  neighborhood: Int!
+  neighborhood: String!
   day: String
   time: String
   yearOpened: Int

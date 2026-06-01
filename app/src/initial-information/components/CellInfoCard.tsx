@@ -18,7 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import { Neighborhood } from '@/src/cells/schemas/neighborhood.enum';
+import { useNeighborhoodStore } from '@/src/neighborhood/store/neighborhood.store';
 import { AddAttendeeModal } from '@/src/cells/components/AddAttendeeModal';
 import { useDiscipleStore } from '@/src/disciples/store/disciple.store';
 import { useInitialInformationStore } from '../store/initialInformation.store';
@@ -45,7 +45,7 @@ const DAYS_OF_WEEK = [
 export interface CellData {
   type: string;
   address: string;
-  neighborhood: number | undefined;
+  neighborhood: string | undefined;
   day: string;
   time: string;
   host: string;
@@ -77,10 +77,21 @@ const CellInfoCard: React.FC<CellInfoCardProps> = ({ cell, index, onChange, onRe
 
   const [modalOpen, setModalOpen] = useState(false);
   const [showCellAddressModal, setShowCellAddressModal] = useState(false);
+  const [neighborhoodSearch, setNeighborhoodSearch] = useState('');
+
+  const neighborhoods = useNeighborhoodStore(state => state.neighborhoods);
+  const fetchNeighborhoods = useNeighborhoodStore(state => state.fetchNeighborhoods);
+  const createNeighborhood = useNeighborhoodStore(state => state.createNeighborhood);
 
   useEffect(() => {
     if (disciples.length === 0) {
       getDisciples();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (neighborhoods.length === 0) {
+      fetchNeighborhoods();
     }
   }, []);
 
@@ -177,7 +188,7 @@ const CellInfoCard: React.FC<CellInfoCardProps> = ({ cell, index, onChange, onRe
               {t("initialInformation.cellInfo.address")}
             </Label>
             <div className="flex gap-2">
-              <Input value={cell.address || ''} onChange={f('address')} className="flex-1 h-10" />
+              <Input value={cell.address || ''} onChange={f('address')} className="flex-1 h-10 bg-muted text-muted-foreground cursor-not-allowed" readOnly />
               <Button type="button" variant="outline" size="icon" className="shrink-0 h-10 w-10"
                 onClick={() => setShowCellAddressModal(true)}
                 title={t("initialInformation.personalInfo.addressStandardizer.title")}
@@ -204,21 +215,50 @@ const CellInfoCard: React.FC<CellInfoCardProps> = ({ cell, index, onChange, onRe
                   className={cn("w-full justify-between font-normal h-10", !cell.neighborhood && "text-muted-foreground")}
                 >
                   {cell.neighborhood
-                    ? Neighborhood.find(n => n.value === cell.neighborhood)?.label
+                    ? neighborhoods.find(n => n.id === cell.neighborhood)?.name
                     : t("initialInformation.cellInfo.neighborhoodPlaceholder")}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-[400px] p-0">
                 <Command>
-                  <CommandInput placeholder={t("initialInformation.cellInfo.neighborhoodSearch")} />
+                  <CommandInput
+                    placeholder={t("initialInformation.cellInfo.neighborhoodSearch")}
+                    onValueChange={setNeighborhoodSearch}
+                  />
                   <CommandList>
-                    <CommandEmpty>{t("initialInformation.cellInfo.neighborhoodEmpty")}</CommandEmpty>
+                    <CommandEmpty>
+                      {neighborhoodSearch.length >= 2 ? (
+                        <div className="p-2">
+                          <p className="text-sm mb-2 text-muted-foreground">
+                            No se encontró "{neighborhoodSearch}"
+                          </p>
+                          <Button
+                            type="button"
+                            size="sm"
+                            className="w-full"
+                            onClick={async () => {
+                              const created = await createNeighborhood(neighborhoodSearch);
+                              if (created) {
+                                onChange(index, 'neighborhood', created.id);
+                                setNeighborhoodSearch('');
+                              }
+                            }}
+                          >
+                            Agregar "{neighborhoodSearch}"
+                          </Button>
+                        </div>
+                      ) : (
+                        <p className="text-sm text-muted-foreground p-2">
+                          Escribe al menos 2 caracteres
+                        </p>
+                      )}
+                    </CommandEmpty>
                     <CommandGroup className="max-h-64 overflow-auto">
-                      {Neighborhood.map(n => (
-                        <CommandItem key={n.value} value={n.label}
-                          onSelect={() => onChange(index, 'neighborhood', n.value)}
+                      {neighborhoods.map(n => (
+                        <CommandItem key={n.id} value={n.name}
+                          onSelect={() => onChange(index, 'neighborhood', n.id)}
                         >
-                          {n.label}
+                          {n.name}
                         </CommandItem>
                       ))}
                     </CommandGroup>

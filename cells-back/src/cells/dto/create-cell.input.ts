@@ -29,10 +29,10 @@ export class CreateCellInput {
   @IsNotEmpty()
   address: string;
 
-  @Field(() => Int)
+  @Field(() => String)
   @IsNotEmpty()
-  @IsPositive()
-  neighborhood: number;
+  @IsMongoId()
+  neighborhood: string;
 
   @Field(() => String, { nullable: true })
   @IsOptional()
