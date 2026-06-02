@@ -1,4 +1,5 @@
 import type { Page, Locator } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { LABELS } from '../data/constants';
 
 export class InitialInformationFormPage {
@@ -16,8 +17,6 @@ export class InitialInformationFormPage {
   readonly genderSelect: Locator;
   readonly rhSelect: Locator;
   readonly maritalStatusSelect: Locator;
-  readonly addressInput: Locator;
-  readonly neighborhoodInput: Locator;
   readonly municipalitySelect: Locator;
   readonly networkSelect: Locator;
   readonly birthDateButton: Locator;
@@ -35,8 +34,8 @@ export class InitialInformationFormPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.step1Indicator = page.getByText(LABELS.step1);
-    this.step2Indicator = page.getByText(LABELS.step2);
+    this.step1Indicator = page.getByRole('heading', { name: LABELS.step1 });
+    this.step2Indicator = page.getByRole('heading', { name: LABELS.step2 });
 
     this.namesInput = page.getByLabel(/^Nombres/);
     this.lastNamesInput = page.getByLabel(/^Apellidos/);
@@ -48,8 +47,6 @@ export class InitialInformationFormPage {
     this.genderSelect = page.getByLabel(/Género/);
     this.rhSelect = page.getByLabel(/RH/i);
     this.maritalStatusSelect = page.getByLabel(/Estado civil/i);
-    this.addressInput = page.getByLabel(/^Dirección/);
-    this.neighborhoodInput = page.getByLabel(/Barrio/);
     this.municipalitySelect = page.getByLabel(/Municipio/);
     this.networkSelect = page.getByLabel(/Red/);
     this.birthDateButton = page.getByLabel(/Fecha de nacimiento/);
@@ -82,6 +79,29 @@ export class InitialInformationFormPage {
     await this.page.getByRole('option', { name: data.identificationType }).click();
   }
 
+  async fillAddressViaModal(viaType?: string, mainNumber?: string) {
+    const standardizerBtn = this.page.getByRole('button', { name: /estandarizar/i });
+    await standardizerBtn.click();
+
+    const dialog = this.page.getByRole('dialog');
+    await expect(dialog).toBeVisible();
+
+    await dialog.locator('[role="combobox"]').first().click();
+    await this.page.getByRole('option', { name: viaType || 'Calle' }).click();
+
+    await dialog.locator('input:not([type="checkbox"])').first().fill(mainNumber || '8');
+
+    await dialog.getByRole('button', { name: /aplicar/i }).click();
+    await expect(dialog).not.toBeVisible();
+  }
+
+  async selectNeighborhood(neighborhood: string) {
+    const trigger = this.page.getByRole('combobox', { name: /barrio/i });
+    await trigger.click();
+    await this.page.getByPlaceholder('Buscar barrio...').fill(neighborhood);
+    await this.page.getByRole('option', { name: neighborhood }).click();
+  }
+
   async fillPersonalInfo(data: {
     nationality: string;
     gender: string;
@@ -106,8 +126,8 @@ export class InitialInformationFormPage {
       await this.maritalStatusSelect.click();
       await this.page.getByRole('option', { name: data.maritalStatus }).click();
     }
-    await this.addressInput.fill(data.address);
-    await this.neighborhoodInput.fill(data.neighborhood);
+    await this.fillAddressViaModal();
+    await this.selectNeighborhood(data.neighborhood);
     await this.municipalitySelect.click();
     await this.page.getByRole('option', { name: data.municipality }).click();
     await this.networkSelect.click();

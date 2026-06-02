@@ -60,7 +60,7 @@ export const formData = {
   maritalStatus: 'Casado(a)',
   address: 'Cra 8 # 15-30',
   housingComplex: 'Conjunto Residencial El Parque',
-  neighborhood: 'Centro',
+  neighborhood: 'CENTRO MOSQUERA',
   municipality: 'Mosquera',
   network: 'Jóvenes',
   birthDate: { day: '15', month: '04', year: '1995' },

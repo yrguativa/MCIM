@@ -18,16 +18,25 @@ export class AssistantSearchPage {
     this.newSearchButton = page.getByRole('button', { name: 'Nueva búsqueda' });
   }
 
+  async dismissLanguageDialog() {
+    const keepSpanish = this.page.getByRole('button', { name: /keep spanish/i });
+    if (await keepSpanish.isVisible({ timeout: 2000 }).catch(() => false)) {
+      await keepSpanish.click();
+      await this.page.waitForTimeout(300);
+    }
+  }
+
   async goto() {
     await this.page.goto(ROUTES.INITIAL_INFORMATION);
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
+    await this.dismissLanguageDialog();
   }
 
   async search(document: string) {
-    await this.checkbox.check();
+    await this.checkbox.click({ force: true });
     await this.documentInput.fill(document);
     await this.searchButton.click();
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   async isUpdateMode(): Promise<boolean> {

@@ -101,16 +101,14 @@ test.describe('Conditional Logic - Secciones dinámicas', () => {
     await formPage.phoneInput.fill('3001234567');
     await formPage.identificationInput.fill(DOCUMENTS.NEW_CC);
 
-    await formPage.nationalitySelect.click();
-    await formPage.page.getByRole('option', { name: 'Colombiana' }).click();
-    await formPage.genderSelect.click();
-    await formPage.page.getByRole('option', { name: 'Masculino' }).click();
-    await formPage.addressInput.fill('Cra 8 # 15-30');
-    await formPage.neighborhoodInput.fill('Centro');
-    await formPage.municipalitySelect.click();
-    await formPage.page.getByRole('option', { name: 'Mosquera' }).click();
-    await formPage.networkSelect.click();
-    await formPage.page.getByRole('option', { name: 'Jóvenes' }).click();
+    await formPage.fillPersonalInfo({
+      nationality: 'Colombiana',
+      gender: 'Masculino',
+      address: 'Cra 8 # 15-30',
+      neighborhood: 'CENTRO MOSQUERA',
+      municipality: 'Mosquera',
+      network: 'Jóvenes',
+    });
     await formPage.selectBirthDate('15', '4', '1995');
     await formPage.setRadio(/¿Ha asistido a Encuentro\?/i, 'No');
 

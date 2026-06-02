@@ -1,4 +1,5 @@
 import type { Page, Locator } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { LABELS } from '../data/constants';
 
 export class CellInfoCardPage {
@@ -44,18 +45,35 @@ export class CellInfoCardPage {
     await minuteInput.click();
     await minuteInput.fill(data.time.split(':')[1]);
 
-    const addressInput = container.getByRole('textbox').first();
-    await addressInput.fill(data.address);
+    await this.fillCellAddressViaModal(cellIndex);
 
     const yearSelect = container.getByRole('combobox', { name: /año de apertura/i });
     await yearSelect.click();
     await this.page.getByRole('option', { name: data.yearOpened }).click();
   }
 
+  async fillCellAddressViaModal(cellIndex: number, viaType?: string, mainNumber?: string) {
+    const container = this.cellContainer(cellIndex);
+    const standardizerBtn = container.getByRole('button', { name: /estandarizar/i });
+    await standardizerBtn.click();
+
+    const dialog = this.page.getByRole('dialog');
+    await expect(dialog).toBeVisible();
+
+    await dialog.locator('[role="combobox"]').first().click();
+    await this.page.getByRole('option', { name: viaType || 'Calle' }).click();
+
+    await dialog.locator('input:not([type="checkbox"])').first().fill(mainNumber || '8');
+
+    await dialog.getByRole('button', { name: /aplicar/i }).click();
+    await expect(dialog).not.toBeVisible();
+  }
+
   async selectNeighborhood(cellIndex: number, neighborhood: string) {
     const container = this.cellContainer(cellIndex);
     const neighborhoodBtn = container.getByRole('combobox', { name: /barrio/i });
     await neighborhoodBtn.click();
+    await this.page.getByPlaceholder('Buscar barrio...').fill(neighborhood);
     await this.page.getByRole('option', { name: neighborhood }).click();
   }
 
