@@ -1,0 +1,143 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install pnpm
+        run: |
+          corepack enable || true
+          corepack prepare pnpm@9 --activate || npm install -g pnpm@9
+
+      - name: Install dependencies
+        run: pnpm install --filter ./app... --frozen-lockfile
+
+      - name: Run lint
+        id: lint
+        continue-on-error: true
+        working-directory: ./app
+        run: |
+          pnpm lint 2>&1 | tee lint-output.txt
+          echo "lint_exit=${PIPESTATUS[0]}" >> $GITHUB_OUTPUT
+
+      - name: Run unit tests
+        id: unit
+        continue-on-error: true
+        working-directory: ./app
+        run: |
+          pnpm test 2>&1 | tee unit-output.txt
+          echo "unit_exit=${PIPESTATUS[0]}" >> $GITHUB_OUTPUT
+        env:
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL || 'http://localhost:3000' }}
+
+      - name: Install Playwright browsers
+        if: always()
+        working-directory: ./app
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Start backend
+        if: always()
+        run: |
+          pnpm --filter cells-back install --frozen-lockfile
+          pnpm --filter cells-back build 2>&1 || true
+          pnpm --filter cells-back start:dev &
+          sleep 5
+          echo "Backend started"
+
+      - name: Start frontend
+        if: always()
+        working-directory: ./app
+        run: |
+          pnpm dev &
+          npx wait-on http://localhost:5173 --timeout 30000
+        env:
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL || 'http://localhost:3000' }}
+
+      - name: Run E2E tests
+        id: e2e
+        if: always()
+        continue-on-error: true
+        working-directory: ./app
+        run: |
+          pnpm test:e2e 2>&1 | tee e2e-output.txt
+          echo "e2e_exit=${PIPESTATUS[0]}" >> $GITHUB_OUTPUT
+
+      - name: Generate test summary
+        if: always()
+        run: |
+          echo "## 📋 Resumen de Pruebas" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### Lint" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.lint.outputs.lint_exit }}" = "0" ]; then
+            echo "✅ **Pasó**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Falló** - Ver detalles abajo" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            head -50 lint-output.txt >> $GITHUB_STEP_SUMMARY 2>/dev/null || echo "Sin output" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### Unit Tests" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.unit.outputs.unit_exit }}" = "0" ]; then
+            echo "✅ **Pasó**" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ steps.unit.outputs.unit_exit }}" = "" ]; then
+            echo "⏭️ **No ejecutado**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Falló**" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            grep -E "FAIL|PASS|Tests:" unit-output.txt 2>/dev/null | head -20 >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### E2E Tests" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.e2e.outputs.e2e_exit }}" = "0" ]; then
+            echo "✅ **Pasó**" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ steps.e2e.outputs.e2e_exit }}" = "" ]; then
+            echo "⏭️ **No ejecutado**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Falló**" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            grep -E "passed|failed|pending|✓|✗|×" e2e-output.txt 2>/dev/null | head -30 >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "_Las pruebas no bloquean el deploy. Revisa el resumen para más detalles._" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: app/playwright-report/
+          retention-days: 7
+
+      - name: Upload test output logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-output-logs
+          path: |
+            app/lint-output.txt
+            app/unit-output.txt
+            app/e2e-output.txt
+          retention-days: 7
