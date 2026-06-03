@@ -51,6 +51,13 @@ export default defineConfig(() => {
       globals: true,
       setupFiles: ['./src/test/setup.ts'],
       css: false,
+      coverage: {
+        provider: 'v8',
+        reporter: ['text', 'text-summary', 'lcov'],
+        reportsDirectory: './coverage',
+        include: ['src/**/*.{ts,tsx}'],
+        exclude: ['src/test/**', '**/*.test.*', '**/*.spec.*', '**/models/**'],
+      },
     },
   }
 })

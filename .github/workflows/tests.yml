@@ -35,13 +35,32 @@ jobs:
           pnpm lint 2>&1 | tee lint-output.txt
           echo "lint_exit=${PIPESTATUS[0]}" >> $GITHUB_OUTPUT
 
-      - name: Run unit tests
+      - name: Run unit tests with coverage
         id: unit
         continue-on-error: true
         working-directory: ./app
         run: |
-          pnpm test 2>&1 | tee unit-output.txt
+          pnpm test -- --coverage 2>&1 | tee unit-output.txt
           echo "unit_exit=${PIPESTATUS[0]}" >> $GITHUB_OUTPUT
+          grep -E "^\s*(Statements|Branches|Functions|Lines)" unit-output.txt 2>/dev/null | tr -s ' ' > coverage-summary.txt || true
+      - name: Extract coverage percentages
+        id: coverage
+        if: always()
+        working-directory: ./app
+        run: |
+          if [ -f coverage-summary.txt ]; then
+            statements=$(grep "Statements" coverage-summary.txt | awk '{print $2}' | tr -d ' %')
+            branches=$(grep "Branches" coverage-summary.txt | awk '{print $2}' | tr -d ' %')
+            functions=$(grep "Functions" coverage-summary.txt | awk '{print $2}' | tr -d ' %')
+            lines=$(grep "Lines" coverage-summary.txt | awk '{print $2}' | tr -d ' %')
+            echo "statements=${statements:-0}" >> $GITHUB_OUTPUT
+            echo "branches=${branches:-0}" >> $GITHUB_OUTPUT
+            echo "functions=${functions:-0}" >> $GITHUB_OUTPUT
+            echo "lines=${lines:-0}" >> $GITHUB_OUTPUT
+            echo "has_coverage=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_coverage=false" >> $GITHUB_OUTPUT
+          fi
         env:
           VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL || 'http://localhost:3000' }}
 
@@ -105,6 +124,18 @@ jobs:
             grep -E "FAIL|PASS|Tests:" unit-output.txt 2>/dev/null | head -20 >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
           fi
+
+          echo "### 📊 Cobertura de Código" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.coverage.outputs.has_coverage }}" = "true" ]; then
+            echo "| Métrica | Porcentaje |" >> $GITHUB_STEP_SUMMARY
+            echo "|---------|-----------|" >> $GITHUB_STEP_SUMMARY
+            echo "| **Statements** | ${{ steps.coverage.outputs.statements }}% |" >> $GITHUB_STEP_SUMMARY
+            echo "| **Branches** | ${{ steps.coverage.outputs.branches }}% |" >> $GITHUB_STEP_SUMMARY
+            echo "| **Functions** | ${{ steps.coverage.outputs.functions }}% |" >> $GITHUB_STEP_SUMMARY
+            echo "| **Lines** | ${{ steps.coverage.outputs.lines }}% |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⏭️ No disponible (los tests no se ejecutaron o no generaron cobertura)" >> $GITHUB_STEP_SUMMARY
+          fi
           echo "" >> $GITHUB_STEP_SUMMARY
 
           echo "### E2E Tests" >> $GITHUB_STEP_SUMMARY
@@ -131,6 +162,14 @@ jobs:
           path: app/playwright-report/
           retention-days: 7
 
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: app/coverage/
+          retention-days: 7
+
       - name: Upload test output logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -140,4 +179,5 @@ jobs:
             app/lint-output.txt
             app/unit-output.txt
             app/e2e-output.txt
+            app/coverage-summary.txt
           retention-days: 7
