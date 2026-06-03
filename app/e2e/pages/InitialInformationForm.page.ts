@@ -172,7 +172,11 @@ export class InitialInformationFormPage {
 
   async submitStep1() {
     await this.saveAndContinueButton.click();
-    await this.page.waitForLoadState('networkidle');
+    await Promise.race([
+      this.page.getByText('¡Información guardada!').waitFor({ state: 'visible', timeout: 10000 }).catch(() => {}),
+      this.step2Indicator.waitFor({ state: 'visible', timeout: 10000 }).catch(() => {}),
+      this.page.waitForResponse(resp => resp.url().includes('/graphql') && resp.status() === 200, { timeout: 10000 }),
+    ]);
   }
 
   async isStep2Visible(): Promise<boolean> {

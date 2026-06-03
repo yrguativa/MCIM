@@ -60,6 +60,7 @@ const PersonalInfoCard: React.FC<PersonalInfoCardProps> = ({ childrenList, onChi
   const hasChildren = useWatch({ control, name: "hasChildren" });
   const maritalStatus = useWatch({ control, name: "maritalStatus" });
   const spouseAttendsChurch = useWatch({ control, name: "spouseAttendsChurch" });
+  const ministryId = useWatch({ control, name: "ministryId" });
   const dateLocale = i18n.language === "es" ? es : undefined;
   const [spouseSearchOpen, setSpouseSearchOpen] = useState(false);
   const [spouseSearchQuery, setSpouseSearchQuery] = useState("");
@@ -368,7 +369,7 @@ const PersonalInfoCard: React.FC<PersonalInfoCardProps> = ({ childrenList, onChi
 
         {hasChildren === "YES" && (
           <div className="md:col-span-2 mt-2">
-            <ChildrenSection items={childrenList} onChange={onChildrenChange} />
+            <ChildrenSection items={childrenList} onChange={onChildrenChange} ministryId={ministryId} />
           </div>
         )}
 

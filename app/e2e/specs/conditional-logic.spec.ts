@@ -19,21 +19,35 @@ test.describe('Conditional Logic - Secciones dinámicas', () => {
     await expect(childrenSection).not.toBeVisible();
   });
 
-  test('Modal de agregar hijo - muestra buscador cuando asiste a la iglesia', async ({ formPage }) => {
+  test('Modal de agregar hijo - muestra tabs Buscar/Crear cuando asiste a célula', async ({ formPage }) => {
     await formPage.setRadio(/¿Tiene hijos\?/i, 'Sí');
     await formPage.page.getByRole('button', { name: /Agregar hijo/i }).click();
 
     await expect(formPage.page.getByRole('dialog').or(formPage.page.getByRole('heading', { name: /agregar/i })).first()).toBeVisible();
 
-    await formPage.setRadio(/¿Asiste a la iglesia\?/i, 'Sí');
-    await expect(formPage.page.getByPlaceholder(/buscar/i).first()).toBeVisible();
+    await formPage.setRadio(/¿asiste a una célula/i, 'Sí');
+    await expect(formPage.page.getByRole('tab', { name: /Buscar/i })).toBeVisible();
+    await expect(formPage.page.getByRole('tab', { name: /Crear/i })).toBeVisible();
+  });
+
+  test('Modal de agregar hijo - pestaña Crear tiene campos de identificación', async ({ formPage }) => {
+    await formPage.setRadio(/¿Tiene hijos\?/i, 'Sí');
+    await formPage.page.getByRole('button', { name: /Agregar hijo/i }).click();
+
+    await formPage.setRadio(/¿asiste a una célula/i, 'Sí');
+    await formPage.page.getByRole('tab', { name: /Crear/i }).click();
+
+    await expect(formPage.page.getByLabel(/Número de Identificación/i)).toBeVisible();
+    await expect(formPage.page.getByLabel(/^Nombres/i).first()).toBeVisible();
+    await expect(formPage.page.getByLabel(/Apellidos/i)).toBeVisible();
+    await expect(formPage.page.getByRole('button', { name: /Guardar y Agregar/i })).toBeVisible();
   });
 
   test('Modal de agregar hijo - campos nombre/edad cuando no asiste', async ({ formPage }) => {
     await formPage.setRadio(/¿Tiene hijos\?/i, 'Sí');
     await formPage.page.getByRole('button', { name: /Agregar hijo/i }).click();
 
-    await formPage.setRadio(/¿Asiste a la iglesia\?/i, 'No');
+    await formPage.setRadio(/¿asiste a una célula/i, 'No');
     await expect(formPage.page.getByLabel(/^Nombre/i).first()).toBeVisible();
     await expect(formPage.page.getByLabel(/Edad/i).first()).toBeVisible();
   });

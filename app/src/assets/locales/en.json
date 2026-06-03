@@ -910,12 +910,22 @@
     "namePlaceholder": "Child's name",
     "age": "Age",
     "agePlaceholder": "Age",
-    "attendsChurch": "Attends church?",
+    "attendsChurch": "Does your child attend a church cell?",
     "attendsChurchLabel": "Attends",
+    "searchTab": "Search disciple",
+    "createTab": "Create disciple",
     "selectChild": "Select child disciple",
     "selectChildPlaceholder": "Search and select disciple...",
     "searchDisciple": "Search disciple...",
     "noResults": "No disciples found",
+    "identificationType": "Identification Type",
+    "identification": "Identification Number",
+    "identificationPlaceholder": "1234567890",
+    "names": "Names",
+    "namesPlaceholder": "Child's names",
+    "lastNames": "Last Names",
+    "lastNamesPlaceholder": "Child's last names",
+    "saveAndAdd": "Save and Add",
     "empty": "No children registered"
   }
 }

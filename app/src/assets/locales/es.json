@@ -922,12 +922,22 @@
         "namePlaceholder": "Nombre del hijo",
         "age": "Edad",
         "agePlaceholder": "Edad",
-        "attendsChurch": "¿Asiste a la iglesia?",
+        "attendsChurch": "¿Su hijo asiste a una célula de la iglesia?",
         "attendsChurchLabel": "Asiste",
+        "searchTab": "Buscar discípulo",
+        "createTab": "Crear discípulo",
         "selectChild": "Seleccionar hijo discípulo",
         "selectChildPlaceholder": "Buscar y seleccionar discípulo...",
         "searchDisciple": "Buscar discípulo...",
         "noResults": "No se encontraron discípulos",
+        "identificationType": "Tipo de Identificación",
+        "identification": "Número de Identificación",
+        "identificationPlaceholder": "1234567890",
+        "names": "Nombres",
+        "namesPlaceholder": "Nombres del hijo",
+        "lastNames": "Apellidos",
+        "lastNamesPlaceholder": "Apellidos del hijo",
+        "saveAndAdd": "Guardar y Agregar",
         "empty": "No hay hijos registrados"
     }
 }
