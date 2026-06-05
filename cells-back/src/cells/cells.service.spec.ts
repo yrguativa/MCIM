@@ -67,10 +67,11 @@ describe('CellsService', () => {
       const createCellInput = {
         leader: 'leader-1',
         network: 1,
+        cellType: 'presencial',
         host: 'host-1',
         timoteo: 'timoteo-1',
         address: 'Calle 123',
-        neighborhood: 1,
+        neighborhood: 'neighborhood-1',
         day: 'Lunes',
         time: '18:00',
         createdUser: 'user-1',
@@ -136,6 +137,7 @@ describe('CellsService', () => {
       const recordInput = {
         topic: 'Test Topic',
         date: new Date(),
+        mode: 'presencial',
         createdUser: 'user-1',
         assistants: [{ name: 'Juan', disciple: 'disciple-1' }],
       };

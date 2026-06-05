@@ -11,24 +11,41 @@ import * as bcrypt from 'bcrypt';
 describe('AuthService', () => {
   let service: AuthService;
 
-  const mockUserModel = {
-    findOne: jest.fn(),
-    findByIdAndUpdate: jest.fn(),
-    findById: jest.fn(),
-    updateOne: jest.fn(),
-  };
+  const mockUserSave = jest.fn().mockResolvedValue({});
+  const mockUserModel: any = jest.fn().mockImplementation(() => ({
+    save: mockUserSave,
+    toObject: () => ({
+      _id: 'userId',
+      email: 'new@example.com',
+      identification: '12345678',
+    }),
+  }));
+  mockUserModel.findOne = jest.fn();
+  mockUserModel.findByIdAndUpdate = jest.fn();
+  mockUserModel.findById = jest.fn();
+  mockUserModel.updateOne = jest.fn();
 
-  const mockDiscipleModel = {
-    findOne: jest.fn(),
-    save: jest.fn(),
-  };
+  const mockDiscipleSave = jest.fn().mockResolvedValue({ _id: 'discipleId' });
+  const mockDiscipleModel: any = jest.fn().mockImplementation(() => ({
+    _id: 'discipleId',
+    identification: '12345678',
+    ministryId: 'ministry1',
+    phone: '3001234567',
+    name: '',
+    lastName: '',
+    createdUser: '',
+    createdDate: new Date(),
+    save: mockDiscipleSave,
+  }));
+  mockDiscipleModel.findOne = jest.fn();
 
-  const mockPasswordResetModel = {
-    updateMany: jest.fn(),
-    findOne: jest.fn(),
-    save: jest.fn(),
-    updateOne: jest.fn(),
-  };
+  const mockPasswordResetSave = jest.fn().mockResolvedValue({});
+  const mockPasswordResetModel: any = jest.fn().mockImplementation(() => ({
+    save: mockPasswordResetSave,
+  }));
+  mockPasswordResetModel.updateMany = jest.fn();
+  mockPasswordResetModel.findOne = jest.fn();
+  mockPasswordResetModel.updateOne = jest.fn();
 
   const mockJwtService = {
     sign: jest.fn(),
@@ -102,12 +119,12 @@ describe('AuthService', () => {
     it('should generate and save reset code for existing user', async () => {
       mockUserModel.findOne.mockResolvedValue({ email: 'test@example.com' });
       mockPasswordResetModel.updateMany.mockResolvedValue({});
-      mockPasswordResetModel.save.mockResolvedValue({});
+      mockPasswordResetSave.mockResolvedValue({});
 
       const result = await service.requestPasswordReset('test@example.com');
 
       expect(result).toBe(true);
-      expect(mockPasswordResetModel.save).toHaveBeenCalled();
+      expect(mockPasswordResetSave).toHaveBeenCalled();
     });
   });
 
@@ -176,7 +193,7 @@ describe('AuthService', () => {
     it('should create user with disciple', async () => {
       mockUserModel.findOne.mockResolvedValue(null);
       mockDiscipleModel.findOne.mockResolvedValue(null);
-      mockDiscipleModel.save.mockResolvedValue({ _id: 'discipleId' });
+      mockDiscipleSave.mockResolvedValue({ _id: 'discipleId' });
       mockUserModel.findOne.mockResolvedValueOnce(null);
       jest.spyOn(bcrypt, 'hash').mockResolvedValue('hashedPassword');
       mockJwtService.sign.mockReturnValue('jwtToken');
@@ -215,11 +232,12 @@ describe('AuthService', () => {
   describe('completeSocialRegistration', () => {
     it('should create disciple and link to user', async () => {
       mockDiscipleModel.findOne.mockResolvedValue(null);
-      mockDiscipleModel.save.mockResolvedValue({ _id: 'newDiscipleId' });
+      mockDiscipleSave.mockResolvedValue({ _id: 'newDiscipleId' });
       mockUserModel.findByIdAndUpdate.mockResolvedValue({
         _id: 'userId',
+        discipleId: 'newDiscipleId',
         email: 'test@example.com',
-        toObject: () => ({ _id: 'userId', email: 'test@example.com' }),
+        toObject: () => ({ _id: 'userId', discipleId: 'newDiscipleId', email: 'test@example.com' }),
       });
       mockJwtService.sign.mockReturnValue('jwtToken');
 

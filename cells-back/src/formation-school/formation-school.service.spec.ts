@@ -5,9 +5,12 @@ import { Cycle } from './schemas/cycle.schema';
 import { Level } from './schemas/level.schema';
 import { Classroom } from './schemas/classroom.schema';
 import { Schedule } from './schemas/schedule.schema';
-import { CourseClass } from './schemas/course-class.schema';
+import { Course } from './schemas/course.schema';
+import { Student } from './schemas/student.schema';
 import { StudentEnrollment } from './schemas/student-enrollment.schema';
+import { TeacherAssignment } from './schemas/teacher-assignment.schema';
 import { Attendance } from './schemas/attendance.schema';
+import { StudentCourseHistory } from './schemas/student-course-history.schema';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 describe('FormationSchoolService', () => {
@@ -16,11 +19,11 @@ describe('FormationSchoolService', () => {
   let levelModel: any;
   let classroomModel: any;
   let scheduleModel: any;
-  let courseClassModel: any;
+  let courseModel: any;
   let enrollmentModel: any;
   let attendanceModel: any;
 
-  const mockCycle = {
+  const mockCycleData = {
     _id: 'cycle-1',
     name: 'Ciclo 2026-1',
     startDate: new Date('2026-01-01'),
@@ -29,43 +32,49 @@ describe('FormationSchoolService', () => {
     active: true,
     createdUser: 'user-1',
     createdDate: new Date(),
-    save: jest.fn().mockResolvedValue(true),
   };
 
-  const mockClassroom = {
+  const mockClassroomData = {
     _id: 'classroom-1',
     name: 'Salón 1',
     capacity: 20,
     location: 'Edificio Principal',
     createdUser: 'user-1',
     createdDate: new Date(),
-    save: jest.fn().mockResolvedValue(true),
   };
 
-  const mockSchedule = {
+  const mockScheduleData = {
     _id: 'schedule-1',
     dayOfWeek: 1,
     startTime: '08:00',
     endTime: '10:00',
+    levelId: 'level-1',
     createdUser: 'user-1',
     createdDate: new Date(),
-    save: jest.fn().mockResolvedValue(true),
+  };
+
+  const mockEntityFields = {
+    _id: 'new-id',
+    toString: () => 'new-id',
   };
 
   beforeEach(async () => {
-    const mockCycleModel = {
-      find: jest.fn().mockReturnValue({
-        sort: jest.fn().mockReturnValue({
-          exec: jest.fn().mockResolvedValue([mockCycle]),
-        }),
+    const mockCycleSave = jest.fn().mockResolvedValue(mockCycleData);
+    const mockCycleModel: any = jest.fn().mockImplementation(() => ({
+      ...mockCycleData,
+      save: mockCycleSave,
+    }));
+    mockCycleModel.find = jest.fn().mockReturnValue({
+      sort: jest.fn().mockReturnValue({
+        exec: jest.fn().mockResolvedValue([mockCycleData]),
       }),
-      findById: jest.fn().mockReturnValue({
-        exec: jest.fn().mockResolvedValue(mockCycle),
-      }),
-      findOne: jest.fn().mockReturnValue({
-        exec: jest.fn().mockResolvedValue(null),
-      }),
-    };
+    });
+    mockCycleModel.findById = jest.fn().mockReturnValue({
+      exec: jest.fn().mockResolvedValue(mockCycleData),
+    });
+    mockCycleModel.findOne = jest.fn().mockReturnValue({
+      exec: jest.fn().mockResolvedValue(null),
+    });
 
     const mockLevelModel = {
       find: jest.fn().mockReturnValue({
@@ -75,62 +84,112 @@ describe('FormationSchoolService', () => {
       }),
     };
 
-    const mockClassroomModel = {
-      find: jest.fn().mockReturnValue({
-        exec: jest.fn().mockResolvedValue([mockClassroom]),
-      }),
-    };
+    const mockClassroomSave = jest.fn().mockResolvedValue(mockClassroomData);
+    const mockClassroomModel: any = jest.fn().mockImplementation(() => ({
+      ...mockClassroomData,
+      save: mockClassroomSave,
+    }));
+    mockClassroomModel.find = jest.fn().mockReturnValue({
+      exec: jest.fn().mockResolvedValue([mockClassroomData]),
+    });
 
-    const mockScheduleModel = {
-      find: jest.fn().mockReturnValue({
-        exec: jest.fn().mockResolvedValue([mockSchedule]),
-      }),
-    };
+    const mockScheduleSave = jest.fn().mockResolvedValue(mockScheduleData);
+    const mockScheduleModel: any = jest.fn().mockImplementation(() => ({
+      ...mockScheduleData,
+      save: mockScheduleSave,
+    }));
+    mockScheduleModel.find = jest.fn().mockReturnValue({
+      exec: jest.fn().mockResolvedValue([mockScheduleData]),
+    });
 
-    const mockCourseClassModel = {
-      find: jest.fn().mockReturnValue({
-        populate: jest.fn().mockReturnValue({
-          exec: jest.fn().mockResolvedValue([]),
-        }),
+    const mockCourseSave = jest.fn().mockResolvedValue({
+      _id: 'course-1',
+      levelId: 'level-1',
+      teacherId: 'teacher-1',
+      classroomId: 'classroom-1',
+      scheduleId: 'schedule-1',
+      cycleId: 'cycle-1',
+      createdUser: 'user-1',
+      createdDate: new Date(),
+    });
+    const mockCourseModel: any = jest.fn().mockImplementation(() => ({
+      save: mockCourseSave,
+    }));
+    mockCourseModel.find = jest.fn().mockReturnValue({
+      populate: jest.fn().mockReturnValue({
+        exec: jest.fn().mockResolvedValue([]),
       }),
-      findOne: jest.fn().mockReturnValue({
-        exec: jest.fn().mockResolvedValue(null),
+    });
+    mockCourseModel.findOne = jest.fn().mockReturnValue({
+      exec: jest.fn().mockResolvedValue(null),
+    });
+    mockCourseModel.findById = jest.fn().mockReturnValue({
+      exec: jest.fn().mockResolvedValue(null),
+    });
+    mockCourseModel.findByIdAndUpdate = jest.fn().mockReturnValue({
+      exec: jest.fn().mockResolvedValue({
+        _id: 'course-1',
+        qrCode: 'data:image/png;base64,...',
+        qrExpiration: new Date(),
+        levelId: 'level-1',
+        teacherId: 'teacher-1',
+        classroomId: 'classroom-1',
+        scheduleId: 'schedule-1',
+        cycleId: 'cycle-1',
+        createdUser: 'user-1',
+        createdDate: new Date(),
       }),
-      findById: jest.fn().mockReturnValue({
-        exec: jest.fn().mockResolvedValue(null),
-      }),
-      findByIdAndUpdate: jest.fn().mockReturnValue({
-        exec: jest.fn().mockResolvedValue({
-          qrCode: 'data:image/png;base64,...',
-          qrExpiration: new Date(),
-        }),
-      }),
-    };
+    });
 
-    const mockEnrollmentModel = {
-      find: jest.fn().mockReturnValue({
-        populate: jest.fn().mockReturnValue({
-          exec: jest.fn().mockResolvedValue([]),
-        }),
+    const mockEnrollmentSave = jest.fn().mockResolvedValue({
+      ...mockEntityFields,
+      studentId: 'student-1',
+      courseId: 'course-1',
+      enrollmentDate: new Date(),
+      status: 'active',
+      createdUser: 'user-1',
+      createdDate: new Date(),
+    });
+    const mockEnrollmentModel: any = jest.fn().mockImplementation(() => ({
+      save: mockEnrollmentSave,
+    }));
+    mockEnrollmentModel.find = jest.fn().mockReturnValue({
+      populate: jest.fn().mockReturnValue({
+        exec: jest.fn().mockResolvedValue([]),
       }),
-      findById: jest.fn().mockReturnValue({
-        exec: jest.fn().mockResolvedValue(null),
+    });
+    mockEnrollmentModel.findById = jest.fn().mockReturnValue({
+      exec: jest.fn().mockResolvedValue(null),
+    });
+    mockEnrollmentModel.findByIdAndUpdate = jest.fn().mockReturnValue({
+      exec: jest.fn().mockResolvedValue({
+        ...mockEntityFields,
+        studentId: 'student-1',
+        courseId: 'course-1',
+        finalGrade: 62.5,
       }),
-      findByIdAndUpdate: jest.fn().mockReturnValue({
-        exec: jest.fn().mockResolvedValue({}),
-      }),
-    };
+    });
 
-    const mockAttendanceModel = {
-      find: jest.fn().mockReturnValue({
-        populate: jest.fn().mockReturnValue({
-          exec: jest.fn().mockResolvedValue([]),
-        }),
+    const mockAttendanceSave = jest.fn().mockResolvedValue({
+      ...mockEntityFields,
+      studentEnrollmentId: 'enrollment-1',
+      courseId: 'course-1',
+      attended: true,
+      attendanceDate: new Date(),
+      createdUser: 'user-1',
+      createdDate: new Date(),
+    });
+    const mockAttendanceModel: any = jest.fn().mockImplementation(() => ({
+      save: mockAttendanceSave,
+    }));
+    mockAttendanceModel.find = jest.fn().mockReturnValue({
+      populate: jest.fn().mockReturnValue({
+        exec: jest.fn().mockResolvedValue([]),
       }),
-      countDocuments: jest.fn().mockReturnValue({
-        exec: jest.fn().mockResolvedValue(5),
-      }),
-    };
+    });
+    mockAttendanceModel.countDocuments = jest.fn().mockReturnValue({
+      exec: jest.fn().mockResolvedValue(5),
+    });
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -143,8 +202,8 @@ describe('FormationSchoolService', () => {
         },
         { provide: getModelToken(Schedule.name), useValue: mockScheduleModel },
         {
-          provide: getModelToken(CourseClass.name),
-          useValue: mockCourseClassModel,
+          provide: getModelToken(Course.name),
+          useValue: mockCourseModel,
         },
         {
           provide: getModelToken(StudentEnrollment.name),
@@ -154,6 +213,18 @@ describe('FormationSchoolService', () => {
           provide: getModelToken(Attendance.name),
           useValue: mockAttendanceModel,
         },
+        {
+          provide: getModelToken(Student.name),
+          useValue: { find: jest.fn().mockReturnValue({ exec: jest.fn().mockResolvedValue([]) }) },
+        },
+        {
+          provide: getModelToken(TeacherAssignment.name),
+          useValue: { find: jest.fn().mockReturnValue({ exec: jest.fn().mockResolvedValue([]) }) },
+        },
+        {
+          provide: getModelToken(StudentCourseHistory.name),
+          useValue: { find: jest.fn().mockReturnValue({ exec: jest.fn().mockResolvedValue([]) }) },
+        },
       ],
     }).compile();
 
@@ -161,7 +232,7 @@ describe('FormationSchoolService', () => {
     cycleModel = module.get(getModelToken(Cycle.name));
     classroomModel = module.get(getModelToken(Classroom.name));
     scheduleModel = module.get(getModelToken(Schedule.name));
-    courseClassModel = module.get(getModelToken(CourseClass.name));
+    courseModel = module.get(getModelToken(Course.name));
     enrollmentModel = module.get(getModelToken(StudentEnrollment.name));
     attendanceModel = module.get(getModelToken(Attendance.name));
   });
@@ -231,6 +302,7 @@ describe('FormationSchoolService', () => {
         dayOfWeek: 2,
         startTime: '10:00',
         endTime: '12:00',
+        levelId: 'level-1',
         createdUser: 'user-1',
       };
 
@@ -246,7 +318,7 @@ describe('FormationSchoolService', () => {
 
   describe('Course Classes', () => {
     it('should check schedule conflict - no conflict', async () => {
-      jest.spyOn(courseClassModel, 'findOne').mockReturnValue({
+      jest.spyOn(courseModel, 'findOne').mockReturnValue({
         exec: jest.fn().mockResolvedValue(null),
       });
 
@@ -258,7 +330,7 @@ describe('FormationSchoolService', () => {
     });
 
     it('should check schedule conflict - conflict exists', async () => {
-      jest.spyOn(courseClassModel, 'findOne').mockReturnValue({
+      jest.spyOn(courseModel, 'findOne').mockReturnValue({
         exec: jest.fn().mockResolvedValue({ _id: 'existing-class' }),
       });
 
@@ -270,11 +342,11 @@ describe('FormationSchoolService', () => {
     });
 
     it('should throw BadRequestException on schedule conflict', async () => {
-      jest.spyOn(courseClassModel, 'findOne').mockReturnValue({
+      jest.spyOn(courseModel, 'findOne').mockReturnValue({
         exec: jest.fn().mockResolvedValue({ _id: 'existing-class' }),
       });
 
-      const createCourseClassInput = {
+      const createCourseInput = {
         levelId: 'level-1',
         teacherId: 'teacher-1',
         classroomId: 'classroom-1',
@@ -284,7 +356,7 @@ describe('FormationSchoolService', () => {
       };
 
       await expect(
-        service.createCourseClass(createCourseClassInput),
+        service.createCourse(createCourseInput),
       ).rejects.toThrow(BadRequestException);
     });
   });
