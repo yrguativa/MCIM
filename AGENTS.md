@@ -272,6 +272,9 @@ const data = {
 
 ### Comandos para depuración
 ```bash
+# Ambos servicios (frontend + backend)
+pnpm dev                       # Abre el navegador automáticamente (puertos 5173 y 3000)
+
 # Frontend
 pnpm --filter app dev          # Servidor (puerto 5173)
 
