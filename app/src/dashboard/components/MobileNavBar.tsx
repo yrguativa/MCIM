@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Home, Users, Package, Package2, LineChart } from "lucide-react";
 
 const links = [
-  { to: "/", icon: Home, labelKey: "menu.dashboard" },
+  { to: "/", icon: Home, labelKey: "menu.dashboardShort" },
   { to: "/disciples", icon: Users, labelKey: "menu.disciples" },
   { to: "/cells", icon: Package, labelKey: "menu.cells" },
   { to: "/cells/reports", icon: LineChart, labelKey: "menu.cellReports" },

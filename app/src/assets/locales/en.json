@@ -18,6 +18,7 @@
   },
   "menu": {
     "dashboard": "Dashboard",
+    "dashboardShort": "Dashboard",
     "cells": "Cells",
     "cellReports": "Cell Reports",
     "disciples": "Disciples",

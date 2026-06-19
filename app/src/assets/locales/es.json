@@ -17,7 +17,8 @@
         "noData": "No hay datos disponibles"
     },
     "menu": {
-        "dashboard": "Panel",
+        "dashboard": "Panel principal",
+        "dashboardShort": "Panel",
         "cells": "Células",
         "cellReports": "Reporte Células",
         "disciples": "Discípulos",
