@@ -11,65 +11,40 @@ const links = [
   { to: "/ministries", icon: Package2, labelKey: "menu.ministries" },
 ];
 
-const MobileNavBar = React.forwardRef<HTMLDivElement>((_, ref) => {
+const MobileNavBar: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <div
-      ref={ref}
-      data-config={JSON.stringify({
-        blurAmount: 0.4,
-        refraction: 0.25,
-        chromAberration: 0.02,
-        edgeHighlight: 0.08,
-        specular: 0.12,
-        fresnel: 0.7,
-        distortion: 0.01,
-        cornerRadius: 32,
-        zRadius: 22,
-        opacity: 0.95,
-        saturation: -0.15,
-        tintStrength: 0.15,
-        brightness: 0.03,
-        shadowOpacity: 0.35,
-        shadowSpread: 20,
-        shadowOffsetY: 4,
-        floating: false,
-        button: false,
-        bevelMode: 0,
-      })}
-      className="fixed bottom-6 left-4 right-4 z-50 mx-auto max-w-[500px] rounded-[32px] md:hidden overflow-hidden bg-background/40"
-    >
-      <div className="relative z-10 flex items-center justify-around h-16 px-2 pb-1">
-        {links.map(({ to, icon: Icon, labelKey }) => (
-          <NavLink
-            key={to}
-            to={to}
-            className={({ isActive }) =>
-              `flex flex-col items-center gap-0.5 min-w-0 px-2 py-1 rounded-xl transition-colors ${
-                isActive
-                  ? "text-primary"
-                  : "text-muted-foreground/60 hover:text-muted-foreground"
-              }`
-            }
-          >
-            {({ isActive }) => (
-              <>
-                <div className={`rounded-full p-1.5 transition-colors ${isActive ? "bg-primary/15" : ""}`}>
+    <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden">
+      <div className="mx-5 mb-6">
+        <div className="flex items-center justify-around h-16 rounded-[28px] border border-border/30 bg-background/10 px-3 shadow-lg backdrop-blur-[20px] supports-[backdrop-filter]:bg-background/5">
+          {links.map(({ to, icon: Icon, labelKey }) => (
+            <NavLink
+              key={to}
+              to={to}
+              className={({ isActive }) =>
+                `relative flex flex-col items-center justify-center gap-0.5 rounded-xl px-3 py-1.5 text-[10px] font-medium transition-all min-w-0 flex-1 ${
+                  isActive
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-foreground"
+                }`
+              }
+            >
+              {({ isActive }) => (
+                <>
+                  {isActive && (
+                    <span className="absolute -top-1.5 left-1/2 h-1 w-6 -translate-x-1/2 rounded-full bg-primary" />
+                  )}
                   <Icon className="h-5 w-5" />
-                </div>
-                <span className="text-[10px] font-medium leading-none truncate max-w-full">
-                  {t(labelKey)}
-                </span>
-              </>
-            )}
-          </NavLink>
-        ))}
+                  <span className="truncate max-w-full">{t(labelKey)}</span>
+                </>
+              )}
+            </NavLink>
+          ))}
+        </div>
       </div>
-    </div>
+    </nav>
   );
-});
-
-MobileNavBar.displayName = "MobileNavBar";
+};
 
 export default MobileNavBar;
