@@ -1,12 +1,30 @@
-import ftplib, os
+import ftplib, os, socket
 from pathlib import Path
 
 host = os.environ["FTP_HOST"]
 user = os.environ["FTP_USER"]
 passwd = os.environ["FTP_PASS"]
+port = int(os.environ.get("FTP_PORT", "21"))
+timeout = 15
 
-print(f"Conectando a {host}...")
-ftp = ftplib.FTP(host, user, passwd, timeout=30)
+print(f"Conectando a {host}:{port}...")
+
+try:
+    ftp = ftplib.FTP()
+    ftp.connect(host, port, timeout=timeout)
+    ftp.login(user, passwd)
+except (socket.error, OSError, ftplib.all_errors) as e:
+    print(f"  Error con FTP plano, intentando FTPS (TLS)...")
+    try:
+        ftp = ftplib.FTP_TLS()
+        ftp.connect(host, port, timeout=timeout)
+        ftp.login(user, passwd)
+        ftp.prot_p()
+    except Exception as e2:
+        print(f"  FTP: {e}")
+        print(f"  FTPS: {e2}")
+        exit(1)
+
 print("Autenticacion exitosa. Subiendo archivos...")
 
 local_root = Path("./app/dist")
