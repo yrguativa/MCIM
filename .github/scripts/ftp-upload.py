@@ -1,10 +1,22 @@
 import ftplib, os
 from pathlib import Path
 
-host = os.environ["FTP_HOST"]
-user = os.environ["FTP_USER"]
-passwd = os.environ["FTP_PASS"]
+host = os.environ.get("FTP_HOST", "")
+user = os.environ.get("FTP_USER", "")
+passwd = os.environ.get("FTP_PASS", "")
 port = 21
+
+host = host.strip()
+if not host:
+    print("ERROR: FTP_HOST esta vacio en GitHub Secrets")
+    print("Ve a: GitHub > Settings > Secrets and variables > Actions")
+    exit(1)
+if not user:
+    print("ERROR: FTP_USERNAME no esta configurado")
+    exit(1)
+if not passwd:
+    print("ERROR: FTP_PASSWORD no esta configurado")
+    exit(1)
 if os.environ.get("FTP_PORT"):
     port = int(os.environ["FTP_PORT"])
 timeout = 15
