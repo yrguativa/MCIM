@@ -45,7 +45,7 @@ jobs:
           host: ${{ secrets.FTP_HOST }}
           user: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          remoteDir: ${{ secrets.FTP_TARGET_DIR }}
+          remoteDir: "./"
           localDir: ./app/dist
           options: --delete --only-newer --ascii
 
