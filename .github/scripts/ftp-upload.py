@@ -1,4 +1,4 @@
-import ftplib, os, socket
+import ftplib, os
 from pathlib import Path
 
 host = os.environ["FTP_HOST"]
@@ -15,8 +15,9 @@ try:
     ftp = ftplib.FTP()
     ftp.connect(host, port, timeout=timeout)
     ftp.login(user, passwd)
-except (socket.error, OSError, ftplib.all_errors) as e:
-    print(f"  Error con FTP plano, intentando FTPS (TLS)...")
+except Exception as e:
+    print(f"  Error: {e}")
+    print("  Intentando FTPS (TLS)...")
     try:
         ftp = ftplib.FTP_TLS()
         ftp.connect(host, port, timeout=timeout)
