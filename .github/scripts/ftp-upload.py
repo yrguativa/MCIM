@@ -4,7 +4,9 @@ from pathlib import Path
 host = os.environ["FTP_HOST"]
 user = os.environ["FTP_USER"]
 passwd = os.environ["FTP_PASS"]
-port = int(os.environ.get("FTP_PORT", "21"))
+port = 21
+if os.environ.get("FTP_PORT"):
+    port = int(os.environ["FTP_PORT"])
 timeout = 15
 
 print(f"Conectando a {host}:{port}...")
