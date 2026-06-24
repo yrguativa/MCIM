@@ -40,14 +40,12 @@ jobs:
         run: pnpm build
 
       - name: Publish to FTP
-        uses: lukewiwa/actions-ftp@v1.0.2
-        with:
-          host: ${{ secrets.FTP_HOST }}
-          user: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          remoteDir: "./"
-          localDir: ./app/dist
-          options: --delete --only-newer --ascii
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USER: ${{ secrets.FTP_USERNAME }}
+          FTP_PASS: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          lftp -c "open -u $FTP_USER,$FTP_PASS $FTP_HOST; mirror -R -e -v ./app/dist ./"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
