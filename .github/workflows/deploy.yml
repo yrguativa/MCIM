@@ -49,7 +49,8 @@ jobs:
           set +H
           echo "machine $FTP_HOST login $FTP_USER password $FTP_PASS" > ~/.netrc
           chmod 600 ~/.netrc
-          lftp "$FTP_HOST" -e "mirror -R -e -v ./app/dist ./; quit"
+          echo "Conectando a $FTP_HOST..."
+          lftp -c "set net:timeout 30; set net:max-retries 2; open $FTP_HOST; mirror -R -e -v ./app/dist ./"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
