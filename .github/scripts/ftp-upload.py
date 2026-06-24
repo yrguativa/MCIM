@@ -43,7 +43,10 @@ except Exception as e:
 print("Autenticacion exitosa. Subiendo archivos...")
 
 local_root = Path("./app/dist")
-remote_root = "/"
+remote_root = os.environ.get("FTP_REMOTE_DIR", "/").strip()
+if not remote_root.startswith("/"):
+    remote_root = "/" + remote_root
+print(f"Directorio remoto: {remote_root}")
 
 def upload_dir(ftp, local_path, remote_path):
     ftp.cwd(remote_path)
