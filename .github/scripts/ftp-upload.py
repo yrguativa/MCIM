@@ -59,6 +59,14 @@ def upload_dir(ftp, local_path, remote_path):
             upload_dir(ftp, entry, entry.name)
             ftp.cwd("..")
         else:
+            try:
+                ftp.delete(entry.name)
+            except:
+                pass
+            try:
+                ftp.delete(f".in.{entry.name}")
+            except:
+                pass
             with open(entry, "rb") as f:
                 ftp.storbinary(f"STOR {entry.name}", f)
                 print(f"  Subido: {entry.relative_to(local_root)}")
