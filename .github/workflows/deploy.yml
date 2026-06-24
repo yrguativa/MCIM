@@ -45,12 +45,40 @@ jobs:
           FTP_USER: ${{ secrets.FTP_USERNAME }}
           FTP_PASS: ${{ secrets.FTP_PASSWORD }}
         run: |
-          sudo apt-get update -qq && sudo apt-get install -y -qq lftp
-          set +H
-          echo "machine $FTP_HOST login $FTP_USER password $FTP_PASS" > ~/.netrc
-          chmod 600 ~/.netrc
-          echo "Conectando a $FTP_HOST..."
-          lftp -c "set net:timeout 30; set net:max-retries 2; open $FTP_HOST; mirror -R -e -v ./app/dist ./"
+          python3 -c "
+import ftplib, os, sys
+from pathlib import Path
+
+host = os.environ['FTP_HOST']
+user = os.environ['FTP_USER']
+passwd = os.environ['FTP_PASS']
+
+print(f'Conectando a {host}...')
+ftp = ftplib.FTP(host, user, passwd, timeout=30)
+print('Autenticacion exitosa. Subiendo archivos...')
+
+local_root = Path('./app/dist')
+remote_root = '/'
+
+def upload_dir(ftp, local_path, remote_path):
+    ftp.cwd(remote_path)
+    for entry in local_path.iterdir():
+        if entry.is_dir():
+            try:
+                ftp.mkd(entry.name)
+            except:
+                pass
+            upload_dir(ftp, entry, entry.name)
+            ftp.cwd('..')
+        else:
+            with open(entry, 'rb') as f:
+                ftp.storbinary(f'STOR {entry.name}', f)
+                print(f'  Subido: {entry.relative_to(local_root)}')
+
+upload_dir(ftp, local_root, remote_root)
+ftp.quit()
+print('Publicacion FTP completada.')
+"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
