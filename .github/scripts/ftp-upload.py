@@ -42,7 +42,7 @@ except Exception as e:
 
 print("Autenticacion exitosa. Subiendo archivos...")
 
-local_root = Path("./app/dist")
+local_root = Path(os.environ.get("FTP_LOCAL_DIR", "./app/dist"))
 remote_root = os.environ.get("FTP_REMOTE_DIR", "/").strip()
 if not remote_root.startswith("/"):
     remote_root = "/" + remote_root
@@ -63,6 +63,10 @@ def upload_dir(ftp, local_path, remote_path):
                 ftp.storbinary(f"STOR {entry.name}", f)
                 print(f"  Subido: {entry.relative_to(local_root)}")
 
+try:
+    ftp.mkd(remote_root)
+except:
+    pass
 upload_dir(ftp, local_root, remote_root)
 ftp.quit()
 print("Publicacion FTP completada.")

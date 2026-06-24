@@ -31,10 +31,20 @@ jobs:
       - name: Install dependencies
         run: pnpm install --filter ./app... --frozen-lockfile
 
-      - name: Build app
+      - name: Build app (GitHub Pages)
         working-directory: ./app
         env:
           VITE_BASE: "/${{ github.event.repository.name }}/"
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
+          VITE_GOOGLE_CLIENT_ID: ${{ vars.VITE_GOOGLE_CLIENT_ID }}
+        run: |
+          pnpm build
+          mv dist dist-gh
+
+      - name: Build app (FTP)
+        working-directory: ./app
+        env:
+          VITE_BASE: "/"
           VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
           VITE_GOOGLE_CLIENT_ID: ${{ vars.VITE_GOOGLE_CLIENT_ID }}
         run: pnpm build
@@ -44,13 +54,14 @@ jobs:
           FTP_HOST: ${{ secrets.FTP_HOST }}
           FTP_USER: ${{ secrets.FTP_USERNAME }}
           FTP_PASS: ${{ secrets.FTP_PASSWORD }}
-          FTP_REMOTE_DIR: "/${{ github.event.repository.name }}"
+          FTP_LOCAL_DIR: ./app/dist
+          FTP_REMOTE_DIR: "/"
         run: python3 .github/scripts/ftp-upload.py
 
-      - name: Upload artifact
+      - name: Upload artifact (GitHub Pages)
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./app/dist
+          path: ./app/dist-gh
 
   deploy:
     needs: build
